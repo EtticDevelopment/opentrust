@@ -51,6 +51,7 @@ package-lock.json
 phpstan.neon
 phpstan.neon.dist
 phpstan-baseline.neon
+.phpstan-bootstrap.php
 .semgrepignore
 
 # Tests

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T12:41:13+00:00\n"
+"POT-Creation-Date: 2026-05-07T12:53:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -1747,7 +1747,7 @@ msgstr ""
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-opentrust-io.php:678
+#: includes/class-opentrust-io.php:683
 msgid "Could not create attachment."
 msgstr ""
 
@@ -1987,28 +1987,28 @@ msgstr ""
 msgid "A data practice describes a specific way a company collects, uses, stores, or shares information. Each practice usually spells out what data is involved, why it is collected, how long it is kept, and who it is shared with. Grouping data practices by category, such as account data, usage data, or support data, helps customers understand exactly what happens to their information."
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:45
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:44
 #: includes/providers/class-opentrust-chat-provider.php:46
 msgid "Anthropic"
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:64
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:63
 msgid "No models available — your account may not be authorized."
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:128
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:127
 msgid "Anthropic adapter missing required args."
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:220
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:219
 msgid "Anthropic request failed."
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:415
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:414
 msgid "Searching documents…"
 msgstr ""
 
-#: includes/providers/class-opentrust-chat-provider-anthropic.php:416
+#: includes/providers/class-opentrust-chat-provider-anthropic.php:415
 msgid "Reading documents…"
 msgstr ""
 

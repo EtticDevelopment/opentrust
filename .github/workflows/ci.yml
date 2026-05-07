@@ -44,6 +44,7 @@ jobs:
         with:
           ignore-warnings: true
           exclude-directories: 'dist'
+          exclude-files: '.phpstan-bootstrap.php'
 
   phpstan:
     name: PHPStan
