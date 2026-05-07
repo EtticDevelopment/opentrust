@@ -423,7 +423,7 @@ final class OpenTrust_IO {
         }
 
         if ($include_media) {
-            foreach (self::ATTACHMENT_META_KEYS[$cpt] ?? [] as $att_key) {
+            foreach (self::ATTACHMENT_META_KEYS[$cpt] as $att_key) {
                 $att_id = (int) ($meta_out[$att_key] ?? 0);
                 if ($att_id > 0) {
                     $ref = self::collect_attachment($att_id, $media);
@@ -431,7 +431,7 @@ final class OpenTrust_IO {
                 }
             }
         } else {
-            foreach (self::ATTACHMENT_META_KEYS[$cpt] ?? [] as $att_key) {
+            foreach (self::ATTACHMENT_META_KEYS[$cpt] as $att_key) {
                 if (isset($meta_out[$att_key])) {
                     unset($meta_out[$att_key]);
                 }
@@ -674,8 +674,13 @@ final class OpenTrust_IO {
                 'post_status'    => 'inherit',
             ], $dest_path);
 
-            if (is_wp_error($att_id) || !$att_id) {
-                $errors[] = is_wp_error($att_id) ? $att_id->get_error_message() : __('Could not create attachment.', 'opentrust');
+            if (is_wp_error($att_id)) {
+                $errors[] = $att_id->get_error_message();
+                wp_delete_file($dest_path);
+                continue;
+            }
+            if (!$att_id) {
+                $errors[] = __('Could not create attachment.', 'opentrust');
                 wp_delete_file($dest_path);
                 continue;
             }

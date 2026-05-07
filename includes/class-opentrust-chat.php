@@ -699,7 +699,7 @@ final class OpenTrust_Chat {
      * pointing the model at alternative tactics. This makes MAX_TOOL_TURNS
      * a soft ceiling rather than a hard limit on legitimate work.
      *
-     * @param array<int, mixed>     $corpus      Full corpus struct (documents + bm25 + …).
+     * @param array<string, mixed>  $corpus      Full corpus struct (documents + bm25 + …).
      * @param array<string, bool>   $seen_calls  Per-request seen-calls map (passed by reference).
      * @return array<int, array{type:string,source:string,title:string,content:array,citations:array}>
      */

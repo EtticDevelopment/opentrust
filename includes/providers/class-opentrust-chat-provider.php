@@ -282,7 +282,7 @@ abstract class OpenTrust_Chat_Provider {
      */
     protected function build_tool_call_event_data(array $pending, array $documents): array {
         $count = count($pending);
-        $names = array_map(static fn(array $p): string => (string) ($p['name'] ?? ''), $pending);
+        $names = array_map(static fn(array $p): string => (string) $p['name'], $pending);
 
         if ($count === 1) {
             $only            = $pending[0];

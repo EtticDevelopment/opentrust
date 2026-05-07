@@ -204,7 +204,7 @@ final class OpenTrust_Admin_Review {
         }
 
         return str_contains((string) $screen->id, 'opentrust')
-            || in_array($screen->post_type ?? '', OpenTrust_CPT::CORPUS, true);
+            || in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
     }
 
     private static function review_url(): string {

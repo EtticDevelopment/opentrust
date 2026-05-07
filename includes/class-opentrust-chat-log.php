@@ -214,13 +214,12 @@ final class OpenTrust_Chat_Log {
     /**
      * Daily purge cron: delete rows older than RETENTION_DAYS.
      */
-    public static function purge_old(): int {
+    public static function purge_old(): void {
         global $wpdb;
         $table  = self::table_name();
         $cutoff = gmdate('Y-m-d H:i:s', time() - self::RETENTION_DAYS * DAY_IN_SECONDS);
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Parameter is via prepare()
-        $rows = $wpdb->query($wpdb->prepare("DELETE FROM {$table} WHERE created_at < %s", $cutoff));
-        return (int) $rows;
+        $wpdb->query($wpdb->prepare("DELETE FROM {$table} WHERE created_at < %s", $cutoff));
     }
 
     /**

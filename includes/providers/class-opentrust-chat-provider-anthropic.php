@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class OpenTrust_Chat_Provider_Anthropic extends OpenTrust_Chat_Provider {
 
-    private const API_BASE        = 'https://api.anthropic.com';
     private const MODELS_ENDPOINT = 'https://api.anthropic.com/v1/models';
     private const MESSAGES_ENDPOINT = 'https://api.anthropic.com/v1/messages';
     private const API_VERSION     = '2023-06-01';

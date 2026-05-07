@@ -214,7 +214,7 @@ final class OpenTrust_Admin {
         // subpages, and the four content CPTs. Bail on every other admin screen.
         $is_opentrust_screen =
             str_contains((string) $screen->id, 'opentrust') ||
-            in_array($screen->post_type ?? '', OpenTrust_CPT::CORPUS, true);
+            in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
 
         if (!$is_opentrust_screen) {
             return;
