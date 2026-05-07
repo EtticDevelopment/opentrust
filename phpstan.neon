@@ -11,9 +11,9 @@ parameters:
         analyse:
             - includes/data/*-catalog.php
         analyseAndScan:
-            - dist/
-            - vendor/
-            - node_modules/
-            - languages/
-            - templates/
+            - dist (?)
+            - vendor (?)
+            - node_modules (?)
+            - languages
+            - templates
     treatPhpDocTypesAsCertain: false
