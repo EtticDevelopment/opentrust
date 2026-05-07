@@ -1,0 +1,12 @@
+{
+    "name": "ettic/opentrust-dev",
+    "description": "Dev tooling for the OpenTrust WordPress plugin (PHPStan). Not shipped to wp.org.",
+    "license": "GPL-2.0-or-later",
+    "require-dev": {
+        "phpstan/phpstan": "^2.0",
+        "szepeviktor/phpstan-wordpress": "^2.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

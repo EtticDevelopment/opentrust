@@ -54,6 +54,10 @@ vendor/
 composer.lock
 package-lock.json
 
+# Static-analysis caches / artifacts
+.phpstan-cache/
+semgrep.sarif
+
 # Logs and ad-hoc temp
 *.log
 *.tmp

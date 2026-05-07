@@ -1,0 +1,19 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - opentrust.php
+        - uninstall.php
+        - includes/
+    excludePaths:
+        analyse:
+            - includes/data/*-catalog.php
+        analyseAndScan:
+            - dist/
+            - vendor/
+            - node_modules/
+            - languages/
+            - templates/
+    treatPhpDocTypesAsCertain: false

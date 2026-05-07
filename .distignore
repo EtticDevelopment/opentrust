@@ -32,6 +32,7 @@ REPLY_DRAFT.md
 .distignore
 .gitignore
 .git/
+.github/
 .editorconfig
 
 # IDE / editor
@@ -42,8 +43,15 @@ REPLY_DRAFT.md
 # Build / dependency artifacts
 node_modules/
 vendor/
+composer.json
 composer.lock
 package-lock.json
+
+# Static-analysis / lint configs
+phpstan.neon
+phpstan.neon.dist
+phpstan-baseline.neon
+.semgrepignore
 
 # Tests
 tests/

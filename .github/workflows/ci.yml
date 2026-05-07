@@ -44,3 +44,97 @@ jobs:
         with:
           ignore-warnings: true
           exclude-directories: 'dist'
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.json') }}
+          restore-keys: composer-
+
+      - name: Install Composer dev dependencies
+        run: composer update --no-progress --no-interaction --prefer-dist
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --no-progress --error-format=github
+
+  pot-freshness:
+    name: POT freshness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      - name: Install WP-CLI
+        run: |
+          curl -sSL -o /usr/local/bin/wp \
+            https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x /usr/local/bin/wp
+          wp --info --allow-root
+
+      - name: Regenerate POT
+        run: |
+          wp i18n make-pot . languages/opentrust.pot \
+            --slug=opentrust \
+            --domain=opentrust \
+            --exclude=dist,vendor,node_modules,languages \
+            --allow-root
+
+      - name: Verify POT is up to date
+        run: |
+          if ! git diff --exit-code -I 'POT-Creation-Date' -- languages/opentrust.pot; then
+            echo "::error::languages/opentrust.pot is stale. Run \`wp i18n make-pot . languages/opentrust.pot --slug=opentrust --domain=opentrust --exclude=dist,vendor,node_modules,languages\` locally and commit the result."
+            exit 1
+          fi
+          echo "OK: POT is in sync with source."
+
+  version-consistency:
+    name: Version consistency
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Compare version strings
+        run: |
+          set -euo pipefail
+
+          header_version=$(grep -E '^\s*\*\s*Version:' opentrust.php | head -1 | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
+          constant_version=$(grep -E "define\('OPENTRUST_VERSION'" opentrust.php | sed -E "s/.*'OPENTRUST_VERSION',[[:space:]]*'([^']+)'.*/\1/")
+          readme_version=$(grep -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
+
+          echo "opentrust.php header: $header_version"
+          echo "OPENTRUST_VERSION:    $constant_version"
+          echo "readme.txt Stable tag: $readme_version"
+
+          if [[ -z "$header_version" || -z "$constant_version" || -z "$readme_version" ]]; then
+            echo "::error::Could not extract one or more version strings."
+            exit 1
+          fi
+
+          if [[ "$header_version" != "$constant_version" || "$header_version" != "$readme_version" ]]; then
+            echo "::error::Version mismatch — header=$header_version, constant=$constant_version, readme=$readme_version"
+            exit 1
+          fi
+
+          echo "OK: all versions match ($header_version)"
