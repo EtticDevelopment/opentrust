@@ -390,6 +390,55 @@ final class OpenTrust_Admin_Settings {
         <?php
     }
 
+    private function ds_render_section_contact(): void {
+        $settings = OpenTrust::get_settings();
+        ?>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Get in touch', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Publish a dark-accent "Get in touch" block on the trust center. Every field is optional — the block only appears if at least one is filled in.', 'opentrust'); ?></p>
+            </header>
+            <div class="opentrust-card">
+                <?php $this->ds_row_textarea('company_description', __('Company Description', 'opentrust'), (string) ($settings['company_description'] ?? ''), __('Two or three sentences describing what the company does. Rendered under the "Get in touch" section title.', 'opentrust')); ?>
+                <?php $this->ds_row_text('dpo_name', __('DPO Name', 'opentrust'), (string) ($settings['dpo_name'] ?? ''), __('Data Protection Officer name. Required under GDPR for many organisations.', 'opentrust')); ?>
+                <?php $this->ds_row_text_typed('dpo_email', __('DPO Email', 'opentrust'), (string) ($settings['dpo_email'] ?? ''), 'email', __('Dedicated DPO mailbox. Rendered as a mailto link.', 'opentrust')); ?>
+                <?php $this->ds_row_text_typed('security_email', __('Security Contact Email', 'opentrust'), (string) ($settings['security_email'] ?? ''), 'email', __('For vulnerability reports and security questions. Often separate from the DPO.', 'opentrust')); ?>
+                <?php $this->ds_row_text_typed('contact_form_url', __('Contact Form URL', 'opentrust'), (string) ($settings['contact_form_url'] ?? ''), 'url', __('Optional link to a gated contact form.', 'opentrust')); ?>
+                <?php $this->ds_row_textarea('contact_address', __('Mailing Address', 'opentrust'), (string) ($settings['contact_address'] ?? ''), __('Postal address for formal GDPR / legal notices.', 'opentrust')); ?>
+                <?php $this->ds_row_text_typed('pgp_key_url', __('PGP Public Key URL', 'opentrust'), (string) ($settings['pgp_key_url'] ?? ''), 'url', __("Optional link to your security team's PGP public key.", 'opentrust')); ?>
+                <?php $this->ds_row_text('company_registration', __('Company Registration Number', 'opentrust'), (string) ($settings['company_registration'] ?? ''), __('KvK (NL), Companies House (UK), Handelsregister (DE), EIN (US), or equivalent business registration.', 'opentrust')); ?>
+                <?php $this->ds_row_text('vat_number', __('VAT / Tax ID', 'opentrust'), (string) ($settings['vat_number'] ?? ''), __('VAT number, sales-tax ID, or equivalent international tax identifier.', 'opentrust')); ?>
+            </div>
+        </section>
+        <?php
+    }
+
+    /**
+     * Typed text input variant — for input types email/url/number that need
+     * the native HTML type for mobile keyboards, validation, autofill.
+     */
+    private function ds_row_text_typed(string $key, string $label, string $value, string $type, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        $extra = match ($type) {
+            'url'   => ' placeholder="https://" inputmode="url" autocomplete="off"',
+            'email' => ' autocomplete="off"',
+            default => '',
+        };
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <input type="<?php echo esc_attr($type); ?>" class="opentrust-input opentrust-input--md" id="<?php echo esc_attr('opentrust_' . $key); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>"<?php echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hardcoded attribute fragment with escaped values ?>>
+            </div>
+        </div>
+        <?php
+    }
+
     private function ds_row_text(string $key, string $label, string $value, string $help = ''): void {
         $name = sprintf('opentrust_settings[%s]', $key);
         ?>
@@ -868,7 +917,7 @@ final class OpenTrust_Admin_Settings {
                         <?php
                         settings_fields('opentrust_settings_group');
                         echo '<input type="hidden" name="opentrust_settings[__contact_tab_save]" value="1">';
-                        do_settings_sections('opentrust-settings-contact');
+                        $this->ds_render_section_contact();
                         ?>
                     </form>
                 <?php else: ?>
