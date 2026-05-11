@@ -1,0 +1,1949 @@
+/* Ettic admin design system template.
+ *
+ * BEFORE USING: replace `opentrust` everywhere with your plugin's slug
+ * (CSS class scope, JS data-attrs, PHP namespace, filenames). The CSS
+ * custom properties (`--ettic-*`) are the shared Ettic brand vocabulary
+ * and should stay — override `--ettic-blue` per plugin to re-skin.
+ *
+ * Scope: every selector lives under `.opentrust-admin` so tokens are
+ * inherited and styles cannot leak to other wp-admin screens. */
+
+.opentrust-admin {
+	/* Brand */
+	--ettic-blue:        #0F5CFA;
+	--ettic-blue-hover:  #0A4ED4;
+	--ettic-blue-fg:     #FFFFFF;
+	--ettic-blue-soft:   #DFEFFF;
+
+	/* Surfaces */
+	--ettic-ink:         #031018;
+	--ettic-ink-soft:    #051016;
+	--ettic-page:        #F9FCFF;
+	--ettic-surface:     #FFFFFF;
+	--ettic-surface-2:   #F5F7FA;
+	--ettic-border:      #E2E5E9;
+	--ettic-border-hi:   #D4D8DD;
+
+	/* Topbar (dark) */
+	--tb-bg:             #031018;
+	--tb-text:           rgba(255,255,255,0.66);
+	--tb-text-hover:     rgba(255,255,255,0.92);
+	--tb-text-strong:    #FFFFFF;
+	--tb-divider:        rgba(255,255,255,0.08);
+
+	/* Text */
+	--tx-strong:         #051016;
+	--tx-body:           #2A323B;
+	--tx-muted:          #5A6573;
+	--tx-quiet:          #7E8895;
+
+	/* Status */
+	--warn:              #B95000;
+	--warn-bg:           #FFF7EC;
+	--warn-border:       #F4D7AC;
+
+	/* Shape */
+	--r-sm:              5px;
+	--r-md:              7px;
+	--r-lg:              10px;
+
+	/* Type stack — Inter / JetBrains Mono if installed, else system */
+	--ff-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	--ff-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+	font-family: var(--ff-sans);
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--tx-body);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.opentrust-admin *,
+.opentrust-admin *::before,
+.opentrust-admin *::after { box-sizing: border-box; }
+
+.opentrust-admin a { color: var(--ettic-blue); text-decoration: none; }
+.opentrust-admin a:hover { text-decoration: underline; }
+
+.opentrust-admin code {
+	font-family: var(--ff-mono);
+	font-size: 0.92em;
+}
+
+/* !important defends against themes/plugins that constrain .wrap max-width. */
+.wrap.opentrust-admin {
+	margin: 10px 20px 0 0 !important;
+	max-width: none !important;
+	width: auto !important;
+	min-width: 0 !important;
+	box-sizing: border-box;
+}
+
+.opentrust-admin .opentrust-form,
+.opentrust-admin .opentrust-topbar { width: 100%; max-width: none; }
+
+/* Hide default WP h1 */
+.wrap.opentrust-admin > h1.wp-heading-inline,
+.wrap.opentrust-admin > h1:first-of-type { display: none; }
+
+/* Topbar — sticky dark strip + sibling hero block. Siblings under .opentrust-form
+ * so the bar's sticky containing block is the full form, not the short hero. */
+.opentrust-admin .opentrust-topbar__bar {
+	min-height: 56px;
+	display: flex;
+	align-items: stretch;
+	/* Bleeds past .wrap gutters + #wpcontent padding for true edge-to-edge. */
+	margin: -10px -20px 0;
+	padding: 0 28px 0 38px;
+	gap: 4px;
+	border-bottom: 1px solid var(--tb-divider);
+	flex-wrap: wrap;
+	/* Sits below admin bar (32/46px); z-20 keeps it above content, below modals/toasts. */
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: var(--tb-bg);
+}
+
+body.admin-bar .opentrust-admin .opentrust-topbar__bar { top: 32px; }
+
+@media screen and (max-width: 782px) {
+	body.admin-bar .opentrust-admin .opentrust-topbar__bar { top: 46px; }
+	/* Mobile: #wpcontent loses its padding — neutralize bleed so bar stays on-screen. */
+	.opentrust-admin .opentrust-topbar__bar,
+	.opentrust-admin .opentrust-topbar__head {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.opentrust-admin .opentrust-topbar__bar { padding-left: 18px; padding-right: 8px; }
+	.opentrust-admin .opentrust-topbar__head { padding-left: 26px; padding-right: 26px; }
+}
+
+.opentrust-admin .opentrust-topbar__brand {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+}
+
+.opentrust-admin .opentrust-topbar__mark { width: 26px; height: 26px; flex-shrink: 0; }
+
+.opentrust-admin .opentrust-topbar__name {
+	color: var(--tb-text-strong);
+	font-weight: 600;
+	font-size: 14.5px;
+	letter-spacing: -0.005em;
+}
+
+.opentrust-admin .opentrust-topbar__version {
+	margin-left: 10px;
+	padding: 2px 8px;
+	font-size: 11px;
+	font-weight: 600;
+	font-family: var(--ff-mono);
+	color: rgba(255,255,255,0.55);
+	background: rgba(255,255,255,0.06);
+	border-radius: 4px;
+	letter-spacing: 0.02em;
+}
+
+.opentrust-admin .opentrust-topbar__actions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 0 0 0 8px;
+	flex-shrink: 0;
+}
+
+/* Right cluster: dirty indicator + Save/Discard, glued to right edge. */
+.opentrust-admin .opentrust-topbar__right {
+	display: flex;
+	align-items: stretch;
+	margin-left: auto;
+	min-width: 0;
+}
+
+/* Unsaved-changes indicator */
+.opentrust-admin .opentrust-topbar__dirty {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0 16px;
+	font-size: 12.5px;
+	color: rgba(255,255,255,0.80);
+	font-weight: 500;
+	flex-shrink: 0;
+	white-space: nowrap;
+}
+
+.opentrust-admin .opentrust-topbar__dirty-dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: #F4A547;
+	position: relative;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 0.5px rgba(244, 165, 71, 0.5);
+}
+
+.opentrust-admin .opentrust-topbar__dirty-dot::after {
+	content: '';
+	position: absolute;
+	inset: -3px;
+	border-radius: 50%;
+	background: rgba(244, 165, 71, 0.34);
+	animation: opentrust-dirty-pulse 2.2s ease-out infinite;
+	pointer-events: none;
+}
+
+@keyframes opentrust-dirty-pulse {
+	0%   { transform: scale(0.5); opacity: 0.7; }
+	80%  { transform: scale(2.6); opacity: 0; }
+	100% { transform: scale(2.6); opacity: 0; }
+}
+
+.opentrust-admin .opentrust-topbar__dirty-num {
+	color: #fff;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	margin-right: 2px;
+}
+
+/* .is-clean hides the indicator; saved/discarded feedback goes through toasts. */
+.opentrust-admin .opentrust-topbar__dirty.is-clean { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+	.opentrust-admin .opentrust-topbar__dirty-dot::after { animation: none; }
+}
+
+/* Page head: edge-to-edge hero that fuses with the sticky bar above. */
+.opentrust-admin .opentrust-topbar__head {
+	background: var(--tb-bg);
+	margin: 0 -20px 28px;
+	padding: 26px 46px 30px;
+}
+
+.opentrust-admin .opentrust-topbar__head h1 {
+	font-size: 26px;
+	font-weight: 700;
+	letter-spacing: -0.022em;
+	margin: 0 0 6px;
+	color: #fff;
+	line-height: 1.2;
+	padding: 0;
+}
+
+.opentrust-admin .opentrust-topbar__head p {
+	margin: 0;
+	font-size: 14.5px;
+	color: rgba(255,255,255,0.62);
+	max-width: 70ch;
+	line-height: 1.55;
+}
+
+/* Buttons */
+.opentrust-admin .opentrust-btn {
+	appearance: none;
+	border: 1px solid transparent;
+	background: transparent;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 7px 14px;
+	border-radius: var(--r-md);
+	cursor: pointer;
+	transition: background-color 130ms ease, border-color 130ms ease, color 130ms ease, box-shadow 130ms ease;
+	line-height: 1.4;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+	text-decoration: none;
+	height: auto;
+}
+
+.opentrust-admin .opentrust-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(15,92,250,0.30); }
+
+.opentrust-admin .opentrust-btn--primary {
+	background: var(--ettic-blue);
+	color: var(--ettic-blue-fg);
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 1px 0 rgba(15,92,250,0.20);
+}
+
+.opentrust-admin .opentrust-btn--primary:hover { background: var(--ettic-blue-hover); color: #fff; text-decoration: none; }
+
+.opentrust-admin .opentrust-btn--ghost {
+	border-color: var(--ettic-border);
+	color: var(--tx-strong);
+	background: #fff;
+}
+
+.opentrust-admin .opentrust-btn--ghost:hover {
+	background: var(--ettic-surface-2);
+	border-color: var(--ettic-border-hi);
+	color: var(--tx-strong);
+	text-decoration: none;
+}
+
+.opentrust-admin .opentrust-btn--ghost-dark {
+	border-color: rgba(255,255,255,0.16);
+	color: rgba(255,255,255,0.86);
+	background: transparent;
+	font-size: 13px;
+	padding: 6px 12px;
+}
+
+.opentrust-admin .opentrust-btn--ghost-dark:hover {
+	background: rgba(255,255,255,0.06);
+	color: #fff;
+	border-color: rgba(255,255,255,0.22);
+	text-decoration: none;
+}
+
+.opentrust-admin .opentrust-btn--text { color: var(--tx-muted); padding: 8px 8px; }
+.opentrust-admin .opentrust-btn--text:hover { color: var(--tx-strong); background: var(--ettic-surface-2); text-decoration: none; }
+
+.opentrust-admin .opentrust-btn--danger {
+	background: #B32D2E;
+	color: #fff;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 1px 0 rgba(179,45,46,0.20);
+}
+.opentrust-admin .opentrust-btn--danger:hover { background: #931E1F; color: #fff; }
+
+.opentrust-admin .opentrust-btn--sm { padding: 6px 11px; font-size: 13px; }
+
+.opentrust-admin .opentrust-btn[disabled],
+.opentrust-admin .opentrust-btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+
+.opentrust-admin .opentrust-btn--primary[disabled] {
+	background: rgba(255,255,255,0.08);
+	color: rgba(255,255,255,0.42);
+	box-shadow: none;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.opentrust-admin .opentrust-btn--ghost-dark[disabled] {
+	opacity: 0.45;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.opentrust-admin .opentrust-btn--loading { pointer-events: none; cursor: wait; }
+.opentrust-admin .opentrust-btn--loading .opentrust-btn__label { opacity: 0.85; }
+
+.opentrust-admin .opentrust-btn__spinner {
+	width: 12px;
+	height: 12px;
+	border: 1.5px solid currentColor;
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: opentrust-spin 600ms linear infinite;
+	display: inline-block;
+	flex-shrink: 0;
+	margin-right: 2px;
+}
+
+@keyframes opentrust-spin { to { transform: rotate(360deg); } }
+
+/* Stack / blocks (h2 outside cards) */
+/* Width contract: 92% / max 1600px / 0 auto — mirrored on .opentrust-footer
+ * so stack and footer line up at the same width. */
+.opentrust-admin .opentrust-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding: 0 0 32px;
+	width: 92%;
+	max-width: 1600px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+.opentrust-admin .opentrust-block { padding: 0; }
+
+.opentrust-admin .opentrust-block__head { margin-bottom: 14px; }
+
+.opentrust-admin .opentrust-block__head h2 {
+	font-size: 18px;
+	font-weight: 700;
+	letter-spacing: -0.012em;
+	margin: 0;
+	color: var(--tx-strong);
+	line-height: 1.3;
+	padding: 0;
+}
+
+.opentrust-admin .opentrust-block__head p {
+	font-size: 13.5px;
+	color: var(--tx-muted);
+	margin: 4px 0 0;
+	max-width: 68ch;
+	line-height: 1.55;
+}
+
+/* Cards. Namespaced to avoid colliding with WP core `.card` (caps at 520px). */
+.opentrust-admin .opentrust-card {
+	background: var(--ettic-surface);
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-lg);
+	overflow: hidden;
+}
+
+/* Field rows */
+.opentrust-admin .opentrust-row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	gap: 24px;
+	padding: 18px 14px;
+}
+
+.opentrust-admin .opentrust-row + .opentrust-row { border-top: 1px solid var(--ettic-border); }
+
+.opentrust-admin .opentrust-row--stacked {
+	grid-template-columns: 1fr;
+	align-items: flex-start;
+}
+
+.opentrust-admin .opentrust-row__main { min-width: 0; }
+
+.opentrust-admin .opentrust-row__label {
+	display: block;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--tx-strong);
+	margin-bottom: 3px;
+	letter-spacing: -0.002em;
+}
+
+.opentrust-admin .opentrust-row__help {
+	margin: 0;
+	font-size: 13px;
+	color: var(--tx-muted);
+	line-height: 1.55;
+	max-width: 64ch;
+}
+
+.opentrust-admin .opentrust-row__help code {
+	background: var(--ettic-surface-2);
+	padding: 1px 5px;
+	border-radius: 4px;
+	font-size: 11.5px;
+	color: var(--tx-strong);
+	border: 1px solid var(--ettic-border);
+}
+
+.opentrust-admin .opentrust-row__control {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.opentrust-admin .opentrust-row__control--stack {
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 6px;
+}
+
+/* Per-row dirty mark (orange dot left of the control) */
+.opentrust-admin .opentrust-row__dirty-mark {
+	position: absolute;
+	top: 50%;
+	left: -14px;
+	transform: translateY(-50%);
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #F4A547;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 160ms ease;
+}
+
+/* Stacked controls: pin dot to input row, not column center. */
+.opentrust-admin .opentrust-row__control--stack .opentrust-row__dirty-mark { top: 19px; }
+
+.opentrust-admin .opentrust-row.is-dirty .opentrust-row__dirty-mark { opacity: 1; }
+
+/* Toggle (CSS-only state) */
+.opentrust-admin .opentrust-toggle {
+	position: relative;
+	display: inline-block;
+	width: 38px;
+	height: 22px;
+	border-radius: 999px;
+	background: var(--ettic-border-hi);
+	cursor: pointer;
+	transition: background-color 200ms ease;
+	flex-shrink: 0;
+	vertical-align: middle;
+}
+
+.opentrust-admin .opentrust-toggle__input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 1;
+}
+
+.opentrust-admin .opentrust-toggle__thumb {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.04);
+	transition: transform 200ms cubic-bezier(0.34, 1.4, 0.64, 1);
+	pointer-events: none;
+}
+
+.opentrust-admin .opentrust-toggle:has(.opentrust-toggle__input:checked) { background: var(--ettic-blue); }
+.opentrust-admin .opentrust-toggle:has(.opentrust-toggle__input:checked) .opentrust-toggle__thumb { transform: translateX(16px); }
+
+.opentrust-admin .opentrust-toggle:focus-within {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(15,92,250,0.25);
+}
+
+.opentrust-admin .opentrust-toggle:has(.opentrust-toggle__input:disabled) {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+.opentrust-admin .opentrust-toggle:has(.opentrust-toggle__input:disabled) .opentrust-toggle__input { cursor: not-allowed; }
+
+/* Inputs */
+.opentrust-admin .opentrust-input {
+	appearance: none;
+	border: 1px solid var(--ettic-border);
+	background: #fff;
+	font-family: inherit;
+	font-size: 13.5px;
+	color: var(--tx-strong);
+	padding: 8px 11px;
+	border-radius: var(--r-md);
+	width: 100%;
+	transition: border-color 130ms ease, box-shadow 130ms ease;
+	box-shadow: none;
+	margin: 0;
+	height: auto;
+	min-height: 0;
+	line-height: 1.4;
+}
+
+.opentrust-admin .opentrust-input:focus {
+	outline: none;
+	border-color: var(--ettic-blue);
+	box-shadow: 0 0 0 3px rgba(15,92,250,0.18);
+}
+
+.opentrust-admin .opentrust-input--mono { font-family: var(--ff-mono); font-size: 13px; }
+.opentrust-admin .opentrust-input--num { width: 88px; }
+.opentrust-admin .opentrust-input--md { width: 280px; }
+
+.opentrust-admin .opentrust-input--invalid {
+	border-color: #B32D2E;
+	box-shadow: 0 0 0 3px rgba(179, 45, 46, 0.10);
+}
+.opentrust-admin .opentrust-input--invalid:focus {
+	border-color: #B32D2E;
+	box-shadow: 0 0 0 3px rgba(179, 45, 46, 0.20);
+}
+
+/* Select */
+.opentrust-admin .opentrust-select {
+	position: relative;
+	display: inline-flex;
+	width: 280px;
+}
+
+.opentrust-admin .opentrust-select select {
+	appearance: none;
+	width: 100%;
+	border: 1px solid var(--ettic-border);
+	background: #fff;
+	font-family: inherit;
+	font-size: 13.5px;
+	color: var(--tx-strong);
+	padding: 8px 32px 8px 11px;
+	border-radius: var(--r-md);
+	cursor: pointer;
+	box-shadow: none;
+	margin: 0;
+	height: auto;
+	min-height: 0;
+	line-height: 1.4;
+}
+
+.opentrust-admin .opentrust-select select:focus {
+	outline: none;
+	border-color: var(--ettic-blue);
+	box-shadow: 0 0 0 3px rgba(15,92,250,0.18);
+}
+
+.opentrust-admin .opentrust-select::after {
+	content: '';
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	width: 7px;
+	height: 7px;
+	border-right: 1.5px solid var(--tx-muted);
+	border-bottom: 1.5px solid var(--tx-muted);
+	transform: translateY(-70%) rotate(45deg);
+	pointer-events: none;
+}
+
+/* Color picker (fused swatch + hex input) */
+.opentrust-admin .opentrust-color {
+	display: inline-flex;
+	align-items: stretch;
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-md);
+	overflow: hidden;
+	background: #fff;
+	width: 200px;
+	transition: border-color 130ms ease, box-shadow 130ms ease;
+}
+
+.opentrust-admin .opentrust-color input[type="color"] {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 36px;
+	height: auto;
+	flex-shrink: 0;
+	border: none;
+	border-right: 1px solid var(--ettic-border);
+	background: transparent;
+	padding: 4px;
+	cursor: pointer;
+	margin: 0;
+	box-shadow: none;
+	min-height: 0;
+}
+.opentrust-admin .opentrust-color input[type="color"]::-webkit-color-swatch { border: none; border-radius: 3px; }
+.opentrust-admin .opentrust-color input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.opentrust-admin .opentrust-color input[type="color"]::-moz-color-swatch { border: none; border-radius: 3px; }
+
+.opentrust-admin .opentrust-color .opentrust-input {
+	border: none;
+	border-radius: 0;
+	flex: 1;
+	min-width: 0;
+}
+
+.opentrust-admin .opentrust-color .opentrust-input:focus { box-shadow: none; }
+
+.opentrust-admin .opentrust-color:focus-within {
+	border-color: var(--ettic-blue);
+	box-shadow: 0 0 0 3px rgba(15,92,250,0.18);
+}
+
+.opentrust-admin .opentrust-color.is-invalid {
+	border-color: #B32D2E;
+	box-shadow: 0 0 0 3px rgba(179, 45, 46, 0.12);
+}
+.opentrust-admin .opentrust-color.is-invalid input[type="color"] { border-right-color: rgba(179, 45, 46, 0.30); }
+
+/* Logo / media (preview + replace/remove) */
+.opentrust-admin .opentrust-media {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.opentrust-admin .opentrust-media__preview {
+	width: 84px;
+	height: 52px;
+	border: 1px dashed var(--ettic-border-hi);
+	border-radius: var(--r-sm);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: var(--tx-quiet);
+	background: var(--ettic-surface-2);
+	overflow: hidden;
+}
+
+.opentrust-admin .opentrust-media__preview img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+	display: block;
+}
+
+.opentrust-admin .opentrust-media__preview--filled {
+	border-style: solid;
+	border-color: var(--ettic-border);
+	background: #fff;
+	color: var(--tx-strong);
+}
+
+.opentrust-admin .opentrust-media__controls { display: flex; gap: 4px; align-items: center; }
+
+/* Segmented control (radios styled as buttons) */
+.opentrust-admin .opentrust-seg {
+	display: inline-flex;
+	background: var(--ettic-surface-2);
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-md);
+	padding: 2px;
+	gap: 1px;
+}
+
+.opentrust-admin .opentrust-seg__btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--tx-muted);
+	padding: 5px 12px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 130ms ease, color 130ms ease;
+	min-width: 32px;
+	user-select: none;
+}
+
+.opentrust-admin .opentrust-seg__input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.opentrust-admin .opentrust-seg__btn:hover { color: var(--tx-strong); }
+
+.opentrust-admin .opentrust-seg__btn:has(.opentrust-seg__input:checked) {
+	background: #fff;
+	color: var(--tx-strong);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.05);
+	cursor: default;
+}
+
+.opentrust-admin .opentrust-seg__btn:focus-within {
+	outline: none;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 2px rgba(15,92,250,0.32);
+}
+
+/* Chips (multi-select, role list etc.) */
+.opentrust-admin .opentrust-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.opentrust-admin .opentrust-chip {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 11px;
+	border-radius: 999px;
+	border: 1px solid var(--ettic-border);
+	background: #fff;
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--tx-muted);
+	cursor: pointer;
+	transition: all 130ms ease;
+	user-select: none;
+	font-family: inherit;
+}
+
+.opentrust-admin .opentrust-chip__input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.opentrust-admin .opentrust-chip:hover { border-color: var(--ettic-border-hi); color: var(--tx-strong); }
+
+.opentrust-admin .opentrust-chip:has(.opentrust-chip__input:checked) {
+	background: var(--ettic-blue-soft);
+	border-color: rgba(15,92,250,0.30);
+	color: var(--ettic-blue);
+}
+
+.opentrust-admin .opentrust-chip__check {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: var(--ettic-blue);
+	color: #fff;
+	display: none;
+	align-items: center;
+	justify-content: center;
+}
+
+.opentrust-admin .opentrust-chip__check svg { width: 8px; height: 8px; }
+.opentrust-admin .opentrust-chip:has(.opentrust-chip__input:checked) .opentrust-chip__check { display: inline-flex; }
+
+.opentrust-admin .opentrust-chip:focus-within {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(15,92,250,0.22);
+}
+
+/* Code block (mono readonly + Copy button) */
+.opentrust-admin .opentrust-code-block {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-family: var(--ff-mono);
+	font-size: 12.5px;
+	background: var(--ettic-surface-2);
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-sm);
+	padding: 8px 11px;
+	color: var(--tx-strong);
+	overflow-x: auto;
+	white-space: nowrap;
+	width: 100%;
+	max-width: 460px;
+}
+
+.opentrust-admin .opentrust-code-block__copy {
+	margin-left: auto;
+	font-family: var(--ff-sans);
+	font-size: 11.5px;
+	font-weight: 500;
+	color: var(--tx-muted);
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+.opentrust-admin .opentrust-code-block__copy:hover { color: var(--ettic-blue); background: rgba(15,92,250,0.08); }
+
+/* Action row (lighter than .opentrust-row, for utility actions) */
+.opentrust-admin .opentrust-action-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 14px 8px;
+	position: relative;
+}
+
+.opentrust-admin .opentrust-action-row + .opentrust-action-row,
+.opentrust-admin .opentrust-row + .opentrust-action-row,
+.opentrust-admin .opentrust-action-row + .opentrust-row { border-top: 1px solid var(--ettic-border); }
+
+.opentrust-admin .opentrust-action-row__main h3 {
+	margin: 0;
+	font-size: 13.5px;
+	font-weight: 600;
+	color: var(--tx-strong);
+	padding: 0;
+}
+
+.opentrust-admin .opentrust-action-row__main p {
+	margin: 2px 0 0;
+	font-size: 12.5px;
+	color: var(--tx-muted);
+	max-width: 56ch;
+}
+
+/* Foot meta */
+.opentrust-admin .opentrust-foot-meta {
+	margin-top: 8px;
+	font-size: 12.5px;
+	color: var(--tx-quiet);
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 0 4px;
+}
+
+.opentrust-admin .opentrust-foot-meta code {
+	font-family: var(--ff-mono);
+	background: var(--ettic-surface-2);
+	border: 1px solid var(--ettic-border);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 11.5px;
+	color: var(--tx-muted);
+}
+
+/* Notices (info/success/warn/error) */
+.opentrust-admin .opentrust-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 13px 16px;
+	border-radius: var(--r-md);
+	border: 1px solid;
+	font-size: 13.5px;
+	line-height: 1.55;
+}
+
+.opentrust-admin .opentrust-notice__icon {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+	margin-top: 1px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.opentrust-admin .opentrust-notice__icon svg { width: 16px; height: 16px; }
+.opentrust-admin .opentrust-notice__body { flex: 1; min-width: 0; }
+.opentrust-admin .opentrust-notice__title { font-weight: 600; margin: 0 0 2px; font-size: 13.5px; }
+.opentrust-admin .opentrust-notice__msg { margin: 0; }
+.opentrust-admin .opentrust-notice__msg a { font-weight: 500; }
+
+.opentrust-admin .opentrust-notice__close {
+	flex-shrink: 0;
+	background: transparent;
+	border: none;
+	color: inherit;
+	opacity: 0.5;
+	cursor: pointer;
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 1;
+	font-family: inherit;
+}
+.opentrust-admin .opentrust-notice__close:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+
+.opentrust-admin .opentrust-notice--info    { background: #F1F7FF; border-color: #C9DEFF; color: #1A3F73; }
+.opentrust-admin .opentrust-notice--info    .opentrust-notice__title { color: #0A3A75; }
+.opentrust-admin .opentrust-notice--info    .opentrust-notice__icon  { color: #0F5CFA; }
+
+.opentrust-admin .opentrust-notice--success { background: #ECF9F1; border-color: #B6E5C9; color: #1B5E36; }
+.opentrust-admin .opentrust-notice--success .opentrust-notice__title { color: #0F4528; }
+.opentrust-admin .opentrust-notice--success .opentrust-notice__icon  { color: #1B8E45; }
+
+.opentrust-admin .opentrust-notice--warn    { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn); }
+.opentrust-admin .opentrust-notice--warn    .opentrust-notice__title { color: #7A3300; }
+.opentrust-admin .opentrust-notice--warn    .opentrust-notice__icon  { color: var(--warn); }
+
+.opentrust-admin .opentrust-notice--error   { background: #FCEEED; border-color: #F4C9C7; color: #B32D2E; }
+.opentrust-admin .opentrust-notice--error   .opentrust-notice__title { color: #7A1B1C; }
+.opentrust-admin .opentrust-notice--error   .opentrust-notice__icon  { color: #B32D2E; }
+
+/* Toasts (bottom-right) */
+body > .opentrust-toast-stack {
+	position: fixed;
+	bottom: 22px;
+	right: 22px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	z-index: 99999;
+	pointer-events: none;
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.opentrust-toast-stack .opentrust-toast {
+	background: #0E1A24;
+	color: #fff;
+	padding: 11px 12px;
+	border-radius: 9px;
+	box-shadow: 0 12px 28px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.06);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13.5px;
+	font-weight: 500;
+	min-width: 280px;
+	max-width: 380px;
+	pointer-events: auto;
+	animation: opentrust-toast-in 220ms cubic-bezier(0.34, 1.4, 0.64, 1);
+	line-height: 1.4;
+}
+
+.opentrust-toast-stack .opentrust-toast.is-leaving { animation: opentrust-toast-out 200ms ease forwards; }
+
+.opentrust-toast-stack .opentrust-toast__icon {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.opentrust-toast-stack .opentrust-toast__icon svg { width: 12px; height: 12px; }
+
+.opentrust-toast-stack .opentrust-toast--success .opentrust-toast__icon { background: rgba(77, 213, 131, 0.18); color: #6EE599; }
+.opentrust-toast-stack .opentrust-toast--error   .opentrust-toast__icon { background: rgba(244, 99, 99, 0.20); color: #FF8A8A; }
+.opentrust-toast-stack .opentrust-toast--info    .opentrust-toast__icon { background: rgba(15, 92, 250, 0.22); color: #6FA8FF; }
+
+.opentrust-toast-stack .opentrust-toast__msg { flex: 1; }
+
+.opentrust-toast-stack .opentrust-toast__close {
+	background: transparent;
+	border: none;
+	color: rgba(255,255,255,0.50);
+	padding: 2px 6px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	font-family: inherit;
+}
+.opentrust-toast-stack .opentrust-toast__close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+@keyframes opentrust-toast-in  { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes opentrust-toast-out { from { opacity: 1; transform: translateY(0); }                 to { opacity: 0; transform: translateY(8px); } }
+
+/* Modal / confirm dialog (renders to body) */
+body > .opentrust-modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(3, 16, 24, 0.42);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100000;
+	padding: 20px;
+	animation: opentrust-backdrop-in 160ms ease;
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 140ms ease forwards; }
+
+.opentrust-modal-backdrop .opentrust-modal {
+	background: #fff;
+	border-radius: 12px;
+	width: 460px;
+	max-width: 100%;
+	box-shadow: 0 24px 48px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.04);
+	overflow: hidden;
+	animation: opentrust-modal-in 220ms cubic-bezier(0.34, 1.4, 0.64, 1);
+	color: #2A323B;
+	font-size: 14px;
+}
+
+.opentrust-modal-backdrop.is-leaving .opentrust-modal { animation: opentrust-modal-out 140ms ease forwards; }
+
+.opentrust-modal-backdrop .opentrust-modal__head {
+	padding: 22px 24px 0;
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.opentrust-modal-backdrop .opentrust-modal__icon {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.opentrust-modal-backdrop .opentrust-modal__icon svg { width: 18px; height: 18px; }
+.opentrust-modal-backdrop .opentrust-modal__icon--danger { background: #FCEEED; color: #B32D2E; }
+.opentrust-modal-backdrop .opentrust-modal__icon--warn   { background: #FFF7EC; color: #B95000; }
+
+.opentrust-modal-backdrop .opentrust-modal__head-text { padding-top: 4px; }
+
+.opentrust-modal-backdrop .opentrust-modal__head-text h3 {
+	font-size: 16.5px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	margin: 0 0 4px;
+	color: #051016;
+	padding: 0;
+}
+
+.opentrust-modal-backdrop .opentrust-modal__lede { margin: 0; font-size: 13.5px; color: #5A6573; line-height: 1.5; }
+
+.opentrust-modal-backdrop .opentrust-modal__body {
+	padding: 12px 24px 22px 74px;
+	font-size: 13.5px;
+	color: #5A6573;
+	line-height: 1.6;
+}
+
+.opentrust-modal-backdrop .opentrust-modal__body p { margin: 0; }
+.opentrust-modal-backdrop .opentrust-modal__body p + p { margin-top: 10px; }
+.opentrust-modal-backdrop .opentrust-modal__body code {
+	background: #F5F7FA;
+	border: 1px solid #E2E5E9;
+	padding: 1px 5px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.opentrust-modal-backdrop .opentrust-modal__foot {
+	padding: 14px 18px;
+	background: #F5F7FA;
+	border-top: 1px solid #E2E5E9;
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+/* Modal buttons — duplicated for body-level rendering (no .opentrust-admin scope) */
+.opentrust-modal-backdrop .opentrust-btn {
+	appearance: none;
+	border: 1px solid transparent;
+	background: transparent;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 7px 14px;
+	border-radius: 7px;
+	cursor: pointer;
+	transition: background-color 130ms ease, border-color 130ms ease, color 130ms ease;
+	line-height: 1.4;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+	height: auto;
+}
+
+.opentrust-modal-backdrop .opentrust-btn--ghost {
+	border-color: #E2E5E9;
+	color: #051016;
+	background: #fff;
+}
+.opentrust-modal-backdrop .opentrust-btn--ghost:hover { background: #F5F7FA; }
+
+.opentrust-modal-backdrop .opentrust-btn--primary {
+	background: #0F5CFA;
+	color: #fff;
+}
+.opentrust-modal-backdrop .opentrust-btn--primary:hover { background: #0A4ED4; }
+
+.opentrust-modal-backdrop .opentrust-btn--danger {
+	background: #B32D2E;
+	color: #fff;
+}
+.opentrust-modal-backdrop .opentrust-btn--danger:hover { background: #931E1F; }
+
+.opentrust-modal-backdrop .opentrust-btn--loading { pointer-events: none; cursor: wait; }
+.opentrust-modal-backdrop .opentrust-btn__spinner {
+	width: 12px;
+	height: 12px;
+	border: 1.5px solid currentColor;
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: opentrust-spin 600ms linear infinite;
+	display: inline-block;
+	flex-shrink: 0;
+	margin-right: 2px;
+}
+
+@keyframes opentrust-backdrop-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes opentrust-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes opentrust-modal-in     { from { opacity: 0; transform: scale(0.95) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes opentrust-modal-out    { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.97); } }
+
+/* Field validation feedback */
+.opentrust-admin .opentrust-field-msg {
+	font-size: 12.5px;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: 500;
+	line-height: 1.4;
+	margin: 0;
+}
+.opentrust-admin .opentrust-field-msg--error { color: #B32D2E; }
+.opentrust-admin .opentrust-field-msg svg { width: 12px; height: 12px; flex-shrink: 0; }
+.opentrust-admin .opentrust-field-msg code {
+	font-family: var(--ff-mono);
+	background: #FCEEED;
+	padding: 1px 5px;
+	border-radius: 3px;
+	font-size: 11.5px;
+	border: 1px solid rgba(179, 45, 46, 0.20);
+	color: #B32D2E;
+	font-weight: 500;
+}
+
+.opentrust-admin .opentrust-field-counter {
+	font-size: 11.5px;
+	color: var(--tx-quiet);
+	font-family: var(--ff-mono);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.02em;
+}
+.opentrust-admin .opentrust-field-counter--warn  { color: var(--warn); }
+.opentrust-admin .opentrust-field-counter--error { color: #B32D2E; font-weight: 600; }
+
+/* Tooltip / disabled-with-reason info pill */
+.opentrust-admin .opentrust-tooltip-trigger {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 1px solid var(--ettic-border-hi);
+	background: #fff;
+	color: var(--tx-muted);
+	font-size: 10px;
+	font-weight: 700;
+	cursor: help;
+	margin-left: 8px;
+	position: relative;
+	flex-shrink: 0;
+	font-family: inherit;
+	padding: 0;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+.opentrust-admin .opentrust-tooltip-trigger:hover,
+.opentrust-admin .opentrust-tooltip-trigger:focus {
+	border-color: var(--warn);
+	color: var(--warn);
+	outline: none;
+}
+
+.opentrust-admin .opentrust-tooltip-trigger:focus-visible {
+	box-shadow: 0 0 0 3px rgba(244, 165, 71, 0.22);
+}
+
+.opentrust-admin .opentrust-tooltip {
+	position: absolute;
+	bottom: calc(100% + 10px);
+	right: -10px;
+	background: #0E1A24;
+	color: rgba(255, 255, 255, 0.92);
+	padding: 11px 13px;
+	border-radius: 8px;
+	width: 252px;
+	font-size: 12.5px;
+	font-weight: 400;
+	line-height: 1.5;
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.06);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(4px);
+	transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+	z-index: 50;
+	text-align: left;
+	letter-spacing: 0;
+	pointer-events: none;
+}
+
+.opentrust-admin .opentrust-tooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	right: 14px;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid #0E1A24;
+}
+
+.opentrust-admin .opentrust-tooltip strong {
+	color: #fff;
+	font-weight: 600;
+	display: block;
+	margin-bottom: 3px;
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-tooltip a { color: #6FA8FF; font-weight: 500; pointer-events: auto; }
+
+.opentrust-admin .opentrust-tooltip-trigger:hover .opentrust-tooltip,
+.opentrust-admin .opentrust-tooltip-trigger:focus .opentrust-tooltip,
+.opentrust-admin .opentrust-tooltip-trigger:focus-within .opentrust-tooltip {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+/* Footer card — rendered as last child of .opentrust-admin so tokens resolve.
+ * Width matches .opentrust-stack so it sits in the same column as the cards. */
+.opentrust-admin .opentrust-footer {
+	width: 92%;
+	max-width: 1600px;
+	margin: 0 auto 32px;
+	background: transparent;
+	border: 0;
+	padding: 0;
+	box-sizing: border-box;
+	display: block;
+}
+
+/* __inner gets its own padding for content breathing room. */
+.opentrust-admin .opentrust-footer__inner {
+	background: var(--ettic-surface);
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-lg);
+	padding: 16px 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.opentrust-admin .opentrust-footer__top {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.opentrust-admin .opentrust-footer__lead {
+	color: var(--tx-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.opentrust-admin .opentrust-footer__brand {
+	color: var(--tx-strong);
+	font-weight: 600;
+	margin-right: 6px;
+}
+
+.opentrust-admin .opentrust-footer__version {
+	font-size: 11.5px;
+	color: var(--tx-quiet);
+	font-family: var(--ff-mono);
+	white-space: nowrap;
+	letter-spacing: 0.02em;
+}
+
+.opentrust-admin .opentrust-footer__version-num {
+	color: var(--tx-strong);
+	font-weight: 500;
+}
+
+.opentrust-admin .opentrust-footer__nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 2px;
+	align-items: center;
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-footer__nav a {
+	color: var(--tx-muted);
+	text-decoration: none;
+	padding: 4px 8px;
+	border-radius: 5px;
+	transition: background-color 130ms ease, color 130ms ease;
+}
+
+.opentrust-admin .opentrust-footer__nav a:hover,
+.opentrust-admin .opentrust-footer__nav a:focus {
+	color: var(--ettic-blue);
+	background: var(--ettic-blue-soft);
+	outline: none;
+}
+
+.opentrust-admin .opentrust-footer__sep {
+	color: var(--ettic-border-hi);
+	user-select: none;
+}
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extension: tabbar strip below the topbar.                *
+ *                                                                         *
+ * The shared Ettic template forbids horizontal tabs INSIDE the dark       *
+ * topbar — OpenTrust's 4-tab settings page predates that invariant and    *
+ * users have bookmarked the ?tab=... URLs. This component renders the     *
+ * tabs as a separate, lighter strip BELOW the topbar so the design        *
+ * system's chrome stays clean while the existing URLs keep working.       *
+ *                                                                         *
+ * Not part of the shared design system. Do not extract upstream without   *
+ * first resolving whether multi-page plugins should always use WP         *
+ * submenus instead of tabs.                                               *
+ * ----------------------------------------------------------------------- */
+
+.opentrust-admin .opentrust-tabbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-items: stretch;
+	margin: -8px 0 18px;
+	padding: 0 4px;
+	border-bottom: 1px solid var(--ettic-border);
+}
+
+.opentrust-admin .opentrust-tabbar__tab {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 14px 11px;
+	margin-bottom: -1px;
+	color: var(--tx-muted);
+	font-size: 13.5px;
+	font-weight: 500;
+	line-height: 1.2;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-bottom: 2px solid transparent;
+	border-radius: var(--r-sm) var(--r-sm) 0 0;
+	transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.opentrust-admin .opentrust-tabbar__tab:hover,
+.opentrust-admin .opentrust-tabbar__tab:focus-visible {
+	color: var(--tx-strong);
+	background: var(--ettic-surface-2);
+	text-decoration: none;
+	outline: none;
+}
+
+.opentrust-admin .opentrust-tabbar__tab.is-active {
+	color: var(--ettic-blue);
+	border-bottom-color: var(--ettic-blue);
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-tabbar__tab.is-active:hover {
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-tabbar__badge {
+	display: inline-flex;
+	align-items: center;
+	height: 18px;
+	padding: 0 7px;
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: #166534;
+	background: #dcfce7;
+	border-radius: 9px;
+	line-height: 1;
+}
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: AI tab atoms.                                *
+ *                                                                         *
+ * Provider cards (full-width primary card, side-by-side advanced grid),   *
+ * disclosure (<details>) styling, the model row that pairs the select     *
+ * with the Refresh button, and a couple of small utilities used by AI/    *
+ * Contact rows (unit suffix, success field-msg, notice list/actions).     *
+ *                                                                         *
+ * Not part of the shared design system. Extracted with the AI tab if/     *
+ * when the template gains a provider-card primitive.                      *
+ * ----------------------------------------------------------------------- */
+
+/* Disclosure (<details>) inside a card or block */
+.opentrust-admin .opentrust-disclosure {
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-md);
+	background: #fff;
+}
+
+.opentrust-admin .opentrust-card > .opentrust-disclosure {
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-disclosure > summary {
+	cursor: pointer;
+	padding: 12px 14px;
+	font-weight: 600;
+	color: var(--tx-strong);
+	font-size: 13.5px;
+	list-style: none;
+	user-select: none;
+	transition: background 120ms ease;
+}
+
+.opentrust-admin .opentrust-disclosure > summary::-webkit-details-marker { display: none; }
+
+.opentrust-admin .opentrust-disclosure > summary::before {
+	content: "▸";
+	display: inline-block;
+	width: 14px;
+	color: var(--tx-muted);
+	transition: transform 140ms ease;
+}
+
+.opentrust-admin .opentrust-disclosure[open] > summary::before { transform: rotate(90deg); }
+
+.opentrust-admin .opentrust-disclosure > summary:hover { background: var(--ettic-surface-2); }
+
+.opentrust-admin .opentrust-disclosure__body {
+	padding: 4px 14px 14px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-disclosure__body > p {
+	margin: 0 0 10px;
+	line-height: 1.55;
+}
+
+.opentrust-admin .opentrust-disclosure__body > p:last-child { margin-bottom: 0; }
+
+/* AI provider card */
+.opentrust-admin .opentrust-ai-card { padding: 16px 18px; }
+
+.opentrust-admin .opentrust-ai-card--primary {
+	margin-top: 14px;
+	border-color: var(--ettic-blue);
+	box-shadow: 0 1px 2px rgba(15,92,250,0.06);
+}
+
+.opentrust-admin .opentrust-ai-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+.opentrust-admin .opentrust-ai-card__title {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--tx-strong);
+}
+
+.opentrust-admin .opentrust-ai-card__badge {
+	display: inline-flex;
+	align-items: center;
+	height: 22px;
+	padding: 0 10px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--ettic-blue);
+	background: var(--ettic-blue-soft);
+	border-radius: 11px;
+	line-height: 1;
+}
+
+.opentrust-admin .opentrust-ai-card__description {
+	margin: 4px 0 10px;
+	color: var(--tx-body);
+	line-height: 1.55;
+}
+
+.opentrust-admin .opentrust-ai-card__keylink {
+	margin: 0 0 14px;
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-ai-card__saved {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 6px 12px;
+	margin: 0 0 10px;
+	background: #ECF9F1;
+	border: 1px solid #B6E5C9;
+	color: #1B5E36;
+	border-radius: var(--r-sm);
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-ai-card__check {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #1B8E45;
+	color: #fff;
+}
+
+.opentrust-admin .opentrust-ai-card__check svg { width: 9px; height: 9px; }
+
+.opentrust-admin .opentrust-ai-card__saved code {
+	background: transparent;
+	color: inherit;
+	font-size: 12.5px;
+}
+
+.opentrust-admin .opentrust-ai-card__form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.opentrust-admin .opentrust-ai-card__form .opentrust-input { flex: 1 1 260px; min-width: 0; }
+
+/* Advanced provider grid */
+.opentrust-admin .opentrust-ai-advanced__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 14px;
+	margin-top: 8px;
+}
+
+.opentrust-admin .opentrust-ai-card--advanced { padding: 14px 16px; }
+.opentrust-admin .opentrust-ai-card--advanced .opentrust-ai-card__title { font-size: 14px; }
+
+/* Model select + refresh button */
+.opentrust-admin .opentrust-ai-model-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.opentrust-admin .opentrust-ai-model-row .opentrust-select { min-width: 320px; }
+
+/* Generic row helpers */
+.opentrust-admin .opentrust-row__unit {
+	font-size: 13px;
+	color: var(--tx-muted);
+	margin-left: 8px;
+}
+
+/* Field message — success variant (template ships error only) */
+.opentrust-admin .opentrust-field-msg--success { color: #1B5E36; }
+
+/* Notice — list + action-row variants used by AI tab banners */
+.opentrust-admin .opentrust-notice__list {
+	margin: 6px 0 0 18px;
+	padding: 0;
+	list-style: disc;
+}
+
+.opentrust-admin .opentrust-notice__list li {
+	margin: 2px 0;
+}
+
+.opentrust-admin .opentrust-notice__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+/* Default <strong> inside notice body styled like a title */
+.opentrust-admin .opentrust-notice__body > strong {
+	display: block;
+	font-weight: 600;
+	margin: 0 0 2px;
+	font-size: 13.5px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: Questions log screen.                        *
+ *                                                                         *
+ * Filter toolbar (label-above-input columns + an actions group), a        *
+ * lightweight log table styled with design tokens, and a flush card       *
+ * variant that lets the table span the card edge-to-edge.                 *
+ * ----------------------------------------------------------------------- */
+
+/* Flush card: drops the padding so a table or media block can span edges */
+.opentrust-admin .opentrust-card--flush { padding: 0; overflow: hidden; }
+
+/* Filter toolbar */
+.opentrust-admin .opentrust-filterbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	align-items: flex-end;
+}
+
+.opentrust-admin .opentrust-filterbar__field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.opentrust-admin .opentrust-filterbar__field label {
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--tx-muted);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.opentrust-admin .opentrust-filterbar__field input,
+.opentrust-admin .opentrust-filterbar__field .opentrust-select { min-width: 0; }
+
+.opentrust-admin .opentrust-filterbar__actions {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-left: auto;
+}
+
+.opentrust-admin .opentrust-filterbar__export { margin-left: auto; }
+
+/* Log table */
+.opentrust-admin .opentrust-log-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	font-size: 13px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-log-table thead th {
+	padding: 9px 14px;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--tx-muted);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	text-align: left;
+	background: var(--ettic-surface-2);
+	border-bottom: 1px solid var(--ettic-border);
+	white-space: nowrap;
+}
+
+.opentrust-admin .opentrust-log-table tbody td {
+	padding: 10px 14px;
+	border-bottom: 1px solid var(--ettic-border);
+	vertical-align: top;
+}
+
+.opentrust-admin .opentrust-log-table tbody tr:last-child td { border-bottom: 0; }
+.opentrust-admin .opentrust-log-table tbody tr:nth-child(even) { background: #FBFCFD; }
+.opentrust-admin .opentrust-log-table tbody tr.is-refused { background: #FFF7EC; }
+.opentrust-admin .opentrust-log-table tbody tr.is-refused:nth-child(even) { background: #FFF1DA; }
+
+.opentrust-admin .opentrust-log-table__empty td { text-align: center; color: var(--tx-muted); padding: 24px 14px; }
+
+.opentrust-admin .opentrust-log-table__date { white-space: nowrap; color: var(--tx-muted); font-size: 12.5px; }
+.opentrust-admin .opentrust-log-table__num  { text-align: right; width: 64px; font-variant-numeric: tabular-nums; }
+.opentrust-admin .opentrust-log-table__meta { font-size: 12px; color: var(--tx-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.opentrust-admin .opentrust-log-table__model { font-family: var(--ff-mono); font-size: 11.5px; background: transparent; color: var(--tx-muted); padding: 0; }
+
+.opentrust-admin .opentrust-log-table__refused {
+	display: inline-block;
+	padding: 1px 7px;
+	margin-right: 6px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	background: var(--warn-bg);
+	color: var(--warn);
+	border-radius: 9px;
+}
+
+/* Pagination — restyle paginate_links() output to fit the design system */
+.opentrust-admin .opentrust-log-table__pagination {
+	display: flex;
+	justify-content: center;
+	gap: 4px;
+	padding: 12px 14px;
+	background: var(--ettic-surface-2);
+	border-top: 1px solid var(--ettic-border);
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-log-table__pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	min-width: 28px;
+	height: 28px;
+	padding: 0 9px;
+	border-radius: var(--r-sm);
+	border: 1px solid var(--ettic-border);
+	background: #fff;
+	color: var(--tx-strong);
+	text-decoration: none;
+}
+
+.opentrust-admin .opentrust-log-table__pagination .page-numbers:hover { border-color: var(--ettic-border-hi); color: var(--ettic-blue); }
+.opentrust-admin .opentrust-log-table__pagination .page-numbers.current {
+	background: var(--ettic-blue);
+	border-color: var(--ettic-blue);
+	color: #fff;
+}
+.opentrust-admin .opentrust-log-table__pagination .page-numbers.dots { border: 0; background: transparent; color: var(--tx-quiet); }
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: Import & Export tab.                         *
+ *                                                                         *
+ * CPT collapsible groups inside the export form, a preview table that     *
+ * reuses .opentrust-log-table styling, and small action pills (create /   *
+ * update / skip / new) for the preview screen.                            *
+ * ----------------------------------------------------------------------- */
+
+/* CPT picker — collapsible list inside the Export form. No surrounding
+ * border/background; sits inline under the row label. */
+.opentrust-admin .opentrust-io-cpt-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 0;
+}
+
+.opentrust-admin .opentrust-io-cpt > summary {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 6px;
+	cursor: pointer;
+	list-style: none;
+	font-size: 13px;
+	user-select: none;
+}
+
+.opentrust-admin .opentrust-io-cpt > summary::-webkit-details-marker { display: none; }
+.opentrust-admin .opentrust-io-cpt > summary::before {
+	content: "▸";
+	display: inline-block;
+	width: 12px;
+	color: var(--tx-muted);
+	transition: transform 140ms ease;
+}
+.opentrust-admin .opentrust-io-cpt[open] > summary::before { transform: rotate(90deg); }
+
+.opentrust-admin .opentrust-io-cpt__head { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.opentrust-admin .opentrust-io-cpt__name { font-weight: 500; color: var(--tx-strong); }
+.opentrust-admin .opentrust-io-cpt__count { color: var(--tx-muted); font-size: 12px; }
+
+.opentrust-admin .opentrust-io-cpt__items {
+	margin: 4px 0 8px 28px;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.opentrust-admin .opentrust-io-cpt__items label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-io-cpt__status { font-style: italic; color: var(--tx-muted); }
+
+/* File input shim — native, but with token spacing */
+.opentrust-admin .opentrust-input--file {
+	padding: 6px 8px;
+	background: #fff;
+	border: 1px dashed var(--ettic-border-hi);
+}
+
+/* Card header for preview tables (a small bar above a flush table) */
+.opentrust-admin .opentrust-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px 14px;
+	background: var(--ettic-surface-2);
+	border-bottom: 1px solid var(--ettic-border);
+}
+
+.opentrust-admin .opentrust-card__title {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--tx-strong);
+}
+
+/* Preview table action pills */
+.opentrust-admin .opentrust-io-preview-table__action { width: 110px; }
+.opentrust-admin .opentrust-io-preview-table__uuid {
+	font-family: var(--ff-mono);
+	font-size: 11.5px;
+	color: var(--tx-muted);
+	width: 200px;
+	word-break: break-all;
+}
+
+.opentrust-admin .opentrust-io-preview-table__uuid code { background: transparent; padding: 0; color: inherit; }
+
+.opentrust-admin .opentrust-io-preview-table__pill {
+	display: inline-block;
+	padding: 2px 9px;
+	border-radius: 9px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.opentrust-admin .opentrust-io-preview-table__pill--create   { background: #ECF9F1; color: #1B5E36; }
+.opentrust-admin .opentrust-io-preview-table__pill--update   { background: var(--ettic-blue-soft); color: var(--ettic-blue); }
+.opentrust-admin .opentrust-io-preview-table__pill--skip     { background: var(--ettic-surface-2); color: var(--tx-muted); }
+.opentrust-admin .opentrust-io-preview-table__pill--new      { background: #FBF1FF; color: #6B2DAA; }
+.opentrust-admin .opentrust-io-preview-table__pill--rename   { background: #FBF1FF; color: #6B2DAA; }
+
+/* Confirm + Cancel button row — free-floats under the preview tables,
+ * no surrounding card. */
+.opentrust-admin .opentrust-io-confirm {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+	padding-top: 16px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: visual polish overrides.                     *
+ * ----------------------------------------------------------------------- */
+
+/* Breathing room between section blocks. .opentrust-stack's flex gap only
+ * separates direct children; on General/Contact tabs the blocks are
+ * wrapped in a <form>, so promote the form to the same flex column layout
+ * instead of adding a margin-top rule (which would stack on top of the
+ * flex gap on tabs whose blocks ARE direct children, e.g. Import & Export). */
+.opentrust-admin .opentrust-stack { gap: 40px; }
+.opentrust-admin .opentrust-stack > form {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+/* Hero head is a flex row so the "View Trust Center" button (moved out of
+ * the dark sticky bar) can sit alongside the page title + tagline. */
+.opentrust-admin .opentrust-topbar__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	flex-wrap: wrap;
+}
+.opentrust-admin .opentrust-topbar__head-text { min-width: 0; flex: 1 1 auto; }
+.opentrust-admin .opentrust-topbar__head-action { flex-shrink: 0; }
+
+/* Logo preview sits on the trust center's dark hero in production. Preview
+ * it on the same background so a white-on-dark logo is actually visible. */
+.opentrust-admin [data-opentrust-media-picker="logo_id"] .opentrust-media__preview {
+	background: var(--tb-bg);
+	border-color: var(--tb-divider);
+}
+
+/* Stacked controls that flow under the label instead of pulling to the right.
+ * Used for accent picker, sections chips, and the IO content selection list. */
+.opentrust-admin .opentrust-row__control--stack-left { align-items: flex-start; }
+
+/* Action rows shared the 8px horizontal padding from the locked template,
+ * which sat 6px shy of the 14px used by .opentrust-row above them. Align. */
+.opentrust-admin .opentrust-action-row { padding-left: 14px; padding-right: 14px; }
+
+/* Bare notice — keeps the variant text color but drops the surrounding
+ * panel. Used inline above the import card. */
+.opentrust-admin .opentrust-notice--bare {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	margin: 0 0 16px;
+}

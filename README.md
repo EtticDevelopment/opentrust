@@ -13,6 +13,8 @@ Publish security policies, subprocessors, certifications, and data practices on 
 [![Tested WP Version](https://img.shields.io/wordpress/plugin/tested/opentrust?style=flat-square)](https://wordpress.org/plugins/opentrust/)
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/opentrust?style=flat-square)](https://wordpress.org/plugins/opentrust/advanced/)
 
+**Latest stable: [1.0.0](../../releases/tag/1.0.0)** · The `main` branch is active development and may contain unreleased changes.
+
 </div>
 
 ---

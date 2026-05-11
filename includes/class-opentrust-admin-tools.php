@@ -41,29 +41,28 @@ final class OpenTrust_Admin_Tools {
         $notice = get_transient('opentrust_io_notice_' . get_current_user_id());
         if (is_array($notice)) {
             delete_transient('opentrust_io_notice_' . get_current_user_id());
-            $class = $notice['type'] === 'error' ? 'notice-error' : 'notice-success';
-            printf('<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr($class), wp_kses_post((string) $notice['message']));
+            $variant = $notice['type'] === 'error' ? 'error' : 'success';
+            printf(
+                '<div class="opentrust-notice opentrust-notice--%s" role="status"><div class="opentrust-notice__body"><p>%s</p></div></div>',
+                esc_attr($variant),
+                wp_kses_post((string) ($notice['message'] ?? ''))
+            );
         }
 
         $exportable = OpenTrust_IO::exportable_summary();
         ?>
-        <p class="ot-tools-intro">
-            <?php esc_html_e('Move trust center content and settings between sites, or seed a fresh install from another. API keys and the Turnstile secret are never included — re-enter them on the destination.', 'opentrust'); ?>
-        </p>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Import &amp; Export', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Move trust center content and settings between sites, or seed a fresh install from another. API keys and the Turnstile secret are never included — re-enter them on the destination.', 'opentrust'); ?></p>
+            </header>
+        </section>
 
         <?php if ($preview && is_array($preview)): ?>
             <?php $this->render_preview_screen($preview); ?>
         <?php else: ?>
-            <div class="ot-tools-grid">
-                <div class="ot-tools-panel">
-                    <h2><?php esc_html_e('Export', 'opentrust'); ?></h2>
-                    <?php $this->render_export_panel($exportable); ?>
-                </div>
-                <div class="ot-tools-panel">
-                    <h2><?php esc_html_e('Import', 'opentrust'); ?></h2>
-                    <?php $this->render_import_panel(); ?>
-                </div>
-            </div>
+            <?php $this->render_export_panel($exportable); ?>
+            <?php $this->render_import_panel(); ?>
         <?php endif; ?>
         <?php
     }
@@ -71,106 +70,169 @@ final class OpenTrust_Admin_Tools {
     private function render_export_panel(array $exportable): void {
         $action_url = admin_url('admin-post.php');
         ?>
-        <form method="post" action="<?php echo esc_url($action_url); ?>">
-            <input type="hidden" name="action" value="opentrust_export">
-            <?php wp_nonce_field('opentrust_export'); ?>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Export', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Download a portable archive of your trust center. Use it to seed another site, archive a snapshot, or migrate between installs.', 'opentrust'); ?></p>
+            </header>
+            <div class="opentrust-card">
+                <form method="post" action="<?php echo esc_url($action_url); ?>">
+                    <input type="hidden" name="action" value="opentrust_export">
+                    <?php wp_nonce_field('opentrust_export'); ?>
 
-            <fieldset class="ot-tools-fieldset">
-                <legend><?php esc_html_e('What to export', 'opentrust'); ?></legend>
-                <label class="ot-tools-radio">
-                    <input type="radio" name="ot_export_kind" value="content" checked>
-                    <?php esc_html_e('Content (CPTs + bundled media)', 'opentrust'); ?>
-                </label>
-                <label class="ot-tools-radio">
-                    <input type="radio" name="ot_export_kind" value="settings">
-                    <?php esc_html_e('Settings only', 'opentrust'); ?>
-                </label>
-            </fieldset>
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('What to export', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('Settings include theme/branding/AI/contact options. Content is the five OpenTrust CPTs with their bundled PDFs and images.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control">
+                            <div class="opentrust-seg" role="radiogroup" aria-label="<?php esc_attr_e('What to export', 'opentrust'); ?>">
+                                <label class="opentrust-seg__btn">
+                                    <input class="opentrust-seg__input" type="radio" name="ot_export_kind" value="content" checked>
+                                    <?php esc_html_e('Content', 'opentrust'); ?>
+                                </label>
+                                <label class="opentrust-seg__btn">
+                                    <input class="opentrust-seg__input" type="radio" name="ot_export_kind" value="settings">
+                                    <?php esc_html_e('Settings only', 'opentrust'); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-            <fieldset class="ot-tools-fieldset" id="ot-export-content-options">
-                <legend><?php esc_html_e('Content selection', 'opentrust'); ?></legend>
-                <?php foreach ($exportable as $cpt => $items):
-                    $label = $this->cpt_label($cpt);
-                    $count = count($items);
-                ?>
-                    <details class="ot-tools-cpt-group">
-                        <summary>
-                            <input type="checkbox" name="ot_export_cpt[<?php echo esc_attr($cpt); ?>]" value="all" checked>
-                            <?php echo esc_html($label); ?>
-                            <span class="ot-tools-count">(<?php echo (int) $count; ?>)</span>
-                        </summary>
-                        <ul>
-                            <?php foreach ($items as $item): ?>
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="ot_export_ids[<?php echo esc_attr($cpt); ?>][]" value="<?php echo (int) $item['id']; ?>" checked>
-                                        <?php echo esc_html($item['title']); ?>
-                                        <?php if ($item['status'] !== 'publish'): ?>
-                                            <em class="ot-tools-status">(<?php echo esc_html($item['status']); ?>)</em>
-                                        <?php endif; ?>
-                                    </label>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </details>
-                <?php endforeach; ?>
-            </fieldset>
+                    <div class="opentrust-row opentrust-row--stacked" id="ot-export-content-options">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Content selection', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('Everything is selected by default. Expand a group to fine-tune.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control opentrust-row__control--stack opentrust-row__control--stack-left">
+                            <div class="opentrust-io-cpt-list">
+                                <?php foreach ($exportable as $cpt => $items):
+                                    $label = $this->cpt_label($cpt);
+                                    $count = count($items);
+                                ?>
+                                    <details class="opentrust-io-cpt">
+                                        <summary>
+                                            <label class="opentrust-io-cpt__head" onclick="event.stopPropagation();">
+                                                <input type="checkbox" name="ot_export_cpt[<?php echo esc_attr($cpt); ?>]" value="all" checked>
+                                                <span class="opentrust-io-cpt__name"><?php echo esc_html($label); ?></span>
+                                                <span class="opentrust-io-cpt__count">(<?php echo (int) $count; ?>)</span>
+                                            </label>
+                                        </summary>
+                                        <ul class="opentrust-io-cpt__items">
+                                            <?php foreach ($items as $item): ?>
+                                                <li>
+                                                    <label>
+                                                        <input type="checkbox" name="ot_export_ids[<?php echo esc_attr($cpt); ?>][]" value="<?php echo (int) $item['id']; ?>" checked>
+                                                        <span><?php echo esc_html($item['title']); ?></span>
+                                                        <?php if ($item['status'] !== 'publish'): ?>
+                                                            <em class="opentrust-io-cpt__status">(<?php echo esc_html($item['status']); ?>)</em>
+                                                        <?php endif; ?>
+                                                    </label>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </details>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
 
-            <label class="ot-tools-radio">
-                <input type="checkbox" name="ot_include_media" value="1" checked>
-                <?php esc_html_e('Bundle attached PDFs and images', 'opentrust'); ?>
-            </label>
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Bundle media', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('Include attached PDFs and images in the archive. Without this, the export references attachment IDs that must already exist on the destination.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control">
+                            <input type="hidden" name="ot_include_media" value="0">
+                            <label class="opentrust-toggle">
+                                <input class="opentrust-toggle__input" type="checkbox" name="ot_include_media" value="1" checked>
+                                <span class="opentrust-toggle__thumb"></span>
+                            </label>
+                        </div>
+                    </div>
 
-            <p>
-                <button type="submit" class="button button-primary"><?php esc_html_e('Download export', 'opentrust'); ?></button>
-            </p>
-        </form>
+                    <div class="opentrust-action-row">
+                        <div class="opentrust-action-row__main">
+                            <h3><?php esc_html_e('Download archive', 'opentrust'); ?></h3>
+                            <p><?php esc_html_e('Generates a ZIP with manifest.json plus any bundled media. Encrypted secrets and the per-site salt are excluded.', 'opentrust'); ?></p>
+                        </div>
+                        <button type="submit" class="opentrust-btn opentrust-btn--primary"><?php esc_html_e('Download export', 'opentrust'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </section>
         <?php
     }
 
     private function render_import_panel(): void {
         $action_url = admin_url('admin-post.php');
         ?>
-        <form method="post" action="<?php echo esc_url($action_url); ?>" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="opentrust_import_preview">
-            <?php wp_nonce_field('opentrust_import_preview'); ?>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Import', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Upload a previously exported archive. You will see a preview of every record before anything is written.', 'opentrust'); ?></p>
+            </header>
 
-            <div class="ot-tools-warn" role="note">
-                <strong><?php esc_html_e('Only upload your own exports.', 'opentrust'); ?></strong>
-                <?php esc_html_e('Export files contain your trust-center content and may include sensitive material. Never import a file you received from someone else.', 'opentrust'); ?>
+            <div class="opentrust-notice opentrust-notice--warn opentrust-notice--bare" role="note">
+                <div class="opentrust-notice__body">
+                    <strong><?php esc_html_e('Only upload your own exports.', 'opentrust'); ?></strong>
+                    <p><?php esc_html_e('Export files contain your trust-center content and may include sensitive material. Never import a file you received from someone else.', 'opentrust'); ?></p>
+                </div>
             </div>
 
-            <p>
-                <label for="ot_import_file"><strong><?php esc_html_e('Upload export file', 'opentrust'); ?></strong></label><br>
-                <input type="file" id="ot_import_file" name="ot_import_file" accept=".zip" required>
-                <span class="ot-tools-hint">
-                    <?php
-                    /* translators: %d: max upload size in MB */
-                    printf(esc_html__('Max %d MB', 'opentrust'), (int) self::UPLOAD_MAX_MB);
-                    ?>
-                </span>
-            </p>
+            <div class="opentrust-card">
+                <form method="post" action="<?php echo esc_url($action_url); ?>" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="opentrust_import_preview">
+                    <?php wp_nonce_field('opentrust_import_preview'); ?>
 
-            <fieldset class="ot-tools-fieldset">
-                <legend><?php esc_html_e('On conflict', 'opentrust'); ?></legend>
-                <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="skip" checked>
-                    <?php esc_html_e('Skip — keep existing records untouched', 'opentrust'); ?>
-                </label>
-                <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="overwrite">
-                    <?php esc_html_e('Overwrite — replace existing records', 'opentrust'); ?>
-                </label>
-                <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="create_new">
-                    <?php esc_html_e('Create new — duplicate with a -import suffix', 'opentrust'); ?>
-                </label>
-            </fieldset>
+                    <div class="opentrust-row opentrust-row--stacked">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Export file', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help">
+                                <?php
+                                /* translators: %d: max upload size in MB */
+                                printf(esc_html__('ZIP archive produced by another OpenTrust install. Max %d MB.', 'opentrust'), (int) self::UPLOAD_MAX_MB);
+                                ?>
+                            </p>
+                        </div>
+                        <div class="opentrust-row__control opentrust-row__control--stack">
+                            <input type="file" id="ot_import_file" name="ot_import_file" accept=".zip" required class="opentrust-input opentrust-input--file">
+                        </div>
+                    </div>
 
-            <p>
-                <button type="submit" class="button button-primary"><?php esc_html_e('Preview import', 'opentrust'); ?></button>
-            </p>
-        </form>
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('On conflict', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('How to handle records whose UUID or slug already exists locally.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control">
+                            <div class="opentrust-seg" role="radiogroup" aria-label="<?php esc_attr_e('Conflict strategy', 'opentrust'); ?>">
+                                <label class="opentrust-seg__btn">
+                                    <input class="opentrust-seg__input" type="radio" name="ot_strategy" value="skip" checked>
+                                    <?php esc_html_e('Skip', 'opentrust'); ?>
+                                </label>
+                                <label class="opentrust-seg__btn">
+                                    <input class="opentrust-seg__input" type="radio" name="ot_strategy" value="overwrite">
+                                    <?php esc_html_e('Overwrite', 'opentrust'); ?>
+                                </label>
+                                <label class="opentrust-seg__btn">
+                                    <input class="opentrust-seg__input" type="radio" name="ot_strategy" value="create_new">
+                                    <?php esc_html_e('Create new', 'opentrust'); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="opentrust-action-row">
+                        <div class="opentrust-action-row__main">
+                            <h3><?php esc_html_e('Preview import', 'opentrust'); ?></h3>
+                            <p><?php esc_html_e('Inspect what will be created, updated, or skipped before applying changes.', 'opentrust'); ?></p>
+                        </div>
+                        <button type="submit" class="opentrust-btn opentrust-btn--primary"><?php esc_html_e('Preview import', 'opentrust'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </section>
         <?php
     }
 
@@ -184,80 +246,94 @@ final class OpenTrust_Admin_Tools {
                 $totals[$k] += (int) ($row[$k] ?? 0);
             }
         }
+        $subtitle = $is_settings
+            ? __('Settings export — current values will be merged with imported values. Excluded keys (encrypted secrets, salt, server-controlled flags) are kept as-is.', 'opentrust')
+            : sprintf(
+                /* translators: %1$d: create count, %2$d: update count, %3$d: skip count */
+                __('Will create %1$d, update %2$d, skip %3$d.', 'opentrust'),
+                (int) $totals['create'],
+                (int) $totals['update'],
+                (int) $totals['skip']
+            );
         ?>
-        <h2><?php esc_html_e('Import preview', 'opentrust'); ?></h2>
-
         <?php if (!empty($preview['errors'])): ?>
-            <div class="notice notice-error">
-                <p><strong><?php esc_html_e('Import blocked:', 'opentrust'); ?></strong></p>
-                <ul>
-                    <?php foreach ($preview['errors'] as $err): ?>
-                        <li><?php echo esc_html((string) $err); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+            <div class="opentrust-notice opentrust-notice--error" role="alert">
+                <div class="opentrust-notice__body">
+                    <strong><?php esc_html_e('Import blocked', 'opentrust'); ?></strong>
+                    <ul class="opentrust-notice__list">
+                        <?php foreach ($preview['errors'] as $err): ?>
+                            <li><?php echo esc_html((string) $err); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         <?php endif; ?>
 
         <?php if (!empty($preview['warnings'])): ?>
-            <div class="notice notice-warning">
-                <ul style="margin:8px 0">
-                    <?php foreach ($preview['warnings'] as $warn): ?>
-                        <li><?php echo esc_html((string) $warn); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+            <div class="opentrust-notice opentrust-notice--warn" role="status">
+                <div class="opentrust-notice__body">
+                    <strong><?php esc_html_e('Warnings', 'opentrust'); ?></strong>
+                    <ul class="opentrust-notice__list">
+                        <?php foreach ($preview['warnings'] as $warn): ?>
+                            <li><?php echo esc_html((string) $warn); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         <?php endif; ?>
 
-        <?php if ($is_settings): ?>
-            <p>
-                <?php esc_html_e('Settings export — current values will be merged with imported values. Excluded keys (encrypted secrets, salt, server-controlled flags) are kept as-is.', 'opentrust'); ?>
-            </p>
-        <?php else: ?>
-            <p>
-                <?php
-                printf(
-                    /* translators: %1$d: create count, %2$d: update count, %3$d: skip count */
-                    esc_html__('Will create %1$d, update %2$d, skip %3$d.', 'opentrust'),
-                    (int) $totals['create'],
-                    (int) $totals['update'],
-                    (int) $totals['skip']
-                );
-                ?>
-            </p>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Import preview', 'opentrust'); ?></h2>
+                <p><?php echo esc_html($subtitle); ?></p>
+            </header>
 
-            <?php foreach ($preview['records'] ?? [] as $cpt => $rows): ?>
-                <?php if (empty($rows)) continue; ?>
-                <h3><?php echo esc_html($this->cpt_label($cpt)); ?></h3>
-                <table class="wp-list-table widefat fixed striped ot-tools-preview-table">
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e('Title', 'opentrust'); ?></th>
-                            <th style="width:120px"><?php esc_html_e('Action', 'opentrust'); ?></th>
-                            <th style="width:200px"><?php esc_html_e('UUID', 'opentrust'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($rows as $r): ?>
-                            <tr>
-                                <td><?php echo esc_html((string) $r['title']); ?></td>
-                                <td><span class="ot-tools-action--<?php echo esc_attr((string) $r['action']); ?>"><?php echo esc_html(ucfirst((string) $r['action'])); ?></span></td>
-                                <td class="ot-tools-uuid"><?php echo esc_html((string) ($r['uuid'] ?? '—')); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-        <form method="post" action="<?php echo esc_url($action_url); ?>" style="margin-top:16px">
-            <input type="hidden" name="action" value="opentrust_import_apply">
-            <?php wp_nonce_field('opentrust_import_apply'); ?>
-
-            <?php if (empty($preview['errors'])): ?>
-                <button type="submit" class="button button-primary"><?php esc_html_e('Confirm and import', 'opentrust'); ?></button>
+            <?php if (!$is_settings): ?>
+                <?php foreach ($preview['records'] ?? [] as $cpt => $rows): ?>
+                    <?php if (empty($rows)) continue; ?>
+                    <div class="opentrust-card opentrust-card--flush">
+                        <div class="opentrust-card__header">
+                            <h3 class="opentrust-card__title"><?php echo esc_html($this->cpt_label($cpt)); ?></h3>
+                        </div>
+                        <table class="opentrust-log-table opentrust-io-preview-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><?php esc_html_e('Title', 'opentrust'); ?></th>
+                                    <th scope="col" class="opentrust-io-preview-table__action"><?php esc_html_e('Action', 'opentrust'); ?></th>
+                                    <th scope="col" class="opentrust-io-preview-table__uuid"><?php esc_html_e('UUID', 'opentrust'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $action_labels = [
+                                    'create' => __('Create', 'opentrust'),
+                                    'update' => __('Update', 'opentrust'),
+                                    'skip'   => __('Skip', 'opentrust'),
+                                ];
+                                foreach ($rows as $r):
+                                    $action = (string) $r['action'];
+                                ?>
+                                    <tr>
+                                        <td><?php echo esc_html((string) $r['title']); ?></td>
+                                        <td><span class="opentrust-io-preview-table__pill opentrust-io-preview-table__pill--<?php echo esc_attr($action); ?>"><?php echo esc_html($action_labels[$action] ?? ucfirst($action)); ?></span></td>
+                                        <td class="opentrust-io-preview-table__uuid"><code><?php echo esc_html((string) ($r['uuid'] ?? '—')); ?></code></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
             <?php endif; ?>
-            <button type="submit" name="ot_cancel" value="1" class="button"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
-        </form>
+
+            <form method="post" action="<?php echo esc_url($action_url); ?>" class="opentrust-io-confirm">
+                <input type="hidden" name="action" value="opentrust_import_apply">
+                <?php wp_nonce_field('opentrust_import_apply'); ?>
+                <button type="submit" name="ot_cancel" value="1" class="opentrust-btn opentrust-btn--ghost"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
+                <?php if (empty($preview['errors'])): ?>
+                    <button type="submit" class="opentrust-btn opentrust-btn--primary"><?php esc_html_e('Confirm and import', 'opentrust'); ?></button>
+                <?php endif; ?>
+            </form>
+        </section>
         <?php
     }
 
@@ -411,7 +487,7 @@ final class OpenTrust_Admin_Tools {
             }
 
             if (!empty($result['errors'])) {
-                $msg .= '<br><strong>' . esc_html__('Errors:', 'opentrust') . '</strong><br>' . esc_html(implode('<br>', (array) $result['errors']));
+                $msg .= '<br><strong>' . esc_html__('Errors:', 'opentrust') . '</strong><br>' . implode('<br>', array_map('esc_html', (array) $result['errors']));
             }
 
             $this->bounce_notice($msg, !empty($result['errors']) ? 'error' : 'success');

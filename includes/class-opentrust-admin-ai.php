@@ -1,22 +1,11 @@
 <?php
 /**
- * AI Chat settings tab and its admin-post handlers.
+ * AI Chat tab body + admin-post handlers for key save/forget/refresh and the
+ * summary backfill sweep.
  *
- * Owns the entire "AI Chat" surface inside the OpenTrust settings page:
- * the provider picker (Anthropic primary, others behind an "advanced"
- * disclosure), the per-provider key card with validate-and-save flow,
- * the post-key model picker + budget/limit form, and the four
- * admin-post.php endpoints that drive key save/forget/refresh and the
- * summary-backfill sweep.
- *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
- * admin_post_* hooks. The settings page (which still lives on
- * OpenTrust_Admin as the menu callback) calls render_ai_tab() when the
- * "ai" tab is active.
- *
- * Settings writes that bypass the sanitize_settings filter (key
- * validation flips ai_enabled / ai_provider / ai_model_list_cached_at)
- * route through OpenTrust_Admin_Settings::save_settings_raw().
+ * Server-controlled settings (ai_enabled / ai_provider / ai_model_list_cached_at)
+ * are written via OpenTrust_Admin_Settings::save_settings_raw() to bypass the
+ * sanitize filter, which always carries them forward from the stored option.
  */
 
 declare(strict_types=1);
@@ -50,75 +39,96 @@ final class OpenTrust_Admin_AI {
         $has_active_key  = $active_provider !== '' && isset($stored_keys[$active_provider]);
         $is_non_anthropic_active = $has_active_key && $active_provider !== 'anthropic';
 
-        // Surface any transient notice from the admin-post handlers.
+        // Transient notice from the admin-post handlers.
         $notice = get_transient('opentrust_ai_notice_' . get_current_user_id());
         if (is_array($notice)) {
             delete_transient('opentrust_ai_notice_' . get_current_user_id());
-            $class = $notice['type'] === 'error' ? 'notice-error' : 'notice-success';
-            printf(
-                '<div class="notice %s is-dismissible"><p>%s</p></div>',
-                esc_attr($class),
-                esc_html((string) $notice['message'])
-            );
+            $variant = $notice['type'] === 'error' ? 'error' : 'success';
+            $this->ds_notice($variant, (string) ($notice['message'] ?? ''));
         }
 
         $this->render_summary_backfill_banner($settings, $has_active_key);
 
-        ?>
-        <?php if ($is_non_anthropic_active): ?>
-            <div class="ot-ai-active-warning">
-                <strong><?php esc_html_e('Heads up: citation fidelity is not guaranteed on your active provider.', 'opentrust'); ?></strong>
-                <p>
-                    <?php
-                    printf(
-                        /* translators: %s: provider label, e.g. OpenAI */
-                        esc_html__('You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'),
-                        '<strong>' . esc_html(ucfirst($active_provider)) . '</strong>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    );
-                    ?>
-                </p>
+        if ($is_non_anthropic_active):
+            $adapter        = OpenTrust_Chat_Provider::for($active_provider);
+            $provider_label = $adapter ? $adapter->label() : ucfirst($active_provider);
+            $intro = sprintf(
+                /* translators: %s: provider label, e.g. OpenAI */
+                __('You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'),
+                $provider_label
+            );
+            ?>
+            <div class="opentrust-notice opentrust-notice--warn" role="alert">
+                <div class="opentrust-notice__body">
+                    <strong><?php esc_html_e('Heads up: citation fidelity is not guaranteed on your active provider.', 'opentrust'); ?></strong>
+                    <p><?php echo esc_html($intro); ?></p>
+                </div>
             </div>
         <?php endif; ?>
 
-        <p class="ot-ai-intro">
-            <?php
-            echo wp_kses(
-                __('OpenTrust uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'opentrust'),
-                ['strong' => []]
-            );
-            ?>
-        </p>
-
-        <details class="ot-ai-rationale">
-            <summary><?php esc_html_e('Why Anthropic, and not OpenAI or any other provider?', 'opentrust'); ?></summary>
-            <div class="ot-ai-rationale__body">
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Citation-backed AI assistant', 'opentrust'); ?></h2>
                 <p>
                     <?php
                     echo wp_kses(
-                        __('A trust center is a <strong>compliance surface</strong>. If the assistant invents a security commitment you never made, that is not a UX papercut — it is a misrepresentation of your security posture, and your customers and auditors will hold you to it.', 'opentrust'),
+                        __('OpenTrust uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — no policy text is invented, nothing is paraphrased into something you did not publish.', 'opentrust'),
                         ['strong' => []]
                     );
                     ?>
                 </p>
-                <p>
-                    <?php
-                    echo wp_kses(
-                        __('Anthropic is the <strong>only major provider</strong> that exposes a structural Citations API. Documents are sent as typed blocks and the model emits citations as first-class events containing the exact source document and the exact quoted text. The model literally cannot return a citation for text that is not in your source documents.', 'opentrust'),
-                        ['strong' => []]
-                    );
-                    ?>
-                </p>
-                <p>
-                    <?php esc_html_e('Every other provider (including OpenAI and any model accessed via OpenRouter) relies on prompted citation tags that we parse out of the answer after the fact. That works most of the time, but the model can ignore the instructions, make up document IDs, or attach a citation to a sentence it actually hallucinated. We support these providers as an escape hatch for organizations that genuinely cannot use Anthropic for procurement or data-residency reasons — but we very, very strongly recommend you do not run a public trust center on them.', 'opentrust'); ?>
-                </p>
+            </header>
+            <div class="opentrust-card">
+                <details class="opentrust-disclosure">
+                    <summary><?php esc_html_e('Why Anthropic, and not OpenAI or another provider?', 'opentrust'); ?></summary>
+                    <div class="opentrust-disclosure__body">
+                        <p>
+                            <?php
+                            echo wp_kses(
+                                __('A trust center is a <strong>compliance surface</strong>. If the assistant invents a security commitment you never made, that is not a UX papercut — it is a misrepresentation of your security posture, and your customers and auditors will hold you to it.', 'opentrust'),
+                                ['strong' => []]
+                            );
+                            ?>
+                        </p>
+                        <p>
+                            <?php
+                            echo wp_kses(
+                                __('Anthropic is the <strong>only major provider</strong> that exposes a structural Citations API. Documents are sent as typed blocks and the model emits citations as first-class events containing the exact source document and the exact quoted text. The model literally cannot return a citation for text that is not in your source documents.', 'opentrust'),
+                                ['strong' => []]
+                            );
+                            ?>
+                        </p>
+                        <p>
+                            <?php esc_html_e('Every other provider (including OpenAI and any model accessed via OpenRouter) relies on prompted citation tags that we parse out of the answer after the fact. That works most of the time, but the model can ignore the instructions, make up document IDs, or attach a citation to a sentence it actually hallucinated. We support these providers as an escape hatch for organisations that cannot use Anthropic for procurement or data-residency reasons — but we very strongly recommend you do not run a public trust center on them.', 'opentrust'); ?>
+                        </p>
+                    </div>
+                </details>
             </div>
-        </details>
+        </section>
 
         <?php $this->render_ai_provider_picker($settings, $stored_keys); ?>
 
         <?php if ($has_active_key): ?>
             <?php $this->render_ai_settings_form($settings); ?>
         <?php endif; ?>
+        <?php
+    }
+
+    /**
+     * Emit a design system notice. Variants: info | success | warn | error.
+     */
+    private function ds_notice(string $variant, string $message, string $heading = ''): void {
+        $allowed = ['info', 'success', 'warn', 'error'];
+        $variant = in_array($variant, $allowed, true) ? $variant : 'info';
+        ?>
+        <div class="opentrust-notice opentrust-notice--<?php echo esc_attr($variant); ?>" role="status">
+            <div class="opentrust-notice__body">
+                <?php if ($heading !== ''): ?>
+                    <strong><?php echo esc_html($heading); ?></strong>
+                <?php endif; ?>
+                <p><?php echo esc_html($message); ?></p>
+            </div>
+        </div>
         <?php
     }
 
@@ -140,32 +150,27 @@ final class OpenTrust_Admin_AI {
         if ($missing < 1) {
             return;
         }
+        $heading = sprintf(
+            /* translators: %d is the number of policies missing AI summaries. */
+            _n(
+                '%d policy is missing an AI summary.',
+                '%d policies are missing AI summaries.',
+                $missing,
+                'opentrust'
+            ),
+            (int) $missing
+        );
         ?>
-        <div class="notice notice-warning" style="margin:14px 0;padding:14px 16px">
-            <p style="margin:0 0 10px;font-size:14px">
-                <strong>
-                    <?php
-                    printf(
-                        esc_html(
-                            /* translators: %d is the number of policies missing AI summaries. */
-                            _n(
-                                '%d policy is missing an AI summary.',
-                                '%d policies are missing AI summaries.',
-                                $missing,
-                                'opentrust'
-                            )
-                        ),
-                        (int) $missing
-                    );
-                    ?>
-                </strong>
-                <?php esc_html_e('Generate them now so the assistant can route questions accurately.', 'opentrust'); ?>
-            </p>
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin:0">
-                <?php wp_nonce_field('opentrust_ai_summarize_sweep'); ?>
-                <input type="hidden" name="action" value="opentrust_ai_summarize_sweep">
-                <button type="submit" class="button button-primary"><?php esc_html_e('Generate now', 'opentrust'); ?></button>
-            </form>
+        <div class="opentrust-notice opentrust-notice--warn" role="status">
+            <div class="opentrust-notice__body">
+                <strong><?php echo esc_html($heading); ?></strong>
+                <p><?php esc_html_e('Generate them now so the assistant can route questions accurately.', 'opentrust'); ?></p>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="opentrust-notice__actions">
+                    <?php wp_nonce_field('opentrust_ai_summarize_sweep'); ?>
+                    <input type="hidden" name="action" value="opentrust_ai_summarize_sweep">
+                    <button type="submit" class="opentrust-btn opentrust-btn--primary opentrust-btn--sm"><?php esc_html_e('Generate now', 'opentrust'); ?></button>
+                </form>
+            </div>
         </div>
         <?php
     }
@@ -188,44 +193,54 @@ final class OpenTrust_Admin_AI {
         // Defensive fallback: if Anthropic is somehow not registered, render
         // everything flat so the tab never breaks.
         if ($primary === null) {
-            echo '<h3 class="ot-ai-section-heading">' . esc_html__('Choose a provider and add your key', 'opentrust') . '</h3>';
-            echo '<div class="ot-ai-advanced__grid">';
-            foreach ($providers as $provider) {
-                $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced');
-            }
-            echo '</div>';
-            return;
-        }
-
-        $is_anthropic_active = $active_provider === 'anthropic' && isset($stored_keys['anthropic']);
-        $advanced_open       = $active_provider !== '' && $active_provider !== 'anthropic';
-        ?>
-        <h3 class="ot-ai-section-heading"><?php esc_html_e('Step 1 — Connect Anthropic', 'opentrust'); ?></h3>
-
-        <?php $this->render_provider_card($primary, $stored_keys, $active_provider, 'primary'); ?>
-
-        <?php if (!empty($advanced)): ?>
-            <details class="ot-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
-                <summary><?php esc_html_e('Advanced: use a different provider (not recommended)', 'opentrust'); ?></summary>
-
-                <div class="ot-ai-advanced__warning">
-                    <strong><?php esc_html_e('These providers cannot guarantee citation fidelity.', 'opentrust'); ?></strong>
-                    <p>
-                        <?php esc_html_e('OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens.', 'opentrust'); ?>
-                    </p>
-                    <p>
-                        <strong><?php esc_html_e('Do not use these providers for a published trust center', 'opentrust'); ?></strong>
-                        <?php esc_html_e('unless your organization genuinely cannot use Anthropic for procurement, contractual, or data-residency reasons. Inaccurate claims about your security posture are a real compliance risk.', 'opentrust'); ?>
-                    </p>
-                </div>
-
-                <div class="ot-ai-advanced__grid">
-                    <?php foreach ($advanced as $provider): ?>
+            ?>
+            <section class="opentrust-block">
+                <header class="opentrust-block__head">
+                    <h2><?php esc_html_e('Connect a provider', 'opentrust'); ?></h2>
+                    <p><?php esc_html_e('Anthropic is not registered. Pick any available provider to continue.', 'opentrust'); ?></p>
+                </header>
+                <div class="opentrust-ai-advanced__grid">
+                    <?php foreach ($providers as $provider): ?>
                         <?php $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced'); ?>
                     <?php endforeach; ?>
                 </div>
-            </details>
-        <?php endif; ?>
+            </section>
+            <?php
+            return;
+        }
+
+        $advanced_open = $active_provider !== '' && $active_provider !== 'anthropic';
+        ?>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Step 1 — Connect Anthropic', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Paste your Anthropic API key. We validate it on save and cache the model list for routing.', 'opentrust'); ?></p>
+            </header>
+            <?php $this->render_provider_card($primary, $stored_keys, $active_provider, 'primary'); ?>
+
+            <?php if (!empty($advanced)): ?>
+                <details class="opentrust-disclosure opentrust-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
+                    <summary><?php esc_html_e('Advanced: use a different provider (not recommended)', 'opentrust'); ?></summary>
+                    <div class="opentrust-disclosure__body">
+                        <div class="opentrust-notice opentrust-notice--warn" role="alert">
+                            <div class="opentrust-notice__body">
+                                <strong><?php esc_html_e('These providers cannot guarantee citation fidelity.', 'opentrust'); ?></strong>
+                                <p><?php esc_html_e('OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens.', 'opentrust'); ?></p>
+                                <p>
+                                    <strong><?php esc_html_e('Do not use these providers for a published trust center', 'opentrust'); ?></strong>
+                                    <?php esc_html_e('unless your organisation genuinely cannot use Anthropic for procurement, contractual, or data-residency reasons. Inaccurate claims about your security posture are a real compliance risk.', 'opentrust'); ?>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="opentrust-ai-advanced__grid">
+                            <?php foreach ($advanced as $provider): ?>
+                                <?php $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced'); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </details>
+            <?php endif; ?>
+        </section>
         <?php
     }
 
@@ -245,58 +260,61 @@ final class OpenTrust_Admin_AI {
         $has_key   = isset($stored_keys[$slug]);
         $masked    = $has_key ? OpenTrust_Chat_Secrets::mask($stored_keys[$slug]) : '';
 
-        $card_classes = ['ot-ai-card', 'ot-ai-card--' . $variant];
+        $card_classes = ['opentrust-card', 'opentrust-ai-card', 'opentrust-ai-card--' . $variant];
         if ($is_active) {
             $card_classes[] = 'is-active';
         }
         ?>
         <div class="<?php echo esc_attr(implode(' ', $card_classes)); ?>">
-            <div class="ot-ai-card__header">
-                <h4 class="ot-ai-card__title"><?php echo esc_html($label); ?></h4>
+            <div class="opentrust-ai-card__header">
+                <h3 class="opentrust-ai-card__title"><?php echo esc_html($label); ?></h3>
                 <?php if ($variant === 'primary'): ?>
-                    <span class="ot-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'opentrust'); ?></span>
+                    <span class="opentrust-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'opentrust'); ?></span>
                 <?php endif; ?>
             </div>
 
             <?php if ($variant === 'primary'): ?>
-                <p class="ot-ai-card__description">
+                <p class="opentrust-ai-card__description">
                     <?php esc_html_e('Uses Claude with the native Citations API. Every quote the assistant attributes to one of your documents is structurally guaranteed to come from that document.', 'opentrust'); ?>
                 </p>
             <?php endif; ?>
 
-            <p class="ot-ai-card__keylink">
+            <p class="opentrust-ai-card__keylink">
                 <a href="<?php echo esc_url($key_url); ?>" target="_blank" rel="noopener">
                     <?php
                     /* translators: %s: provider name (e.g. Anthropic) */
                     printf(esc_html__('Get a %s API key', 'opentrust'), esc_html($label));
-                    ?> ↗
+                    ?> &rarr;
                 </a>
             </p>
 
             <?php if ($has_key && $is_active): ?>
-                <div class="ot-ai-card__saved">
-                    ✓ <?php echo esc_html($masked); ?>
+                <div class="opentrust-ai-card__saved">
+                    <span class="opentrust-ai-card__check" aria-hidden="true">
+                        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 6 5 8.5 9.5 4"/></svg>
+                    </span>
+                    <code><?php echo esc_html($masked); ?></code>
                 </div>
-                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline">
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="opentrust-ai-card__form">
                     <?php wp_nonce_field('opentrust_ai_forget_key'); ?>
                     <input type="hidden" name="action" value="opentrust_ai_forget_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <button type="submit" class="button-link ot-ai-card__forget" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'opentrust')); ?>')">
+                    <button type="submit" class="opentrust-btn opentrust-btn--text" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'opentrust')); ?>')">
                         <?php esc_html_e('Replace key', 'opentrust'); ?>
                     </button>
                 </form>
             <?php else: ?>
-                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="opentrust-ai-card__form">
                     <?php wp_nonce_field('opentrust_ai_save_key'); ?>
                     <input type="hidden" name="action" value="opentrust_ai_save_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <input type="password" name="api_key" class="ot-ai-card__input" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
+                    <input type="password" name="api_key" class="opentrust-input opentrust-input--md" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
                         /* translators: %s: provider name (e.g. Anthropic) */
                         __('Paste your %s API key…', 'opentrust'),
                         $label
                     )); ?>" required>
-                    <button type="submit" class="button button-primary ot-ai-card__submit">
-                        <?php esc_html_e('Validate & save', 'opentrust'); ?>
+                    <button type="submit" class="opentrust-btn opentrust-btn--primary">
+                        <?php esc_html_e('Validate &amp; save', 'opentrust'); ?>
                     </button>
                 </form>
             <?php endif; ?>
@@ -305,202 +323,199 @@ final class OpenTrust_Admin_AI {
     }
 
     private function render_ai_settings_form(array $settings): void {
-        $active_provider = $settings['ai_provider'];
+        $active_provider = (string) $settings['ai_provider'];
         $models          = $this->get_cached_model_list($active_provider);
-        $current_model   = $settings['ai_model'] ?? '';
+        $current_model   = (string) ($settings['ai_model'] ?? '');
         $refresh_url     = wp_nonce_url(
             admin_url('admin-post.php?action=opentrust_ai_refresh_models&provider=' . rawurlencode($active_provider)),
             'opentrust_ai_refresh_models'
         );
+        $cached_at       = (int) ($settings['ai_model_list_cached_at'] ?? 0);
+        $oversized       = class_exists('OpenTrust_Chat_Corpus') ? OpenTrust_Chat_Corpus::oversized_policies() : [];
+        $secret_saved    = !empty($settings['turnstile_secret_key']);
         ?>
-        <h3 style="margin-top:32px"><?php esc_html_e('Step 2 — Pick a model and tune defaults', 'opentrust'); ?></h3>
-
-        <form method="post" action="options.php">
+        <form id="opentrust-settings-form" method="post" action="options.php">
             <?php settings_fields('opentrust_settings_group'); ?>
-
             <?php // Sentinel so sanitize_settings knows the AI tab is submitting. The
-                  // sanitize callback's else-branches (admin.php:446-465, 478-488) carry
-                  // every non-AI key forward from $old_settings byte-for-byte, so we do
-                  // NOT need to re-POST those values via hidden inputs. ?>
+                  // sanitize callback carries every non-AI key forward from $old, so we
+                  // do NOT need to re-POST values from other tabs as hidden inputs. ?>
             <input type="hidden" name="opentrust_settings[__ai_tab_save]" value="1">
 
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_model"><?php esc_html_e('Active model', 'opentrust'); ?></label></th>
-                    <td>
-                        <?php if (empty($models)): ?>
-                            <p class="description" style="color:#b91c1c">
-                                <?php esc_html_e('No cached models found. Use Refresh to re-fetch the model list.', 'opentrust'); ?>
-                            </p>
-                        <?php else: ?>
-                            <select id="opentrust_ai_model" name="opentrust_settings[ai_model]" style="min-width:360px">
-                                <?php foreach ($models as $model): ?>
-                                    <option value="<?php echo esc_attr($model['id']); ?>" <?php selected($current_model, $model['id']); ?>>
-                                        <?php echo esc_html($model['display_name']); ?>
-                                        <?php if (!empty($model['recommended'])): ?>
-                                            — ★ <?php esc_html_e('Recommended', 'opentrust'); ?>
-                                        <?php endif; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php endif; ?>
-                        <a href="<?php echo esc_url($refresh_url); ?>" class="button" style="margin-left:8px">
-                            <?php esc_html_e('Refresh models', 'opentrust'); ?>
-                        </a>
-                        <?php
-                        $cached_at = (int) ($settings['ai_model_list_cached_at'] ?? 0);
-                        if ($cached_at > 0):
-                            $diff = human_time_diff($cached_at);
-                            ?>
-                            <p class="description">
-                                <?php
-                                /* translators: %s: human-readable time difference (e.g. "5 minutes") */
-                                printf(esc_html__('Model list cached %s ago.', 'opentrust'), esc_html($diff));
-                                ?>
-                            </p>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_daily_token_budget"><?php esc_html_e('Daily token budget', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="number" id="opentrust_ai_daily_token_budget" name="opentrust_settings[ai_daily_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_daily_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)); ?>" min="0" step="10000" class="regular-text">
-                        <p class="description"><?php esc_html_e('Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 rates).', 'opentrust'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_monthly_token_budget"><?php esc_html_e('Monthly token budget', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="number" id="opentrust_ai_monthly_token_budget" name="opentrust_settings[ai_monthly_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_monthly_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)); ?>" min="0" step="100000" class="regular-text">
-                        <p class="description"><?php esc_html_e('Hard cap per site per month. Default 10,000,000 tokens.', 'opentrust'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_rate_limit_per_ip"><?php esc_html_e('Rate limit — per IP', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="number" id="opentrust_ai_rate_limit_per_ip" name="opentrust_settings[ai_rate_limit_per_ip]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_ip'] ?? 10)); ?>" min="0" max="1000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per minute', 'opentrust'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_rate_limit_per_session"><?php esc_html_e('Rate limit — per session', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="number" id="opentrust_ai_rate_limit_per_session" name="opentrust_settings[ai_rate_limit_per_session]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_session'] ?? 50)); ?>" min="0" max="10000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per hour', 'opentrust'); ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_max_message_length"><?php esc_html_e('Max message length', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="number" id="opentrust_ai_max_message_length" name="opentrust_settings[ai_max_message_length]" value="<?php echo esc_attr((string) ($settings['ai_max_message_length'] ?? OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH)); ?>" min="100" max="4000" step="100" class="small-text"> <span class="description"><?php esc_html_e('characters', 'opentrust'); ?></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_contact_url"><?php esc_html_e('Refuse-to-answer contact URL', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="url" id="opentrust_ai_contact_url" name="opentrust_settings[ai_contact_url]" value="<?php echo esc_attr((string) ($settings['ai_contact_url'] ?? '')); ?>" class="regular-text" placeholder="https://example.com/contact">
-                        <p class="description"><?php esc_html_e('When the AI cannot confidently answer a question, it links here. Leave blank to use the trust center home.', 'opentrust'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php esc_html_e('Visitor display', 'opentrust'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="opentrust_settings[ai_show_model_attribution]" value="1" <?php checked(!empty($settings['ai_show_model_attribution'])); ?>>
-                            <?php esc_html_e('Show the active model name under the chat input', 'opentrust'); ?>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php esc_html_e('Analytics logging', 'opentrust'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="opentrust_settings[ai_logging_enabled]" value="1" <?php checked(!empty($settings['ai_logging_enabled'])); ?>>
-                            <?php esc_html_e('Log anonymized visitor questions for admin review (90-day auto-purge, no PII)', 'opentrust'); ?>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php esc_html_e('Improve answer quality', 'opentrust'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="opentrust_settings[ai_auto_summarize]" value="1" <?php checked(!empty($settings['ai_auto_summarize'])); ?>>
-                            <?php esc_html_e('Generate AI summaries of each policy', 'opentrust'); ?>
-                        </label>
-                        <p class="description" style="max-width:680px">
-                            <?php esc_html_e('When on, the AI generates a 2–3 sentence summary of each published policy and stores it for routing decisions. Improves answers on questions like "What\'s your data deletion policy?" that don\'t match a title literally. Cost is roughly $0.05–$0.10 per 50 policies, lifetime — pennies per edit afterward. Uses your configured AI key.', 'opentrust'); ?>
-                        </p>
-                    </td>
-                </tr>
-
-                <?php if (class_exists('OpenTrust_Chat_Corpus')): ?>
-                    <?php $ot_oversized = OpenTrust_Chat_Corpus::oversized_policies(); ?>
-                    <?php if (!empty($ot_oversized)): ?>
-                        <tr>
-                            <th scope="row"><?php esc_html_e('Oversized policies', 'opentrust'); ?></th>
-                            <td>
-                                <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #ef4444;border-radius:4px;max-width:680px">
-                                    <p style="margin:0 0 6px">
-                                        <?php esc_html_e('The following policies are large enough that the AI will receive only a truncated version when retrieving them. Consider splitting them into shorter documents:', 'opentrust'); ?>
+            <section class="opentrust-block">
+                <header class="opentrust-block__head">
+                    <h2><?php esc_html_e('Step 2 — Model &amp; defaults', 'opentrust'); ?></h2>
+                    <p><?php esc_html_e('Pick a model and tune budgets, rate limits, and visitor-facing behavior.', 'opentrust'); ?></p>
+                </header>
+                <div class="opentrust-card">
+                    <div class="opentrust-row opentrust-row--stacked">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Active model', 'opentrust'); ?></span>
+                            <?php if ($cached_at > 0): ?>
+                                <p class="opentrust-row__help">
+                                    <?php
+                                    /* translators: %s: human-readable time difference (e.g. "5 minutes") */
+                                    printf(esc_html__('Model list cached %s ago.', 'opentrust'), esc_html(human_time_diff($cached_at)));
+                                    ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                        <div class="opentrust-row__control opentrust-row__control--stack">
+                            <div class="opentrust-ai-model-row">
+                                <?php if (empty($models)): ?>
+                                    <p class="opentrust-field-msg opentrust-field-msg--error">
+                                        <?php esc_html_e('No cached models found. Use Refresh to re-fetch the model list.', 'opentrust'); ?>
                                     </p>
-                                    <ul style="margin:6px 0 0 18px">
-                                        <?php foreach ($ot_oversized as $row): ?>
-                                            <li><?php
-                                                printf(
-                                                    /* translators: 1: policy title, 2: token count. */
-                                                    esc_html__('%1$s (~%2$s tokens)', 'opentrust'),
-                                                    esc_html((string) $row['title']),
-                                                    esc_html(number_format_i18n((int) $row['tokens']))
-                                                );
-                                            ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </table>
+                                <?php else: ?>
+                                    <div class="opentrust-select">
+                                        <select id="opentrust_ai_model" name="opentrust_settings[ai_model]">
+                                            <?php foreach ($models as $model): ?>
+                                                <option value="<?php echo esc_attr((string) $model['id']); ?>" <?php selected($current_model, (string) $model['id']); ?>>
+                                                    <?php echo esc_html((string) $model['display_name']); ?>
+                                                    <?php if (!empty($model['recommended'])): ?>
+                                                        — <?php esc_html_e('Recommended', 'opentrust'); ?>
+                                                    <?php endif; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                <?php endif; ?>
+                                <a href="<?php echo esc_url($refresh_url); ?>" class="opentrust-btn opentrust-btn--ghost opentrust-btn--sm">
+                                    <?php esc_html_e('Refresh models', 'opentrust'); ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-            <h3 style="margin-top:24px"><?php esc_html_e('Advanced — Turnstile anti-abuse', 'opentrust'); ?></h3>
-            <p class="description" style="max-width:720px">
-                <?php esc_html_e('Cloudflare Turnstile is optional but recommended for public sites. It challenges suspicious visitors on the first message of each session. You need a free Cloudflare account to get site/secret keys.', 'opentrust'); ?>
-            </p>
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><?php esc_html_e('Enable Turnstile for chat', 'opentrust'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="opentrust_settings[ai_turnstile_enabled]" value="1" <?php checked(!empty($settings['ai_turnstile_enabled'])); ?>>
-                            <?php esc_html_e('Require Turnstile verification on first chat message', 'opentrust'); ?>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_turnstile_site_key"><?php esc_html_e('Turnstile Site Key', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="text" id="opentrust_turnstile_site_key" name="opentrust_settings[turnstile_site_key]" value="<?php echo esc_attr((string) ($settings['turnstile_site_key'] ?? '')); ?>" class="regular-text">
-                        <p class="description"><?php esc_html_e('Public site key from your Cloudflare Turnstile widget.', 'opentrust'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="opentrust_turnstile_secret_key"><?php esc_html_e('Turnstile Secret Key', 'opentrust'); ?></label></th>
-                    <td>
-                        <?php $ot_secret_saved = !empty($settings['turnstile_secret_key']); ?>
-                        <input type="password" id="opentrust_turnstile_secret_key" name="opentrust_settings[turnstile_secret_key]" value="<?php echo esc_attr($ot_secret_saved ? '••••••••••••••••••••' : ''); ?>" class="regular-text" autocomplete="off" placeholder="<?php esc_attr_e('Enter secret key…', 'opentrust'); ?>">
-                        <?php if ($ot_secret_saved): ?>
-                            <span class="description" style="color:#16a34a">&#10003; <?php esc_html_e('Key saved', 'opentrust'); ?></span>
-                        <?php endif; ?>
-                        <p class="description"><?php esc_html_e('Secret key from Cloudflare Turnstile. Stored server-side — never exposed to the frontend.', 'opentrust'); ?></p>
-                    </td>
-                </tr>
-            </table>
+                    <?php $this->ds_row_number('ai_daily_token_budget', __('Daily token budget', 'opentrust'), (int) ($settings['ai_daily_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET), 0, 100000000, 10000, __('tokens', 'opentrust'), __('Hard cap per site per day. Default 500,000 (~$12/day at Sonnet 4.5 rates).', 'opentrust')); ?>
 
-            <?php submit_button(__('Save AI settings', 'opentrust')); ?>
+                    <?php $this->ds_row_number('ai_monthly_token_budget', __('Monthly token budget', 'opentrust'), (int) ($settings['ai_monthly_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET), 0, 1000000000, 100000, __('tokens', 'opentrust'), __('Hard cap per site per month. Default 10,000,000.', 'opentrust')); ?>
+
+                    <?php $this->ds_row_number('ai_rate_limit_per_ip', __('Rate limit — per IP', 'opentrust'), (int) ($settings['ai_rate_limit_per_ip'] ?? 10), 0, 1000, 1, __('messages per minute', 'opentrust')); ?>
+
+                    <?php $this->ds_row_number('ai_rate_limit_per_session', __('Rate limit — per session', 'opentrust'), (int) ($settings['ai_rate_limit_per_session'] ?? 50), 0, 10000, 1, __('messages per hour', 'opentrust')); ?>
+
+                    <?php $this->ds_row_number('ai_max_message_length', __('Max message length', 'opentrust'), (int) ($settings['ai_max_message_length'] ?? OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH), 100, 4000, 100, __('characters', 'opentrust')); ?>
+
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Refuse-to-answer contact URL', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('When the AI cannot confidently answer, it links here. Leave blank to use the trust center home.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control">
+                            <input type="url" class="opentrust-input opentrust-input--md" id="opentrust_ai_contact_url" name="opentrust_settings[ai_contact_url]" value="<?php echo esc_attr((string) ($settings['ai_contact_url'] ?? '')); ?>" placeholder="https://example.com/contact" inputmode="url" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <?php $this->ds_row_toggle('ai_show_model_attribution', __('Visitor display', 'opentrust'), !empty($settings['ai_show_model_attribution']), __('Show the active model name under the chat input.', 'opentrust')); ?>
+
+                    <?php $this->ds_row_toggle('ai_logging_enabled', __('Analytics logging', 'opentrust'), !empty($settings['ai_logging_enabled']), __('Log anonymised visitor questions for admin review (90-day auto-purge, no PII).', 'opentrust')); ?>
+
+                    <?php $this->ds_row_toggle('ai_auto_summarize', __('Improve answer quality', 'opentrust'), !empty($settings['ai_auto_summarize']), __('Auto-generate a 2–3 sentence AI summary of each policy for routing. Cost ~$0.05–$0.10 per 50 policies lifetime; pennies per edit afterward. Uses your configured AI key.', 'opentrust')); ?>
+                </div>
+            </section>
+
+            <?php if (!empty($oversized)): ?>
+                <div class="opentrust-notice opentrust-notice--error" role="alert">
+                    <div class="opentrust-notice__body">
+                        <strong><?php esc_html_e('Oversized policies', 'opentrust'); ?></strong>
+                        <p><?php esc_html_e('The following policies will be truncated when retrieved by the AI. Consider splitting them into shorter documents:', 'opentrust'); ?></p>
+                        <ul class="opentrust-notice__list">
+                            <?php foreach ($oversized as $row): ?>
+                                <li><?php
+                                    printf(
+                                        /* translators: 1: policy title, 2: token count. */
+                                        esc_html__('%1$s (~%2$s tokens)', 'opentrust'),
+                                        esc_html((string) $row['title']),
+                                        esc_html(number_format_i18n((int) $row['tokens']))
+                                    );
+                                ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <section class="opentrust-block">
+                <header class="opentrust-block__head">
+                    <h2><?php esc_html_e('Anti-abuse — Cloudflare Turnstile', 'opentrust'); ?></h2>
+                    <p><?php esc_html_e('Optional. Turnstile challenges suspicious visitors on their first chat message of a session. Requires a free Cloudflare account.', 'opentrust'); ?></p>
+                </header>
+                <div class="opentrust-card">
+                    <?php $this->ds_row_toggle('ai_turnstile_enabled', __('Enable Turnstile for chat', 'opentrust'), !empty($settings['ai_turnstile_enabled']), __('Require Turnstile verification on first chat message.', 'opentrust')); ?>
+
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Turnstile Site Key', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('Public site key from your Cloudflare Turnstile widget.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control">
+                            <input type="text" class="opentrust-input opentrust-input--md opentrust-input--mono" id="opentrust_turnstile_site_key" name="opentrust_settings[turnstile_site_key]" value="<?php echo esc_attr((string) ($settings['turnstile_site_key'] ?? '')); ?>">
+                        </div>
+                    </div>
+
+                    <div class="opentrust-row">
+                        <div class="opentrust-row__main">
+                            <span class="opentrust-row__label"><?php esc_html_e('Turnstile Secret Key', 'opentrust'); ?></span>
+                            <p class="opentrust-row__help"><?php esc_html_e('Stored server-side, encrypted via libsodium. Never exposed to the frontend.', 'opentrust'); ?></p>
+                        </div>
+                        <div class="opentrust-row__control opentrust-row__control--stack">
+                            <input type="password" class="opentrust-input opentrust-input--md opentrust-input--mono" id="opentrust_turnstile_secret_key" name="opentrust_settings[turnstile_secret_key]" value="<?php echo esc_attr($secret_saved ? str_repeat('•', 20) : ''); ?>" autocomplete="off" placeholder="<?php esc_attr_e('Enter secret key…', 'opentrust'); ?>">
+                            <?php if ($secret_saved): ?>
+                                <span class="opentrust-field-msg opentrust-field-msg--success">
+                                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="2.5 6 5 8.5 9.5 4"/></svg>
+                                    <?php esc_html_e('Key saved', 'opentrust'); ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </form>
+        <?php
+    }
+
+    /**
+     * Design system helpers used by render_ai_settings_form. Kept locally
+     * because OpenTrust_Admin_Settings::ds_row_* are private; once a common
+     * "design system helper" surface is needed, lift the shared variants
+     * into a trait or a static helper class.
+     */
+    private function ds_row_number(string $key, string $label, int $value, int $min, int $max, int $step, string $unit_label, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <input type="number" class="opentrust-input opentrust-input--num" id="<?php echo esc_attr('opentrust_' . $key); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr((string) $value); ?>" min="<?php echo esc_attr((string) $min); ?>" max="<?php echo esc_attr((string) $max); ?>" step="<?php echo esc_attr((string) $step); ?>">
+                <span class="opentrust-row__unit"><?php echo esc_html($unit_label); ?></span>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function ds_row_toggle(string $key, string $label, bool $checked, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <input type="hidden" name="<?php echo esc_attr($name); ?>" value="0">
+                <label class="opentrust-toggle">
+                    <input class="opentrust-toggle__input" type="checkbox" name="<?php echo esc_attr($name); ?>" value="1" <?php checked($checked); ?>>
+                    <span class="opentrust-toggle__thumb"></span>
+                </label>
+            </div>
+        </div>
         <?php
     }
 

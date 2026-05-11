@@ -145,25 +145,23 @@
     }
 
     $(function () {
-        // ── Colour picker ──────────────────────────
-        var $accentInput  = $('#opentrust_accent_color');
-        var $forceExact   = $('#opentrust_accent_force_exact');
+        // ── Accent contrast warning ────────────────
+        // Bound to native input events on the design system's hex text input
+        // (#opentrust_accent_color). The template's initColorPickers in
+        // opentrust-admin.js already syncs the <input type="color"> swatch to
+        // the hex text input via `input` events, so listening here catches
+        // both swatch picks and direct hex typing.
+        var $accentInput   = $('#opentrust_accent_color');
+        var $forceExact    = $('#opentrust_accent_force_exact');
         var $accentWarning = $('#opentrust-accent-warning');
 
-        $('.ot-color-picker').wpColorPicker({
-            change: function (event, ui) {
-                // wpColorPicker fires `change` before the input is updated,
-                // so defer a tick before reading the value.
-                setTimeout(function () {
-                    updateAccentWarning(ui.color.toString());
-                }, 0);
-            },
-            clear: function () {
-                setTimeout(function () {
-                    updateAccentWarning($accentInput.val());
-                }, 0);
-            }
-        });
+        if ($accentInput.length) {
+            $accentInput.on('input', function () {
+                updateAccentWarning($accentInput.val());
+            });
+            // Initial check on page load.
+            updateAccentWarning($accentInput.val());
+        }
 
         // Live-toggle the override class so the warning tone updates without
         // a page reload. The actual clamping still happens server-side — the
@@ -172,53 +170,10 @@
             $accentWarning.toggleClass('ot-accent-warning--override', this.checked);
         });
 
-        // Initial check on page load.
-        if ($accentInput.length) {
-            updateAccentWarning($accentInput.val());
-        }
-
-        // ── Media uploader (logo + avatar) ─────────
-        $('[data-ot-media-field]').each(function () {
-            var $field     = $(this);
-            var $input     = $field.find('[data-ot-media-input]');
-            var $preview   = $field.find('.ot-logo-preview');
-            var $uploadBtn = $field.find('[data-ot-media-upload]');
-            var $removeBtn = $field.find('[data-ot-media-remove]');
-            var frame;
-
-            $uploadBtn.on('click', function (e) {
-                e.preventDefault();
-
-                if (!frame) {
-                    frame = wp.media({
-                        title:    $uploadBtn.text(),
-                        multiple: false,
-                        library:  { type: 'image' },
-                        button:   { text: $uploadBtn.text() }
-                    });
-
-                    frame.on('select', function () {
-                        var attachment = frame.state().get('selection').first().toJSON();
-                        var src = (attachment.sizes && attachment.sizes.medium)
-                            ? attachment.sizes.medium.url
-                            : attachment.url;
-                        $input.val(attachment.id);
-                        $preview.find('img').attr('src', src);
-                        $preview.show();
-                        $removeBtn.show();
-                    });
-                }
-
-                frame.open();
-            });
-
-            $removeBtn.on('click', function (e) {
-                e.preventDefault();
-                $input.val('0');
-                $preview.hide();
-                $removeBtn.hide();
-            });
-        });
+        // Settings page logo + avatar uploads moved to the design system's
+        // .opentrust-media component (template JS handles them via
+        // [data-opentrust-media-picker]). The legacy [data-ot-media-field]
+        // wiring lives on only inside the CPT meta boxes below.
 
         // ── Certification badge uploader ───────────
         $('.ot-upload-badge').on('click', function (e) {

@@ -46,7 +46,7 @@ final class OpenTrust_Admin_Questions {
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only filter params on admin display page.
         $filters = [
-            'search'    => isset($_GET['q'])         ? sanitize_text_field((string) wp_unslash($_GET['q']))         : '',
+            'search'    => isset($_GET['search'])    ? sanitize_text_field((string) wp_unslash($_GET['search']))    : '',
             'model'     => isset($_GET['model'])     ? sanitize_text_field((string) wp_unslash($_GET['model']))     : '',
             'date_from' => isset($_GET['date_from']) ? sanitize_text_field((string) wp_unslash($_GET['date_from'])) : '',
             'date_to'   => isset($_GET['date_to'])   ? sanitize_text_field((string) wp_unslash($_GET['date_to']))   : '',
@@ -55,15 +55,26 @@ final class OpenTrust_Admin_Questions {
         ];
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        $result  = OpenTrust_Chat_Log::query($filters);
-        $total   = $result['total'];
-        $rows    = $result['rows'];
-        $pages   = max(1, (int) ceil($total / $filters['per_page']));
-        $models  = OpenTrust_Chat_Log::distinct_models();
-        $counts  = OpenTrust_Chat_Log::total_count();
+        $result   = OpenTrust_Chat_Log::query($filters);
+        $total    = $result['total'];
+        $rows     = $result['rows'];
+        $pages    = max(1, (int) ceil($total / $filters['per_page']));
+        $models   = OpenTrust_Chat_Log::distinct_models();
+        $counts   = OpenTrust_Chat_Log::total_count();
+        $tc_url   = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
+        $back_url = admin_url('admin.php?page=opentrust&tab=ai');
 
+        $log_filter_params = array_filter([
+            'search'    => $filters['search'],
+            'model'     => $filters['model'],
+            'date_from' => $filters['date_from'],
+            'date_to'   => $filters['date_to'],
+        ]);
         $export_url = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
+            add_query_arg(
+                ['action' => 'opentrust_ai_questions_export'] + $log_filter_params,
+                admin_url('admin-post.php')
+            ),
             'opentrust_ai_questions_export'
         );
         $clear_url  = wp_nonce_url(
@@ -75,137 +86,209 @@ final class OpenTrust_Admin_Questions {
             'opentrust_ai_toggle_logging'
         );
 
-        $notice = get_transient('opentrust_ai_notice_' . get_current_user_id());
-        if (is_array($notice)) {
-            delete_transient('opentrust_ai_notice_' . get_current_user_id());
-            $class = $notice['type'] === 'error' ? 'notice-error' : 'notice-success';
-            printf('<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr($class), esc_html((string) $notice['message']));
-        }
+        $logging_on = !empty($settings['ai_logging_enabled']);
 
         ?>
-        <div class="wrap">
-            <h1><?php esc_html_e('AI Questions', 'opentrust'); ?></h1>
+        <div class="wrap opentrust-admin">
 
-            <p style="color:#50575e;max-width:720px">
-                <?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed and rows auto-purge after 90 days.', 'opentrust'); ?>
-            </p>
+            <div class="opentrust-topbar__bar" role="banner">
+                <div class="opentrust-topbar__brand">
+                    <svg class="opentrust-topbar__mark" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="OpenTrust">
+                        <rect width="26" height="26" rx="6" fill="#0F5CFA"/>
+                        <path transform="translate(4 4) scale(0.75)" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 16l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z" fill="white"/>
+                    </svg>
+                    <span class="opentrust-topbar__name"><?php esc_html_e('OpenTrust', 'opentrust'); ?></span>
+                    <span class="opentrust-topbar__version">v<?php echo esc_html(OPENTRUST_VERSION); ?></span>
+                </div>
+                <div class="opentrust-topbar__right">
+                    <div class="opentrust-topbar__actions">
+                        <a href="<?php echo esc_url($back_url); ?>" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
+                            &larr; <?php esc_html_e('AI settings', 'opentrust'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-            <div style="display:flex;align-items:center;gap:16px;margin:16px 0;padding:12px 16px;background:<?php echo !empty($settings['ai_logging_enabled']) ? '#dcfce7' : '#fef2f2'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;border-radius:6px">
-                <strong>
-                    <?php if (!empty($settings['ai_logging_enabled'])): ?>
-                        ✓ <?php esc_html_e('Logging is ON', 'opentrust'); ?>
-                    <?php else: ?>
-                        ✗ <?php esc_html_e('Logging is OFF', 'opentrust'); ?>
-                    <?php endif; ?>
-                </strong>
-                <span style="color:#50575e">
-                    <?php
-                    /* translators: %d: number of questions */
-                    printf(esc_html(_n('%d question logged in the last 90 days', '%d questions logged in the last 90 days', (int) $counts, 'opentrust')), (int) $counts);
-                    ?>
-                </span>
-                <a href="<?php echo esc_url($toggle_url); ?>" class="button button-small" style="margin-left:auto"
-                   onclick="return confirm('<?php echo esc_js(__('Toggle visitor question logging?', 'opentrust')); ?>')">
-                    <?php echo !empty($settings['ai_logging_enabled']) ? esc_html__('Disable logging', 'opentrust') : esc_html__('Enable logging', 'opentrust'); ?>
+            <div class="opentrust-topbar__head">
+                <div class="opentrust-topbar__head-text">
+                    <h1><?php esc_html_e('AI Questions', 'opentrust'); ?></h1>
+                    <p><?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed; rows auto-purge after 90 days.', 'opentrust'); ?></p>
+                </div>
+                <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm opentrust-topbar__head-action">
+                    <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
                 </a>
             </div>
 
-            <form method="get" action="" style="margin:16px 0">
-                <input type="hidden" name="page" value="opentrust-questions">
-                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
-                    <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Search', 'opentrust'); ?></label>
-                        <input type="text" name="q" value="<?php echo esc_attr($filters['search']); ?>" class="regular-text" placeholder="<?php esc_attr_e('Search questions…', 'opentrust'); ?>">
-                    </div>
-                    <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Model', 'opentrust'); ?></label>
-                        <select name="model">
-                            <option value=""><?php esc_html_e('Any', 'opentrust'); ?></option>
-                            <?php foreach ($models as $m): ?>
-                                <option value="<?php echo esc_attr($m); ?>" <?php selected($filters['model'], $m); ?>><?php echo esc_html($m); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('From', 'opentrust'); ?></label>
-                        <input type="date" name="date_from" value="<?php echo esc_attr($filters['date_from']); ?>">
-                    </div>
-                    <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('To', 'opentrust'); ?></label>
-                        <input type="date" name="date_to" value="<?php echo esc_attr($filters['date_to']); ?>">
-                    </div>
-                    <button type="submit" class="button"><?php esc_html_e('Filter', 'opentrust'); ?></button>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=opentrust-questions')); ?>" class="button"><?php esc_html_e('Reset', 'opentrust'); ?></a>
-                    <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'opentrust'); ?></a>
-                </div>
-            </form>
+            <div class="opentrust-stack">
 
-            <table class="wp-list-table widefat fixed striped">
-                <thead>
-                    <tr>
-                        <th scope="col" style="width:150px"><?php esc_html_e('Date', 'opentrust'); ?></th>
-                        <th scope="col"><?php esc_html_e('Question', 'opentrust'); ?></th>
-                        <th scope="col" style="width:140px"><?php esc_html_e('Model', 'opentrust'); ?></th>
-                        <th scope="col" style="width:80px"><?php esc_html_e('Cites', 'opentrust'); ?></th>
-                        <th scope="col" style="width:120px"><?php esc_html_e('Tokens', 'opentrust'); ?></th>
-                        <th scope="col" style="width:90px"><?php esc_html_e('Latency', 'opentrust'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($rows)): ?>
-                        <tr><td colspan="6"><?php esc_html_e('No questions logged yet.', 'opentrust'); ?></td></tr>
-                    <?php else: ?>
-                        <?php foreach ($rows as $row):
-                            $row_bg = $row->refused ? 'background:#fef9c3' : '';
-                        ?>
-                            <tr style="<?php echo esc_attr($row_bg); ?>">
-                                <td><?php echo esc_html(wp_date('M j, Y H:i', strtotime($row->created_at . ' UTC'))); ?></td>
-                                <td>
-                                    <?php if ($row->refused): ?>
-                                        <span style="display:inline-block;padding:1px 6px;background:#fde68a;color:#854d0e;border-radius:8px;font-size:10px;font-weight:700;margin-right:6px"><?php esc_html_e('REFUSED', 'opentrust'); ?></span>
-                                    <?php endif; ?>
-                                    <?php echo esc_html($row->question); ?>
-                                </td>
-                                <td style="font-size:11px;font-family:monospace"><?php echo esc_html($row->model); ?></td>
-                                <td><?php echo (int) $row->citation_count; ?></td>
-                                <td style="font-size:11px;color:#50575e">
-                                    ↓<?php echo (int) $row->tokens_in; ?> / ↑<?php echo (int) $row->tokens_out; ?>
-                                </td>
-                                <td style="font-size:11px;color:#50575e">
-                                    <?php echo (int) $row->response_ms; ?>ms
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-
-            <?php if ($pages > 1):
-                $base = add_query_arg($filters + ['page' => 'opentrust-questions'], admin_url('admin.php'));
-                $base = remove_query_arg('paged', $base);
+                <?php
+                $notice = get_transient('opentrust_ai_notice_' . get_current_user_id());
+                if (is_array($notice)) {
+                    delete_transient('opentrust_ai_notice_' . get_current_user_id());
+                    $variant = $notice['type'] === 'error' ? 'error' : 'success';
+                    printf(
+                        '<div class="opentrust-notice opentrust-notice--%s" role="status"><div class="opentrust-notice__body"><p>%s</p></div></div>',
+                        esc_attr($variant),
+                        esc_html((string) ($notice['message'] ?? ''))
+                    );
+                }
                 ?>
-                <div class="tablenav" style="margin-top:16px">
-                    <div class="tablenav-pages">
-                        <?php
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- paginate_links returns safe HTML
-                        echo paginate_links([
-                            'base'      => add_query_arg('paged', '%#%', $base),
-                            'format'    => '',
-                            'current'   => $filters['page'],
-                            'total'     => $pages,
-                            'prev_text' => '‹',
-                            'next_text' => '›',
-                        ]);
-                        ?>
+
+                <div class="opentrust-notice opentrust-notice--<?php echo $logging_on ? 'success' : 'warn'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hardcoded ?>">
+                    <div class="opentrust-notice__body">
+                        <strong>
+                            <?php echo $logging_on
+                                ? esc_html__('Logging is ON', 'opentrust')
+                                : esc_html__('Logging is OFF', 'opentrust');
+                            ?>
+                        </strong>
+                        <p>
+                            <?php
+                            /* translators: %d: number of questions */
+                            printf(esc_html(_n('%d question logged in the last 90 days.', '%d questions logged in the last 90 days.', (int) $counts, 'opentrust')), (int) $counts);
+                            ?>
+                        </p>
+                        <div class="opentrust-notice__actions">
+                            <a href="<?php echo esc_url($toggle_url); ?>" class="opentrust-btn opentrust-btn--ghost opentrust-btn--sm"
+                               onclick="return confirm('<?php echo esc_js(__('Toggle visitor question logging?', 'opentrust')); ?>')">
+                                <?php echo $logging_on ? esc_html__('Disable logging', 'opentrust') : esc_html__('Enable logging', 'opentrust'); ?>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            <?php endif; ?>
 
-            <hr style="margin:32px 0">
-            <h3 style="color:#b91c1c"><?php esc_html_e('Danger zone', 'opentrust'); ?></h3>
-            <p><a href="<?php echo esc_url($clear_url); ?>" class="button button-link-delete" onclick="return confirm('<?php echo esc_js(__('Permanently delete all logged questions? This cannot be undone.', 'opentrust')); ?>')">
-                <?php esc_html_e('Clear entire question log', 'opentrust'); ?>
-            </a></p>
+                <section class="opentrust-block">
+                    <header class="opentrust-block__head">
+                        <h2><?php esc_html_e('Filter &amp; export', 'opentrust'); ?></h2>
+                    </header>
+                    <div class="opentrust-card">
+                        <form method="get" action="" class="opentrust-filterbar">
+                            <input type="hidden" name="page" value="opentrust-questions">
+                            <div class="opentrust-filterbar__field">
+                                <label for="opentrust-q-search"><?php esc_html_e('Search', 'opentrust'); ?></label>
+                                <input type="text" id="opentrust-q-search" name="search" value="<?php echo esc_attr($filters['search']); ?>" class="opentrust-input opentrust-input--md" placeholder="<?php esc_attr_e('Search questions…', 'opentrust'); ?>">
+                            </div>
+                            <div class="opentrust-filterbar__field">
+                                <label for="opentrust-q-model"><?php esc_html_e('Model', 'opentrust'); ?></label>
+                                <div class="opentrust-select">
+                                    <select id="opentrust-q-model" name="model">
+                                        <option value=""><?php esc_html_e('Any', 'opentrust'); ?></option>
+                                        <?php foreach ($models as $m): ?>
+                                            <option value="<?php echo esc_attr($m); ?>" <?php selected($filters['model'], $m); ?>><?php echo esc_html($m); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="opentrust-filterbar__field">
+                                <label for="opentrust-q-from"><?php esc_html_e('From', 'opentrust'); ?></label>
+                                <input type="date" id="opentrust-q-from" name="date_from" value="<?php echo esc_attr($filters['date_from']); ?>" class="opentrust-input">
+                            </div>
+                            <div class="opentrust-filterbar__field">
+                                <label for="opentrust-q-to"><?php esc_html_e('To', 'opentrust'); ?></label>
+                                <input type="date" id="opentrust-q-to" name="date_to" value="<?php echo esc_attr($filters['date_to']); ?>" class="opentrust-input">
+                            </div>
+                            <div class="opentrust-filterbar__actions">
+                                <button type="submit" class="opentrust-btn opentrust-btn--primary opentrust-btn--sm"><?php esc_html_e('Apply', 'opentrust'); ?></button>
+                                <a href="<?php echo esc_url(admin_url('admin.php?page=opentrust-questions')); ?>" class="opentrust-btn opentrust-btn--ghost opentrust-btn--sm"><?php esc_html_e('Reset', 'opentrust'); ?></a>
+                                <a href="<?php echo esc_url($export_url); ?>" class="opentrust-btn opentrust-btn--ghost opentrust-btn--sm opentrust-filterbar__export"><?php esc_html_e('Download CSV', 'opentrust'); ?></a>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="opentrust-block">
+                    <header class="opentrust-block__head">
+                        <h2><?php esc_html_e('Log', 'opentrust'); ?></h2>
+                        <p>
+                            <?php
+                            /* translators: %d: total rows */
+                            printf(esc_html__('%d total', 'opentrust'), (int) $total);
+                            ?>
+                            <?php if ($total > 0): ?>
+                                · <?php esc_html_e('most recent first; refused answers are highlighted', 'opentrust'); ?>
+                            <?php endif; ?>
+                        </p>
+                    </header>
+                    <div class="opentrust-card opentrust-card--flush">
+                        <table class="opentrust-log-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="opentrust-log-table__date"><?php esc_html_e('Date', 'opentrust'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Question', 'opentrust'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Model', 'opentrust'); ?></th>
+                                    <th scope="col" class="opentrust-log-table__num"><?php esc_html_e('Cites', 'opentrust'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Tokens', 'opentrust'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Latency', 'opentrust'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($rows)): ?>
+                                    <tr class="opentrust-log-table__empty">
+                                        <td colspan="6"><?php esc_html_e('No questions logged yet.', 'opentrust'); ?></td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($rows as $row): ?>
+                                        <tr class="<?php echo $row->refused ? 'is-refused' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hardcoded ?>">
+                                            <td class="opentrust-log-table__date"><?php echo esc_html(wp_date('M j, Y H:i', strtotime($row->created_at . ' UTC'))); ?></td>
+                                            <td>
+                                                <?php if ($row->refused): ?>
+                                                    <span class="opentrust-log-table__refused"><?php esc_html_e('Refused', 'opentrust'); ?></span>
+                                                <?php endif; ?>
+                                                <?php echo esc_html($row->question); ?>
+                                            </td>
+                                            <td><code class="opentrust-log-table__model"><?php echo esc_html($row->model); ?></code></td>
+                                            <td class="opentrust-log-table__num"><?php echo (int) $row->citation_count; ?></td>
+                                            <td class="opentrust-log-table__meta">&darr;<?php echo (int) $row->tokens_in; ?> / &uarr;<?php echo (int) $row->tokens_out; ?></td>
+                                            <td class="opentrust-log-table__meta"><?php echo (int) $row->response_ms; ?>ms</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+
+                        <?php if ($pages > 1):
+                            $base = add_query_arg(
+                                ['page' => 'opentrust-questions'] + $log_filter_params,
+                                admin_url('admin.php')
+                            );
+                            ?>
+                            <div class="opentrust-log-table__pagination">
+                                <?php
+                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- paginate_links returns safe HTML
+                                echo paginate_links([
+                                    'base'      => add_query_arg('paged', '%#%', $base),
+                                    'format'    => '',
+                                    'current'   => $filters['page'],
+                                    'total'     => $pages,
+                                    'prev_text' => '&lsaquo;',
+                                    'next_text' => '&rsaquo;',
+                                ]);
+                                ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </section>
+
+                <section class="opentrust-block">
+                    <header class="opentrust-block__head">
+                        <h2><?php esc_html_e('Danger zone', 'opentrust'); ?></h2>
+                    </header>
+                    <div class="opentrust-card">
+                        <div class="opentrust-action-row">
+                            <div class="opentrust-action-row__main">
+                                <h3><?php esc_html_e('Clear entire question log', 'opentrust'); ?></h3>
+                                <p><?php esc_html_e('Permanently deletes every logged question. Cannot be undone.', 'opentrust'); ?></p>
+                            </div>
+                            <a href="<?php echo esc_url($clear_url); ?>" class="opentrust-btn opentrust-btn--danger opentrust-btn--sm"
+                               onclick="return confirm('<?php echo esc_js(__('Permanently delete all logged questions? This cannot be undone.', 'opentrust')); ?>')">
+                                <?php esc_html_e('Clear log', 'opentrust'); ?>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <?php \OpenTrust\Admin\Footer::render(); ?>
         </div>
         <?php
     }

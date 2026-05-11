@@ -130,8 +130,20 @@ final class OpenTrust_Admin {
             return;
         }
 
-        wp_enqueue_style('wp-color-picker');
-        wp_enqueue_media();
+        // wp_enqueue_media() pulls ~150 KB of media-uploader JS. Only fire it
+        // where a media picker actually renders:
+        //   - CPT edit screens (badge / artifact / policy-PDF uploaders)
+        //   - Settings page → General tab (logo + AI avatar)
+        // Other tabs (Contact, AI, IO) and the Questions submenu skip it.
+        $needs_media = in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
+        if (!$needs_media && $screen->id === 'toplevel_page_opentrust') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab gate.
+            $tab = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'general';
+            $needs_media = $tab === 'general';
+        }
+        if ($needs_media) {
+            wp_enqueue_media();
+        }
 
         wp_enqueue_style(
             'opentrust-admin',
@@ -140,27 +152,62 @@ final class OpenTrust_Admin {
             OPENTRUST_VERSION
         );
 
+        // admin.js still drives CPT-meta-box uploads (badge, artifact, policy
+        // PDF) — keep jQuery for those handlers. wp-color-picker dropped: the
+        // settings page now uses the design system's native .opentrust-color
+        // widget; no other consumer remains.
         wp_enqueue_script(
             'opentrust-admin',
             OPENTRUST_PLUGIN_URL . 'assets/js/admin.js',
-            ['wp-color-picker', 'jquery'],
+            ['jquery'],
             OPENTRUST_VERSION,
             true
         );
 
-        // Localize the handful of admin strings that admin.js renders directly
-        // (e.g. wp.media modal titles). Catalog-screen strings are shipped
-        // separately below via window.OpenTrustCatalog.
+        // Ettic admin design system — chrome (topbar, footer, tabbar) plus
+        // dirty tracking / toasts / modals JS. Scoped under .opentrust-admin
+        // so the tokens don't leak onto CPT edit screens. Loaded only on
+        // OpenTrust's own plugin pages, never on CPT meta-box screens.
+        $is_plugin_page = str_starts_with($screen->id, 'toplevel_page_opentrust')
+            || str_starts_with($screen->id, 'opentrust_page_');
+
+        if ($is_plugin_page) {
+            wp_enqueue_style(
+                'opentrust-admin-ds',
+                OPENTRUST_PLUGIN_URL . 'assets/css/opentrust-admin.css',
+                [],
+                OPENTRUST_VERSION
+            );
+            wp_enqueue_script(
+                'opentrust-admin-ds',
+                OPENTRUST_PLUGIN_URL . 'assets/js/opentrust-admin.js',
+                [],
+                OPENTRUST_VERSION,
+                true
+            );
+        }
+
+        // Localize strings rendered directly from JS (wp.media modal titles in
+        // admin.js, and the design system's tab-switch confirm modal in
+        // opentrust-admin.js). Catalog-screen strings ship below via
+        // window.OpenTrustCatalog.
         wp_add_inline_script(
             'opentrust-admin',
             'window.OpenTrustAdmin = ' . wp_json_encode([
                 'i18n' => [
-                    'selectBadgeImage' => __('Select Badge Image', 'opentrust'),
-                    'useAsBadge'       => __('Use as Badge', 'opentrust'),
-                    'selectArtifact'   => __('Select Proof Artifact', 'opentrust'),
-                    'useAsArtifact'    => __('Use This File', 'opentrust'),
-                    'uploadArtifact'   => __('Upload File', 'opentrust'),
-                    'replaceArtifact'  => __('Replace File', 'opentrust'),
+                    'selectBadgeImage'     => __('Select Badge Image', 'opentrust'),
+                    'useAsBadge'           => __('Use as Badge', 'opentrust'),
+                    'selectArtifact'       => __('Select Proof Artifact', 'opentrust'),
+                    'useAsArtifact'        => __('Use This File', 'opentrust'),
+                    'uploadArtifact'       => __('Upload File', 'opentrust'),
+                    'replaceArtifact'      => __('Replace File', 'opentrust'),
+                    'tabSwitchTitle'       => __('Discard unsaved changes?', 'opentrust'),
+                    'tabSwitchOneUnsaved'  => __('You have 1 unsaved change on this tab. Switching tabs will discard it.', 'opentrust'),
+                    /* translators: %d: number of unsaved changes on the current tab. */
+                    'tabSwitchManyUnsaved' => __('You have %d unsaved changes on this tab. Switching tabs will discard them.', 'opentrust'),
+                    'tabSwitchBody'        => __('Each tab saves independently. Save first to keep your changes, or discard them and switch.', 'opentrust'),
+                    'tabSwitchConfirm'     => __('Discard and switch', 'opentrust'),
+                    'tabSwitchCancel'      => __('Stay on this tab', 'opentrust'),
                 ],
             ]) . ';',
             'before'
@@ -169,8 +216,7 @@ final class OpenTrust_Admin {
         // Catalog autofill: ship the bundled vendor / practice catalog only on
         // the new-post screen for the two CPTs that support it. Edit screens
         // are deliberately excluded so we never stomp existing values.
-        $screen = get_current_screen();
-        if ($hook === 'post-new.php' && $screen && in_array($screen->post_type, ['ot_subprocessor', 'ot_data_practice', 'ot_certification'], true)) {
+        if ($hook === 'post-new.php' && in_array($screen->post_type, ['ot_subprocessor', 'ot_data_practice', 'ot_certification'], true)) {
             $payload = [
                 'postType' => $screen->post_type,
                 'catalog'  => OpenTrust_Catalog::for_js($screen->post_type),

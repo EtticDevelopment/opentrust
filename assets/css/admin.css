@@ -141,31 +141,6 @@
     margin: 0;
 }
 
-/* Logo upload */
-.ot-logo-upload {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-/* The logo is rendered on the dark hero/nav surface, so the admin preview
-   mirrors that background — otherwise a white-on-white logo vanishes. */
-.ot-logo-preview img {
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    padding: 10px 14px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
-        #111827;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.ot-logo-upload .description {
-    flex-basis: 100%;
-    margin: 4px 0 0;
-}
-
 /* Certification meta box */
 .ot-meta-field {
     margin-bottom: 16px;
