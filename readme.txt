@@ -4,7 +4,7 @@ Tags: trust-center, compliance, gdpr, privacy, subprocessors
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,11 @@ Not automatically — that's intentional. Auto-rendered PDFs from HTML almost al
 6. Settings screen with logo upload, accent colour picker, and live WCAG contrast warning.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fix: the active AI model could be silently cleared 24 hours after the provider's model-list cache expired, leaving chat disabled until the admin reopened settings and re-picked.
+* Add: a daily cron refreshes each stored provider's model list ahead of cache expiry, and a persisted display-name snapshot keeps the saved model rendered even if the provider deprecates the id.
+* Change: settings export no longer includes per-site AI model fields (id, display name, recommended flag) — they are provider-paired and would carry stale labels to a destination site running a different provider.
 
 = 1.0.0 =
 * Initial public release.
