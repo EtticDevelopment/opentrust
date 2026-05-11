@@ -1,13 +1,14 @@
 <?php
 /**
- * Settings API registration, field rendering, sanitization, and the
- * settings-page wrapper that hosts the General / Contact / AI tabs.
+ * Settings API registration, design-system field renderers, sanitization,
+ * and the settings-page wrapper that hosts the General / Contact / AI / IO
+ * tabs.
  *
- * Owns the entire WordPress Settings API surface for OpenTrust:
- * register_setting() with a sanitize_callback, every add_settings_section
- * and add_settings_field call, the eight per-type field renderers, and
- * the schema-driven sanitize cascade that keeps cross-tab saves shape-
- * stable.
+ * Owns the WordPress Settings API surface for OpenTrust: register_setting()
+ * with a sanitize_callback, plus the schema-driven sanitize cascade that
+ * keeps cross-tab saves shape-stable. Page rendering is manual (no
+ * do_settings_sections); every tab calls a ds_render_section_* method that
+ * emits .opentrust-* row markup from the shared Ettic admin design system.
  *
  * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
  * admin_init hook for register_settings(). The settings menu page in
@@ -43,299 +44,15 @@ final class OpenTrust_Admin_Settings {
     // ──────────────────────────────────────────────
 
     public function register_settings(): void {
+        // Single serialized option; sanitize_settings is the only writer. The
+        // page is rendered manually (see render_settings_page) so we no
+        // longer register add_settings_section / add_settings_field — every
+        // tab uses ds_render_section_* with the design-system row markup.
         register_setting('opentrust_settings_group', 'opentrust_settings', [
             'type'              => 'array',
             'sanitize_callback' => [$this, 'sanitize_settings'],
             'default'           => OpenTrust::defaults(),
         ]);
-
-        // ── General tab ──────────────────────────────────────────────
-        add_settings_section(
-            'opentrust_general',
-            __('General Settings', 'opentrust'),
-            fn() => null,
-            'opentrust-settings-general'
-        );
-
-        $this->add_field('endpoint_slug', __('Endpoint Slug', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general', [
-            'description' => __('The URL path for your trust center (e.g., "trust-center" = yoursite.com/trust-center/).', 'opentrust'),
-        ]);
-
-        $this->add_field('page_title', __('Page Title', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general');
-
-        $this->add_field('company_name', __('Company Name', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general');
-
-        $this->add_field('tagline', __('Tagline', 'opentrust'), 'render_textarea_field', 'opentrust_general', 'opentrust-settings-general', [
-            'description' => __('A short description displayed below the company name in the hero section.', 'opentrust'),
-        ]);
-
-        // Branding section (General tab).
-        add_settings_section(
-            'opentrust_branding',
-            __('Branding', 'opentrust'),
-            fn() => null,
-            'opentrust-settings-general'
-        );
-
-        $this->add_field('logo_id', __('Logo', 'opentrust'), 'render_logo_field', 'opentrust_branding', 'opentrust-settings-general');
-        $this->add_field('avatar_id', __('AI Avatar', 'opentrust'), 'render_avatar_field', 'opentrust_branding', 'opentrust-settings-general');
-
-        $this->add_field('accent_color', __('Accent Color', 'opentrust'), 'render_color_field', 'opentrust_branding', 'opentrust-settings-general', [
-            'description' => __('Used for buttons, links, and highlights. Choose a color that matches your brand.', 'opentrust'),
-        ]);
-
-        $this->add_field('show_powered_by', __('Credit Link', 'opentrust'), 'render_show_powered_by_field', 'opentrust_branding', 'opentrust-settings-general');
-
-        // Sections visibility (General tab).
-        add_settings_section(
-            'opentrust_sections',
-            __('Visible Sections', 'opentrust'),
-            fn() => print('<p>' . esc_html__('Choose which sections to display on the trust center.', 'opentrust') . '</p>'),
-            'opentrust-settings-general'
-        );
-
-        $this->add_field('sections_visible', __('Sections', 'opentrust'), 'render_sections_field', 'opentrust_sections', 'opentrust-settings-general');
-
-        // ── Contact tab ──────────────────────────────────────────────
-        // Fields are optional — the frontend block renders only when at least one field below is populated.
-        add_settings_section(
-            'opentrust_contact',
-            __('Get in touch', 'opentrust'),
-            fn() => print('<p>' . esc_html__('Publish a dark-accent "Get in touch" block on the trust center. Every field is optional — the block only appears if at least one is filled in.', 'opentrust') . '</p>'),
-            'opentrust-settings-contact'
-        );
-
-        $this->add_field('company_description', __('Company Description', 'opentrust'), 'render_textarea_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Two or three sentences describing what the company does. Rendered under the "Get in touch" section title.', 'opentrust'),
-        ]);
-
-        $this->add_field('dpo_name', __('DPO Name', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Data Protection Officer name. Required under GDPR for many organisations.', 'opentrust'),
-        ]);
-
-        $this->add_field('dpo_email', __('DPO Email', 'opentrust'), 'render_email_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Dedicated DPO mailbox. Rendered as a mailto link.', 'opentrust'),
-        ]);
-
-        $this->add_field('security_email', __('Security Contact Email', 'opentrust'), 'render_email_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('For vulnerability reports and security questions. Often separate from the DPO.', 'opentrust'),
-        ]);
-
-        $this->add_field('contact_form_url', __('Contact Form URL', 'opentrust'), 'render_url_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Optional link to a gated contact form.', 'opentrust'),
-        ]);
-
-        $this->add_field('contact_address', __('Mailing Address', 'opentrust'), 'render_textarea_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Postal address for formal GDPR / legal notices.', 'opentrust'),
-        ]);
-
-        $this->add_field('pgp_key_url', __('PGP Public Key URL', 'opentrust'), 'render_url_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('Optional link to your security team\'s PGP public key.', 'opentrust'),
-        ]);
-
-        $this->add_field('company_registration', __('Company Registration Number', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('KvK (NL), Companies House (UK), Handelsregister (DE), EIN (US), or equivalent business registration.', 'opentrust'),
-        ]);
-
-        $this->add_field('vat_number', __('VAT / Tax ID', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
-            'description' => __('VAT number, sales-tax ID, or equivalent international tax identifier.', 'opentrust'),
-        ]);
-
-    }
-
-    private function add_field(string $key, string $title, string $callback, string $section, string $page = 'opentrust-settings-general', array $extra = []): void {
-        add_settings_field(
-            'opentrust_' . $key,
-            $title,
-            [$this, $callback],
-            $page,
-            $section,
-            array_merge(['key' => $key], $extra)
-        );
-    }
-
-    // ──────────────────────────────────────────────
-    // Field renderers
-    // ──────────────────────────────────────────────
-
-    public function render_text_field(array $args): void {
-        $this->render_input_field('text', $args);
-    }
-
-    public function render_email_field(array $args): void {
-        $this->render_input_field('email', $args, ['autocomplete' => 'off']);
-    }
-
-    public function render_url_field(array $args): void {
-        $this->render_input_field('url', $args, ['placeholder' => 'https://', 'autocomplete' => 'off']);
-    }
-
-    public function render_textarea_field(array $args): void {
-        $this->render_input_field('textarea', $args);
-    }
-
-    /**
-     * Shared renderer for the Settings API string-input field family.
-     * One unified path so escaping rules and id/name conventions can't drift
-     * between text/email/url/textarea variants.
-     *
-     * @param 'text'|'email'|'url'|'textarea' $type
-     * @param array{key:string, description?:string} $args
-     * @param array<string,string> $extra_attrs
-     */
-    private function render_input_field(string $type, array $args, array $extra_attrs = []): void {
-        $settings = OpenTrust::get_settings();
-        $key      = $args['key'];
-        $value    = $settings[$key] ?? '';
-
-        $attr_html = '';
-        foreach ($extra_attrs as $name => $val) {
-            $attr_html .= ' ' . $name . '="' . esc_attr($val) . '"';
-        }
-
-        if ($type === 'textarea') {
-            printf(
-                '<textarea id="opentrust_%1$s" name="opentrust_settings[%1$s]" rows="3" class="large-text"%3$s>%2$s</textarea>',
-                esc_attr($key),
-                esc_textarea($value),
-                $attr_html  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute values escaped above; names are hardcoded
-            );
-        } else {
-            printf(
-                '<input type="%4$s" id="opentrust_%1$s" name="opentrust_settings[%1$s]" value="%2$s" class="regular-text"%3$s>',
-                esc_attr($key),
-                esc_attr($value),
-                $attr_html, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute values escaped above; names are hardcoded
-                esc_attr($type)
-            );
-        }
-
-        if (!empty($args['description'])) {
-            printf('<p class="description">%s</p>', esc_html($args['description']));
-        }
-    }
-
-    public function render_color_field(array $args): void {
-        $settings     = OpenTrust::get_settings();
-        $value        = $settings['accent_color'] ?? '#2563EB';
-        $force_exact  = !empty($settings['accent_force_exact']);
-        printf(
-            '<input type="text" id="opentrust_accent_color" name="opentrust_settings[accent_color]" value="%s" class="ot-color-picker" data-default-color="#2563EB">',
-            esc_attr($value)
-        );
-        ?>
-        <div id="opentrust-accent-warning" class="ot-accent-warning<?php echo $force_exact ? ' ot-accent-warning--override' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded class ?>" hidden>
-            <svg class="ot-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <div class="ot-accent-warning__body">
-                <strong class="ot-accent-warning__heading ot-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'opentrust'); ?></strong>
-                <strong class="ot-accent-warning__heading ot-accent-warning__heading--override"><?php esc_html_e('Using your exact color on white backgrounds', 'opentrust'); ?></strong>
-
-                <p class="ot-accent-warning__copy ot-accent-warning__copy--auto">
-                    <?php esc_html_e('Your chosen color is too light for buttons, links, and borders on white sections. On those surfaces OpenTrust will use a darker, on-brand variant:', 'opentrust'); ?>
-                </p>
-                <p class="ot-accent-warning__copy ot-accent-warning__copy--override">
-                    <?php esc_html_e("You've chosen to keep your exact color on white backgrounds. Buttons, links, and borders in those sections may be hard to read.", 'opentrust'); ?>
-                </p>
-
-                <div class="ot-accent-warning__preview">
-                    <span class="ot-accent-warning__swatch ot-accent-warning__swatch--chosen" aria-hidden="true"></span>
-                    <code class="ot-accent-warning__hex ot-accent-warning__hex--chosen"></code>
-                    <span class="ot-accent-warning__arrow" aria-hidden="true">→</span>
-                    <span class="ot-accent-warning__swatch ot-accent-warning__swatch--adjusted" aria-hidden="true"></span>
-                    <code class="ot-accent-warning__hex ot-accent-warning__hex--adjusted"></code>
-                </div>
-
-                <p class="ot-accent-warning__note ot-accent-warning__note--auto">
-                    <?php esc_html_e('The hero and navigation still use your exact color.', 'opentrust'); ?>
-                </p>
-
-                <label class="ot-accent-warning__override">
-                    <input
-                        type="checkbox"
-                        id="opentrust_accent_force_exact"
-                        name="opentrust_settings[accent_force_exact]"
-                        value="1"
-                        <?php checked($force_exact); ?>
-                    >
-                    <span><?php esc_html_e('Use my exact color anyway — skip the contrast adjustment.', 'opentrust'); ?></span>
-                </label>
-            </div>
-        </div>
-        <?php
-        if (!empty($args['description'])) {
-            printf('<p class="description">%s</p>', esc_html($args['description']));
-        }
-    }
-
-    public function render_logo_field(array $args): void {
-        $this->render_media_field(
-            'logo_id',
-            __('Select Logo', 'opentrust'),
-            __('Used in the hero and sticky nav. A white version is recommended — it sits on a dark background.', 'opentrust')
-        );
-    }
-
-    public function render_avatar_field(array $args): void {
-        $this->render_media_field(
-            'avatar_id',
-            __('Select Avatar', 'opentrust'),
-            __('Square image used as the avatar on AI chat responses. Use a colored background with a light or dark favicon or logo on top.', 'opentrust')
-        );
-    }
-
-    private function render_media_field(string $key, string $button_label, string $description): void {
-        $settings  = OpenTrust::get_settings();
-        $media_id  = (int) ($settings[$key] ?? 0);
-        $media_url = $media_id ? wp_get_attachment_image_url($media_id, 'medium') : '';
-        ?>
-        <div class="ot-logo-upload" data-ot-media-field>
-            <div class="ot-logo-preview" <?php echo $media_url ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>>
-                <img src="<?php echo esc_url($media_url); ?>" alt="" style="max-width:200px;max-height:80px">
-            </div>
-            <input type="hidden" name="opentrust_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ot-media-input>
-            <button type="button" class="button" data-ot-media-upload><?php echo esc_html($button_label); ?></button>
-            <button type="button" class="button" data-ot-media-remove <?php echo $media_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>><?php esc_html_e('Remove', 'opentrust'); ?></button>
-            <p class="description"><?php echo esc_html($description); ?></p>
-        </div>
-        <?php
-    }
-
-    public function render_show_powered_by_field(array $args): void {
-        $settings = OpenTrust::get_settings();
-        $checked  = !empty($settings['show_powered_by']);
-        printf(
-            '<label><input type="checkbox" id="opentrust_show_powered_by" name="opentrust_settings[show_powered_by]" value="1" %s> %s</label>',
-            checked($checked, true, false),
-            esc_html__('Show a "Powered by OpenTrust" credit in the trust center footer.', 'opentrust')
-        );
-        printf(
-            '<p class="description">%s</p>',
-            esc_html__('Off by default. Public credits are opt-in.', 'opentrust')
-        );
-    }
-
-    public function render_sections_field(array $args): void {
-        $settings = OpenTrust::get_settings();
-        $visible  = $settings['sections_visible'] ?? [];
-
-        $sections = [
-            'certifications' => __('Certifications & Compliance', 'opentrust'),
-            'policies'       => __('Policies', 'opentrust'),
-            'subprocessors'  => __('Subprocessors', 'opentrust'),
-            'data_practices' => __('Data Practices', 'opentrust'),
-            'faqs'           => __('FAQs', 'opentrust'),
-            'contact'        => __('Contact & DPO', 'opentrust'),
-        ];
-
-        foreach ($sections as $key => $label) {
-            $checked = !empty($visible[$key]);
-            printf(
-                '<label style="display:block;margin-bottom:8px"><input type="checkbox" name="opentrust_settings[sections_visible][%1$s]" value="1" %2$s> %3$s</label>',
-                esc_attr($key),
-                checked($checked, true, false),
-                esc_html($label)
-            );
-        }
     }
 
     // ──────────────────────────────────────────────
@@ -346,8 +63,6 @@ final class OpenTrust_Admin_Settings {
     // bypassing do_settings_sections(). The Settings API registration in
     // register_settings() (above) is what `settings_fields()` reads for the
     // nonce + option_page hidden inputs — that wiring stays unchanged.
-    // add_settings_section/field calls for migrated tabs remain registered
-    // but un-rendered; commit cleanup removes them once all tabs migrate.
 
     private function ds_render_section_general(): void {
         $settings = OpenTrust::get_settings();

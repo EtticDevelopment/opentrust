@@ -170,48 +170,10 @@
             $accentWarning.toggleClass('ot-accent-warning--override', this.checked);
         });
 
-        // ── Media uploader (logo + avatar) ─────────
-        $('[data-ot-media-field]').each(function () {
-            var $field     = $(this);
-            var $input     = $field.find('[data-ot-media-input]');
-            var $preview   = $field.find('.ot-logo-preview');
-            var $uploadBtn = $field.find('[data-ot-media-upload]');
-            var $removeBtn = $field.find('[data-ot-media-remove]');
-            var frame;
-
-            $uploadBtn.on('click', function (e) {
-                e.preventDefault();
-
-                if (!frame) {
-                    frame = wp.media({
-                        title:    $uploadBtn.text(),
-                        multiple: false,
-                        library:  { type: 'image' },
-                        button:   { text: $uploadBtn.text() }
-                    });
-
-                    frame.on('select', function () {
-                        var attachment = frame.state().get('selection').first().toJSON();
-                        var src = (attachment.sizes && attachment.sizes.medium)
-                            ? attachment.sizes.medium.url
-                            : attachment.url;
-                        $input.val(attachment.id);
-                        $preview.find('img').attr('src', src);
-                        $preview.show();
-                        $removeBtn.show();
-                    });
-                }
-
-                frame.open();
-            });
-
-            $removeBtn.on('click', function (e) {
-                e.preventDefault();
-                $input.val('0');
-                $preview.hide();
-                $removeBtn.hide();
-            });
-        });
+        // Settings page logo + avatar uploads moved to the design system's
+        // .opentrust-media component (template JS handles them via
+        // [data-opentrust-media-picker]). The legacy [data-ot-media-field]
+        // wiring lives on only inside the CPT meta boxes below.
 
         // ── Certification badge uploader ───────────
         $('.ot-upload-badge').on('click', function (e) {

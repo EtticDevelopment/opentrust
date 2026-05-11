@@ -130,7 +130,6 @@ final class OpenTrust_Admin {
             return;
         }
 
-        wp_enqueue_style('wp-color-picker');
         wp_enqueue_media();
 
         wp_enqueue_style(
@@ -140,10 +139,14 @@ final class OpenTrust_Admin {
             OPENTRUST_VERSION
         );
 
+        // admin.js still drives CPT-meta-box uploads (badge, artifact, policy
+        // PDF) — keep jQuery for those handlers. wp-color-picker dropped: the
+        // settings page now uses the design system's native .opentrust-color
+        // widget; no other consumer remains.
         wp_enqueue_script(
             'opentrust-admin',
             OPENTRUST_PLUGIN_URL . 'assets/js/admin.js',
-            ['wp-color-picker', 'jquery'],
+            ['jquery'],
             OPENTRUST_VERSION,
             true
         );
