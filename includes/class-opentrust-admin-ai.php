@@ -333,7 +333,7 @@ final class OpenTrust_Admin_AI {
         if ($current_model !== '' && $this->find_model_meta($current_model, $models) === null) {
             $snapshot = [
                 'id'           => $current_model,
-                'display_name' => (string) ($settings['ai_model_display_name'] ?: $current_model),
+                'display_name' => (string) ($settings['ai_model_display_name'] ?? $current_model),
                 'recommended'  => !empty($settings['ai_model_recommended']),
             ];
             if (!empty($models)) {
