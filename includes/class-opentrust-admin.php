@@ -33,6 +33,11 @@ final class OpenTrust_Admin {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
         add_filter('submenu_file', [$this, 'fix_submenu_highlight']);
 
+        add_filter(
+            'plugin_action_links_' . plugin_basename(OPENTRUST_PLUGIN_FILE),
+            [$this, 'add_plugin_action_links']
+        );
+
         // Warn admins on every OpenTrust admin page when the site is on Plain
         // permalinks — the plugin's pretty URLs all 404 in that mode.
         add_action('admin_notices', [$this, 'render_plain_permalinks_notice']);
@@ -62,13 +67,15 @@ final class OpenTrust_Admin {
             30
         );
 
+        // Position 0 forces Settings above CPT submenus that core injects via show_in_menu.
         add_submenu_page(
             'opentrust',
             __('Settings', 'opentrust'),
             __('Settings', 'opentrust'),
             'manage_options',
             'opentrust',
-            $settings_page
+            $settings_page,
+            0
         );
 
         // AI Questions — only visible once AI is enabled.
@@ -83,6 +90,21 @@ final class OpenTrust_Admin {
                 [OpenTrust_Admin_Questions::instance(), 'render_page']
             );
         }
+    }
+
+    public function add_plugin_action_links(array $links): array {
+        $settings = sprintf(
+            '<a href="%s">%s</a>',
+            esc_url(admin_url('admin.php?page=opentrust')),
+            esc_html__('Settings', 'opentrust')
+        );
+        $docs = sprintf(
+            '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+            esc_url('https://plugins.ettic.nl/docs/opentrust'),
+            esc_html__('Docs', 'opentrust')
+        );
+        array_unshift($links, $settings, $docs);
+        return $links;
     }
 
     /**

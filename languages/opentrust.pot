@@ -9,15 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T12:53:39+00:00\n"
+"POT-Creation-Date: 2026-05-11T15:17:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
 
 #. Plugin Name of the plugin
 #: opentrust.php
-#: includes/class-opentrust-admin.php:56
-#: includes/class-opentrust-admin.php:57
+#: includes/class-opentrust-admin.php:61
+#: includes/class-opentrust-admin.php:62
 msgid "OpenTrust"
 msgstr ""
 
@@ -975,93 +975,98 @@ msgstr ""
 msgid "Certifications"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:67
-#: includes/class-opentrust-admin.php:68
+#: includes/class-opentrust-admin.php:73
+#: includes/class-opentrust-admin.php:74
+#: includes/class-opentrust-admin.php:99
 msgid "Settings"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:79
-#: includes/class-opentrust-admin.php:80
+#: includes/class-opentrust-admin.php:86
+#: includes/class-opentrust-admin.php:87
 msgid "Questions"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:158
+#: includes/class-opentrust-admin.php:104
+msgid "Docs"
+msgstr ""
+
+#: includes/class-opentrust-admin.php:180
 msgid "Select Badge Image"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:159
+#: includes/class-opentrust-admin.php:181
 msgid "Use as Badge"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:160
+#: includes/class-opentrust-admin.php:182
 msgid "Select Proof Artifact"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:161
+#: includes/class-opentrust-admin.php:183
 msgid "Use This File"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:162
+#: includes/class-opentrust-admin.php:184
 #: includes/class-opentrust-cpt.php:402
 msgid "Upload File"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:163
+#: includes/class-opentrust-admin.php:185
 #: includes/class-opentrust-cpt.php:402
 msgid "Replace File"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:178
+#: includes/class-opentrust-admin.php:200
 msgid "No match in catalog, just keep typing to add manually."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:179
+#: includes/class-opentrust-admin.php:201
 msgid "Auto-filled from catalog, you may want to verify this."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:180
+#: includes/class-opentrust-admin.php:202
 msgid "Auto-filled template, please verify this matches how you use this service."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:181
+#: includes/class-opentrust-admin.php:203
 msgid "click to autofill"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:182
+#: includes/class-opentrust-admin.php:204
 msgid "Catalog suggestions"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:228
+#: includes/class-opentrust-admin.php:250
 msgid "OpenTrust requires pretty permalinks."
 msgstr ""
 
 #. translators: %s: link to Settings → Permalinks
-#: includes/class-opentrust-admin.php:232
+#: includes/class-opentrust-admin.php:254
 #, php-format
 msgid "Your site is using \"Plain\" permalinks. Please go to %s and choose any other option (Post name is the WordPress default)."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:233
+#: includes/class-opentrust-admin.php:255
 msgid "Settings → Permalinks"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:238
+#: includes/class-opentrust-admin.php:260
 msgid "Without pretty permalinks, every link OpenTrust generates returns 404 — including the trust center page itself. Visitors will not be able to reach your policies, certifications, or chat."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:242
+#: includes/class-opentrust-admin.php:264
 msgid "Read-only fallback if you cannot change permalinks"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:246
+#: includes/class-opentrust-admin.php:268
 msgid "You can preview the trust center via raw query-string URLs:"
 msgstr ""
 
-#: includes/class-opentrust-admin.php:254
+#: includes/class-opentrust-admin.php:276
 msgid "This is for testing only."
 msgstr ""
 
-#: includes/class-opentrust-admin.php:255
+#: includes/class-opentrust-admin.php:277
 msgid "Switching to pretty permalinks is the only supported configuration."
 msgstr ""
 
