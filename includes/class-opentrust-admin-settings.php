@@ -842,10 +842,10 @@ final class OpenTrust_Admin_Settings {
         }
         $base_url = admin_url('admin.php?page=opentrust');
 
-        // General + Contact are Settings-API-saveable. AI + IO have their own
-        // bespoke forms (admin-post handlers / sub-forms) and don't wire into
-        // the topbar Save until their respective migration commits.
-        $has_settings_form = in_array($tab, ['general', 'contact'], true);
+        // General, Contact, and the AI tab's main settings form are Settings-API-
+        // saveable and wire into the topbar Save. IO is purely action-based
+        // (admin-post handlers) and never grows a Save button.
+        $has_settings_form = in_array($tab, ['general', 'contact', 'ai'], true);
         $tabs = [
             'general' => ['label' => __('General', 'opentrust'),         'url' => $base_url],
             'contact' => ['label' => __('Contact', 'opentrust'),         'url' => add_query_arg('tab', 'contact', $base_url)],

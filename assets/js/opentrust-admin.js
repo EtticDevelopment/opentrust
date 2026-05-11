@@ -140,7 +140,14 @@
 		labelEl    = document.querySelector( '[data-dirty-label]' );
 		saveBtn    = document.querySelector( '[data-save]' );
 		discardBtn = document.querySelector( '[data-discard]' );
-		form       = document.querySelector( '.opentrust-admin form' );
+		// Prefer the form the topbar Save is wired to (HTML5 `form="..."` attr,
+		// which points at the active tab's Settings API form on multi-form
+		// screens like AI Chat). Fall back to the first form inside the wrap.
+		var saveTargetId = saveBtn ? saveBtn.getAttribute( 'form' ) : null;
+		form = saveTargetId ? document.getElementById( saveTargetId ) : null;
+		if ( ! form ) {
+			form = document.querySelector( '.opentrust-admin form' );
+		}
 		if ( ! dirtyEl || ! saveBtn || ! form ) {
 			return;
 		}

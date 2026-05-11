@@ -1438,3 +1438,212 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
 	border-radius: 9px;
 	line-height: 1;
 }
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: AI tab atoms.                                *
+ *                                                                         *
+ * Provider cards (full-width primary card, side-by-side advanced grid),   *
+ * disclosure (<details>) styling, the model row that pairs the select     *
+ * with the Refresh button, and a couple of small utilities used by AI/    *
+ * Contact rows (unit suffix, success field-msg, notice list/actions).     *
+ *                                                                         *
+ * Not part of the shared design system. Extracted with the AI tab if/     *
+ * when the template gains a provider-card primitive.                      *
+ * ----------------------------------------------------------------------- */
+
+/* Disclosure (<details>) inside a card or block */
+.opentrust-admin .opentrust-disclosure {
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-md);
+	background: #fff;
+}
+
+.opentrust-admin .opentrust-card > .opentrust-disclosure {
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-disclosure > summary {
+	cursor: pointer;
+	padding: 12px 14px;
+	font-weight: 600;
+	color: var(--tx-strong);
+	font-size: 13.5px;
+	list-style: none;
+	user-select: none;
+	transition: background 120ms ease;
+}
+
+.opentrust-admin .opentrust-disclosure > summary::-webkit-details-marker { display: none; }
+
+.opentrust-admin .opentrust-disclosure > summary::before {
+	content: "▸";
+	display: inline-block;
+	width: 14px;
+	color: var(--tx-muted);
+	transition: transform 140ms ease;
+}
+
+.opentrust-admin .opentrust-disclosure[open] > summary::before { transform: rotate(90deg); }
+
+.opentrust-admin .opentrust-disclosure > summary:hover { background: var(--ettic-surface-2); }
+
+.opentrust-admin .opentrust-disclosure__body {
+	padding: 4px 14px 14px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-disclosure__body > p {
+	margin: 0 0 10px;
+	line-height: 1.55;
+}
+
+.opentrust-admin .opentrust-disclosure__body > p:last-child { margin-bottom: 0; }
+
+/* AI provider card */
+.opentrust-admin .opentrust-ai-card { padding: 16px 18px; }
+
+.opentrust-admin .opentrust-ai-card--primary {
+	margin-top: 14px;
+	border-color: var(--ettic-blue);
+	box-shadow: 0 1px 2px rgba(15,92,250,0.06);
+}
+
+.opentrust-admin .opentrust-ai-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+.opentrust-admin .opentrust-ai-card__title {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--tx-strong);
+}
+
+.opentrust-admin .opentrust-ai-card__badge {
+	display: inline-flex;
+	align-items: center;
+	height: 22px;
+	padding: 0 10px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--ettic-blue);
+	background: var(--ettic-blue-soft);
+	border-radius: 11px;
+	line-height: 1;
+}
+
+.opentrust-admin .opentrust-ai-card__description {
+	margin: 4px 0 10px;
+	color: var(--tx-body);
+	line-height: 1.55;
+}
+
+.opentrust-admin .opentrust-ai-card__keylink {
+	margin: 0 0 14px;
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-ai-card__saved {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 6px 12px;
+	margin: 0 0 10px;
+	background: #ECF9F1;
+	border: 1px solid #B6E5C9;
+	color: #1B5E36;
+	border-radius: var(--r-sm);
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-ai-card__check {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #1B8E45;
+	color: #fff;
+}
+
+.opentrust-admin .opentrust-ai-card__check svg { width: 9px; height: 9px; }
+
+.opentrust-admin .opentrust-ai-card__saved code {
+	background: transparent;
+	color: inherit;
+	font-size: 12.5px;
+}
+
+.opentrust-admin .opentrust-ai-card__form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.opentrust-admin .opentrust-ai-card__form .opentrust-input { flex: 1 1 260px; min-width: 0; }
+
+/* Advanced provider grid */
+.opentrust-admin .opentrust-ai-advanced__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 14px;
+	margin-top: 8px;
+}
+
+.opentrust-admin .opentrust-ai-card--advanced { padding: 14px 16px; }
+.opentrust-admin .opentrust-ai-card--advanced .opentrust-ai-card__title { font-size: 14px; }
+
+/* Model select + refresh button */
+.opentrust-admin .opentrust-ai-model-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.opentrust-admin .opentrust-ai-model-row .opentrust-select { min-width: 320px; }
+
+/* Generic row helpers */
+.opentrust-admin .opentrust-row__unit {
+	font-size: 13px;
+	color: var(--tx-muted);
+	margin-left: 8px;
+}
+
+/* Field message — success variant (template ships error only) */
+.opentrust-admin .opentrust-field-msg--success { color: #1B5E36; }
+
+/* Notice — list + action-row variants used by AI tab banners */
+.opentrust-admin .opentrust-notice__list {
+	margin: 6px 0 0 18px;
+	padding: 0;
+	list-style: disc;
+}
+
+.opentrust-admin .opentrust-notice__list li {
+	margin: 2px 0;
+}
+
+.opentrust-admin .opentrust-notice__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+/* Default <strong> inside notice body styled like a title */
+.opentrust-admin .opentrust-notice__body > strong {
+	display: block;
+	font-weight: 600;
+	margin: 0 0 2px;
+	font-size: 13.5px;
+}
