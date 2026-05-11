@@ -338,6 +338,11 @@
 		} );
 	}
 
+	// Module-scoped so initTabSwitchGuard and the beforeunload listener can
+	// both consult / flip it. Flipped to true when the user is intentionally
+	// leaving the page (Save click, Discard click, confirmed tab switch).
+	var navConsented = false;
+
 	// Form submission — Save = native submit, Discard = reload with sessionStorage flag
 	function initFormSubmission() {
 		if ( ! form ) {
@@ -345,7 +350,7 @@
 		}
 
 		form.addEventListener( 'submit', function () {
-			// Loading state before browser navigates.
+			navConsented = true;
 			setLoading( saveBtn, true, 'Saving…' );
 			setLoading( discardBtn, true, 'Saving…' );
 		} );
@@ -356,12 +361,70 @@
 					return;
 				}
 				e.preventDefault();
+				navConsented = true;
 				try {
 					sessionStorage.setItem( 'opentrust_discarded', '1' );
 				} catch ( err ) { /* private mode / quota */ }
 				window.location.reload();
 			} );
 		}
+
+		// Browser-native catch-all: hard nav, window close, back-button. The
+		// custom tabbar guard below intercepts in-app tab clicks so the user
+		// gets a typed modal instead of the generic browser confirm.
+		window.addEventListener( 'beforeunload', function ( e ) {
+			if ( navConsented || dirtyCount() === 0 ) {
+				return;
+			}
+			// Modern browsers ignore the returnValue text — they show their own
+			// generic "Leave site?" prompt — but assigning it is the contract.
+			e.preventDefault();
+			e.returnValue = '';
+			return '';
+		} );
+
+		initTabSwitchGuard();
+	}
+
+	// Intercept tabbar clicks when the current tab has unsaved changes. Each
+	// tab is a separate page load, so switching always drops in-flight edits —
+	// the modal makes that explicit and offers a clean off-ramp.
+	function initTabSwitchGuard() {
+		var tabs = document.querySelectorAll( '.opentrust-admin .opentrust-tabbar__tab' );
+		if ( ! tabs.length ) {
+			return;
+		}
+		Array.prototype.forEach.call( tabs, function ( tab ) {
+			tab.addEventListener( 'click', function ( e ) {
+				if ( dirtyCount() === 0 || tab.classList.contains( 'is-active' ) ) {
+					return;
+				}
+				var target = tab.getAttribute( 'href' );
+				if ( ! target ) {
+					return;
+				}
+				e.preventDefault();
+				var n = dirtyCount();
+				showConfirm( {
+					title:       'Discard unsaved changes?',
+					lede:        n === 1
+						? 'You have 1 unsaved change on this tab. Switching tabs will discard it.'
+						: 'You have ' + n + ' unsaved changes on this tab. Switching tabs will discard them.',
+					body:        '<p>Each tab saves independently. Save first to keep your changes, or discard them and switch.</p>',
+					confirmText: 'Discard and switch',
+					cancelText:  'Stay on this tab',
+					danger:      true,
+					onConfirm:   function ( done ) {
+						navConsented = true;
+						try {
+							sessionStorage.setItem( 'opentrust_discarded', '1' );
+						} catch ( err ) { /* private mode / quota */ }
+						window.location.href = target;
+						done();
+					}
+				} );
+			} );
+		} );
 	}
 
 	// Notice dismissal

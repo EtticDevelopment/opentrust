@@ -130,7 +130,20 @@ final class OpenTrust_Admin {
             return;
         }
 
-        wp_enqueue_media();
+        // wp_enqueue_media() pulls ~150 KB of media-uploader JS. Only fire it
+        // where a media picker actually renders:
+        //   - CPT edit screens (badge / artifact / policy-PDF uploaders)
+        //   - Settings page → General tab (logo + AI avatar)
+        // Other tabs (Contact, AI, IO) and the Questions submenu skip it.
+        $needs_media = in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
+        if (!$needs_media && $screen->id === 'toplevel_page_opentrust') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab gate.
+            $tab = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'general';
+            $needs_media = !in_array($tab, ['contact', 'ai', 'io'], true);
+        }
+        if ($needs_media) {
+            wp_enqueue_media();
+        }
 
         wp_enqueue_style(
             'opentrust-admin',
