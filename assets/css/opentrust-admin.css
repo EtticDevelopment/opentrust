@@ -1647,3 +1647,128 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
 	margin: 0 0 2px;
 	font-size: 13.5px;
 }
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: Questions log screen.                        *
+ *                                                                         *
+ * Filter toolbar (label-above-input columns + an actions group), a        *
+ * lightweight log table styled with design tokens, and a flush card       *
+ * variant that lets the table span the card edge-to-edge.                 *
+ * ----------------------------------------------------------------------- */
+
+/* Flush card: drops the padding so a table or media block can span edges */
+.opentrust-admin .opentrust-card--flush { padding: 0; overflow: hidden; }
+
+/* Filter toolbar */
+.opentrust-admin .opentrust-filterbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	align-items: flex-end;
+}
+
+.opentrust-admin .opentrust-filterbar__field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.opentrust-admin .opentrust-filterbar__field label {
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--tx-muted);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.opentrust-admin .opentrust-filterbar__field input,
+.opentrust-admin .opentrust-filterbar__field .opentrust-select { min-width: 0; }
+
+.opentrust-admin .opentrust-filterbar__actions {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-left: auto;
+}
+
+.opentrust-admin .opentrust-filterbar__export { margin-left: auto; }
+
+/* Log table */
+.opentrust-admin .opentrust-log-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	font-size: 13px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-log-table thead th {
+	padding: 9px 14px;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--tx-muted);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	text-align: left;
+	background: var(--ettic-surface-2);
+	border-bottom: 1px solid var(--ettic-border);
+	white-space: nowrap;
+}
+
+.opentrust-admin .opentrust-log-table tbody td {
+	padding: 10px 14px;
+	border-bottom: 1px solid var(--ettic-border);
+	vertical-align: top;
+}
+
+.opentrust-admin .opentrust-log-table tbody tr:last-child td { border-bottom: 0; }
+.opentrust-admin .opentrust-log-table tbody tr:nth-child(even) { background: #FBFCFD; }
+.opentrust-admin .opentrust-log-table tbody tr.is-refused { background: #FFF7EC; }
+.opentrust-admin .opentrust-log-table tbody tr.is-refused:nth-child(even) { background: #FFF1DA; }
+
+.opentrust-admin .opentrust-log-table__empty td { text-align: center; color: var(--tx-muted); padding: 24px 14px; }
+
+.opentrust-admin .opentrust-log-table__date { white-space: nowrap; color: var(--tx-muted); font-size: 12.5px; }
+.opentrust-admin .opentrust-log-table__num  { text-align: right; width: 64px; font-variant-numeric: tabular-nums; }
+.opentrust-admin .opentrust-log-table__meta { font-size: 12px; color: var(--tx-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.opentrust-admin .opentrust-log-table__model { font-family: var(--ff-mono); font-size: 11.5px; background: transparent; color: var(--tx-muted); padding: 0; }
+
+.opentrust-admin .opentrust-log-table__refused {
+	display: inline-block;
+	padding: 1px 7px;
+	margin-right: 6px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	background: var(--warn-bg);
+	color: var(--warn);
+	border-radius: 9px;
+}
+
+/* Pagination — restyle paginate_links() output to fit the design system */
+.opentrust-admin .opentrust-log-table__pagination {
+	display: flex;
+	justify-content: center;
+	gap: 4px;
+	padding: 12px 14px;
+	background: var(--ettic-surface-2);
+	border-top: 1px solid var(--ettic-border);
+	font-size: 13px;
+}
+
+.opentrust-admin .opentrust-log-table__pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	min-width: 28px;
+	height: 28px;
+	padding: 0 9px;
+	border-radius: var(--r-sm);
+	border: 1px solid var(--ettic-border);
+	background: #fff;
+	color: var(--tx-strong);
+	text-decoration: none;
+}
+
+.opentrust-admin .opentrust-log-table__pagination .page-numbers:hover { border-color: var(--ettic-border-hi); color: var(--ettic-blue); }
+.opentrust-admin .opentrust-log-table__pagination .page-numbers.current {
+	background: var(--ettic-blue);
+	border-color: var(--ettic-blue);
+	color: #fff;
+}
+.opentrust-admin .opentrust-log-table__pagination .page-numbers.dots { border: 0; background: transparent; color: var(--tx-quiet); }
