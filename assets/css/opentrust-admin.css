@@ -1781,15 +1781,13 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
  * update / skip / new) for the preview screen.                            *
  * ----------------------------------------------------------------------- */
 
-/* CPT picker — collapsible list inside the Export form */
+/* CPT picker — collapsible list inside the Export form. No surrounding
+ * border/background; sits inline under the row label. */
 .opentrust-admin .opentrust-io-cpt-list {
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
-	border: 1px solid var(--ettic-border);
-	border-radius: var(--r-md);
-	background: #fff;
-	padding: 8px 10px;
+	padding: 0;
 }
 
 .opentrust-admin .opentrust-io-cpt > summary {
@@ -1889,9 +1887,63 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
 .opentrust-admin .opentrust-io-preview-table__pill--new      { background: #FBF1FF; color: #6B2DAA; }
 .opentrust-admin .opentrust-io-preview-table__pill--rename   { background: #FBF1FF; color: #6B2DAA; }
 
-/* Confirm + Cancel button row */
+/* Confirm + Cancel button row — free-floats under the preview tables,
+ * no surrounding card. */
 .opentrust-admin .opentrust-io-confirm {
 	display: flex;
 	gap: 10px;
 	justify-content: flex-end;
+	padding-top: 16px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: visual polish overrides.                     *
+ * ----------------------------------------------------------------------- */
+
+/* Breathing room between section blocks. .opentrust-stack's flex gap only
+ * separates direct children; on General/Contact tabs the blocks are
+ * wrapped in a <form>, so promote the form to the same flex column layout
+ * instead of adding a margin-top rule (which would stack on top of the
+ * flex gap on tabs whose blocks ARE direct children, e.g. Import & Export). */
+.opentrust-admin .opentrust-stack { gap: 40px; }
+.opentrust-admin .opentrust-stack > form {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+/* Hero head is a flex row so the "View Trust Center" button (moved out of
+ * the dark sticky bar) can sit alongside the page title + tagline. */
+.opentrust-admin .opentrust-topbar__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	flex-wrap: wrap;
+}
+.opentrust-admin .opentrust-topbar__head-text { min-width: 0; flex: 1 1 auto; }
+.opentrust-admin .opentrust-topbar__head-action { flex-shrink: 0; }
+
+/* Logo preview sits on the trust center's dark hero in production. Preview
+ * it on the same background so a white-on-dark logo is actually visible. */
+.opentrust-admin [data-opentrust-media-picker="logo_id"] .opentrust-media__preview {
+	background: var(--tb-bg);
+	border-color: var(--tb-divider);
+}
+
+/* Stacked controls that flow under the label instead of pulling to the right.
+ * Used for accent picker, sections chips, and the IO content selection list. */
+.opentrust-admin .opentrust-row__control--stack-left { align-items: flex-start; }
+
+/* Action rows shared the 8px horizontal padding from the locked template,
+ * which sat 6px shy of the 14px used by .opentrust-row above them. Align. */
+.opentrust-admin .opentrust-action-row { padding-left: 14px; padding-right: 14px; }
+
+/* Bare notice — keeps the variant text color but drops the surrounding
+ * panel. Used inline above the import card. */
+.opentrust-admin .opentrust-notice--bare {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	margin: 0 0 16px;
 }

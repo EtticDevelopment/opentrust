@@ -46,7 +46,7 @@ final class OpenTrust_Admin_Questions {
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only filter params on admin display page.
         $filters = [
-            'search'    => isset($_GET['q'])         ? sanitize_text_field((string) wp_unslash($_GET['q']))         : '',
+            'search'    => isset($_GET['search'])    ? sanitize_text_field((string) wp_unslash($_GET['search']))    : '',
             'model'     => isset($_GET['model'])     ? sanitize_text_field((string) wp_unslash($_GET['model']))     : '',
             'date_from' => isset($_GET['date_from']) ? sanitize_text_field((string) wp_unslash($_GET['date_from'])) : '',
             'date_to'   => isset($_GET['date_to'])   ? sanitize_text_field((string) wp_unslash($_GET['date_to']))   : '',
@@ -64,8 +64,17 @@ final class OpenTrust_Admin_Questions {
         $tc_url   = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
         $back_url = admin_url('admin.php?page=opentrust&tab=ai');
 
+        $log_filter_params = array_filter([
+            'search'    => $filters['search'],
+            'model'     => $filters['model'],
+            'date_from' => $filters['date_from'],
+            'date_to'   => $filters['date_to'],
+        ]);
         $export_url = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
+            add_query_arg(
+                ['action' => 'opentrust_ai_questions_export'] + $log_filter_params,
+                admin_url('admin-post.php')
+            ),
             'opentrust_ai_questions_export'
         );
         $clear_url  = wp_nonce_url(
@@ -96,16 +105,18 @@ final class OpenTrust_Admin_Questions {
                         <a href="<?php echo esc_url($back_url); ?>" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
                             &larr; <?php esc_html_e('AI settings', 'opentrust'); ?>
                         </a>
-                        <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
-                            <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
-                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="opentrust-topbar__head">
-                <h1><?php esc_html_e('AI Questions', 'opentrust'); ?></h1>
-                <p><?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed; rows auto-purge after 90 days.', 'opentrust'); ?></p>
+                <div class="opentrust-topbar__head-text">
+                    <h1><?php esc_html_e('AI Questions', 'opentrust'); ?></h1>
+                    <p><?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed; rows auto-purge after 90 days.', 'opentrust'); ?></p>
+                </div>
+                <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm opentrust-topbar__head-action">
+                    <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
+                </a>
             </div>
 
             <div class="opentrust-stack">
@@ -155,7 +166,7 @@ final class OpenTrust_Admin_Questions {
                             <input type="hidden" name="page" value="opentrust-questions">
                             <div class="opentrust-filterbar__field">
                                 <label for="opentrust-q-search"><?php esc_html_e('Search', 'opentrust'); ?></label>
-                                <input type="text" id="opentrust-q-search" name="q" value="<?php echo esc_attr($filters['search']); ?>" class="opentrust-input opentrust-input--md" placeholder="<?php esc_attr_e('Search questions…', 'opentrust'); ?>">
+                                <input type="text" id="opentrust-q-search" name="search" value="<?php echo esc_attr($filters['search']); ?>" class="opentrust-input opentrust-input--md" placeholder="<?php esc_attr_e('Search questions…', 'opentrust'); ?>">
                             </div>
                             <div class="opentrust-filterbar__field">
                                 <label for="opentrust-q-model"><?php esc_html_e('Model', 'opentrust'); ?></label>
@@ -236,8 +247,10 @@ final class OpenTrust_Admin_Questions {
                         </table>
 
                         <?php if ($pages > 1):
-                            $base = add_query_arg($filters + ['page' => 'opentrust-questions'], admin_url('admin.php'));
-                            $base = remove_query_arg('paged', $base);
+                            $base = add_query_arg(
+                                ['page' => 'opentrust-questions'] + $log_filter_params,
+                                admin_url('admin.php')
+                            );
                             ?>
                             <div class="opentrust-log-table__pagination">
                                 <?php

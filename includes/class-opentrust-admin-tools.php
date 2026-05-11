@@ -104,7 +104,7 @@ final class OpenTrust_Admin_Tools {
                             <span class="opentrust-row__label"><?php esc_html_e('Content selection', 'opentrust'); ?></span>
                             <p class="opentrust-row__help"><?php esc_html_e('Everything is selected by default. Expand a group to fine-tune.', 'opentrust'); ?></p>
                         </div>
-                        <div class="opentrust-row__control opentrust-row__control--stack">
+                        <div class="opentrust-row__control opentrust-row__control--stack opentrust-row__control--stack-left">
                             <div class="opentrust-io-cpt-list">
                                 <?php foreach ($exportable as $cpt => $items):
                                     $label = $this->cpt_label($cpt);
@@ -173,7 +173,7 @@ final class OpenTrust_Admin_Tools {
                 <p><?php esc_html_e('Upload a previously exported archive. You will see a preview of every record before anything is written.', 'opentrust'); ?></p>
             </header>
 
-            <div class="opentrust-notice opentrust-notice--warn" role="note">
+            <div class="opentrust-notice opentrust-notice--warn opentrust-notice--bare" role="note">
                 <div class="opentrust-notice__body">
                     <strong><?php esc_html_e('Only upload your own exports.', 'opentrust'); ?></strong>
                     <p><?php esc_html_e('Export files contain your trust-center content and may include sensitive material. Never import a file you received from someone else.', 'opentrust'); ?></p>
@@ -304,10 +304,18 @@ final class OpenTrust_Admin_Tools {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($rows as $r): ?>
+                                <?php
+                                $action_labels = [
+                                    'create' => __('Create', 'opentrust'),
+                                    'update' => __('Update', 'opentrust'),
+                                    'skip'   => __('Skip', 'opentrust'),
+                                ];
+                                foreach ($rows as $r):
+                                    $action = (string) $r['action'];
+                                ?>
                                     <tr>
                                         <td><?php echo esc_html((string) $r['title']); ?></td>
-                                        <td><span class="opentrust-io-preview-table__pill opentrust-io-preview-table__pill--<?php echo esc_attr((string) $r['action']); ?>"><?php echo esc_html(ucfirst((string) $r['action'])); ?></span></td>
+                                        <td><span class="opentrust-io-preview-table__pill opentrust-io-preview-table__pill--<?php echo esc_attr($action); ?>"><?php echo esc_html($action_labels[$action] ?? ucfirst($action)); ?></span></td>
                                         <td class="opentrust-io-preview-table__uuid"><code><?php echo esc_html((string) ($r['uuid'] ?? '—')); ?></code></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -317,16 +325,14 @@ final class OpenTrust_Admin_Tools {
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <div class="opentrust-card">
-                <form method="post" action="<?php echo esc_url($action_url); ?>" class="opentrust-io-confirm">
-                    <input type="hidden" name="action" value="opentrust_import_apply">
-                    <?php wp_nonce_field('opentrust_import_apply'); ?>
-                    <button type="submit" name="ot_cancel" value="1" class="opentrust-btn opentrust-btn--ghost"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
-                    <?php if (empty($preview['errors'])): ?>
-                        <button type="submit" class="opentrust-btn opentrust-btn--primary"><?php esc_html_e('Confirm and import', 'opentrust'); ?></button>
-                    <?php endif; ?>
-                </form>
-            </div>
+            <form method="post" action="<?php echo esc_url($action_url); ?>" class="opentrust-io-confirm">
+                <input type="hidden" name="action" value="opentrust_import_apply">
+                <?php wp_nonce_field('opentrust_import_apply'); ?>
+                <button type="submit" name="ot_cancel" value="1" class="opentrust-btn opentrust-btn--ghost"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
+                <?php if (empty($preview['errors'])): ?>
+                    <button type="submit" class="opentrust-btn opentrust-btn--primary"><?php esc_html_e('Confirm and import', 'opentrust'); ?></button>
+                <?php endif; ?>
+            </form>
         </section>
         <?php
     }
@@ -481,7 +487,7 @@ final class OpenTrust_Admin_Tools {
             }
 
             if (!empty($result['errors'])) {
-                $msg .= '<br><strong>' . esc_html__('Errors:', 'opentrust') . '</strong><br>' . esc_html(implode('<br>', (array) $result['errors']));
+                $msg .= '<br><strong>' . esc_html__('Errors:', 'opentrust') . '</strong><br>' . implode('<br>', array_map('esc_html', (array) $result['errors']));
             }
 
             $this->bounce_notice($msg, !empty($result['errors']) ? 'error' : 'success');

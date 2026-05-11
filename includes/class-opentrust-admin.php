@@ -139,7 +139,7 @@ final class OpenTrust_Admin {
         if (!$needs_media && $screen->id === 'toplevel_page_opentrust') {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab gate.
             $tab = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'general';
-            $needs_media = !in_array($tab, ['contact', 'ai', 'io'], true);
+            $needs_media = $tab === 'general';
         }
         if ($needs_media) {
             wp_enqueue_media();
@@ -187,19 +187,27 @@ final class OpenTrust_Admin {
             );
         }
 
-        // Localize the handful of admin strings that admin.js renders directly
-        // (e.g. wp.media modal titles). Catalog-screen strings are shipped
-        // separately below via window.OpenTrustCatalog.
+        // Localize strings rendered directly from JS (wp.media modal titles in
+        // admin.js, and the design system's tab-switch confirm modal in
+        // opentrust-admin.js). Catalog-screen strings ship below via
+        // window.OpenTrustCatalog.
         wp_add_inline_script(
             'opentrust-admin',
             'window.OpenTrustAdmin = ' . wp_json_encode([
                 'i18n' => [
-                    'selectBadgeImage' => __('Select Badge Image', 'opentrust'),
-                    'useAsBadge'       => __('Use as Badge', 'opentrust'),
-                    'selectArtifact'   => __('Select Proof Artifact', 'opentrust'),
-                    'useAsArtifact'    => __('Use This File', 'opentrust'),
-                    'uploadArtifact'   => __('Upload File', 'opentrust'),
-                    'replaceArtifact'  => __('Replace File', 'opentrust'),
+                    'selectBadgeImage'     => __('Select Badge Image', 'opentrust'),
+                    'useAsBadge'           => __('Use as Badge', 'opentrust'),
+                    'selectArtifact'       => __('Select Proof Artifact', 'opentrust'),
+                    'useAsArtifact'        => __('Use This File', 'opentrust'),
+                    'uploadArtifact'       => __('Upload File', 'opentrust'),
+                    'replaceArtifact'      => __('Replace File', 'opentrust'),
+                    'tabSwitchTitle'       => __('Discard unsaved changes?', 'opentrust'),
+                    'tabSwitchOneUnsaved'  => __('You have 1 unsaved change on this tab. Switching tabs will discard it.', 'opentrust'),
+                    /* translators: %d: number of unsaved changes on the current tab. */
+                    'tabSwitchManyUnsaved' => __('You have %d unsaved changes on this tab. Switching tabs will discard them.', 'opentrust'),
+                    'tabSwitchBody'        => __('Each tab saves independently. Save first to keep your changes, or discard them and switch.', 'opentrust'),
+                    'tabSwitchConfirm'     => __('Discard and switch', 'opentrust'),
+                    'tabSwitchCancel'      => __('Stay on this tab', 'opentrust'),
                 ],
             ]) . ';',
             'before'
@@ -208,8 +216,7 @@ final class OpenTrust_Admin {
         // Catalog autofill: ship the bundled vendor / practice catalog only on
         // the new-post screen for the two CPTs that support it. Edit screens
         // are deliberately excluded so we never stomp existing values.
-        $screen = get_current_screen();
-        if ($hook === 'post-new.php' && $screen && in_array($screen->post_type, ['ot_subprocessor', 'ot_data_practice', 'ot_certification'], true)) {
+        if ($hook === 'post-new.php' && in_array($screen->post_type, ['ot_subprocessor', 'ot_data_practice', 'ot_certification'], true)) {
             $payload = [
                 'postType' => $screen->post_type,
                 'catalog'  => OpenTrust_Catalog::for_js($screen->post_type),

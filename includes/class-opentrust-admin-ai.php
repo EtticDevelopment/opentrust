@@ -1,22 +1,11 @@
 <?php
 /**
- * AI Chat settings tab and its admin-post handlers.
+ * AI Chat tab body + admin-post handlers for key save/forget/refresh and the
+ * summary backfill sweep.
  *
- * Owns the entire "AI Chat" surface inside the OpenTrust settings page:
- * the provider picker (Anthropic primary, others behind an "advanced"
- * disclosure), the per-provider key card with validate-and-save flow,
- * the post-key model picker + budget/limit form, and the four
- * admin-post.php endpoints that drive key save/forget/refresh and the
- * summary-backfill sweep.
- *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
- * admin_post_* hooks. The settings page (which still lives on
- * OpenTrust_Admin as the menu callback) calls render_ai_tab() when the
- * "ai" tab is active.
- *
- * Settings writes that bypass the sanitize_settings filter (key
- * validation flips ai_enabled / ai_provider / ai_model_list_cached_at)
- * route through OpenTrust_Admin_Settings::save_settings_raw().
+ * Server-controlled settings (ai_enabled / ai_provider / ai_model_list_cached_at)
+ * are written via OpenTrust_Admin_Settings::save_settings_raw() to bypass the
+ * sanitize filter, which always carries them forward from the stored option.
  */
 
 declare(strict_types=1);
@@ -61,10 +50,12 @@ final class OpenTrust_Admin_AI {
         $this->render_summary_backfill_banner($settings, $has_active_key);
 
         if ($is_non_anthropic_active):
+            $adapter        = OpenTrust_Chat_Provider::for($active_provider);
+            $provider_label = $adapter ? $adapter->label() : ucfirst($active_provider);
             $intro = sprintf(
                 /* translators: %s: provider label, e.g. OpenAI */
                 __('You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'),
-                ucfirst($active_provider)
+                $provider_label
             );
             ?>
             <div class="opentrust-notice opentrust-notice--warn" role="alert">

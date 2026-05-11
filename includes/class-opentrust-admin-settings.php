@@ -1,24 +1,11 @@
 <?php
 /**
- * Settings API registration, design-system field renderers, sanitization,
- * and the settings-page wrapper that hosts the General / Contact / AI / IO
- * tabs.
+ * Settings API + design-system renderers for the General / Contact / AI / IO tabs.
  *
- * Owns the WordPress Settings API surface for OpenTrust: register_setting()
- * with a sanitize_callback, plus the schema-driven sanitize cascade that
- * keeps cross-tab saves shape-stable. Page rendering is manual (no
- * do_settings_sections); every tab calls a ds_render_section_* method that
- * emits .opentrust-* row markup from the shared Ettic admin design system.
- *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
- * admin_init hook for register_settings(). The settings menu page in
- * OpenTrust_Admin::register_menu() points its callback directly at this
- * class's render_settings_page().
- *
- * Also owns save_settings_raw() — the skip-sanitize writer used by the
- * AI key-save handlers and the Questions toggle-logging handler. It
- * lives here because it needs the same `[$this, 'sanitize_settings']`
- * callable to remove/re-add the filter as the registration site.
+ * The sanitize callback is schema-driven so saving one tab carries the others'
+ * values forward unchanged. save_settings_raw() bypasses the filter for the
+ * out-of-band writes done by the AI key-save and Questions toggle-logging
+ * handlers.
  */
 
 declare(strict_types=1);
@@ -28,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class OpenTrust_Admin_Settings {
+
+    public const TABS = ['general', 'contact', 'ai', 'io'];
 
     private static ?self $instance = null;
 
@@ -58,11 +47,6 @@ final class OpenTrust_Admin_Settings {
     // ──────────────────────────────────────────────
     // Design-system field renderers
     // ──────────────────────────────────────────────
-    //
-    // These emit the shared Ettic admin design system row markup directly,
-    // bypassing do_settings_sections(). The Settings API registration in
-    // register_settings() (above) is what `settings_fields()` reads for the
-    // nonce + option_page hidden inputs — that wiring stays unchanged.
 
     private function ds_render_section_general(): void {
         $settings = OpenTrust::get_settings();
@@ -254,7 +238,7 @@ final class OpenTrust_Admin_Settings {
                 <span class="opentrust-row__label"><?php esc_html_e('Accent Color', 'opentrust'); ?></span>
                 <p class="opentrust-row__help"><?php esc_html_e('Used for buttons, links, and highlights. Choose a color that matches your brand.', 'opentrust'); ?></p>
             </div>
-            <div class="opentrust-row__control opentrust-row__control--stack">
+            <div class="opentrust-row__control opentrust-row__control--stack opentrust-row__control--stack-left">
                 <div class="opentrust-color">
                     <input type="color" value="<?php echo esc_attr($value); ?>" aria-label="<?php esc_attr_e('Color picker', 'opentrust'); ?>">
                     <input type="text" class="opentrust-input opentrust-input--mono" id="opentrust_accent_color" name="opentrust_settings[accent_color]" value="<?php echo esc_attr($value); ?>" maxlength="7" data-validate-hex>
@@ -310,7 +294,7 @@ final class OpenTrust_Admin_Settings {
                 <span class="opentrust-row__label"><?php esc_html_e('Sections', 'opentrust'); ?></span>
                 <p class="opentrust-row__help"><?php esc_html_e('Click a section to toggle its visibility. Hidden sections still preserve their content; only the public page changes.', 'opentrust'); ?></p>
             </div>
-            <div class="opentrust-row__control opentrust-row__control--stack">
+            <div class="opentrust-row__control opentrust-row__control--stack opentrust-row__control--stack-left">
                 <div class="opentrust-chips">
                     <?php foreach ($sections as $key => $label): ?>
                         <?php $checked = !empty($visible[$key]); ?>
@@ -552,7 +536,7 @@ final class OpenTrust_Admin_Settings {
         $tc_url   = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switch on admin settings page.
         $tab      = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'general';
-        if (!in_array($tab, ['general', 'contact', 'ai', 'io'], true)) {
+        if (!in_array($tab, self::TABS, true)) {
             $tab = 'general';
         }
         $base_url = admin_url('admin.php?page=opentrust');
@@ -580,32 +564,28 @@ final class OpenTrust_Admin_Settings {
                     <span class="opentrust-topbar__version">v<?php echo esc_html(OPENTRUST_VERSION); ?></span>
                 </div>
 
-                <div class="opentrust-topbar__right">
-                    <?php if ($has_settings_form): ?>
+                <?php if ($has_settings_form): ?>
+                    <div class="opentrust-topbar__right">
                         <div class="opentrust-topbar__dirty is-clean" aria-live="polite" data-dirty>
                             <span class="opentrust-topbar__dirty-dot" aria-hidden="true"></span>
                             <span><span class="opentrust-topbar__dirty-num" data-dirty-num>0</span><span data-dirty-label></span></span>
                         </div>
                         <div class="opentrust-topbar__actions">
-                            <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
-                                <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
-                            </a>
                             <button type="button" class="opentrust-btn opentrust-btn--ghost-dark" data-discard disabled><?php esc_html_e('Discard', 'opentrust'); ?></button>
                             <button type="submit" form="opentrust-settings-form" class="opentrust-btn opentrust-btn--primary" data-save name="submit" disabled><?php esc_html_e('Save changes', 'opentrust'); ?></button>
                         </div>
-                    <?php else: ?>
-                        <div class="opentrust-topbar__actions">
-                            <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
-                                <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="opentrust-topbar__head">
-                <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-                <p><?php esc_html_e('Self-hosted, open-source trust center for security policies, subprocessors, certifications, and data practices.', 'opentrust'); ?></p>
+                <div class="opentrust-topbar__head-text">
+                    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+                    <p><?php esc_html_e('Self-hosted, open-source trust center for security policies, subprocessors, certifications, and data practices.', 'opentrust'); ?></p>
+                </div>
+                <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm opentrust-topbar__head-action">
+                    <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
+                </a>
             </div>
 
             <nav class="opentrust-tabbar" role="tablist" aria-label="<?php esc_attr_e('OpenTrust settings sections', 'opentrust'); ?>">

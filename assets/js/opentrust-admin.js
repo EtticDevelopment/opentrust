@@ -405,14 +405,16 @@
 				}
 				e.preventDefault();
 				var n = dirtyCount();
+				var i18n = ( window.OpenTrustAdmin && window.OpenTrustAdmin.i18n ) || {};
+				var manyText = ( i18n.tabSwitchManyUnsaved || 'You have %d unsaved changes on this tab. Switching tabs will discard them.' ).replace( '%d', String( n ) );
 				showConfirm( {
-					title:       'Discard unsaved changes?',
+					title:       i18n.tabSwitchTitle || 'Discard unsaved changes?',
 					lede:        n === 1
-						? 'You have 1 unsaved change on this tab. Switching tabs will discard it.'
-						: 'You have ' + n + ' unsaved changes on this tab. Switching tabs will discard them.',
-					body:        '<p>Each tab saves independently. Save first to keep your changes, or discard them and switch.</p>',
-					confirmText: 'Discard and switch',
-					cancelText:  'Stay on this tab',
+						? ( i18n.tabSwitchOneUnsaved || 'You have 1 unsaved change on this tab. Switching tabs will discard it.' )
+						: manyText,
+					body:        '<p>' + ( i18n.tabSwitchBody || 'Each tab saves independently. Save first to keep your changes, or discard them and switch.' ) + '</p>',
+					confirmText: i18n.tabSwitchConfirm || 'Discard and switch',
+					cancelText:  i18n.tabSwitchCancel || 'Stay on this tab',
 					danger:      true,
 					onConfirm:   function ( done ) {
 						navConsented = true;
