@@ -568,63 +568,97 @@ final class OpenTrust_Admin_Settings {
             $tab = 'general';
         }
         $base_url = admin_url('admin.php?page=opentrust');
+
+        // General + Contact are Settings-API-saveable. AI + IO have their own
+        // bespoke forms (admin-post handlers / sub-forms) and don't wire into
+        // the topbar Save until their respective migration commits.
+        $has_settings_form = in_array($tab, ['general', 'contact'], true);
+        $tabs = [
+            'general' => ['label' => __('General', 'opentrust'),         'url' => $base_url],
+            'contact' => ['label' => __('Contact', 'opentrust'),         'url' => add_query_arg('tab', 'contact', $base_url)],
+            'ai'      => ['label' => __('AI Chat', 'opentrust'),         'url' => add_query_arg('tab', 'ai', $base_url)],
+            'io'      => ['label' => __('Import & Export', 'opentrust'), 'url' => add_query_arg('tab', 'io', $base_url)],
+        ];
         ?>
-        <div class="wrap">
-            <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        <div class="wrap opentrust-admin">
 
-            <p>
-                <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="button button-secondary">
-                    <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
-                </a>
-            </p>
+            <div class="opentrust-topbar__bar" role="banner">
+                <div class="opentrust-topbar__brand">
+                    <svg class="opentrust-topbar__mark" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="OpenTrust">
+                        <rect width="26" height="26" rx="6" fill="#0F5CFA"/>
+                        <path transform="translate(4 4) scale(0.75)" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 16l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z" fill="white"/>
+                    </svg>
+                    <span class="opentrust-topbar__name"><?php esc_html_e('OpenTrust', 'opentrust'); ?></span>
+                    <span class="opentrust-topbar__version">v<?php echo esc_html(OPENTRUST_VERSION); ?></span>
+                </div>
 
-            <h2 class="nav-tab-wrapper">
-                <a href="<?php echo esc_url($base_url); ?>"
-                   class="nav-tab <?php echo $tab === 'general' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
-                    <?php esc_html_e('General', 'opentrust'); ?>
-                </a>
-                <a href="<?php echo esc_url(add_query_arg('tab', 'contact', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'contact' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
-                    <?php esc_html_e('Contact', 'opentrust'); ?>
-                </a>
-                <a href="<?php echo esc_url(add_query_arg('tab', 'ai', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'ai' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
-                    <?php esc_html_e('AI Chat', 'opentrust'); ?>
-                    <?php if (!empty($settings['ai_enabled'])): ?>
-                        <span class="ot-pill ot-pill--live" style="margin-left:6px;padding:2px 8px;background:#dcfce7;color:#166534;border-radius:10px;font-size:11px;font-weight:600;vertical-align:middle">
-                            <?php esc_html_e('Live', 'opentrust'); ?>
-                        </span>
+                <div class="opentrust-topbar__right">
+                    <?php if ($has_settings_form): ?>
+                        <div class="opentrust-topbar__dirty is-clean" aria-live="polite" data-dirty>
+                            <span class="opentrust-topbar__dirty-dot" aria-hidden="true"></span>
+                            <span><span class="opentrust-topbar__dirty-num" data-dirty-num>0</span><span data-dirty-label></span></span>
+                        </div>
+                        <div class="opentrust-topbar__actions">
+                            <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
+                                <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
+                            </a>
+                            <button type="button" class="opentrust-btn opentrust-btn--ghost-dark" data-discard disabled><?php esc_html_e('Discard', 'opentrust'); ?></button>
+                            <button type="submit" form="opentrust-settings-form" class="opentrust-btn opentrust-btn--primary" data-save name="submit" disabled><?php esc_html_e('Save changes', 'opentrust'); ?></button>
+                        </div>
+                    <?php else: ?>
+                        <div class="opentrust-topbar__actions">
+                            <a href="<?php echo esc_url($tc_url); ?>" target="_blank" class="opentrust-btn opentrust-btn--ghost-dark opentrust-btn--sm">
+                                <?php esc_html_e('View Trust Center', 'opentrust'); ?> &rarr;
+                            </a>
+                        </div>
                     <?php endif; ?>
-                </a>
-                <a href="<?php echo esc_url(add_query_arg('tab', 'io', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'io' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
-                    <?php esc_html_e('Import & Export', 'opentrust'); ?>
-                </a>
-            </h2>
+                </div>
+            </div>
 
-            <?php if ($tab === 'io'): ?>
-                <?php OpenTrust_Admin_Tools::instance()->render_tab(); ?>
-            <?php elseif ($tab === 'ai'): ?>
-                <?php OpenTrust_Admin_AI::instance()->render_ai_tab($settings); ?>
-            <?php elseif ($tab === 'contact'): ?>
-                <form method="post" action="options.php">
-                    <?php
-                    settings_fields('opentrust_settings_group');
-                    echo '<input type="hidden" name="opentrust_settings[__contact_tab_save]" value="1">';
-                    do_settings_sections('opentrust-settings-contact');
-                    submit_button();
-                    ?>
-                </form>
-            <?php else: ?>
-                <form method="post" action="options.php">
-                    <?php
-                    settings_fields('opentrust_settings_group');
-                    echo '<input type="hidden" name="opentrust_settings[__general_tab_save]" value="1">';
-                    do_settings_sections('opentrust-settings-general');
-                    submit_button();
-                    ?>
-                </form>
-            <?php endif; ?>
+            <div class="opentrust-topbar__head">
+                <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+                <p><?php esc_html_e('Self-hosted, open-source trust center for security policies, subprocessors, certifications, and data practices.', 'opentrust'); ?></p>
+            </div>
+
+            <nav class="opentrust-tabbar" role="tablist" aria-label="<?php esc_attr_e('OpenTrust settings sections', 'opentrust'); ?>">
+                <?php foreach ($tabs as $tab_key => $info): ?>
+                    <a href="<?php echo esc_url($info['url']); ?>"
+                       class="opentrust-tabbar__tab<?php echo $tab === $tab_key ? ' is-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>"
+                       role="tab"
+                       aria-selected="<?php echo $tab === $tab_key ? 'true' : 'false'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
+                        <?php echo esc_html($info['label']); ?>
+                        <?php if ($tab_key === 'ai' && !empty($settings['ai_enabled'])): ?>
+                            <span class="opentrust-tabbar__badge"><?php esc_html_e('Live', 'opentrust'); ?></span>
+                        <?php endif; ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+
+            <div class="opentrust-stack">
+                <?php if ($tab === 'io'): ?>
+                    <?php OpenTrust_Admin_Tools::instance()->render_tab(); ?>
+                <?php elseif ($tab === 'ai'): ?>
+                    <?php OpenTrust_Admin_AI::instance()->render_ai_tab($settings); ?>
+                <?php elseif ($tab === 'contact'): ?>
+                    <form id="opentrust-settings-form" method="post" action="options.php">
+                        <?php
+                        settings_fields('opentrust_settings_group');
+                        echo '<input type="hidden" name="opentrust_settings[__contact_tab_save]" value="1">';
+                        do_settings_sections('opentrust-settings-contact');
+                        ?>
+                    </form>
+                <?php else: ?>
+                    <form id="opentrust-settings-form" method="post" action="options.php">
+                        <?php
+                        settings_fields('opentrust_settings_group');
+                        echo '<input type="hidden" name="opentrust_settings[__general_tab_save]" value="1">';
+                        do_settings_sections('opentrust-settings-general');
+                        ?>
+                    </form>
+                <?php endif; ?>
+            </div>
+
+            <?php \OpenTrust\Admin\Footer::render(); ?>
         </div>
         <?php
     }

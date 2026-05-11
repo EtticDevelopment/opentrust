@@ -148,6 +148,29 @@ final class OpenTrust_Admin {
             true
         );
 
+        // Ettic admin design system — chrome (topbar, footer, tabbar) plus
+        // dirty tracking / toasts / modals JS. Scoped under .opentrust-admin
+        // so the tokens don't leak onto CPT edit screens. Loaded only on
+        // OpenTrust's own plugin pages, never on CPT meta-box screens.
+        $is_plugin_page = str_starts_with($screen->id, 'toplevel_page_opentrust')
+            || str_starts_with($screen->id, 'opentrust_page_');
+
+        if ($is_plugin_page) {
+            wp_enqueue_style(
+                'opentrust-admin-ds',
+                OPENTRUST_PLUGIN_URL . 'assets/css/opentrust-admin.css',
+                [],
+                OPENTRUST_VERSION
+            );
+            wp_enqueue_script(
+                'opentrust-admin-ds',
+                OPENTRUST_PLUGIN_URL . 'assets/js/opentrust-admin.js',
+                [],
+                OPENTRUST_VERSION,
+                true
+            );
+        }
+
         // Localize the handful of admin strings that admin.js renders directly
         // (e.g. wp.media modal titles). Catalog-screen strings are shipped
         // separately below via window.OpenTrustCatalog.

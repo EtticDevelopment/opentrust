@@ -1363,3 +1363,78 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
 	color: var(--ettic-border-hi);
 	user-select: none;
 }
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extension: tabbar strip below the topbar.                *
+ *                                                                         *
+ * The shared Ettic template forbids horizontal tabs INSIDE the dark       *
+ * topbar — OpenTrust's 4-tab settings page predates that invariant and    *
+ * users have bookmarked the ?tab=... URLs. This component renders the     *
+ * tabs as a separate, lighter strip BELOW the topbar so the design        *
+ * system's chrome stays clean while the existing URLs keep working.       *
+ *                                                                         *
+ * Not part of the shared design system. Do not extract upstream without   *
+ * first resolving whether multi-page plugins should always use WP         *
+ * submenus instead of tabs.                                               *
+ * ----------------------------------------------------------------------- */
+
+.opentrust-admin .opentrust-tabbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-items: stretch;
+	margin: -8px 0 18px;
+	padding: 0 4px;
+	border-bottom: 1px solid var(--ettic-border);
+}
+
+.opentrust-admin .opentrust-tabbar__tab {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 14px 11px;
+	margin-bottom: -1px;
+	color: var(--tx-muted);
+	font-size: 13.5px;
+	font-weight: 500;
+	line-height: 1.2;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-bottom: 2px solid transparent;
+	border-radius: var(--r-sm) var(--r-sm) 0 0;
+	transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.opentrust-admin .opentrust-tabbar__tab:hover,
+.opentrust-admin .opentrust-tabbar__tab:focus-visible {
+	color: var(--tx-strong);
+	background: var(--ettic-surface-2);
+	text-decoration: none;
+	outline: none;
+}
+
+.opentrust-admin .opentrust-tabbar__tab.is-active {
+	color: var(--ettic-blue);
+	border-bottom-color: var(--ettic-blue);
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-tabbar__tab.is-active:hover {
+	background: transparent;
+}
+
+.opentrust-admin .opentrust-tabbar__badge {
+	display: inline-flex;
+	align-items: center;
+	height: 18px;
+	padding: 0 7px;
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: #166534;
+	background: #dcfce7;
+	border-radius: 9px;
+	line-height: 1;
+}
