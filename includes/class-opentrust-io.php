@@ -25,7 +25,14 @@ final class OpenTrust_IO {
         'opentrust_site_salt',
         'ai_enabled',
         'ai_provider',
+        // ai_model is paired with ai_provider — exporting it without the provider
+        // would let an Anthropic model id land on a destination running OpenAI.
+        'ai_model',
         'ai_model_list_cached_at',
+        // Snapshot of the active model's metadata — provider-specific, would carry
+        // a stale label across to a destination site that uses a different provider.
+        'ai_model_display_name',
+        'ai_model_recommended',
     ];
 
     // Keep in sync with class-opentrust-cpt.php save handlers.

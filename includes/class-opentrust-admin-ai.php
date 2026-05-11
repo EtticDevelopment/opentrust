@@ -27,6 +27,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class OpenTrust_Admin_AI {
 
+    public const CRON_HOOK    = 'opentrust_ai_models_refresh';
+    public const CACHE_TTL    = 25 * HOUR_IN_SECONDS; // Slightly > daily cron cadence so the cache never expires between ticks.
+
     private static ?self $instance = null;
 
     public static function instance(): self {
@@ -38,6 +41,11 @@ final class OpenTrust_Admin_AI {
         add_action('admin_post_opentrust_ai_forget_key',      [$this, 'handle_ai_forget_key']);
         add_action('admin_post_opentrust_ai_refresh_models',  [$this, 'handle_ai_refresh_models']);
         add_action('admin_post_opentrust_ai_summarize_sweep', [$this, 'handle_ai_summarize_sweep']);
+
+        // Idempotent re-schedule on admin page loads — defends against the
+        // daily cron getting cleared externally without forcing a deactivate/
+        // reactivate cycle. wp_next_scheduled is an in-request lookup.
+        add_action('admin_init', [self::class, 'schedule_cron']);
     }
 
     // ──────────────────────────────────────────────
@@ -306,12 +314,34 @@ final class OpenTrust_Admin_AI {
 
     private function render_ai_settings_form(array $settings): void {
         $active_provider = $settings['ai_provider'];
-        $models          = $this->get_cached_model_list($active_provider);
-        $current_model   = $settings['ai_model'] ?? '';
+        $models          = $this->cached_models_for($active_provider);
+        $current_model   = (string) ($settings['ai_model'] ?? '');
         $refresh_url     = wp_nonce_url(
             admin_url('admin-post.php?action=opentrust_ai_refresh_models&provider=' . rawurlencode($active_provider)),
             'opentrust_ai_refresh_models'
         );
+
+        // Cache may have expired (empty list) or the provider may have
+        // dropped the id (non-empty list, no match). Either way, synthesize
+        // the saved selection so the <select> isn't empty — an empty <select>
+        // posts nothing on save and silently blanks ai_model. Empty cache
+        // alone isn't proof of deprecation, so only the no-match-in-non-empty
+        // case shows the warning icon. Falls back to the raw id when the
+        // snapshot label is missing (e.g. v2→v3 upgrade ran with an already-
+        // expired cache, so the backfill couldn't seed a name).
+        $is_unavailable = false;
+        if ($current_model !== '' && $this->find_model_meta($current_model, $models) === null) {
+            $snapshot = [
+                'id'           => $current_model,
+                'display_name' => (string) ($settings['ai_model_display_name'] ?? $current_model),
+                'recommended'  => !empty($settings['ai_model_recommended']),
+            ];
+            if (!empty($models)) {
+                $is_unavailable          = true;
+                $snapshot['unavailable'] = true;
+            }
+            array_unshift($models, $snapshot);
+        }
         ?>
         <h3 style="margin-top:32px"><?php esc_html_e('Step 2 — Pick a model and tune defaults', 'opentrust'); ?></h3>
 
@@ -336,13 +366,27 @@ final class OpenTrust_Admin_AI {
                             <select id="opentrust_ai_model" name="opentrust_settings[ai_model]" style="min-width:360px">
                                 <?php foreach ($models as $model): ?>
                                     <option value="<?php echo esc_attr($model['id']); ?>" <?php selected($current_model, $model['id']); ?>>
-                                        <?php echo esc_html($model['display_name']); ?>
+                                        <?php
+                                        echo esc_html($model['display_name']);
+                                        if (!empty($model['unavailable'])) {
+                                            echo ' ' . esc_html__('(unavailable)', 'opentrust');
+                                        }
+                                        ?>
                                         <?php if (!empty($model['recommended'])): ?>
                                             — ★ <?php esc_html_e('Recommended', 'opentrust'); ?>
                                         <?php endif; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <?php if ($is_unavailable): ?>
+                                <span class="opentrust-ai-model-unavailable" aria-hidden="false">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+                                        <line x1="3" y1="3" x2="13" y2="13"/>
+                                        <line x1="13" y1="3" x2="3" y2="13"/>
+                                    </svg>
+                                    <span class="description"><?php esc_html_e('Model unavailable', 'opentrust'); ?></span>
+                                </span>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <a href="<?php echo esc_url($refresh_url); ?>" class="button" style="margin-left:8px">
                             <?php esc_html_e('Refresh models', 'opentrust'); ?>
@@ -505,9 +549,9 @@ final class OpenTrust_Admin_AI {
     }
 
     /**
-     * Read the cached model list for a provider. Returns an empty array if missing.
+     * Read the cached model list for a provider. Empty if no key or no cache.
      */
-    private function get_cached_model_list(string $provider): array {
+    private function cached_models_for(string $provider): array {
         if ($provider === '') {
             return [];
         }
@@ -515,11 +559,93 @@ final class OpenTrust_Admin_AI {
         if (!isset($stored_keys[$provider])) {
             return [];
         }
-        $fingerprint = OpenTrust_Chat_Secrets::fingerprint($stored_keys[$provider]);
-        $cached      = get_transient('opentrust_models_' . $provider . '_' . $fingerprint);
+        $cached = get_transient($this->cache_key_for($provider, $stored_keys[$provider]));
         return is_array($cached) && isset($cached['models']) && is_array($cached['models'])
             ? $cached['models']
             : [];
+    }
+
+    private function cache_key_for(string $provider, string $api_key): string {
+        return 'opentrust_models_' . $provider . '_' . OpenTrust_Chat_Secrets::fingerprint($api_key);
+    }
+
+    /**
+     * Find a model entry by id. Returns null if $models is empty or no match.
+     *
+     * @param array<int, array{id: string, display_name: string, recommended: bool}> $models
+     * @return array{id: string, display_name: string, recommended: bool}|null
+     */
+    public function find_model_meta(string $id, array $models): ?array {
+        if ($id === '') {
+            return null;
+        }
+        foreach ($models as $model) {
+            if (($model['id'] ?? '') === $id) {
+                return $model;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Look up the snapshot fields for $model_id against the cached model list
+     * for $provider. Null if no key, no cache, or no match. Used by
+     * sanitize_settings, which doesn't otherwise know about the model cache.
+     *
+     * @return array{display_name: string, recommended: bool}|null
+     */
+    public function snapshot_for_provider(string $provider, string $model_id): ?array {
+        if ($model_id === '') {
+            return null;
+        }
+        $meta = $this->find_model_meta($model_id, $this->cached_models_for($provider));
+        return $meta === null ? null : [
+            'display_name' => (string) ($meta['display_name'] ?? ''),
+            'recommended'  => !empty($meta['recommended']),
+        ];
+    }
+
+    /**
+     * Write the active model's metadata snapshot into $settings. No-op if the
+     * id isn't in $models — the existing snapshot stays untouched so the
+     * dropdown can still render a label after a deprecation or cache miss.
+     *
+     * @param array<int, array{id: string, display_name: string, recommended: bool}> $models
+     */
+    public function snapshot_active_model(array &$settings, array $models): void {
+        $id = (string) ($settings['ai_model'] ?? '');
+        if ($id === '') {
+            return;
+        }
+        $meta = $this->find_model_meta($id, $models);
+        if ($meta === null) {
+            return;
+        }
+        $settings['ai_model_display_name'] = (string) ($meta['display_name'] ?? '');
+        $settings['ai_model_recommended']  = !empty($meta['recommended']);
+    }
+
+    /**
+     * Hit a provider's /models endpoint, refresh its transient cache on success.
+     * Returns the raw validate_and_list_models() result so the caller can
+     * branch on ok/error.
+     *
+     * @return array{ok: bool, models?: array<int, array{id: string, display_name: string, recommended: bool}>, error?: string}
+     */
+    private function refresh_provider_cache(string $slug, string $api_key): array {
+        $adapter = OpenTrust_Chat_Provider::for($slug);
+        if (!$adapter) {
+            return ['ok' => false, 'error' => 'Unknown provider'];
+        }
+        $result = $adapter->validate_and_list_models($api_key);
+        if (!empty($result['ok'])) {
+            set_transient(
+                $this->cache_key_for($slug, $api_key),
+                ['models' => $result['models'], 'fetched_at' => time()],
+                self::CACHE_TTL
+            );
+        }
+        return $result;
     }
 
     // ──────────────────────────────────────────────
@@ -545,7 +671,7 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        $result = $adapter->validate_and_list_models($api_key);
+        $result = $this->refresh_provider_cache($provider, $api_key);
 
         if (empty($result['ok'])) {
             $error = $result['error'] ?? __('Validation failed.', 'opentrust');
@@ -555,16 +681,7 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        // Persist the key (encrypted).
         OpenTrust_Chat_Secrets::put($provider, $api_key);
-
-        // Cache the model list keyed by fingerprint, NOT by key.
-        $fingerprint = OpenTrust_Chat_Secrets::fingerprint($api_key);
-        set_transient(
-            'opentrust_models_' . $provider . '_' . $fingerprint,
-            ['models' => $result['models'], 'fetched_at' => time()],
-            24 * HOUR_IN_SECONDS
-        );
 
         // Update settings: mark AI enabled, record provider + cache timestamp,
         // and if no model is selected yet, pre-pick the first recommended model.
@@ -583,6 +700,7 @@ final class OpenTrust_Admin_AI {
                 $settings['ai_model'] = $result['models'][0]['id'];
             }
         }
+        $this->snapshot_active_model($settings, $result['models']);
         OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: 1: provider label, 2: number of models */
@@ -647,7 +765,7 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        $result = $adapter->validate_and_list_models($api_key);
+        $result = $this->refresh_provider_cache($provider, $api_key);
         if (empty($result['ok'])) {
             $error = $result['error'] ?? __('Refresh failed.', 'opentrust');
             /* translators: %s: error message from the provider */
@@ -655,15 +773,9 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        $fingerprint = OpenTrust_Chat_Secrets::fingerprint($api_key);
-        set_transient(
-            'opentrust_models_' . $provider . '_' . $fingerprint,
-            ['models' => $result['models'], 'fetched_at' => time()],
-            24 * HOUR_IN_SECONDS
-        );
-
         $settings = OpenTrust::get_settings();
         $settings['ai_model_list_cached_at'] = time();
+        $this->snapshot_active_model($settings, $result['models']);
         OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: %d: number of models */
@@ -725,4 +837,66 @@ final class OpenTrust_Admin_AI {
         wp_safe_redirect(admin_url('admin.php?page=opentrust&tab=ai'));
         exit;
     }
+
+    // ──────────────────────────────────────────────
+    // Cron — daily model-list refresh
+    // ──────────────────────────────────────────────
+
+    public static function schedule_cron(): void {
+        if (!wp_next_scheduled(self::CRON_HOOK)) {
+            wp_schedule_event(time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK);
+        }
+    }
+
+    public static function unschedule_cron(): void {
+        $timestamp = wp_next_scheduled(self::CRON_HOOK);
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, self::CRON_HOOK);
+        }
+    }
+
+    /**
+     * Daily cron: refresh every stored provider's model list, re-snapshot
+     * the active provider's selected-model metadata. Failures are logged
+     * and skipped per-provider so one bad provider doesn't poison the
+     * others.
+     */
+    public static function cron_refresh_all_providers(): void {
+        $stored_keys = OpenTrust_Chat_Secrets::get_all();
+        if (empty($stored_keys)) {
+            return;
+        }
+
+        $self     = self::instance();
+        $settings = OpenTrust::get_settings();
+        $active   = (string) ($settings['ai_provider'] ?? '');
+        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic for cron refresh failures
+        $log      = static fn(string $slug, string $why) => error_log("[OpenTrust] AI model refresh failed for {$slug}: {$why}");
+        $dirty    = false;
+
+        foreach ($stored_keys as $slug => $api_key) {
+            try {
+                $result = $self->refresh_provider_cache($slug, $api_key);
+            } catch (\Throwable $e) {
+                $log($slug, $e->getMessage());
+                continue;
+            }
+            if (empty($result['ok'])) {
+                $log($slug, (string) ($result['error'] ?? 'unknown'));
+                continue;
+            }
+            if ($slug === $active) {
+                $settings['ai_model_list_cached_at'] = time();
+                $self->snapshot_active_model($settings, $result['models']);
+                $dirty = true;
+            }
+        }
+
+        if ($dirty) {
+            OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        }
+    }
 }
+
+// Wire the cron hook at file load so it fires regardless of admin context.
+add_action(OpenTrust_Admin_AI::CRON_HOOK, [OpenTrust_Admin_AI::class, 'cron_refresh_all_providers']);

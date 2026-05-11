@@ -891,4 +891,18 @@
 
 .ot-tools-action--create { color: #166534; font-weight: 600; }
 .ot-tools-action--update { color: #854d0e; font-weight: 600; }
+
+/* Active-model dropdown — provider-deprecated id marker. */
+.opentrust-ai-model-unavailable {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.opentrust-ai-model-unavailable .description {
+    margin: 0;
+    color: #b91c1c;
+}
 .ot-tools-action--skip   { color: #6b7280; }

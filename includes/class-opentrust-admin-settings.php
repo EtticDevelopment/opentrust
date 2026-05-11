@@ -369,6 +369,23 @@ final class OpenTrust_Admin_Settings {
         $sanitized['ai_provider']             = sanitize_key($old['ai_provider'] ?? '');
         $sanitized['ai_model_list_cached_at'] = (int) ($old['ai_model_list_cached_at'] ?? 0);
 
+        // Active-model snapshot — server-controlled; carried from $old so a
+        // form save can't spoof the label. When the AI tab changes ai_model,
+        // re-snapshot from the live model cache so the new selection's label
+        // follows the id.
+        $sanitized['ai_model_display_name'] = (string) ($old['ai_model_display_name'] ?? '');
+        $sanitized['ai_model_recommended']  = !empty($old['ai_model_recommended']);
+        if (($sanitized['ai_model'] ?? '') !== ($old['ai_model'] ?? '')) {
+            $snap = OpenTrust_Admin_AI::instance()->snapshot_for_provider(
+                $sanitized['ai_provider'],
+                (string) ($sanitized['ai_model'] ?? '')
+            );
+            if ($snap !== null) {
+                $sanitized['ai_model_display_name'] = $snap['display_name'];
+                $sanitized['ai_model_recommended']  = $snap['recommended'];
+            }
+        }
+
         // Per-site salt — written out-of-band by OpenTrust_Chat_Budget::site_salt().
         // Carry forward byte-for-byte so saving settings doesn't force a
         // regeneration (which would invalidate all in-flight rate-limit

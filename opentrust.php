@@ -22,7 +22,7 @@ define('OPENTRUST_VERSION', '1.0.0');
 define('OPENTRUST_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OPENTRUST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('OPENTRUST_PLUGIN_FILE', __FILE__);
-define('OPENTRUST_DB_VERSION', 2);
+define('OPENTRUST_DB_VERSION', 3);
 
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin.php';
@@ -78,6 +78,7 @@ register_activation_hook(__FILE__, static function (): void {
 
     // Schedule crons.
     OpenTrust_Chat_Log::schedule_cron();
+    OpenTrust_Admin_AI::schedule_cron();
 
     // Add rewrite rules and flush.
     OpenTrust::add_rewrite_rules();
@@ -86,5 +87,6 @@ register_activation_hook(__FILE__, static function (): void {
 
 register_deactivation_hook(__FILE__, static function (): void {
     OpenTrust_Chat_Log::unschedule_cron();
+    OpenTrust_Admin_AI::unschedule_cron();
     flush_rewrite_rules();
 });

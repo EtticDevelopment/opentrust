@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T12:53:39+00:00\n"
+"POT-Creation-Date: 2026-05-11T15:00:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -41,276 +41,284 @@ msgstr ""
 msgid "https://plugins.ettic.nl"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:70
+#: includes/class-opentrust-admin-ai.php:78
 msgid "Heads up: citation fidelity is not guaranteed on your active provider."
 msgstr ""
 
 #. translators: %s: provider label, e.g. OpenAI
-#: includes/class-opentrust-admin-ai.php:75
+#: includes/class-opentrust-admin-ai.php:83
 #, php-format
 msgid "You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:86
+#: includes/class-opentrust-admin-ai.php:94
 msgid "OpenTrust uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:93
+#: includes/class-opentrust-admin-ai.php:101
 msgid "Why Anthropic, and not OpenAI or any other provider?"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:98
+#: includes/class-opentrust-admin-ai.php:106
 msgid "A trust center is a <strong>compliance surface</strong>. If the assistant invents a security commitment you never made, that is not a UX papercut — it is a misrepresentation of your security posture, and your customers and auditors will hold you to it."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:106
+#: includes/class-opentrust-admin-ai.php:114
 msgid "Anthropic is the <strong>only major provider</strong> that exposes a structural Citations API. Documents are sent as typed blocks and the model emits citations as first-class events containing the exact source document and the exact quoted text. The model literally cannot return a citation for text that is not in your source documents."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:112
+#: includes/class-opentrust-admin-ai.php:120
 msgid "Every other provider (including OpenAI and any model accessed via OpenRouter) relies on prompted citation tags that we parse out of the answer after the fact. That works most of the time, but the model can ignore the instructions, make up document IDs, or attach a citation to a sentence it actually hallucinated. We support these providers as an escape hatch for organizations that genuinely cannot use Anthropic for procurement or data-residency reasons — but we very, very strongly recommend you do not run a public trust center on them."
 msgstr ""
 
 #. translators: %d is the number of policies missing AI summaries.
-#: includes/class-opentrust-admin-ai.php:151
+#: includes/class-opentrust-admin-ai.php:159
 #, php-format
 msgid "%d policy is missing an AI summary."
 msgid_plural "%d policies are missing AI summaries."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-opentrust-admin-ai.php:162
+#: includes/class-opentrust-admin-ai.php:170
 msgid "Generate them now so the assistant can route questions accurately."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:167
+#: includes/class-opentrust-admin-ai.php:175
 msgid "Generate now"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:191
+#: includes/class-opentrust-admin-ai.php:199
 msgid "Choose a provider and add your key"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:203
+#: includes/class-opentrust-admin-ai.php:211
 msgid "Step 1 — Connect Anthropic"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:209
+#: includes/class-opentrust-admin-ai.php:217
 msgid "Advanced: use a different provider (not recommended)"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:212
+#: includes/class-opentrust-admin-ai.php:220
 msgid "These providers cannot guarantee citation fidelity."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:214
+#: includes/class-opentrust-admin-ai.php:222
 msgid "OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:217
+#: includes/class-opentrust-admin-ai.php:225
 msgid "Do not use these providers for a published trust center"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:218
+#: includes/class-opentrust-admin-ai.php:226
 msgid "unless your organization genuinely cannot use Anthropic for procurement, contractual, or data-residency reasons. Inaccurate claims about your security posture are a real compliance risk."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:257
+#: includes/class-opentrust-admin-ai.php:265
 msgid "Required for citation fidelity"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:263
+#: includes/class-opentrust-admin-ai.php:271
 msgid "Uses Claude with the native Citations API. Every quote the assistant attributes to one of your documents is structurally guaranteed to come from that document."
 msgstr ""
 
 #. translators: %s: provider name (e.g. Anthropic)
-#: includes/class-opentrust-admin-ai.php:271
+#: includes/class-opentrust-admin-ai.php:279
 #, php-format
 msgid "Get a %s API key"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:284
+#: includes/class-opentrust-admin-ai.php:292
 msgid "Remove the saved key for this provider?"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:285
+#: includes/class-opentrust-admin-ai.php:293
 msgid "Replace key"
 msgstr ""
 
 #. translators: %s: provider name (e.g. Anthropic)
-#: includes/class-opentrust-admin-ai.php:295
+#: includes/class-opentrust-admin-ai.php:303
 #, php-format
 msgid "Paste your %s API key…"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:299
+#: includes/class-opentrust-admin-ai.php:307
 msgid "Validate & save"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:316
+#: includes/class-opentrust-admin-ai.php:346
 msgid "Step 2 — Pick a model and tune defaults"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:329
+#: includes/class-opentrust-admin-ai.php:359
 msgid "Active model"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:333
+#: includes/class-opentrust-admin-ai.php:363
 msgid "No cached models found. Use Refresh to re-fetch the model list."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:341
+#: includes/class-opentrust-admin-ai.php:372
+msgid "(unavailable)"
+msgstr ""
+
+#: includes/class-opentrust-admin-ai.php:376
 msgid "Recommended"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:348
+#: includes/class-opentrust-admin-ai.php:387
+msgid "Model unavailable"
+msgstr ""
+
+#: includes/class-opentrust-admin-ai.php:392
 msgid "Refresh models"
 msgstr ""
 
 #. translators: %s: human-readable time difference (e.g. "5 minutes")
-#: includes/class-opentrust-admin-ai.php:358
+#: includes/class-opentrust-admin-ai.php:402
 #, php-format
 msgid "Model list cached %s ago."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:366
+#: includes/class-opentrust-admin-ai.php:410
 msgid "Daily token budget"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:369
+#: includes/class-opentrust-admin-ai.php:413
 msgid "Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 rates)."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:373
+#: includes/class-opentrust-admin-ai.php:417
 msgid "Monthly token budget"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:376
+#: includes/class-opentrust-admin-ai.php:420
 msgid "Hard cap per site per month. Default 10,000,000 tokens."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:380
+#: includes/class-opentrust-admin-ai.php:424
 msgid "Rate limit — per IP"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:382
+#: includes/class-opentrust-admin-ai.php:426
 msgid "messages per minute"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:386
+#: includes/class-opentrust-admin-ai.php:430
 msgid "Rate limit — per session"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:388
+#: includes/class-opentrust-admin-ai.php:432
 msgid "messages per hour"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:392
+#: includes/class-opentrust-admin-ai.php:436
 msgid "Max message length"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:394
+#: includes/class-opentrust-admin-ai.php:438
 msgid "characters"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:399
+#: includes/class-opentrust-admin-ai.php:443
 msgid "Refuse-to-answer contact URL"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:402
+#: includes/class-opentrust-admin-ai.php:446
 msgid "When the AI cannot confidently answer a question, it links here. Leave blank to use the trust center home."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:407
+#: includes/class-opentrust-admin-ai.php:451
 msgid "Visitor display"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:411
+#: includes/class-opentrust-admin-ai.php:455
 msgid "Show the active model name under the chat input"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:417
+#: includes/class-opentrust-admin-ai.php:461
 msgid "Analytics logging"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:421
+#: includes/class-opentrust-admin-ai.php:465
 msgid "Log anonymized visitor questions for admin review (90-day auto-purge, no PII)"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:427
+#: includes/class-opentrust-admin-ai.php:471
 msgid "Improve answer quality"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:431
+#: includes/class-opentrust-admin-ai.php:475
 msgid "Generate AI summaries of each policy"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:434
+#: includes/class-opentrust-admin-ai.php:478
 msgid "When on, the AI generates a 2–3 sentence summary of each published policy and stores it for routing decisions. Improves answers on questions like \"What's your data deletion policy?\" that don't match a title literally. Cost is roughly $0.05–$0.10 per 50 policies, lifetime — pennies per edit afterward. Uses your configured AI key."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:443
+#: includes/class-opentrust-admin-ai.php:487
 msgid "Oversized policies"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:447
+#: includes/class-opentrust-admin-ai.php:491
 msgid "The following policies are large enough that the AI will receive only a truncated version when retrieving them. Consider splitting them into shorter documents:"
 msgstr ""
 
 #. translators: 1: policy title, 2: token count.
-#: includes/class-opentrust-admin-ai.php:454
+#: includes/class-opentrust-admin-ai.php:498
 #, php-format
 msgid "%1$s (~%2$s tokens)"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:468
+#: includes/class-opentrust-admin-ai.php:512
 msgid "Advanced — Turnstile anti-abuse"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:470
+#: includes/class-opentrust-admin-ai.php:514
 msgid "Cloudflare Turnstile is optional but recommended for public sites. It challenges suspicious visitors on the first message of each session. You need a free Cloudflare account to get site/secret keys."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:474
+#: includes/class-opentrust-admin-ai.php:518
 msgid "Enable Turnstile for chat"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:478
+#: includes/class-opentrust-admin-ai.php:522
 msgid "Require Turnstile verification on first chat message"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:483
+#: includes/class-opentrust-admin-ai.php:527
 msgid "Turnstile Site Key"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:486
+#: includes/class-opentrust-admin-ai.php:530
 msgid "Public site key from your Cloudflare Turnstile widget."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:490
+#: includes/class-opentrust-admin-ai.php:534
 msgid "Turnstile Secret Key"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:493
+#: includes/class-opentrust-admin-ai.php:537
 msgid "Enter secret key…"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:495
+#: includes/class-opentrust-admin-ai.php:539
 msgid "Key saved"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:497
+#: includes/class-opentrust-admin-ai.php:541
 msgid "Secret key from Cloudflare Turnstile. Stored server-side — never exposed to the frontend."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:502
+#: includes/class-opentrust-admin-ai.php:546
 msgid "Save AI settings"
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:531
-#: includes/class-opentrust-admin-ai.php:596
-#: includes/class-opentrust-admin-ai.php:633
-#: includes/class-opentrust-admin-ai.php:684
+#: includes/class-opentrust-admin-ai.php:657
+#: includes/class-opentrust-admin-ai.php:714
+#: includes/class-opentrust-admin-ai.php:751
+#: includes/class-opentrust-admin-ai.php:796
 #: includes/class-opentrust-admin-questions.php:219
 #: includes/class-opentrust-admin-questions.php:260
 #: includes/class-opentrust-admin-questions.php:277
@@ -318,65 +326,65 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:540
-#: includes/class-opentrust-admin-ai.php:604
-#: includes/class-opentrust-admin-ai.php:640
+#: includes/class-opentrust-admin-ai.php:666
+#: includes/class-opentrust-admin-ai.php:722
+#: includes/class-opentrust-admin-ai.php:758
 msgid "Unknown provider."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:544
+#: includes/class-opentrust-admin-ai.php:670
 msgid "API key cannot be empty."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:551
+#: includes/class-opentrust-admin-ai.php:677
 msgid "Validation failed."
 msgstr ""
 
 #. translators: 1: provider label, 2: provider error message
-#: includes/class-opentrust-admin-ai.php:553
+#: includes/class-opentrust-admin-ai.php:679
 #, php-format
 msgid "%1$s rejected the key: %2$s"
 msgstr ""
 
 #. translators: 1: provider label, 2: number of models
-#: includes/class-opentrust-admin-ai.php:589
+#: includes/class-opentrust-admin-ai.php:707
 #, php-format
 msgid "%1$s key validated. Found %2$d model(s)."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:627
+#: includes/class-opentrust-admin-ai.php:745
 msgid "Key removed."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:646
+#: includes/class-opentrust-admin-ai.php:764
 msgid "No key on file for this provider."
 msgstr ""
 
-#: includes/class-opentrust-admin-ai.php:652
+#: includes/class-opentrust-admin-ai.php:770
 msgid "Refresh failed."
 msgstr ""
 
 #. translators: %s: error message from the provider
-#: includes/class-opentrust-admin-ai.php:654
+#: includes/class-opentrust-admin-ai.php:772
 #, php-format
 msgid "Refresh failed: %s"
 msgstr ""
 
 #. translators: %d: number of models
-#: includes/class-opentrust-admin-ai.php:670
+#: includes/class-opentrust-admin-ai.php:782
 #, php-format
 msgid "Model list refreshed. Found %d model(s)."
 msgstr ""
 
 #. translators: %d is the number of policies enqueued for summary generation.
-#: includes/class-opentrust-admin-ai.php:700
+#: includes/class-opentrust-admin-ai.php:812
 #, php-format
 msgid "Queued %d policy for AI summary generation. Summaries will appear over the next minute."
 msgid_plural "Queued %d policies for AI summary generation. Summaries will appear over the next few minutes."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-opentrust-admin-ai.php:708
+#: includes/class-opentrust-admin-ai.php:820
 msgid "All policies already have up-to-date AI summaries."
 msgstr ""
 
@@ -793,30 +801,30 @@ msgstr ""
 msgid "Contact & DPO"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:577
+#: includes/class-opentrust-admin-settings.php:594
 msgid "View Trust Center"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:584
+#: includes/class-opentrust-admin-settings.php:601
 #: includes/class-opentrust-render.php:516
 msgid "General"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:588
+#: includes/class-opentrust-admin-settings.php:605
 #: templates/chat.php:60
 #: templates/trust-center.php:121
 msgid "Contact"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:592
+#: includes/class-opentrust-admin-settings.php:609
 msgid "AI Chat"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:595
+#: includes/class-opentrust-admin-settings.php:612
 msgid "Live"
 msgstr ""
 
-#: includes/class-opentrust-admin-settings.php:601
+#: includes/class-opentrust-admin-settings.php:618
 msgid "Import & Export"
 msgstr ""
 
@@ -1687,67 +1695,67 @@ msgstr ""
 msgid "Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first."
 msgstr ""
 
-#: includes/class-opentrust-io.php:186
+#: includes/class-opentrust-io.php:193
 msgid "PHP ZipArchive extension is required for export."
 msgstr ""
 
-#: includes/class-opentrust-io.php:191
+#: includes/class-opentrust-io.php:198
 msgid "Could not create temp file for export."
 msgstr ""
 
-#: includes/class-opentrust-io.php:205
+#: includes/class-opentrust-io.php:212
 msgid "Could not open ZIP for writing."
 msgstr ""
 
-#: includes/class-opentrust-io.php:233
+#: includes/class-opentrust-io.php:240
 msgid "Unrecognised export format."
 msgstr ""
 
 #. translators: %1$d: schema version found, %2$d: schema version expected
-#: includes/class-opentrust-io.php:239
+#: includes/class-opentrust-io.php:246
 #, php-format
 msgid "Schema version mismatch (found %1$d, expected %2$d)."
 msgstr ""
 
 #. translators: %1$s: their version, %2$s: our version
-#: includes/class-opentrust-io.php:250
+#: includes/class-opentrust-io.php:257
 #, php-format
 msgid "Plugin major version mismatch (export: %1$s, this site: %2$s)."
 msgstr ""
 
-#: includes/class-opentrust-io.php:384
+#: includes/class-opentrust-io.php:391
 msgid "PHP ZipArchive extension is required."
 msgstr ""
 
-#: includes/class-opentrust-io.php:388
+#: includes/class-opentrust-io.php:395
 msgid "Could not open uploaded archive."
 msgstr ""
 
-#: includes/class-opentrust-io.php:393
+#: includes/class-opentrust-io.php:400
 msgid "Archive is missing manifest.json."
 msgstr ""
 
-#: includes/class-opentrust-io.php:397
+#: includes/class-opentrust-io.php:404
 msgid "manifest.json could not be parsed."
 msgstr ""
 
-#: includes/class-opentrust-io.php:630
+#: includes/class-opentrust-io.php:637
 msgid "Could not reopen archive for media import."
 msgstr ""
 
 #. translators: %s: media path
-#: includes/class-opentrust-io.php:645
+#: includes/class-opentrust-io.php:652
 #, php-format
 msgid "Bundled media missing during import: %s"
 msgstr ""
 
 #. translators: %s: filename
-#: includes/class-opentrust-io.php:665
+#: includes/class-opentrust-io.php:672
 #, php-format
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-opentrust-io.php:683
+#: includes/class-opentrust-io.php:690
 msgid "Could not create attachment."
 msgstr ""
 

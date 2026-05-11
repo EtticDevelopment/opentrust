@@ -45,6 +45,9 @@ if ($ot_timestamp) {
     wp_unschedule_event($ot_timestamp, 'opentrust_chat_log_purge');
 }
 
+// Unschedule AI model-list refresh cron.
+wp_clear_scheduled_hook('opentrust_ai_models_refresh');
+
 // Clear any pending policy-summary single-events. Pending events would otherwise
 // fire post-uninstall and fatal because the OpenTrust_Chat_Summarizer class is
 // gone — wp_clear_scheduled_hook() removes every scheduled occurrence.
