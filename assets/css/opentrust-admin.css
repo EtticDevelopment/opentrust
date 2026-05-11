@@ -1772,3 +1772,126 @@ body > .opentrust-modal-backdrop.is-leaving { animation: opentrust-backdrop-out 
 	color: #fff;
 }
 .opentrust-admin .opentrust-log-table__pagination .page-numbers.dots { border: 0; background: transparent; color: var(--tx-quiet); }
+
+/* ----------------------------------------------------------------------- *
+ * OpenTrust-only extensions: Import & Export tab.                         *
+ *                                                                         *
+ * CPT collapsible groups inside the export form, a preview table that     *
+ * reuses .opentrust-log-table styling, and small action pills (create /   *
+ * update / skip / new) for the preview screen.                            *
+ * ----------------------------------------------------------------------- */
+
+/* CPT picker — collapsible list inside the Export form */
+.opentrust-admin .opentrust-io-cpt-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	border: 1px solid var(--ettic-border);
+	border-radius: var(--r-md);
+	background: #fff;
+	padding: 8px 10px;
+}
+
+.opentrust-admin .opentrust-io-cpt > summary {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 6px;
+	cursor: pointer;
+	list-style: none;
+	font-size: 13px;
+	user-select: none;
+}
+
+.opentrust-admin .opentrust-io-cpt > summary::-webkit-details-marker { display: none; }
+.opentrust-admin .opentrust-io-cpt > summary::before {
+	content: "▸";
+	display: inline-block;
+	width: 12px;
+	color: var(--tx-muted);
+	transition: transform 140ms ease;
+}
+.opentrust-admin .opentrust-io-cpt[open] > summary::before { transform: rotate(90deg); }
+
+.opentrust-admin .opentrust-io-cpt__head { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.opentrust-admin .opentrust-io-cpt__name { font-weight: 500; color: var(--tx-strong); }
+.opentrust-admin .opentrust-io-cpt__count { color: var(--tx-muted); font-size: 12px; }
+
+.opentrust-admin .opentrust-io-cpt__items {
+	margin: 4px 0 8px 28px;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.opentrust-admin .opentrust-io-cpt__items label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--tx-body);
+}
+
+.opentrust-admin .opentrust-io-cpt__status { font-style: italic; color: var(--tx-muted); }
+
+/* File input shim — native, but with token spacing */
+.opentrust-admin .opentrust-input--file {
+	padding: 6px 8px;
+	background: #fff;
+	border: 1px dashed var(--ettic-border-hi);
+}
+
+/* Card header for preview tables (a small bar above a flush table) */
+.opentrust-admin .opentrust-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px 14px;
+	background: var(--ettic-surface-2);
+	border-bottom: 1px solid var(--ettic-border);
+}
+
+.opentrust-admin .opentrust-card__title {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--tx-strong);
+}
+
+/* Preview table action pills */
+.opentrust-admin .opentrust-io-preview-table__action { width: 110px; }
+.opentrust-admin .opentrust-io-preview-table__uuid {
+	font-family: var(--ff-mono);
+	font-size: 11.5px;
+	color: var(--tx-muted);
+	width: 200px;
+	word-break: break-all;
+}
+
+.opentrust-admin .opentrust-io-preview-table__uuid code { background: transparent; padding: 0; color: inherit; }
+
+.opentrust-admin .opentrust-io-preview-table__pill {
+	display: inline-block;
+	padding: 2px 9px;
+	border-radius: 9px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.opentrust-admin .opentrust-io-preview-table__pill--create   { background: #ECF9F1; color: #1B5E36; }
+.opentrust-admin .opentrust-io-preview-table__pill--update   { background: var(--ettic-blue-soft); color: var(--ettic-blue); }
+.opentrust-admin .opentrust-io-preview-table__pill--skip     { background: var(--ettic-surface-2); color: var(--tx-muted); }
+.opentrust-admin .opentrust-io-preview-table__pill--new      { background: #FBF1FF; color: #6B2DAA; }
+.opentrust-admin .opentrust-io-preview-table__pill--rename   { background: #FBF1FF; color: #6B2DAA; }
+
+/* Confirm + Cancel button row */
+.opentrust-admin .opentrust-io-confirm {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
