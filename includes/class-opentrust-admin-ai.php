@@ -322,11 +322,13 @@ final class OpenTrust_Admin_AI {
         );
 
         // Cache may have expired (empty list) or the provider may have
-        // deprecated the id (non-empty list, no match). In both cases we
-        // synthesize the entry from the saved snapshot so the dropdown
-        // still renders the selection — otherwise the <select> would be
-        // empty and silently blank ai_model on save. Empty cache alone is
-        // NOT proof of deprecation, so only the no-match case flags it.
+        // dropped the id (non-empty list, no match). Either way, synthesize
+        // the saved selection so the <select> isn't empty — an empty <select>
+        // posts nothing on save and silently blanks ai_model. Empty cache
+        // alone isn't proof of deprecation, so only the no-match-in-non-empty
+        // case shows the warning icon. Falls back to the raw id when the
+        // snapshot label is missing (e.g. v2→v3 upgrade ran with an already-
+        // expired cache, so the backfill couldn't seed a name).
         $is_unavailable = false;
         if ($current_model !== '' && $this->find_model_meta($current_model, $models) === null) {
             $snapshot = [
@@ -335,12 +337,10 @@ final class OpenTrust_Admin_AI {
                 'recommended'  => !empty($settings['ai_model_recommended']),
             ];
             if (!empty($models)) {
-                $is_unavailable        = true;
+                $is_unavailable          = true;
                 $snapshot['unavailable'] = true;
-                array_unshift($models, $snapshot);
-            } elseif (($settings['ai_model_display_name'] ?? '') !== '') {
-                $models = [$snapshot];
             }
+            array_unshift($models, $snapshot);
         }
         ?>
         <h3 style="margin-top:32px"><?php esc_html_e('Step 2 — Pick a model and tune defaults', 'opentrust'); ?></h3>
