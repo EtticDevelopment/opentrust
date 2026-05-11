@@ -339,6 +339,230 @@ final class OpenTrust_Admin_Settings {
     }
 
     // ──────────────────────────────────────────────
+    // Design-system field renderers
+    // ──────────────────────────────────────────────
+    //
+    // These emit the shared Ettic admin design system row markup directly,
+    // bypassing do_settings_sections(). The Settings API registration in
+    // register_settings() (above) is what `settings_fields()` reads for the
+    // nonce + option_page hidden inputs — that wiring stays unchanged.
+    // add_settings_section/field calls for migrated tabs remain registered
+    // but un-rendered; commit cleanup removes them once all tabs migrate.
+
+    private function ds_render_section_general(): void {
+        $settings = OpenTrust::get_settings();
+        ?>
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('General', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Endpoint, page title, and company identity.', 'opentrust'); ?></p>
+            </header>
+            <div class="opentrust-card">
+                <?php $this->ds_row_text('endpoint_slug', __('Endpoint Slug', 'opentrust'), (string) ($settings['endpoint_slug'] ?? ''), __('The URL path for your trust center (e.g. "trust-center" = yoursite.com/trust-center/).', 'opentrust')); ?>
+                <?php $this->ds_row_text('page_title', __('Page Title', 'opentrust'), (string) ($settings['page_title'] ?? '')); ?>
+                <?php $this->ds_row_text('company_name', __('Company Name', 'opentrust'), (string) ($settings['company_name'] ?? '')); ?>
+                <?php $this->ds_row_textarea('tagline', __('Tagline', 'opentrust'), (string) ($settings['tagline'] ?? ''), __('A short description displayed below the company name in the hero.', 'opentrust')); ?>
+            </div>
+        </section>
+
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Branding', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Logo, AI avatar, accent color, and credit link.', 'opentrust'); ?></p>
+            </header>
+            <div class="opentrust-card">
+                <?php $this->ds_row_media('logo_id', __('Logo', 'opentrust'), (int) ($settings['logo_id'] ?? 0), __('Used in the hero and sticky nav. A white version is recommended — it sits on a dark background.', 'opentrust')); ?>
+                <?php $this->ds_row_media('avatar_id', __('AI Avatar', 'opentrust'), (int) ($settings['avatar_id'] ?? 0), __('Square image used as the avatar on AI chat responses. A colored background with a light/dark mark on top works well.', 'opentrust')); ?>
+                <?php $this->ds_row_accent_color($settings); ?>
+                <?php $this->ds_row_toggle('show_powered_by', __('Credit Link', 'opentrust'), !empty($settings['show_powered_by']), __('Show a "Powered by OpenTrust" credit in the trust center footer. Off by default — public credits are opt-in.', 'opentrust')); ?>
+            </div>
+        </section>
+
+        <section class="opentrust-block">
+            <header class="opentrust-block__head">
+                <h2><?php esc_html_e('Visible Sections', 'opentrust'); ?></h2>
+                <p><?php esc_html_e('Choose which sections appear on the trust center.', 'opentrust'); ?></p>
+            </header>
+            <div class="opentrust-card">
+                <?php $this->ds_row_sections((array) ($settings['sections_visible'] ?? [])); ?>
+            </div>
+        </section>
+        <?php
+    }
+
+    private function ds_row_text(string $key, string $label, string $value, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <input type="text" class="opentrust-input opentrust-input--md" id="<?php echo esc_attr('opentrust_' . $key); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
+            </div>
+        </div>
+        <?php
+    }
+
+    private function ds_row_textarea(string $key, string $label, string $value, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row opentrust-row--stacked">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control opentrust-row__control--stack">
+                <textarea class="opentrust-input" rows="3" id="<?php echo esc_attr('opentrust_' . $key); ?>" name="<?php echo esc_attr($name); ?>"><?php echo esc_textarea($value); ?></textarea>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function ds_row_toggle(string $key, string $label, bool $checked, string $help = ''): void {
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <input type="hidden" name="<?php echo esc_attr($name); ?>" value="0">
+                <label class="opentrust-toggle">
+                    <input class="opentrust-toggle__input" type="checkbox" name="<?php echo esc_attr($name); ?>" value="1" <?php checked($checked); ?>>
+                    <span class="opentrust-toggle__thumb"></span>
+                </label>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function ds_row_media(string $key, string $label, int $attachment_id, string $help = ''): void {
+        $src  = $attachment_id ? wp_get_attachment_image_src($attachment_id, 'medium') : false;
+        $url  = is_array($src) ? (string) $src[0] : '';
+        $name = sprintf('opentrust_settings[%s]', $key);
+        ?>
+        <div class="opentrust-row">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php echo esc_html($label); ?></span>
+                <?php if ($help !== ''): ?>
+                    <p class="opentrust-row__help"><?php echo esc_html($help); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="opentrust-row__control">
+                <div class="opentrust-media" data-opentrust-media-picker="<?php echo esc_attr($key); ?>">
+                    <input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr((string) $attachment_id); ?>" data-opentrust-media-id>
+                    <div class="opentrust-media__preview <?php echo $url ? 'opentrust-media__preview--filled' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>" data-opentrust-media-preview>
+                        <?php if ($url): ?>
+                            <img src="<?php echo esc_url($url); ?>" alt="">
+                        <?php endif; ?>
+                    </div>
+                    <div class="opentrust-media__controls">
+                        <button type="button" class="opentrust-btn opentrust-btn--ghost opentrust-btn--sm" data-opentrust-media-pick><?php esc_html_e('Replace', 'opentrust'); ?></button>
+                        <button type="button" class="opentrust-btn opentrust-btn--text" data-opentrust-media-clear style="<?php echo $attachment_id ? '' : 'display:none;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Accent color row — fuses the design system's native swatch + hex pair
+     * with the existing contrast-warning widget. The hex text input keeps the
+     * id `opentrust_accent_color` and name `opentrust_settings[accent_color]`
+     * so the existing admin.js accent-warning code can locate it.
+     */
+    private function ds_row_accent_color(array $settings): void {
+        $value       = (string) ($settings['accent_color'] ?? '#2563EB');
+        $force_exact = !empty($settings['accent_force_exact']);
+        ?>
+        <div class="opentrust-row opentrust-row--stacked">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php esc_html_e('Accent Color', 'opentrust'); ?></span>
+                <p class="opentrust-row__help"><?php esc_html_e('Used for buttons, links, and highlights. Choose a color that matches your brand.', 'opentrust'); ?></p>
+            </div>
+            <div class="opentrust-row__control opentrust-row__control--stack">
+                <div class="opentrust-color">
+                    <input type="color" value="<?php echo esc_attr($value); ?>" aria-label="<?php esc_attr_e('Color picker', 'opentrust'); ?>">
+                    <input type="text" class="opentrust-input opentrust-input--mono" id="opentrust_accent_color" name="opentrust_settings[accent_color]" value="<?php echo esc_attr($value); ?>" maxlength="7" data-validate-hex>
+                </div>
+                <div id="opentrust-accent-warning" class="ot-accent-warning<?php echo $force_exact ? ' ot-accent-warning--override' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded class ?>" hidden>
+                    <svg class="ot-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <div class="ot-accent-warning__body">
+                        <strong class="ot-accent-warning__heading ot-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'opentrust'); ?></strong>
+                        <strong class="ot-accent-warning__heading ot-accent-warning__heading--override"><?php esc_html_e('Using your exact color on white backgrounds', 'opentrust'); ?></strong>
+
+                        <p class="ot-accent-warning__copy ot-accent-warning__copy--auto">
+                            <?php esc_html_e('Your chosen color is too light for buttons, links, and borders on white sections. On those surfaces OpenTrust will use a darker, on-brand variant:', 'opentrust'); ?>
+                        </p>
+                        <p class="ot-accent-warning__copy ot-accent-warning__copy--override">
+                            <?php esc_html_e("You've chosen to keep your exact color on white backgrounds. Buttons, links, and borders in those sections may be hard to read.", 'opentrust'); ?>
+                        </p>
+
+                        <div class="ot-accent-warning__preview">
+                            <span class="ot-accent-warning__swatch ot-accent-warning__swatch--chosen" aria-hidden="true"></span>
+                            <code class="ot-accent-warning__hex ot-accent-warning__hex--chosen"></code>
+                            <span class="ot-accent-warning__arrow" aria-hidden="true">&rarr;</span>
+                            <span class="ot-accent-warning__swatch ot-accent-warning__swatch--adjusted" aria-hidden="true"></span>
+                            <code class="ot-accent-warning__hex ot-accent-warning__hex--adjusted"></code>
+                        </div>
+
+                        <p class="ot-accent-warning__note ot-accent-warning__note--auto">
+                            <?php esc_html_e('The hero and navigation still use your exact color.', 'opentrust'); ?>
+                        </p>
+
+                        <label class="ot-accent-warning__override">
+                            <input type="checkbox" id="opentrust_accent_force_exact" name="opentrust_settings[accent_force_exact]" value="1" <?php checked($force_exact); ?>>
+                            <span><?php esc_html_e('Use my exact color anyway — skip the contrast adjustment.', 'opentrust'); ?></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function ds_row_sections(array $visible): void {
+        $sections = [
+            'certifications' => __('Certifications & Compliance', 'opentrust'),
+            'policies'       => __('Policies', 'opentrust'),
+            'subprocessors'  => __('Subprocessors', 'opentrust'),
+            'data_practices' => __('Data Practices', 'opentrust'),
+            'faqs'           => __('FAQs', 'opentrust'),
+            'contact'        => __('Contact & DPO', 'opentrust'),
+        ];
+        ?>
+        <div class="opentrust-row opentrust-row--stacked">
+            <div class="opentrust-row__main">
+                <span class="opentrust-row__label"><?php esc_html_e('Sections', 'opentrust'); ?></span>
+                <p class="opentrust-row__help"><?php esc_html_e('Click a section to toggle its visibility. Hidden sections still preserve their content; only the public page changes.', 'opentrust'); ?></p>
+            </div>
+            <div class="opentrust-row__control opentrust-row__control--stack">
+                <div class="opentrust-chips">
+                    <?php foreach ($sections as $key => $label): ?>
+                        <?php $checked = !empty($visible[$key]); ?>
+                        <label class="opentrust-chip">
+                            <input class="opentrust-chip__input" type="checkbox" name="<?php echo esc_attr(sprintf('opentrust_settings[sections_visible][%s]', $key)); ?>" value="1" <?php checked($checked); ?>>
+                            <span class="opentrust-chip__check" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 6 5 8.5 9.5 4"/></svg></span>
+                            <span><?php echo esc_html($label); ?></span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    // ──────────────────────────────────────────────
     // Sanitization
     // ──────────────────────────────────────────────
 
@@ -652,7 +876,7 @@ final class OpenTrust_Admin_Settings {
                         <?php
                         settings_fields('opentrust_settings_group');
                         echo '<input type="hidden" name="opentrust_settings[__general_tab_save]" value="1">';
-                        do_settings_sections('opentrust-settings-general');
+                        $this->ds_render_section_general();
                         ?>
                     </form>
                 <?php endif; ?>

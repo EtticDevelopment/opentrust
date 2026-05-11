@@ -145,25 +145,23 @@
     }
 
     $(function () {
-        // ── Colour picker ──────────────────────────
-        var $accentInput  = $('#opentrust_accent_color');
-        var $forceExact   = $('#opentrust_accent_force_exact');
+        // ── Accent contrast warning ────────────────
+        // Bound to native input events on the design system's hex text input
+        // (#opentrust_accent_color). The template's initColorPickers in
+        // opentrust-admin.js already syncs the <input type="color"> swatch to
+        // the hex text input via `input` events, so listening here catches
+        // both swatch picks and direct hex typing.
+        var $accentInput   = $('#opentrust_accent_color');
+        var $forceExact    = $('#opentrust_accent_force_exact');
         var $accentWarning = $('#opentrust-accent-warning');
 
-        $('.ot-color-picker').wpColorPicker({
-            change: function (event, ui) {
-                // wpColorPicker fires `change` before the input is updated,
-                // so defer a tick before reading the value.
-                setTimeout(function () {
-                    updateAccentWarning(ui.color.toString());
-                }, 0);
-            },
-            clear: function () {
-                setTimeout(function () {
-                    updateAccentWarning($accentInput.val());
-                }, 0);
-            }
-        });
+        if ($accentInput.length) {
+            $accentInput.on('input', function () {
+                updateAccentWarning($accentInput.val());
+            });
+            // Initial check on page load.
+            updateAccentWarning($accentInput.val());
+        }
 
         // Live-toggle the override class so the warning tone updates without
         // a page reload. The actual clamping still happens server-side — the
@@ -171,11 +169,6 @@
         $forceExact.on('change', function () {
             $accentWarning.toggleClass('ot-accent-warning--override', this.checked);
         });
-
-        // Initial check on page load.
-        if ($accentInput.length) {
-            updateAccentWarning($accentInput.val());
-        }
 
         // ── Media uploader (logo + avatar) ─────────
         $('[data-ot-media-field]').each(function () {
