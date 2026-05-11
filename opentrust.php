@@ -24,6 +24,14 @@ define('OPENTRUST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('OPENTRUST_PLUGIN_FILE', __FILE__);
 define('OPENTRUST_DB_VERSION', 2);
 
+// Ettic shared-template compatibility shims. The shared admin design system
+// at /Users/.../Ettic Admin UI uses PLUGINSLUG_FILE / PLUGINSLUG_URL as its
+// constant placeholder, which renames to OPENTRUST_FILE / OPENTRUST_URL.
+// Aliased to the existing OPENTRUST_PLUGIN_* constants so the ported files
+// run unmodified.
+define('OPENTRUST_FILE', OPENTRUST_PLUGIN_FILE);
+define('OPENTRUST_URL', OPENTRUST_PLUGIN_URL);
+
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-settings.php';
@@ -37,6 +45,12 @@ require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-render.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-version.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-io.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-tools.php';
+
+// Ettic shared admin design system. Footer.php renders the branded footer
+// used across every OpenTrust admin screen. Settings.php is the reference
+// implementation of the design system's page shell — not booted by default;
+// the migrated admin classes consume its markup vocabulary directly.
+require_once OPENTRUST_PLUGIN_DIR . 'includes/Admin/Footer.php';
 
 // Chat (OTC) — policy chat feature.
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-secrets.php';
