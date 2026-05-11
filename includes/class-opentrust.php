@@ -100,6 +100,11 @@ final class OpenTrust {
             'ai_provider'               => '',
             'ai_model'                  => '',
             'ai_model_list_cached_at'   => 0,
+            // Snapshot of the active model's metadata, so the dropdown can
+            // re-render the selected entry even when the cache transient has
+            // expired or the provider has deprecated the model id.
+            'ai_model_display_name'     => '',
+            'ai_model_recommended'      => false,
             'ai_daily_token_budget'     => OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
             'ai_monthly_token_budget'   => OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
             'ai_rate_limit_per_ip'      => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
@@ -181,9 +186,35 @@ final class OpenTrust {
             self::backfill_uuids();
         }
 
+        // v2 → v3: register the daily AI-model-refresh cron and back-fill
+        // the active-model snapshot so existing installs don't render a raw
+        // id before the first cron tick.
+        if ($current < 3) {
+            OpenTrust_Admin_AI::schedule_cron();
+            self::backfill_model_snapshot();
+        }
+
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
         set_transient('opentrust_flush_rewrite', true);
         $this->invalidate_cache();
+    }
+
+    /**
+     * Seed the active-model snapshot from the existing per-provider transient
+     * cache. No HTTP — runs at upgrade time only.
+     */
+    private static function backfill_model_snapshot(): void {
+        $settings = self::get_settings();
+        $snap     = OpenTrust_Admin_AI::instance()->snapshot_for_provider(
+            (string) ($settings['ai_provider'] ?? ''),
+            (string) ($settings['ai_model'] ?? '')
+        );
+        if ($snap === null) {
+            return;
+        }
+        $settings['ai_model_display_name'] = $snap['display_name'];
+        $settings['ai_model_recommended']  = $snap['recommended'];
+        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
     }
 
     private static function backfill_uuids(): void {

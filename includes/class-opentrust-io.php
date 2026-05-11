@@ -26,6 +26,10 @@ final class OpenTrust_IO {
         'ai_enabled',
         'ai_provider',
         'ai_model_list_cached_at',
+        // Snapshot of the active model's metadata — provider-specific, would carry
+        // a stale label across to a destination site that uses a different provider.
+        'ai_model_display_name',
+        'ai_model_recommended',
     ];
 
     // Keep in sync with class-opentrust-cpt.php save handlers.
