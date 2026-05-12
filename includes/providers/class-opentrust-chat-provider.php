@@ -598,19 +598,23 @@ abstract class OpenTrust_Chat_Provider {
 
         add_action('http_api_curl', $filter, 10, 3);
 
-        $response = wp_safe_remote_post($url, [
-            'timeout'     => $timeout,
-            'redirection' => 0,
-            'sslverify'   => true,
-            'blocking'    => true,
-            'headers'     => array_merge(
-                ['Content-Type' => 'application/json', 'Accept' => 'text/event-stream'],
-                $headers
-            ),
-            'body'        => $body,
-        ]);
-
-        remove_action('http_api_curl', $filter, 10);
+        try {
+            $response = wp_safe_remote_post($url, [
+                'timeout'     => $timeout,
+                'redirection' => 0,
+                'sslverify'   => true,
+                'blocking'    => true,
+                'headers'     => array_merge(
+                    ['Content-Type' => 'application/json', 'Accept' => 'text/event-stream'],
+                    $headers
+                ),
+                'body'        => $body,
+            ]);
+        } finally {
+            // $on_line is caller-supplied; if it throws inside WRITEFUNCTION the
+            // exception unwinds through cURL → wp_safe_remote_post. Always detach.
+            remove_action('http_api_curl', $filter, 10);
+        }
 
         // If WP picked Streams/fsockopen, http_api_curl never fired and our SSE callbacks
         // never installed — the response body was buffered, not streamed. Fail loudly.
