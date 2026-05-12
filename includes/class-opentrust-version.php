@@ -147,7 +147,7 @@ final class OpenTrust_Version {
             printf(
                 '<p>%s <strong>v%d</strong></p>',
                 esc_html__('Current version:', 'opentrust'),
-                $current_version
+                (int) $current_version
             );
             echo '<p class="description">' . esc_html__('Version history will appear after the first update.', 'opentrust') . '</p>';
             return;
