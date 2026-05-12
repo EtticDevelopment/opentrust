@@ -263,9 +263,12 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
             'alert'    => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
             'share'    => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
         ];
-        // Allow-list for the static SVG markup in $ot_icons.
+        // Allow-list for the static SVG markup in $ot_icons. wp_kses lowercases
+        // attribute names for both matching AND output, so allow-list keys must
+        // be lowercase. The HTML5 parser case-fixes 'viewbox' → 'viewBox' on
+        // foreign-content (SVG) elements, so scaling still works in the DOM.
         $ot_icon_allowed = [
-            'svg'      => ['width' => true, 'height' => true, 'viewBox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true],
+            'svg'      => ['width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true],
             'path'     => ['d' => true, 'fill-rule' => true, 'clip-rule' => true],
             'circle'   => ['cx' => true, 'cy' => true, 'r' => true],
             'ellipse'  => ['cx' => true, 'cy' => true, 'rx' => true, 'ry' => true],
