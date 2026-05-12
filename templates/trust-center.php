@@ -83,9 +83,6 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="<?php echo esc_url($ot_base_url); ?>">
     <?php
-    // Inline the frontend CSS for zero-request rendering. We register a
-    // synthetic handle (src=false) and push the CSS through wp_add_inline_style
-    // so the standalone document still routes through WordPress's enqueue API.
     $ot_root_vars = sprintf(
         ':root{--ot-accent-h:%d;--ot-accent-s:%d%%;--ot-accent-l:%d%%;--ot-accent-l-safe:%d%%;--ot-accent-contrast:%s;}',
         (int) $ot_hsl['h'],
@@ -94,15 +91,9 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         (int) $ot_accent_l_safe,
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    $ot_css_body  = '';
-    $ot_css_path  = OPENTRUST_PLUGIN_DIR . 'assets/css/frontend.css';
-    if (file_exists($ot_css_path)) {
-        $ot_css_body = (string) file_get_contents($ot_css_path);
-        $ot_css_body = str_replace('@@OT_FONT_URL@@', esc_url(OPENTRUST_PLUGIN_URL . 'assets/fonts'), $ot_css_body);
-    }
-    wp_register_style('opentrust-frontend', false, [], OPENTRUST_VERSION);
+    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', OPENTRUST_PLUGIN_FILE), [], OPENTRUST_VERSION);
     wp_enqueue_style('opentrust-frontend');
-    wp_add_inline_style('opentrust-frontend', $ot_root_vars . "\n" . $ot_css_body);
+    wp_add_inline_style('opentrust-frontend', $ot_root_vars);
     wp_print_styles(['opentrust-frontend']);
     ?>
 </head>
@@ -235,13 +226,15 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     </footer>
 
     <?php
-    $ot_js_path = OPENTRUST_PLUGIN_DIR . 'assets/js/frontend.js';
-    if (file_exists($ot_js_path)) {
-        wp_register_script('opentrust-frontend', false, [], OPENTRUST_VERSION, true);
-        wp_enqueue_script('opentrust-frontend');
-        wp_add_inline_script('opentrust-frontend', (string) file_get_contents($ot_js_path));
-        wp_print_scripts(['opentrust-frontend']);
-    }
+    wp_register_script(
+        'opentrust-frontend',
+        plugins_url('assets/js/frontend.js', OPENTRUST_PLUGIN_FILE),
+        [],
+        OPENTRUST_VERSION,
+        ['in_footer' => true, 'strategy' => 'defer']
+    );
+    wp_enqueue_script('opentrust-frontend');
+    wp_print_scripts(['opentrust-frontend']);
     ?>
 
 </body>
