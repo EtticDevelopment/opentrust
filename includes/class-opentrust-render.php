@@ -426,12 +426,14 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     /**
-     * Render an "Updated X ago" pill. Returns HTML string.
+     * Echo an "Updated X ago" pill. Void return so the SVG markup never
+     * round-trips through wp_kses (which lowercases attribute names and
+     * would mangle viewBox). Dynamic text is esc_html'd inline.
      */
-    public static function updated_pill(string $section_key, array $data): string {
+    public static function updated_pill(string $section_key, array $data): void {
         $timestamp = $data['section_updated'][$section_key] ?? '';
         if (!$timestamp) {
-            return '';
+            return;
         }
 
         $diff = time() - (int) $timestamp;
@@ -467,10 +469,7 @@ final class OpenTrust_Render {
             );
         }
 
-        return '<span class="ot-updated-pill">'
-            . '<svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
-            . '<span>' . esc_html($text) . '</span>'
-            . '</span>';
+        ?><span class="ot-updated-pill"><svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span><?php echo esc_html($text); ?></span></span><?php
     }
 
     // ──────────────────────────────────────────────

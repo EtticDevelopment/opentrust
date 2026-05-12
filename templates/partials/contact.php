@@ -114,14 +114,22 @@ if ($ot_vat_number) {
                 <?php endif; ?>
             </div>
 
-            <?php if (!empty($ot_rows)): ?>
+            <?php if (!empty($ot_rows)):
+                // Allow-list of element shapes the $ot_rows build code can produce.
+                // wp_kses at the echo IS the late escape; per-element esc_html/esc_url
+                // upstream remains as defense-in-depth.
+                $ot_line_allowed = [
+                    'span' => ['class' => true],
+                    'a'    => ['href' => true, 'target' => true, 'rel' => true],
+                ];
+                ?>
                 <dl class="ot-get-list">
                     <?php foreach ($ot_rows as $ot_row): ?>
                         <div class="ot-get-row">
                             <dt class="ot-get-row__label"><?php echo esc_html($ot_row['label']); ?></dt>
                             <dd class="ot-get-row__lines">
                                 <?php foreach ($ot_row['lines'] as $ot_line): ?>
-                                    <?php echo $ot_line; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each line was pre-escaped above ?>
+                                    <?php echo wp_kses($ot_line, $ot_line_allowed); ?>
                                 <?php endforeach; ?>
                             </dd>
                         </div>

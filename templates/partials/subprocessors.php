@@ -16,7 +16,7 @@ $ot_subprocessors = $ot_data['subprocessors'] ?? [];
 <section id="ot-subprocessors" class="ot-section">
     <div class="ot-container">
         <div class="ot-section__header">
-            <?php echo OpenTrust_Render::updated_pill('subprocessors', $ot_data); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped within method ?>
+            <?php OpenTrust_Render::updated_pill('subprocessors', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Subprocessors', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('Third-party services that process data on our behalf, along with their purposes and data handling agreements.', 'opentrust'); ?></p>
         </div>

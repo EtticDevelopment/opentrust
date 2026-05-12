@@ -188,30 +188,22 @@ final class OpenTrust_Admin_Settings {
         $key      = $args['key'];
         $value    = $settings[$key] ?? '';
 
-        $attr_html = '';
-        foreach ($extra_attrs as $name => $val) {
-            $attr_html .= ' ' . $name . '="' . esc_attr($val) . '"';
-        }
-
         if ($type === 'textarea') {
-            printf(
-                '<textarea id="opentrust_%1$s" name="opentrust_settings[%1$s]" rows="3" class="large-text"%3$s>%2$s</textarea>',
-                esc_attr($key),
-                esc_textarea($value),
-                $attr_html  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute values escaped above; names are hardcoded
-            );
+            echo '<textarea id="opentrust_' . esc_attr($key) . '" name="opentrust_settings[' . esc_attr($key) . ']" rows="3" class="large-text"';
         } else {
-            printf(
-                '<input type="%4$s" id="opentrust_%1$s" name="opentrust_settings[%1$s]" value="%2$s" class="regular-text"%3$s>',
-                esc_attr($key),
-                esc_attr($value),
-                $attr_html, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute values escaped above; names are hardcoded
-                esc_attr($type)
-            );
+            echo '<input type="' . esc_attr($type) . '" id="opentrust_' . esc_attr($key) . '" name="opentrust_settings[' . esc_attr($key) . ']" value="' . esc_attr($value) . '" class="regular-text"';
+        }
+        foreach ($extra_attrs as $attr_name => $attr_val) {
+            echo ' ' . esc_attr($attr_name) . '="' . esc_attr($attr_val) . '"';
+        }
+        if ($type === 'textarea') {
+            echo '>' . esc_textarea($value) . '</textarea>';
+        } else {
+            echo '>';
         }
 
         if (!empty($args['description'])) {
-            printf('<p class="description">%s</p>', esc_html($args['description']));
+            echo '<p class="description">' . esc_html($args['description']) . '</p>';
         }
     }
 
@@ -224,7 +216,7 @@ final class OpenTrust_Admin_Settings {
             esc_attr($value)
         );
         ?>
-        <div id="opentrust-accent-warning" class="ot-accent-warning<?php echo $force_exact ? ' ot-accent-warning--override' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded class ?>" hidden>
+        <div id="opentrust-accent-warning" class="ot-accent-warning<?php echo esc_attr($force_exact ? ' ot-accent-warning--override' : ''); ?>" hidden>
             <svg class="ot-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <div class="ot-accent-warning__body">
                 <strong class="ot-accent-warning__heading ot-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'opentrust'); ?></strong>
@@ -289,12 +281,12 @@ final class OpenTrust_Admin_Settings {
         $media_url = $media_id ? wp_get_attachment_image_url($media_id, 'medium') : '';
         ?>
         <div class="ot-logo-upload" data-ot-media-field>
-            <div class="ot-logo-preview" <?php echo $media_url ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>>
+            <div class="ot-logo-preview<?php echo esc_attr($media_url ? '' : ' ot-hidden'); ?>">
                 <img src="<?php echo esc_url($media_url); ?>" alt="" style="max-width:200px;max-height:80px">
             </div>
             <input type="hidden" name="opentrust_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ot-media-input>
             <button type="button" class="button" data-ot-media-upload><?php echo esc_html($button_label); ?></button>
-            <button type="button" class="button" data-ot-media-remove <?php echo $media_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>><?php esc_html_e('Remove', 'opentrust'); ?></button>
+            <button type="button" class="button<?php echo esc_attr($media_id ? '' : ' ot-hidden'); ?>" data-ot-media-remove><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php echo esc_html($description); ?></p>
         </div>
         <?php
@@ -597,15 +589,15 @@ final class OpenTrust_Admin_Settings {
 
             <h2 class="nav-tab-wrapper">
                 <a href="<?php echo esc_url($base_url); ?>"
-                   class="nav-tab <?php echo $tab === 'general' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
+                   class="nav-tab <?php echo esc_attr($tab === 'general' ? 'nav-tab-active' : ''); ?>">
                     <?php esc_html_e('General', 'opentrust'); ?>
                 </a>
                 <a href="<?php echo esc_url(add_query_arg('tab', 'contact', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'contact' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
+                   class="nav-tab <?php echo esc_attr($tab === 'contact' ? 'nav-tab-active' : ''); ?>">
                     <?php esc_html_e('Contact', 'opentrust'); ?>
                 </a>
                 <a href="<?php echo esc_url(add_query_arg('tab', 'ai', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'ai' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
+                   class="nav-tab <?php echo esc_attr($tab === 'ai' ? 'nav-tab-active' : ''); ?>">
                     <?php esc_html_e('AI Chat', 'opentrust'); ?>
                     <?php if (!empty($settings['ai_enabled'])): ?>
                         <span class="ot-pill ot-pill--live" style="margin-left:6px;padding:2px 8px;background:#dcfce7;color:#166534;border-radius:10px;font-size:11px;font-weight:600;vertical-align:middle">
@@ -614,7 +606,7 @@ final class OpenTrust_Admin_Settings {
                     <?php endif; ?>
                 </a>
                 <a href="<?php echo esc_url(add_query_arg('tab', 'io', $base_url)); ?>"
-                   class="nav-tab <?php echo $tab === 'io' ? 'nav-tab-active' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>">
+                   class="nav-tab <?php echo esc_attr($tab === 'io' ? 'nav-tab-active' : ''); ?>">
                     <?php esc_html_e('Import & Export', 'opentrust'); ?>
                 </a>
             </h2>

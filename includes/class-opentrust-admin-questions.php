@@ -90,7 +90,7 @@ final class OpenTrust_Admin_Questions {
                 <?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed and rows auto-purge after 90 days.', 'opentrust'); ?>
             </p>
 
-            <div style="display:flex;align-items:center;gap:16px;margin:16px 0;padding:12px 16px;background:<?php echo !empty($settings['ai_logging_enabled']) ? '#dcfce7' : '#fef2f2'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;border-radius:6px">
+            <div style="<?php echo esc_attr('display:flex;align-items:center;gap:16px;margin:16px 0;padding:12px 16px;background:' . (!empty($settings['ai_logging_enabled']) ? '#dcfce7' : '#fef2f2') . ';border-radius:6px'); ?>">
                 <strong>
                     <?php if (!empty($settings['ai_logging_enabled'])): ?>
                         ✓ <?php esc_html_e('Logging is ON', 'opentrust'); ?>
@@ -187,15 +187,19 @@ final class OpenTrust_Admin_Questions {
                 <div class="tablenav" style="margin-top:16px">
                     <div class="tablenav-pages">
                         <?php
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- paginate_links returns safe HTML
-                        echo paginate_links([
+                        // Allow-list mirrors the markup paginate_links() emits.
+                        $pagination_allowed = [
+                            'a'    => ['href' => true, 'class' => true, 'title' => true, 'aria-current' => true, 'aria-label' => true],
+                            'span' => ['class' => true, 'aria-current' => true],
+                        ];
+                        echo wp_kses((string) paginate_links([
                             'base'      => add_query_arg('paged', '%#%', $base),
                             'format'    => '',
                             'current'   => $filters['page'],
                             'total'     => $pages,
                             'prev_text' => '‹',
                             'next_text' => '›',
-                        ]);
+                        ]), $pagination_allowed);
                         ?>
                     </div>
                 </div>

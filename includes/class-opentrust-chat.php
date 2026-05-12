@@ -493,16 +493,17 @@ final class OpenTrust_Chat {
     // ──────────────────────────────────────────────
 
     public static function send_sse(string $event, mixed $data): void {
-        $json = wp_json_encode($data);
+        // JSON_HEX_* flags hex-escape <>&'" so the encoded text carries no
+        // HTML-active characters — esc_html below is then byte-identical and
+        // satisfies "escape everything echoed" even though SSE is text/event-stream.
+        $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         if ($json === false) {
             $json = '{}';
         }
         // Event name is an internal token (start|progress|complete|error|…); strip to [A-Za-z0-9_-].
-        $event = preg_replace('/[^A-Za-z0-9_-]/', '', $event);
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $event sanitized above; $json produced by wp_json_encode().
-        echo 'event: ' . $event . "\n";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $json produced by wp_json_encode().
-        echo 'data: ' . $json . "\n\n";
+        $event = (string) preg_replace('/[^A-Za-z0-9_-]/', '', $event);
+        echo esc_html('event: ' . $event) . "\n";
+        echo esc_html('data: ' . $json) . "\n\n";
         if (function_exists('flush')) {
             flush();
         }

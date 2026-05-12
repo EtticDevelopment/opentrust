@@ -194,6 +194,11 @@ final class OpenTrust {
             self::backfill_model_snapshot();
         }
 
+        // v3 → v4: no schema change. Bump exists so the unconditional
+        // invalidate_cache() at the bottom of this method fires on plugin
+        // update — escape-output rework can change wp_kses_post() output
+        // for policy content with unsupported HTML.
+
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
         set_transient('opentrust_flush_rewrite', true);
         $this->invalidate_cache();

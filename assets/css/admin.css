@@ -2,6 +2,11 @@
  * OpenTrust admin styles.
  */
 
+/* Server-rendered visibility toggle. jQuery .show()/.hide() override via inline style. */
+.ot-hidden {
+    display: none;
+}
+
 /* Accent contrast warning */
 .ot-accent-warning {
     display: flex;

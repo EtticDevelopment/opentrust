@@ -147,7 +147,7 @@ final class OpenTrust_Version {
             printf(
                 '<p>%s <strong>v%d</strong></p>',
                 esc_html__('Current version:', 'opentrust'),
-                intval( $current_version ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Integer cast via %d format specifier and intval()
+                $current_version
             );
             echo '<p class="description">' . esc_html__('Version history will appear after the first update.', 'opentrust') . '</p>';
             return;

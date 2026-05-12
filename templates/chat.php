@@ -192,7 +192,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                                     <div class="ot-chat-msg__body"><?php echo esc_html((string) ($ot_ns_response['question'] ?? '')); ?></div>
                                 </div>
                             </div>
-                            <div class="ot-chat-msg ot-chat-msg--assistant<?php echo !empty($ot_ns_response['refused']) ? ' ot-chat-msg--refused' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
+                            <div class="ot-chat-msg ot-chat-msg--assistant<?php echo esc_attr(!empty($ot_ns_response['refused']) ? ' ot-chat-msg--refused' : ''); ?>">
                                 <div class="ot-chat-msg__avatar" aria-hidden="true">
                                     <?php if ($ot_avatar_url): ?>
                                         <img class="ot-chat-msg__avatar-img" src="<?php echo esc_url($ot_avatar_url); ?>" alt="">
@@ -263,6 +263,16 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
             'alert'    => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
             'share'    => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
         ];
+        // Allow-list for the static SVG markup in $ot_icons.
+        $ot_icon_allowed = [
+            'svg'      => ['width' => true, 'height' => true, 'viewBox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true, 'aria-hidden' => true],
+            'path'     => ['d' => true, 'fill-rule' => true, 'clip-rule' => true],
+            'circle'   => ['cx' => true, 'cy' => true, 'r' => true],
+            'ellipse'  => ['cx' => true, 'cy' => true, 'rx' => true, 'ry' => true],
+            'line'     => ['x1' => true, 'y1' => true, 'x2' => true, 'y2' => true],
+            'polyline' => ['points' => true],
+            'polygon'  => ['points' => true],
+        ];
         ?>
         <div class="ot-chat-dock" data-ot-chat-dock>
             <div class="ot-container ot-chat-dock__inner">
@@ -271,8 +281,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                     <?php foreach ($ot_suggested as $ot_q): ?>
                         <button type="button" class="ot-chat-chip" data-ot-chat-chip="<?php echo esc_attr($ot_q['label']); ?>">
                             <span class="ot-chat-chip__icon" aria-hidden="true"><?php
-                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hard-coded static SVG
-                                echo $ot_icons[$ot_q['icon']] ?? '';
+                                echo wp_kses($ot_icons[$ot_q['icon']] ?? '', $ot_icon_allowed);
                             ?></span>
                             <?php echo esc_html($ot_q['label']); ?>
                         </button>
