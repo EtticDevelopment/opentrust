@@ -532,6 +532,7 @@ abstract class OpenTrust_Chat_Provider {
             'early_status'     => 0,
             'response_headers' => [],
             'connect_timeout'  => 15,
+            'curl_hook_ran'    => false,
         ];
 
         // wp_safe_remote_post collapses connect + total timeout into one 'timeout' arg,
@@ -543,6 +544,7 @@ abstract class OpenTrust_Chat_Provider {
             if ((string) $filter_url !== $state->url) {
                 return;
             }
+            $state->curl_hook_ran = true;
             // phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_setopt -- documented http_api_curl escape hatch for SSE streaming.
             curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $state->connect_timeout);
             curl_setopt($handle, CURLOPT_FOLLOWLOCATION, false);
@@ -609,6 +611,12 @@ abstract class OpenTrust_Chat_Provider {
         ]);
 
         remove_action('http_api_curl', $filter, 10);
+
+        // If WP picked Streams/fsockopen, http_api_curl never fired and our SSE callbacks
+        // never installed — the response body was buffered, not streamed. Fail loudly.
+        if (!$state->curl_hook_ran) {
+            return ['ok' => false, 'error' => __('AI streaming requires the WordPress cURL transport.', 'opentrust')];
+        }
 
         // Status code lives in $state (header callback), not the WP response body, since
         // our WRITEFUNCTION suppresses Requests' default body/header collectors.
