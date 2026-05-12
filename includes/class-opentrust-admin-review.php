@@ -78,14 +78,14 @@ final class OpenTrust_Admin_Review {
         $link = sprintf(
             '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
             esc_url(self::review_url()),
-            esc_html__('★★★★★ review on WordPress.org', 'opentrust')
+            esc_html__('review on WordPress.org', 'opentrust')
         );
 
         // The static English string contains no HTML; the only insertion is
         // the pre-escaped link above. Translators who add markup here own
         // the result — same risk model as core's admin_footer_text usage.
         return sprintf(
-            /* translators: %s: link to leave a 5-star review on WordPress.org */
+            /* translators: %s: link to the WordPress.org reviews page */
             __('OpenTrust is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'opentrust'),
             $link
         );
@@ -208,7 +208,10 @@ final class OpenTrust_Admin_Review {
     }
 
     private static function review_url(): string {
-        $url = 'https://wordpress.org/support/plugin/opentrust/reviews/?rate=5#new-post';
+        // Neutral reviews index — wp.org Detailed Plugin Guideline 9 forbids
+        // linking to a pre-rated/filtered review surface (e.g. ?rate=5#new-post),
+        // which hides constructive feedback and pressures positive ratings.
+        $url = 'https://wordpress.org/support/plugin/opentrust/reviews/';
         return (string) apply_filters('opentrust_review_url', $url);
     }
 
