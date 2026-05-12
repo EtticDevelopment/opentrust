@@ -152,7 +152,7 @@ final class OpenTrust_Admin_Review {
             return false;
         }
 
-        $counts = wp_count_posts('ot_policy');
+        $counts = wp_count_posts(OpenTrust_CPT::POLICY);
         $published = (int) ($counts->publish ?? 0);
 
         return $published >= self::POLICY_THRESHOLD;

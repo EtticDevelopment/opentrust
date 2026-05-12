@@ -3,7 +3,7 @@
  * Certification catalog.
  *
  * Curated list of common compliance frameworks, regulations, and
- * certifications shown in the admin typeahead on the ot_certification
+ * certifications shown in the admin typeahead on the opentr_certification
  * create screen. Each entry sets `_ot_cert_type` to either `certified`
  * (third-party audited, has a certificate with dates and an issuing body)
  * or `compliant` (self-attested adherence to a standard or regulation).

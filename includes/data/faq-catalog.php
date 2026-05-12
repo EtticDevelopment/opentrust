@@ -2,7 +2,7 @@
 /**
  * Default FAQ catalog.
  *
- * Generic, content-agnostic glossary entries seeded into the ot_faq CPT on
+ * Generic, content-agnostic glossary entries seeded into the opentr_faq CPT on
  * first plugin activation. These explain universal trust-center concepts and
  * make no claims about the specific company running the plugin.
  *

@@ -181,6 +181,16 @@ final class OpenTrust {
             return;
         }
 
+        // v3 → v4: rename CPT slugs from `ot_*` to `opentr_*` to satisfy the
+        // wp.org 4-character-prefix rule. Runs first so any v1→v4 jump renames
+        // the rows before the v1→v2 UUID back-fill queries them — the back-fill
+        // resolves OpenTrust_CPT::ALL to the new slugs, so the rows must already
+        // carry those slugs by the time it runs. Runs at init priority 5,
+        // before OpenTrust_CPT::register_post_types() at priority 10.
+        if ($current < 4) {
+            self::rename_cpt_slugs_v4();
+        }
+
         // v1 → v2: back-fill _ot_uuid on existing CPT posts.
         if ($current < 2) {
             self::backfill_uuids();
@@ -215,6 +225,26 @@ final class OpenTrust {
         $settings['ai_model_display_name'] = $snap['display_name'];
         $settings['ai_model_recommended']  = $snap['recommended'];
         OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+    }
+
+    /**
+     * Rewrite wp_posts.post_type for each renamed CPT. Idempotent: if the
+     * migration is interrupted, opentrust_db_version stays unadvanced and the
+     * next init retries. Revisions carry post_type='revision' and are not
+     * matched. Translation linkage (WPML/Polylang) is keyed by post ID, not
+     * by slug, so existing translations stay paired.
+     */
+    private static function rename_cpt_slugs_v4(): void {
+        global $wpdb;
+        foreach (OpenTrust_CPT::LEGACY_MAP as $old => $new) {
+            $wpdb->update(
+                $wpdb->posts,
+                ['post_type' => $new],
+                ['post_type' => $old],
+                ['%s'],
+                ['%s']
+            );
+        }
     }
 
     private static function backfill_uuids(): void {

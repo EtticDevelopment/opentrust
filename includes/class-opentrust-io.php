@@ -37,7 +37,7 @@ final class OpenTrust_IO {
 
     // Keep in sync with class-opentrust-cpt.php save handlers.
     private const META_KEYS = [
-        'ot_policy' => [
+        OpenTrust_CPT::POLICY => [
             '_ot_uuid',
             '_ot_policy_ref_id',
             '_ot_policy_category',
@@ -52,7 +52,7 @@ final class OpenTrust_IO {
             '_ot_policy_chat_summary_updated_at',
             '_ot_policy_chat_summary_origin',
         ],
-        'ot_certification' => [
+        OpenTrust_CPT::CERTIFICATION => [
             '_ot_uuid',
             '_ot_cert_type',
             '_ot_cert_status',
@@ -63,7 +63,7 @@ final class OpenTrust_IO {
             '_ot_cert_artifact_id',
             '_ot_cert_description',
         ],
-        'ot_subprocessor' => [
+        OpenTrust_CPT::SUBPROCESSOR => [
             '_ot_uuid',
             '_ot_sub_purpose',
             '_ot_sub_data_processed',
@@ -71,7 +71,7 @@ final class OpenTrust_IO {
             '_ot_sub_website',
             '_ot_sub_dpa_signed',
         ],
-        'ot_data_practice' => [
+        OpenTrust_CPT::DATA_PRACTICE => [
             '_ot_uuid',
             '_ot_dp_data_items',
             '_ot_dp_purpose',
@@ -85,7 +85,7 @@ final class OpenTrust_IO {
             '_ot_dp_sold',
             '_ot_dp_encrypted',
         ],
-        'ot_faq' => [
+        OpenTrust_CPT::FAQ => [
             '_ot_uuid',
             '_ot_faq_related_policy',
         ],
@@ -93,17 +93,17 @@ final class OpenTrust_IO {
 
     // Meta keys whose value is an attachment ID; serialized as __media_ref.
     private const ATTACHMENT_META_KEYS = [
-        'ot_policy'        => ['_ot_policy_attachment_id'],
-        'ot_certification' => ['_ot_cert_badge_id', '_ot_cert_artifact_id'],
-        'ot_subprocessor'  => [],
-        'ot_data_practice' => [],
-        'ot_faq'           => [],
+        OpenTrust_CPT::POLICY        => ['_ot_policy_attachment_id'],
+        OpenTrust_CPT::CERTIFICATION => ['_ot_cert_badge_id', '_ot_cert_artifact_id'],
+        OpenTrust_CPT::SUBPROCESSOR  => [],
+        OpenTrust_CPT::DATA_PRACTICE => [],
+        OpenTrust_CPT::FAQ           => [],
     ];
 
     // meta_key => target_cpt_slug. Cross-CPT refs serialized as __post_ref.
     private const POST_REF_META_KEYS = [
-        'ot_faq' => [
-            '_ot_faq_related_policy' => 'ot_policy',
+        OpenTrust_CPT::FAQ => [
+            '_ot_faq_related_policy' => OpenTrust_CPT::POLICY,
         ],
     ];
 
@@ -269,9 +269,10 @@ final class OpenTrust_IO {
 
     // Dry-run: returns per-CPT counts and per-record actions, no DB writes.
     public static function preview_import(array $manifest, string $strategy = self::STRATEGY_SKIP): array {
-        $records = $manifest['records'] ?? [];
-        $summary = [];
-        $detail  = [];
+        $manifest = self::remap_legacy_cpt_keys($manifest);
+        $records  = $manifest['records'] ?? [];
+        $summary  = [];
+        $detail   = [];
 
         foreach ($records as $cpt => $recs) {
             $summary[$cpt] = ['create' => 0, 'update' => 0, 'skip' => 0];
@@ -301,6 +302,8 @@ final class OpenTrust_IO {
     // ──────────────────────────────────────────────
 
     public static function apply_content_import(array $manifest, string $zip_path, string $strategy): array {
+        $manifest = self::remap_legacy_cpt_keys($manifest);
+
         $created = 0;
         $updated = 0;
         $skipped = 0;
@@ -308,12 +311,12 @@ final class OpenTrust_IO {
 
         // Suppress the chat summarizer for the duration of the import, otherwise
         // every imported policy queues a fresh summary generation (real cost).
-        $had_summarizer = remove_action('save_post_ot_policy', ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20);
+        $had_summarizer = remove_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20);
 
         $media_map = self::sideload_bundled_media($manifest['media'] ?? [], $zip_path, $errors);
 
         // Policies first so FAQs can resolve their policy refs in one pass.
-        $cpt_order = ['ot_policy', 'ot_certification', 'ot_subprocessor', 'ot_data_practice', 'ot_faq'];
+        $cpt_order = [OpenTrust_CPT::POLICY, OpenTrust_CPT::CERTIFICATION, OpenTrust_CPT::SUBPROCESSOR, OpenTrust_CPT::DATA_PRACTICE, OpenTrust_CPT::FAQ];
         $uuid_to_new_id = [];
 
         foreach ($cpt_order as $cpt) {
@@ -338,7 +341,7 @@ final class OpenTrust_IO {
         self::remap_post_references($manifest['records'] ?? [], $uuid_to_new_id);
 
         if ($had_summarizer) {
-            add_action('save_post_ot_policy', ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20, 3);
+            add_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20, 3);
         }
 
         OpenTrust::instance()->invalidate_cache();
@@ -409,6 +412,24 @@ final class OpenTrust_IO {
     // ──────────────────────────────────────────────
     // Internals: build records
     // ──────────────────────────────────────────────
+
+    /**
+     * Rewrite v1.0.x CPT slugs (ot_*) in an inbound manifest to the v1.1+
+     * slugs (opentr_*). Touches top-level record keys only — record bodies
+     * carry __post_ref values as UUIDs (not slugs) and resolve fine once the
+     * outer key is corrected.
+     */
+    private static function remap_legacy_cpt_keys(array $manifest): array {
+        if (empty($manifest['records']) || !is_array($manifest['records'])) {
+            return $manifest;
+        }
+        $out = [];
+        foreach ($manifest['records'] as $cpt => $recs) {
+            $out[OpenTrust_CPT::LEGACY_MAP[$cpt] ?? $cpt] = $recs;
+        }
+        $manifest['records'] = $out;
+        return $manifest;
+    }
 
     private static function record_for_post(int $post_id, bool $include_media, array &$media): ?array {
         $post = get_post($post_id);

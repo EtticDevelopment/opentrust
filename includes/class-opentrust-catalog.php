@@ -87,7 +87,7 @@ final class OpenTrust_Catalog {
      * Return the default FAQ catalog as a list of question/answer pairs.
      *
      * Unlike the other catalogs, FAQ entries are seeded once into real
-     * `ot_faq` posts on first activation and then owned by the user. This
+     * `opentr_faq` posts on first activation and then owned by the user. This
      * loader is only consulted by the seeder.
      *
      * @return array<string, array{question:string, answer:string}>
@@ -132,7 +132,7 @@ final class OpenTrust_Catalog {
     }
 
     /**
-     * Seed the default FAQs as published `ot_faq` posts.
+     * Seed the default FAQs as published `opentr_faq` posts.
      *
      * Gated by the `opentrust_faqs_seeded` option so deletions stick: once a
      * site has been seeded, re-activating the plugin will not recreate the
@@ -154,7 +154,7 @@ final class OpenTrust_Catalog {
 
             $post_id = wp_insert_post(
                 [
-                    'post_type'    => 'ot_faq',
+                    'post_type'    => OpenTrust_CPT::FAQ,
                     'post_status'  => 'publish',
                     'post_title'   => $entry['question'],
                     'post_content' => $content,
@@ -181,10 +181,10 @@ final class OpenTrust_Catalog {
      */
     public static function for_js( string $post_type ): array {
         $catalog = match ( $post_type ) {
-            'ot_subprocessor'  => self::subprocessors(),
-            'ot_data_practice' => self::data_practices(),
-            'ot_certification' => self::certifications(),
-            default            => [],
+            OpenTrust_CPT::SUBPROCESSOR  => self::subprocessors(),
+            OpenTrust_CPT::DATA_PRACTICE => self::data_practices(),
+            OpenTrust_CPT::CERTIFICATION => self::certifications(),
+            default                      => [],
         };
 
         $entries = [];

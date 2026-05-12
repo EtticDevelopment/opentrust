@@ -17,10 +17,10 @@
     -->
 
     <custom-types>
-        <custom-type translate="1">ot_policy</custom-type>
-        <custom-type translate="1">ot_certification</custom-type>
-        <custom-type translate="1">ot_subprocessor</custom-type>
-        <custom-type translate="1">ot_data_practice</custom-type>
+        <custom-type translate="1">opentr_policy</custom-type>
+        <custom-type translate="1">opentr_certification</custom-type>
+        <custom-type translate="1">opentr_subprocessor</custom-type>
+        <custom-type translate="1">opentr_data_practice</custom-type>
     </custom-types>
 
     <custom-fields>

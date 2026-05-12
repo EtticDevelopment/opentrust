@@ -456,12 +456,12 @@ final class OpenTrust_Admin_Tools {
 
     private function cpt_label(string $cpt): string {
         return match ($cpt) {
-            'ot_policy'        => __('Policies', 'opentrust'),
-            'ot_certification' => __('Certifications', 'opentrust'),
-            'ot_subprocessor'  => __('Subprocessors', 'opentrust'),
-            'ot_data_practice' => __('Data Practices', 'opentrust'),
-            'ot_faq'           => __('FAQs', 'opentrust'),
-            default            => $cpt,
+            OpenTrust_CPT::POLICY        => __('Policies', 'opentrust'),
+            OpenTrust_CPT::CERTIFICATION => __('Certifications', 'opentrust'),
+            OpenTrust_CPT::SUBPROCESSOR  => __('Subprocessors', 'opentrust'),
+            OpenTrust_CPT::DATA_PRACTICE => __('Data Practices', 'opentrust'),
+            OpenTrust_CPT::FAQ           => __('FAQs', 'opentrust'),
+            default                      => $cpt,
         };
     }
 

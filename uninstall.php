@@ -20,7 +20,22 @@ global $wpdb;
 // loading the rest of the plugin, so we cannot reference OpenTrust_CPT::ALL
 // here. The list below MUST stay in sync with that constant; if a CPT is
 // added or renamed there, mirror the change here.
-$ot_post_types = ['ot_policy', 'ot_subprocessor', 'ot_certification', 'ot_data_practice', 'ot_faq'];
+//
+// Legacy ot_* slugs included as a belt-and-suspenders cleanup for the corner
+// case of a v1.0.x install uninstalling before the v3→v4 migration in
+// OpenTrust::maybe_upgrade() has had a chance to run.
+$ot_post_types = [
+    'opentr_policy',
+    'opentr_subprocessor',
+    'opentr_certification',
+    'opentr_data_practice',
+    'opentr_faq',
+    'ot_policy',
+    'ot_subprocessor',
+    'ot_certification',
+    'ot_data_practice',
+    'ot_faq',
+];
 
 foreach ($ot_post_types as $ot_post_type) {
     $posts = get_posts([

@@ -3,7 +3,7 @@
  * Data-practice catalog.
  *
  * Templates for common data-practice categories. Used by the admin typeahead
- * on the ot_data_practice create screen. Every entry is a starting point —
+ * on the opentr_data_practice create screen. Every entry is a starting point —
  * users must review legal basis, retention, and shared-with lists before
  * publishing. All template fields live under `fields_review` so the UI marks
  * them as "verify before publishing".

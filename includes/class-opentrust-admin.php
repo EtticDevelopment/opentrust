@@ -170,7 +170,7 @@ final class OpenTrust_Admin {
         // the new-post screen for the two CPTs that support it. Edit screens
         // are deliberately excluded so we never stomp existing values.
         $screen = get_current_screen();
-        if ($hook === 'post-new.php' && $screen && in_array($screen->post_type, ['ot_subprocessor', 'ot_data_practice', 'ot_certification'], true)) {
+        if ($hook === 'post-new.php' && $screen && in_array($screen->post_type, [OpenTrust_CPT::SUBPROCESSOR, OpenTrust_CPT::DATA_PRACTICE, OpenTrust_CPT::CERTIFICATION], true)) {
             $payload = [
                 'postType' => $screen->post_type,
                 'catalog'  => OpenTrust_Catalog::for_js($screen->post_type),
