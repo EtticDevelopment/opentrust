@@ -64,5 +64,21 @@ delete_option('opentrust_faqs_seeded');
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Bulk cleanup of plugin transients on uninstall, no user input
 $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_opentrust_%' OR option_name LIKE '_transient_timeout_opentrust_%'");
 
+// Sweep legacy import-stash directory left behind by versions <1.1.0.
+$ot_uploads = wp_upload_dir();
+if (!empty($ot_uploads['basedir'])) {
+    $ot_stash = rtrim((string) $ot_uploads['basedir'], '/') . '/opentrust-tmp';
+    if (is_dir($ot_stash)) {
+        $ot_legacy = glob($ot_stash . '/{.,}*', GLOB_BRACE) ?: [];
+        foreach ($ot_legacy as $ot_file) {
+            if (is_file($ot_file)) {
+                wp_delete_file($ot_file);
+            }
+        }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- one-shot legacy cleanup on uninstall; WP_Filesystem is disproportionate here.
+        @rmdir($ot_stash);
+    }
+}
+
 // Flush rewrite rules.
 flush_rewrite_rules();

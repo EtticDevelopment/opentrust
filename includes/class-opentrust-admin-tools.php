@@ -318,20 +318,28 @@ final class OpenTrust_Admin_Tools {
             return;
         }
 
-        // Park the upload between preview and apply. Path goes in a per-user transient.
-        $upload_dir = wp_upload_dir();
-        $stash_dir  = rtrim((string) $upload_dir['basedir'], '/') . '/opentrust-tmp';
-        wp_mkdir_p($stash_dir);
-        if (!file_exists($stash_dir . '/.htaccess')) {
-            @file_put_contents($stash_dir . '/.htaccess', "Require all denied\n");
-        }
-        $stash_path = $stash_dir . '/import-' . wp_generate_password(12, false) . '.zip';
+        // wp_handle_upload() lives here; idempotent require for WP-CLI / alt call paths.
+        require_once ABSPATH . 'wp-admin/includes/file.php';
 
-        // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- Required for $_FILES handling. Higher-level WP wrappers impose a MIME allowlist that rejects file types we deliberately accept (admin-only, nonce + size cap + is_uploaded_file already gate this path).
-        if (!move_uploaded_file((string) $_FILES['ot_import_file']['tmp_name'], $stash_path)) {
-            $this->bounce_error(__('Could not store uploaded file.', 'opentrust'));
+        // test_form=false because our admin-post action is opentrust_import_preview,
+        // not the 'wp_handle_upload' token wp_handle_upload() checks for by default.
+        // mimes is narrowed to ZIP only — finfo magic-byte detection promotes Safari's
+        // application/x-zip-compressed to application/zip, so one entry covers all
+        // browsers without tripping the get_allowed_mime_types() global allowlist.
+        $upload = wp_handle_upload(
+            $_FILES['ot_import_file'],
+            [
+                'test_form' => false,
+                'mimes'     => ['zip' => 'application/zip'],
+            ]
+        );
+
+        if (isset($upload['error'])) {
+            $this->bounce_error((string) $upload['error']);
             return;
         }
+
+        $stash_path = (string) $upload['file'];
 
         try {
             $read = OpenTrust_IO::read_zip($stash_path);
