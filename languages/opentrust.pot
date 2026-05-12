@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-11T15:00:11+00:00\n"
+"POT-Creation-Date: 2026-05-12T20:24:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -322,7 +322,7 @@ msgstr ""
 #: includes/class-opentrust-admin-questions.php:219
 #: includes/class-opentrust-admin-questions.php:260
 #: includes/class-opentrust-admin-questions.php:277
-#: includes/class-opentrust-admin-tools.php:432
+#: includes/class-opentrust-admin-tools.php:440
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -760,7 +760,7 @@ msgid "Certifications & Compliance"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:323
-#: includes/class-opentrust-admin-tools.php:459
+#: includes/class-opentrust-admin-tools.php:467
 #: includes/class-opentrust-cpt.php:151
 #: includes/class-opentrust-cpt.php:161
 #: templates/chat.php:45
@@ -770,7 +770,7 @@ msgid "Policies"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:324
-#: includes/class-opentrust-admin-tools.php:461
+#: includes/class-opentrust-admin-tools.php:469
 #: includes/class-opentrust-cpt.php:218
 #: includes/class-opentrust-cpt.php:227
 #: templates/chat.php:47
@@ -781,7 +781,7 @@ msgid "Subprocessors"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:325
-#: includes/class-opentrust-admin-tools.php:462
+#: includes/class-opentrust-admin-tools.php:470
 #: includes/class-opentrust-cpt.php:251
 #: includes/class-opentrust-cpt.php:260
 #: templates/chat.php:48
@@ -791,7 +791,7 @@ msgid "Data Practices"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:326
-#: includes/class-opentrust-admin-tools.php:463
+#: includes/class-opentrust-admin-tools.php:471
 #: includes/class-opentrust-cpt.php:284
 #: includes/class-opentrust-cpt.php:294
 msgid "FAQs"
@@ -952,29 +952,25 @@ msgstr ""
 msgid "Upload exceeds size limit."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:332
-msgid "Could not store uploaded file."
-msgstr ""
-
-#: includes/class-opentrust-admin-tools.php:381
+#: includes/class-opentrust-admin-tools.php:389
 msgid "Import cancelled."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:386
+#: includes/class-opentrust-admin-tools.php:394
 msgid "Import has unresolved errors."
 msgstr ""
 
 #. translators: %1$d: created, %2$d: updated, %3$d: skipped
-#: includes/class-opentrust-admin-tools.php:406
+#: includes/class-opentrust-admin-tools.php:414
 #, php-format
 msgid "Imported: %1$d created, %2$d updated, %3$d skipped."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:414
+#: includes/class-opentrust-admin-tools.php:422
 msgid "Errors:"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:460
+#: includes/class-opentrust-admin-tools.php:468
 #: includes/class-opentrust-cpt.php:185
 #: includes/class-opentrust-cpt.php:194
 #: templates/chat.php:46
