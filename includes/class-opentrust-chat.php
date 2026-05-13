@@ -493,17 +493,17 @@ final class OpenTrust_Chat {
     // ──────────────────────────────────────────────
 
     public static function send_sse(string $event, mixed $data): void {
-        // JSON_HEX_* flags hex-escape <>&'" so the encoded text carries no
-        // HTML-active characters — esc_html below is then byte-identical and
-        // satisfies "escape everything echoed" even though SSE is text/event-stream.
-        $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        // Encode the payload. SSE is text/event-stream, not HTML — the structural " around JSON keys must reach the client raw, which is why send_sse does NOT wrap its echoes in esc_html().
+        $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if ($json === false) {
             $json = '{}';
         }
         // Event name is an internal token (start|progress|complete|error|…); strip to [A-Za-z0-9_-].
         $event = (string) preg_replace('/[^A-Za-z0-9_-]/', '', $event);
-        echo esc_html('event: ' . $event) . "\n";
-        echo esc_html('data: ' . $json) . "\n\n";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $event sanitized to [A-Za-z0-9_-] above; SSE is text/event-stream, not HTML.
+        echo 'event: ' . $event . "\n";
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $json is wp_json_encode output; SSE is text/event-stream, not HTML.
+        echo 'data: ' . $json . "\n\n";
         if (function_exists('flush')) {
             flush();
         }
