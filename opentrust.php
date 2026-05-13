@@ -70,7 +70,13 @@ register_activation_hook(__FILE__, static function (): void {
     // Custom tables.
     OpenTrust_Chat_Log::create_table();
 
-    update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
+    // Stamp the schema version on a true first install only. On reactivation
+    // after an in-place upgrade (deactivate → upload zip → activate) the
+    // option already exists with the prior version; leaving it untouched lets
+    // OpenTrust::maybe_upgrade() walk pending migrations on the next init.
+    if (false === get_option('opentrust_db_version', false)) {
+        update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
+    }
 
     // Seed default FAQs on first activation. Gated internally so deletions
     // stick and re-activation will not recreate them.

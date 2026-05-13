@@ -207,6 +207,15 @@ final class OpenTrust {
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
         set_transient('opentrust_flush_rewrite', true);
         $this->invalidate_cache();
+
+        // The chat corpus transient is locale-keyed and not bound to
+        // opentrust_cache_version, so invalidate_cache() above doesn't bust
+        // it. After the v4 rename the surviving corpus would be valid but
+        // mention the old slug context in admin telemetry — drop it so the
+        // next chat request rebuilds against the renamed rows.
+        if (class_exists('OpenTrust_Chat_Corpus')) {
+            OpenTrust_Chat_Corpus::invalidate();
+        }
     }
 
     /**
@@ -233,10 +242,22 @@ final class OpenTrust {
      * next init retries. Revisions carry post_type='revision' and are not
      * matched. Translation linkage (WPML/Polylang) is keyed by post ID, not
      * by slug, so existing translations stay paired.
+     *
+     * Collects affected IDs before the UPDATE so each row's WP_Post entry in
+     * the object cache can be invalidated — otherwise post_type checks that
+     * read from cache return stale 'ot_*' values until the cache expires.
      */
     private static function rename_cpt_slugs_v4(): void {
         global $wpdb;
         foreach (OpenTrust_CPT::LEGACY_MAP as $old => $new) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
+            $ids = $wpdb->get_col(
+                $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", $old)
+            );
+            if (empty($ids)) {
+                continue;
+            }
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
             $wpdb->update(
                 $wpdb->posts,
                 ['post_type' => $new],
@@ -244,6 +265,9 @@ final class OpenTrust {
                 ['%s'],
                 ['%s']
             );
+            foreach ($ids as $id) {
+                clean_post_cache((int) $id);
+            }
         }
     }
 
