@@ -24,6 +24,110 @@ final class OpenTrust_Admin_Tools {
         add_action('admin_post_opentrust_export',         [$this, 'handle_export']);
         add_action('admin_post_opentrust_import_preview', [$this, 'handle_import_preview']);
         add_action('admin_post_opentrust_import_apply',   [$this, 'handle_import_apply']);
+        add_action('opentrust_io_preview_cleanup',        [$this, 'cleanup_preview_file'], 10, 2);
+    }
+
+    /**
+     * Absolute path to the private stash directory used for import-preview ZIPs.
+     *
+     * Sits under wp-content/uploads/opentrust-tmp/. Returns the canonical (realpath)
+     * directory when it exists so callers can compare paths safely.
+     */
+    private function stash_dir(): string {
+        $upload_dir = wp_upload_dir();
+        $base       = isset($upload_dir['basedir']) ? rtrim((string) $upload_dir['basedir'], '/\\') : '';
+        return $base === '' ? '' : $base . '/opentrust-tmp';
+    }
+
+    /**
+     * Ensure the private stash directory exists with deny-all protection,
+     * then redirect wp_handle_upload() into it via a scoped upload_dir filter.
+     *
+     * Returns the filter closure so the caller can remove it immediately after
+     * wp_handle_upload() returns — the redirection MUST NOT leak into any other
+     * upload code paths in the same request.
+     */
+    private function install_stash_upload_filter(): ?\Closure {
+        $stash_dir = $this->stash_dir();
+        if ($stash_dir === '') {
+            return null;
+        }
+
+        if (!wp_mkdir_p($stash_dir)) {
+            return null;
+        }
+
+        // Deny-all protections. .htaccess covers Apache; index.html covers
+        // directory-listing fallback when web servers don't honour .htaccess.
+        $htaccess = $stash_dir . '/.htaccess';
+        if (!file_exists($htaccess)) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Hardening file for a plugin-private dir; WP_Filesystem is disproportionate for a one-time write of a 36-byte deny rule.
+            @file_put_contents($htaccess, "Require all denied\nDeny from all\n");
+        }
+        $index = $stash_dir . '/index.html';
+        if (!file_exists($index)) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Empty index for directory-listing defence; WP_Filesystem is disproportionate for a one-time zero-byte write.
+            @file_put_contents($index, '');
+        }
+
+        $upload_dir = wp_upload_dir();
+        $base_url   = isset($upload_dir['baseurl']) ? rtrim((string) $upload_dir['baseurl'], '/\\') : '';
+        $upload_url = $base_url === '' ? '' : $base_url . '/opentrust-tmp';
+
+        $filter = static function (array $dirs) use ($stash_dir, $upload_url): array {
+            $dirs['path']   = $stash_dir;
+            $dirs['url']    = $upload_url;
+            $dirs['subdir'] = '';
+            return $dirs;
+        };
+
+        add_filter('upload_dir', $filter);
+        return $filter;
+    }
+
+    /**
+     * Scheduled handler — wp_cron fires this 30 minutes after preview creation.
+     *
+     * Deletes the stashed ZIP if (a) it still lives inside the canonical stash
+     * directory and (b) the user's preview transient no longer references it
+     * (handle_import_apply has already cleaned up the active preview path).
+     */
+    public function cleanup_preview_file(string $path, int $user_id): void {
+        if ($path === '') {
+            return;
+        }
+
+        $stash_dir = $this->stash_dir();
+        if ($stash_dir === '') {
+            return;
+        }
+
+        $canonical_stash = realpath($stash_dir);
+        $canonical_path  = realpath($path);
+        if ($canonical_stash === false || $canonical_path === false) {
+            return;
+        }
+
+        // Strict containment check: canonical path must start with the canonical
+        // stash dir + separator. Substring-only matches (str_contains) would let
+        // a path like /var/uploads/opentrust-tmp-evil/foo.zip slip through.
+        $stash_prefix = rtrim($canonical_stash, '/\\') . DIRECTORY_SEPARATOR;
+        if (!str_starts_with($canonical_path, $stash_prefix)) {
+            return;
+        }
+
+        // If the user's preview transient still points at this exact file, an
+        // import is mid-flight — defer to handle_import_apply()'s wp_delete_file().
+        if ($user_id > 0) {
+            $preview = get_transient('opentrust_io_preview_' . $user_id);
+            if (is_array($preview) && isset($preview['zip_path']) && (string) $preview['zip_path'] === $path) {
+                return;
+            }
+        }
+
+        if (is_file($canonical_path)) {
+            wp_delete_file($canonical_path);
+        }
     }
 
     // ──────────────────────────────────────────────
@@ -321,6 +425,13 @@ final class OpenTrust_Admin_Tools {
         // wp_handle_upload() lives here; idempotent require for WP-CLI / alt call paths.
         require_once ABSPATH . 'wp-admin/includes/file.php';
 
+        // Scope an upload_dir filter to redirect wp_handle_upload() into our
+        // plugin-private stash dir (wp-content/uploads/opentrust-tmp/ with a
+        // deny-all .htaccess + blank index.html). The filter is added immediately
+        // before wp_handle_upload() and removed immediately after so no other
+        // upload code path in this request is affected.
+        $upload_filter = $this->install_stash_upload_filter();
+
         // test_form=false because our admin-post action is opentrust_import_preview,
         // not the 'wp_handle_upload' token wp_handle_upload() checks for by default.
         // mimes is narrowed to ZIP only — finfo magic-byte detection promotes Safari's
@@ -333,6 +444,10 @@ final class OpenTrust_Admin_Tools {
                 'mimes'     => ['zip' => 'application/zip'],
             ]
         );
+
+        if ($upload_filter !== null) {
+            remove_filter('upload_dir', $upload_filter);
+        }
 
         if (isset($upload['error'])) {
             $this->bounce_error((string) $upload['error']);
@@ -365,6 +480,16 @@ final class OpenTrust_Admin_Tools {
             }
 
             set_transient('opentrust_io_preview_' . get_current_user_id(), $preview, 30 * MINUTE_IN_SECONDS);
+
+            // Belt-and-suspenders cleanup: schedule a single-event deletion of the
+            // stashed ZIP keyed to the transient TTL. Covers the abandon-the-preview
+            // case where the admin never returns to confirm or cancel. The handler
+            // re-checks containment and skips if an import is mid-flight.
+            wp_schedule_single_event(
+                time() + 30 * MINUTE_IN_SECONDS,
+                'opentrust_io_preview_cleanup',
+                [$stash_path, get_current_user_id()]
+            );
         } catch (\Throwable $e) {
             wp_delete_file($stash_path);
             $this->bounce_error($e->getMessage());
