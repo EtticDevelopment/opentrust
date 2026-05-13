@@ -246,6 +246,10 @@ final class OpenTrust {
      * Collects affected IDs before the UPDATE so each row's WP_Post entry in
      * the object cache can be invalidated — otherwise post_type checks that
      * read from cache return stale 'ot_*' values until the cache expires.
+     *
+     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer
+     *             supported. Also remove the `if ($current < 4)` branch in
+     *             maybe_upgrade() and the OpenTrust_CPT::LEGACY_* constants.
      */
     private static function rename_cpt_slugs_v4(): void {
         global $wpdb;

@@ -21,14 +21,22 @@ final class OpenTrust_CPT {
     public const DATA_PRACTICE = 'opentr_data_practice';
     public const FAQ           = 'opentr_faq';
 
-    // Legacy slugs from v1.0.x. Kept solely for the v3→v4 migration and the
-    // import/export back-compat remap. Do not introduce new references.
+    /**
+     * Legacy slugs from v1.0.x. Kept solely for the v3→v4 migration and the
+     * import/export back-compat remap. Do not introduce new references.
+     *
+     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer supported.
+     *             The major-version mismatch check in OpenTrust_IO::validate_manifest()
+     *             already hard-rejects 1.x archives on a 2.x destination, so the
+     *             import remap becomes redundant at the same cutoff.
+     */
     public const LEGACY_POLICY        = 'ot_policy';
     public const LEGACY_CERTIFICATION = 'ot_certification';
     public const LEGACY_SUBPROCESSOR  = 'ot_subprocessor';
     public const LEGACY_DATA_PRACTICE = 'ot_data_practice';
     public const LEGACY_FAQ           = 'ot_faq';
 
+    /** @deprecated 1.1.0 Drop in 2.0.0 alongside the LEGACY_* constants above. */
     public const LEGACY_MAP = [
         self::LEGACY_POLICY        => self::POLICY,
         self::LEGACY_CERTIFICATION => self::CERTIFICATION,

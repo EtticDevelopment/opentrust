@@ -418,6 +418,12 @@ final class OpenTrust_IO {
      * slugs (opentr_*). Touches top-level record keys only — record bodies
      * carry __post_ref values as UUIDs (not slugs) and resolve fine once the
      * outer key is corrected.
+     *
+     * @deprecated 1.1.0 Drop in 2.0.0. The major-version mismatch check in
+     *             validate_manifest() already hard-rejects 1.x archives on a
+     *             2.x destination, so this remap becomes redundant. Also
+     *             remove the two call sites in preview_import() and
+     *             apply_content_import().
      */
     private static function remap_legacy_cpt_keys(array $manifest): array {
         if (empty($manifest['records']) || !is_array($manifest['records'])) {

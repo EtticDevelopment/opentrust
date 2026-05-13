@@ -24,6 +24,9 @@ global $wpdb;
 // Legacy ot_* slugs included as a belt-and-suspenders cleanup for the corner
 // case of a v1.0.x install uninstalling before the v3→v4 migration in
 // OpenTrust::maybe_upgrade() has had a chance to run.
+//
+// @deprecated 1.1.0 Drop the ot_* entries in 2.0.0 once v1.0.x upgrades are no
+//             longer supported.
 $ot_post_types = [
     'opentr_policy',
     'opentr_subprocessor',
