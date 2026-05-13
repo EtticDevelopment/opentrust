@@ -16,9 +16,9 @@ $ot_settings = $ot_data['settings'];
 $ot_hsl      = $ot_data['hsl'];
 $ot_view     = $ot_data['view'] ?? 'main';
 
-$ot_page_title   = (string) ($ot_settings['page_title'] ?: __('Trust Center', 'opentrust'));
+$ot_page_title   = (string) (($ot_settings['page_title'] ?? '') ?: __('Trust Center', 'opentrust'));
 $ot_company_name = (string) ($ot_settings['company_name'] ?? '');
-$ot_tagline      = (string) ($ot_settings['tagline'] ?: __('Transparency and security you can trust.', 'opentrust'));
+$ot_tagline      = (string) (($ot_settings['tagline'] ?? '') ?: __('Transparency and security you can trust.', 'opentrust'));
 $ot_logo_url     = $ot_data['logo_url'] ?? '';
 $ot_base_url     = $ot_data['base_url'] ?? '/';
 
