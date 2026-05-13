@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-12T20:24:14+00:00\n"
+"POT-Creation-Date: 2026-05-13T09:58:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -322,7 +322,7 @@ msgstr ""
 #: includes/class-opentrust-admin-questions.php:219
 #: includes/class-opentrust-admin-questions.php:260
 #: includes/class-opentrust-admin-questions.php:277
-#: includes/class-opentrust-admin-tools.php:440
+#: includes/class-opentrust-admin-tools.php:565
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -760,7 +760,7 @@ msgid "Certifications & Compliance"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:323
-#: includes/class-opentrust-admin-tools.php:467
+#: includes/class-opentrust-admin-tools.php:592
 #: includes/class-opentrust-cpt.php:151
 #: includes/class-opentrust-cpt.php:161
 #: templates/chat.php:45
@@ -770,7 +770,7 @@ msgid "Policies"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:324
-#: includes/class-opentrust-admin-tools.php:469
+#: includes/class-opentrust-admin-tools.php:594
 #: includes/class-opentrust-cpt.php:218
 #: includes/class-opentrust-cpt.php:227
 #: templates/chat.php:47
@@ -781,7 +781,7 @@ msgid "Subprocessors"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:325
-#: includes/class-opentrust-admin-tools.php:470
+#: includes/class-opentrust-admin-tools.php:595
 #: includes/class-opentrust-cpt.php:251
 #: includes/class-opentrust-cpt.php:260
 #: templates/chat.php:48
@@ -791,7 +791,7 @@ msgid "Data Practices"
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:326
-#: includes/class-opentrust-admin-tools.php:471
+#: includes/class-opentrust-admin-tools.php:596
 #: includes/class-opentrust-cpt.php:284
 #: includes/class-opentrust-cpt.php:294
 msgid "FAQs"
@@ -828,149 +828,149 @@ msgstr ""
 msgid "Import & Export"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:51
+#: includes/class-opentrust-admin-tools.php:155
 msgid "Move trust center content and settings between sites, or seed a fresh install from another. API keys and the Turnstile secret are never included — re-enter them on the destination."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:59
+#: includes/class-opentrust-admin-tools.php:163
 msgid "Export"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:63
+#: includes/class-opentrust-admin-tools.php:167
 msgid "Import"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:79
+#: includes/class-opentrust-admin-tools.php:183
 msgid "What to export"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:82
+#: includes/class-opentrust-admin-tools.php:186
 msgid "Content (CPTs + bundled media)"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:86
+#: includes/class-opentrust-admin-tools.php:190
 msgid "Settings only"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:91
+#: includes/class-opentrust-admin-tools.php:195
 msgid "Content selection"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:121
+#: includes/class-opentrust-admin-tools.php:225
 msgid "Bundle attached PDFs and images"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:125
+#: includes/class-opentrust-admin-tools.php:229
 msgid "Download export"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:139
+#: includes/class-opentrust-admin-tools.php:243
 msgid "Only upload your own exports."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:140
+#: includes/class-opentrust-admin-tools.php:244
 msgid "Export files contain your trust-center content and may include sensitive material. Never import a file you received from someone else."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:144
+#: includes/class-opentrust-admin-tools.php:248
 msgid "Upload export file"
 msgstr ""
 
 #. translators: %d: max upload size in MB
-#: includes/class-opentrust-admin-tools.php:149
+#: includes/class-opentrust-admin-tools.php:253
 #, php-format
 msgid "Max %d MB"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:155
+#: includes/class-opentrust-admin-tools.php:259
 msgid "On conflict"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:158
+#: includes/class-opentrust-admin-tools.php:262
 msgid "Skip — keep existing records untouched"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:162
+#: includes/class-opentrust-admin-tools.php:266
 msgid "Overwrite — replace existing records"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:166
+#: includes/class-opentrust-admin-tools.php:270
 msgid "Create new — duplicate with a -import suffix"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:171
+#: includes/class-opentrust-admin-tools.php:275
 msgid "Preview import"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:188
+#: includes/class-opentrust-admin-tools.php:292
 msgid "Import preview"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:192
+#: includes/class-opentrust-admin-tools.php:296
 msgid "Import blocked:"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:213
+#: includes/class-opentrust-admin-tools.php:317
 msgid "Settings export — current values will be merged with imported values. Excluded keys (encrypted secrets, salt, server-controlled flags) are kept as-is."
 msgstr ""
 
 #. translators: %1$d: create count, %2$d: update count, %3$d: skip count
-#: includes/class-opentrust-admin-tools.php:220
+#: includes/class-opentrust-admin-tools.php:324
 #, php-format
 msgid "Will create %1$d, update %2$d, skip %3$d."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:234
+#: includes/class-opentrust-admin-tools.php:338
 msgid "Title"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:235
+#: includes/class-opentrust-admin-tools.php:339
 msgid "Action"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:236
+#: includes/class-opentrust-admin-tools.php:340
 msgid "UUID"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:257
+#: includes/class-opentrust-admin-tools.php:361
 msgid "Confirm and import"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:259
+#: includes/class-opentrust-admin-tools.php:363
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:281
+#: includes/class-opentrust-admin-tools.php:385
 msgid "Pick at least one record to export."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:311
+#: includes/class-opentrust-admin-tools.php:415
 msgid "No file uploaded."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:317
+#: includes/class-opentrust-admin-tools.php:421
 msgid "Upload exceeds size limit."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:389
+#: includes/class-opentrust-admin-tools.php:514
 msgid "Import cancelled."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:394
+#: includes/class-opentrust-admin-tools.php:519
 msgid "Import has unresolved errors."
 msgstr ""
 
 #. translators: %1$d: created, %2$d: updated, %3$d: skipped
-#: includes/class-opentrust-admin-tools.php:414
+#: includes/class-opentrust-admin-tools.php:539
 #, php-format
 msgid "Imported: %1$d created, %2$d updated, %3$d skipped."
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:422
+#: includes/class-opentrust-admin-tools.php:547
 msgid "Errors:"
 msgstr ""
 
-#: includes/class-opentrust-admin-tools.php:468
+#: includes/class-opentrust-admin-tools.php:593
 #: includes/class-opentrust-cpt.php:185
 #: includes/class-opentrust-cpt.php:194
 #: templates/chat.php:46
