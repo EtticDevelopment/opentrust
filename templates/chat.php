@@ -74,8 +74,6 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="canonical" href="<?php echo esc_url(trailingslashit($ot_base_url) . 'ask/'); ?>">
     <?php
-    // Inline the frontend + chat CSS via a synthetic style handle so the
-    // standalone document still routes through WordPress's enqueue API.
     $ot_root_vars = sprintf(
         ':root{--ot-accent-h:%d;--ot-accent-s:%d%%;--ot-accent-l:%d%%;--ot-accent-contrast:%s;}',
         (int) $ot_hsl['h'],
@@ -83,21 +81,11 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         (int) $ot_hsl['l'],
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    $ot_font_url      = esc_url(OPENTRUST_PLUGIN_URL . 'assets/fonts');
-    $ot_css_body      = '';
-    $ot_base_css_path = OPENTRUST_PLUGIN_DIR . 'assets/css/frontend.css';
-    if (file_exists($ot_base_css_path)) {
-        $ot_base_css = (string) file_get_contents($ot_base_css_path);
-        $ot_css_body .= str_replace('@@OT_FONT_URL@@', $ot_font_url, $ot_base_css);
-    }
-    $ot_chat_css_path = OPENTRUST_PLUGIN_DIR . 'assets/css/chat.css';
-    if (file_exists($ot_chat_css_path)) {
-        $ot_css_body .= "\n" . (string) file_get_contents($ot_chat_css_path);
-    }
-    wp_register_style('opentrust-chat', false, [], OPENTRUST_VERSION);
+    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', OPENTRUST_PLUGIN_FILE), [], OPENTRUST_VERSION);
+    wp_register_style('opentrust-chat', plugins_url('assets/css/chat.css', OPENTRUST_PLUGIN_FILE), ['opentrust-frontend'], OPENTRUST_VERSION);
     wp_enqueue_style('opentrust-chat');
-    wp_add_inline_style('opentrust-chat', $ot_root_vars . "\n" . $ot_css_body);
-    wp_print_styles(['opentrust-chat']);
+    wp_add_inline_style('opentrust-chat', $ot_root_vars);
+    wp_print_styles(['opentrust-frontend', 'opentrust-chat']);
     ?>
     <?php if ($ot_ts_key !== ''): ?>
         <?php
@@ -317,56 +305,59 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         </div>
     <?php endif; ?>
 
-    <?php if ($ot_state === 'ready'): ?>
-        <script id="ot-chat-config" type="application/json"><?php
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON_HEX_* flags hex-escape <, >, &, ', " for safe in-DOM <script> embedding.
-            echo wp_json_encode([
-                'rest_url'       => $ot_rest_url,
-                'nonce'          => $ot_nonce,
-                'prefill_q'      => $ot_prefill_q,
-                'model'          => $ot_show_attrib ? $ot_model_id : '',
-                'contact_url'    => esc_url_raw($ot_contact_url),
-                'max_length'     => $ot_max_len,
-                'base_url'       => esc_url_raw($ot_base_url),
-                'company_name'   => $ot_company_name,
-                'assistant_name' => $ot_assistant_name,
-                'avatar_url'     => esc_url_raw($ot_avatar_url),
-                'turnstile_key'  => $ot_ts_key,
-                'turnstile_required' => $ot_ts_key !== '',
-                'strings'        => [
-                    'placeholder'       => __('Ask anything about our security and compliance…', 'opentrust'),
-                    'send'              => __('Send', 'opentrust'),
-                    'stop'              => __('Stop', 'opentrust'),
-                    'thinking'          => __('Thinking…', 'opentrust'),
-                    'retry'             => __('Connection lost. Retry?', 'opentrust'),
-                    'refused_contact'   => __('Contact security team →', 'opentrust'),
-                    'copy'              => __('Copy', 'opentrust'),
-                    'copied'            => __('Copied', 'opentrust'),
-                    'print'             => __('Print', 'opentrust'),
-                    'start_new'         => __('Start a new conversation', 'opentrust'),
-                    'long_hint'         => __('This conversation is getting long. Start fresh for better answers.', 'opentrust'),
-                    'sources_label'     => __('Sources', 'opentrust'),
-                    'refused_headline'  => __("I don't see enough information in our trust center to answer that confidently.", 'opentrust'),
-                    'provider_error'    => __('The AI provider returned an error. Please try again.', 'opentrust'),
-                    'unavailable'       => __('AI is temporarily unavailable. Please try again in a few minutes or browse our published content.', 'opentrust'),
-                    'message_too_long'  => __('Message is too long.', 'opentrust'),
-                    'rate_limited'      => __('Please wait a moment before asking again.', 'opentrust'),
-                    'cite'              => __('Cite source', 'opentrust'),
-                    'user_name'         => __('You', 'opentrust'),
-                    'just_now'          => __('just now', 'opentrust'),
-                    'empty_response'    => __('No content returned by the model.', 'opentrust'),
-                    'disclaimer'        => __('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'opentrust'),
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-        ?></script>
-        <?php
-        $ot_chat_js_path = OPENTRUST_PLUGIN_DIR . 'assets/js/chat.js';
-        if (file_exists($ot_chat_js_path)) {
-            wp_register_script('opentrust-chat', false, [], OPENTRUST_VERSION, true);
-            wp_enqueue_script('opentrust-chat');
-            wp_add_inline_script('opentrust-chat', (string) file_get_contents($ot_chat_js_path));
-            wp_print_scripts(['opentrust-chat']);
-        }
+    <?php if ($ot_state === 'ready'):
+        $ot_chat_config = [
+            'rest_url'       => $ot_rest_url,
+            'nonce'          => $ot_nonce,
+            'prefill_q'      => $ot_prefill_q,
+            'model'          => $ot_show_attrib ? $ot_model_id : '',
+            'contact_url'    => esc_url_raw($ot_contact_url),
+            'max_length'     => $ot_max_len,
+            'base_url'       => esc_url_raw($ot_base_url),
+            'company_name'   => $ot_company_name,
+            'assistant_name' => $ot_assistant_name,
+            'avatar_url'     => esc_url_raw($ot_avatar_url),
+            'turnstile_key'  => $ot_ts_key,
+            'turnstile_required' => $ot_ts_key !== '',
+            'strings'        => [
+                'placeholder'       => __('Ask anything about our security and compliance…', 'opentrust'),
+                'send'              => __('Send', 'opentrust'),
+                'stop'              => __('Stop', 'opentrust'),
+                'thinking'          => __('Thinking…', 'opentrust'),
+                'retry'             => __('Connection lost. Retry?', 'opentrust'),
+                'refused_contact'   => __('Contact security team →', 'opentrust'),
+                'copy'              => __('Copy', 'opentrust'),
+                'copied'            => __('Copied', 'opentrust'),
+                'print'             => __('Print', 'opentrust'),
+                'start_new'         => __('Start a new conversation', 'opentrust'),
+                'long_hint'         => __('This conversation is getting long. Start fresh for better answers.', 'opentrust'),
+                'sources_label'     => __('Sources', 'opentrust'),
+                'refused_headline'  => __("I don't see enough information in our trust center to answer that confidently.", 'opentrust'),
+                'provider_error'    => __('The AI provider returned an error. Please try again.', 'opentrust'),
+                'unavailable'       => __('AI is temporarily unavailable. Please try again in a few minutes or browse our published content.', 'opentrust'),
+                'message_too_long'  => __('Message is too long.', 'opentrust'),
+                'rate_limited'      => __('Please wait a moment before asking again.', 'opentrust'),
+                'cite'              => __('Cite source', 'opentrust'),
+                'user_name'         => __('You', 'opentrust'),
+                'just_now'          => __('just now', 'opentrust'),
+                'empty_response'    => __('No content returned by the model.', 'opentrust'),
+                'disclaimer'        => __('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'opentrust'),
+            ],
+        ];
+        wp_print_inline_script_tag(
+            (string) wp_json_encode($ot_chat_config, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
+            ['id' => 'ot-chat-config', 'type' => 'application/json']
+        );
+
+        wp_register_script(
+            'opentrust-chat',
+            plugins_url('assets/js/chat.js', OPENTRUST_PLUGIN_FILE),
+            [],
+            OPENTRUST_VERSION,
+            ['in_footer' => true, 'strategy' => 'defer']
+        );
+        wp_enqueue_script('opentrust-chat');
+        wp_print_scripts(['opentrust-chat']);
         ?>
     <?php endif; ?>
 

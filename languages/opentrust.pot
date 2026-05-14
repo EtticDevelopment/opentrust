@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-12T19:09:16+00:00\n"
+"POT-Creation-Date: 2026-05-12T20:25:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -515,10 +515,10 @@ msgid "Logging disabled."
 msgstr ""
 
 #: includes/class-opentrust-admin-review.php:81
-msgid "review on WordPress.org"
+msgid "★★★★★ review on WordPress.org"
 msgstr ""
 
-#. translators: %s: link to the WordPress.org reviews page
+#. translators: %s: link to leave a 5-star review on WordPress.org
 #: includes/class-opentrust-admin-review.php:89
 #, php-format
 msgid "OpenTrust is built and maintained in the open. If it is helping your team, a %s keeps the project moving."
@@ -765,7 +765,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:161
 #: templates/chat.php:45
 #: templates/partials/hero.php:55
-#: templates/trust-center.php:117
+#: templates/trust-center.php:108
 msgid "Policies"
 msgstr ""
 
@@ -776,7 +776,7 @@ msgstr ""
 #: templates/chat.php:47
 #: templates/partials/hero.php:61
 #: templates/partials/subprocessors.php:20
-#: templates/trust-center.php:119
+#: templates/trust-center.php:110
 msgid "Subprocessors"
 msgstr ""
 
@@ -786,7 +786,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:260
 #: templates/chat.php:48
 #: templates/partials/data-practices.php:34
-#: templates/trust-center.php:120
+#: templates/trust-center.php:111
 msgid "Data Practices"
 msgstr ""
 
@@ -812,7 +812,7 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:605
 #: templates/chat.php:60
-#: templates/trust-center.php:121
+#: templates/trust-center.php:112
 msgid "Contact"
 msgstr ""
 
@@ -979,7 +979,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:194
 #: templates/chat.php:46
 #: templates/partials/hero.php:49
-#: templates/trust-center.php:118
+#: templates/trust-center.php:109
 msgid "Certifications"
 msgstr ""
 
@@ -1300,7 +1300,7 @@ msgstr ""
 
 #: includes/class-opentrust-cpt.php:285
 #: templates/chat.php:61
-#: templates/trust-center.php:122
+#: templates/trust-center.php:113
 msgid "FAQ"
 msgstr ""
 
@@ -2161,174 +2161,174 @@ msgstr ""
 msgid "Ask %s — Trust Center"
 msgstr ""
 
-#: templates/chat.php:112
-#: templates/trust-center.php:111
+#: templates/chat.php:100
+#: templates/trust-center.php:102
 msgid "Skip to content"
 msgstr ""
 
-#: templates/chat.php:114
+#: templates/chat.php:102
 #: templates/partials/policy-single.php:36
-#: templates/trust-center.php:124
+#: templates/trust-center.php:115
 msgid "Trust center navigation"
 msgstr ""
 
-#: templates/chat.php:143
-#: templates/trust-center.php:154
+#: templates/chat.php:131
+#: templates/trust-center.php:145
 msgid "Ask AI"
 msgstr ""
 
-#: templates/chat.php:157
+#: templates/chat.php:145
 msgid "Ask AI is not configured"
 msgstr ""
 
-#: templates/chat.php:158
+#: templates/chat.php:146
 msgid "The site administrator has not enabled the AI chat feature yet."
 msgstr ""
 
-#: templates/chat.php:160
+#: templates/chat.php:148
 msgid "Browse trust center"
 msgstr ""
 
-#: templates/chat.php:188
-#: templates/chat.php:355
+#: templates/chat.php:176
+#: templates/chat.php:341
 msgid "You"
 msgstr ""
 
-#: templates/chat.php:190
-#: templates/chat.php:207
-#: templates/chat.php:356
+#: templates/chat.php:178
+#: templates/chat.php:195
+#: templates/chat.php:342
 msgid "just now"
 msgstr ""
 
-#: templates/chat.php:214
-#: templates/chat.php:348
+#: templates/chat.php:202
+#: templates/chat.php:334
 msgid "Sources"
 msgstr ""
 
-#: templates/chat.php:224
-#: templates/chat.php:358
+#: templates/chat.php:212
+#: templates/chat.php:344
 msgid "AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above."
 msgstr ""
 
-#: templates/chat.php:234
+#: templates/chat.php:222
 msgid "JavaScript is disabled — you can still ask one question below. The answer will load as a regular page."
 msgstr ""
 
-#: templates/chat.php:237
+#: templates/chat.php:225
 msgid "Your question"
 msgstr ""
 
-#: templates/chat.php:244
+#: templates/chat.php:232
 msgid "Ask"
 msgstr ""
 
-#: templates/chat.php:255
+#: templates/chat.php:243
 msgid "Are you SOC 2 compliant?"
 msgstr ""
 
-#: templates/chat.php:256
+#: templates/chat.php:244
 msgid "Where is customer data stored?"
 msgstr ""
 
-#: templates/chat.php:257
+#: templates/chat.php:245
 msgid "What's your incident response process?"
 msgstr ""
 
-#: templates/chat.php:258
+#: templates/chat.php:246
 msgid "Which subprocessors do you use?"
 msgstr ""
 
-#: templates/chat.php:270
+#: templates/chat.php:258
 msgid "Suggested questions"
 msgstr ""
 
-#: templates/chat.php:286
+#: templates/chat.php:274
 msgid "Ask a question"
 msgstr ""
 
-#: templates/chat.php:293
-#: templates/chat.php:337
+#: templates/chat.php:281
+#: templates/chat.php:323
 msgid "Ask anything about our security and compliance…"
 msgstr ""
 
-#: templates/chat.php:295
-#: templates/chat.php:346
+#: templates/chat.php:283
+#: templates/chat.php:332
 msgid "Start a new conversation"
 msgstr ""
 
-#: templates/chat.php:298
-#: templates/chat.php:338
+#: templates/chat.php:286
+#: templates/chat.php:324
 msgid "Send"
 msgstr ""
 
 #. translators: 1: link to trust center, 2: company name
-#: templates/chat.php:309
+#: templates/chat.php:297
 #, php-format
 msgid "Grounded in the published %1$s for %2$s. AI-generated, not legal, security, or compliance advice. Always check the sources."
 msgstr ""
 
-#: templates/chat.php:310
+#: templates/chat.php:298
 msgid "trust center"
 msgstr ""
 
-#: templates/chat.php:339
+#: templates/chat.php:325
 msgid "Stop"
 msgstr ""
 
-#: templates/chat.php:340
+#: templates/chat.php:326
 msgid "Thinking…"
 msgstr ""
 
-#: templates/chat.php:341
+#: templates/chat.php:327
 msgid "Connection lost. Retry?"
 msgstr ""
 
-#: templates/chat.php:342
+#: templates/chat.php:328
 msgid "Contact security team →"
 msgstr ""
 
-#: templates/chat.php:343
+#: templates/chat.php:329
 msgid "Copy"
 msgstr ""
 
-#: templates/chat.php:344
+#: templates/chat.php:330
 msgid "Copied"
 msgstr ""
 
-#: templates/chat.php:345
+#: templates/chat.php:331
 #: templates/partials/policy-single.php:139
 msgid "Print"
 msgstr ""
 
-#: templates/chat.php:347
+#: templates/chat.php:333
 msgid "This conversation is getting long. Start fresh for better answers."
 msgstr ""
 
-#: templates/chat.php:349
+#: templates/chat.php:335
 msgid "I don't see enough information in our trust center to answer that confidently."
 msgstr ""
 
-#: templates/chat.php:350
+#: templates/chat.php:336
 msgid "The AI provider returned an error. Please try again."
 msgstr ""
 
-#: templates/chat.php:351
+#: templates/chat.php:337
 msgid "AI is temporarily unavailable. Please try again in a few minutes or browse our published content."
 msgstr ""
 
-#: templates/chat.php:352
+#: templates/chat.php:338
 msgid "Message is too long."
 msgstr ""
 
-#: templates/chat.php:353
+#: templates/chat.php:339
 msgid "Please wait a moment before asking again."
 msgstr ""
 
-#: templates/chat.php:354
+#: templates/chat.php:340
 msgid "Cite source"
 msgstr ""
 
-#: templates/chat.php:357
+#: templates/chat.php:343
 msgid "No content returned by the model."
 msgstr ""
 
@@ -2563,16 +2563,16 @@ msgstr ""
 msgid "Transparency and security you can trust."
 msgstr ""
 
-#: templates/trust-center.php:206
+#: templates/trust-center.php:197
 msgid "Trust center content is being prepared. Check back soon."
 msgstr ""
 
 #. translators: %s: company name
-#: templates/trust-center.php:222
+#: templates/trust-center.php:213
 #, php-format
 msgid "© %1$s %2$s. All rights reserved."
 msgstr ""
 
-#: templates/trust-center.php:230
+#: templates/trust-center.php:221
 msgid "Powered by OpenTrust"
 msgstr ""
