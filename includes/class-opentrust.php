@@ -193,7 +193,20 @@ final class OpenTrust {
             self::rename_cpt_slugs_v4();
         }
 
-        // v1 → v2: back-fill _ot_uuid on existing CPT posts.
+        // v4 → v5: rename postmeta keys from `_ot_*` to `_opentrust_*` so the
+        // plugin no longer uses a 2-character prefix in the shared postmeta
+        // table. MUST run before the v1→v2 UUID back-fill below: the back-fill
+        // stamps `_opentrust_uuid` on any post that lacks it, so a v1 post's
+        // legacy `_ot_uuid` row has to be renamed to `_opentrust_uuid` first —
+        // otherwise the back-fill would see no `_opentrust_uuid`, add a second
+        // one, and the post would end up with two conflicting UUID rows.
+        if ($current < 5) {
+            self::rename_postmeta_keys_v5();
+        }
+
+        // v1 → v2: back-fill _opentrust_uuid on existing CPT posts. Runs after
+        // the v4→v5 rename above so it never double-stamps a post that already
+        // carries a (renamed) legacy UUID.
         if ($current < 2) {
             self::backfill_uuids();
         }
@@ -204,16 +217,6 @@ final class OpenTrust {
         if ($current < 3) {
             OpenTrust_Admin_AI::schedule_cron();
             self::backfill_model_snapshot();
-        }
-
-        // v4 → v5: rename postmeta keys from `_ot_*` to `_opentrust_*` so the
-        // plugin no longer uses a 2-character prefix in the shared postmeta
-        // table. Ordering-independent: every runtime write path stamps the new
-        // key, so this step only cleans up rows left by older code — whether it
-        // runs before or after the v1→v2 UUID back-fill, the end state is the
-        // same set of `_opentrust_*` rows.
-        if ($current < 5) {
-            self::rename_postmeta_keys_v5();
         }
 
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
