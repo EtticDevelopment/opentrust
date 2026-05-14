@@ -10,6 +10,8 @@ CLAUDE.md
 research/
 marketing/
 reference/
+wporg-review/
+release-planning/
 dist/
 *.zip
 
@@ -34,6 +36,9 @@ REPLY_DRAFT.md
 .git/
 .github/
 .editorconfig
+
+# GitHub-facing docs (WordPress reads readme.txt, not README.md)
+README.md
 
 # IDE / editor
 .vscode/
