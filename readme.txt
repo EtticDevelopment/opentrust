@@ -2,9 +2,9 @@
 Contributors: ettic
 Tags: trust-center, compliance, gdpr, privacy, subprocessors
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -188,6 +188,18 @@ Not automatically — that's intentional. Auto-rendered PDFs from HTML almost al
 
 == Changelog ==
 
+= 1.1.0 =
+This release implements the fixes requested in round 1 of the WordPress.org plugin review. It contains no new features. Every change is compliance, security hardening, or internal correctness work.
+
+* Change: the five custom post types have been renamed from the `ot_` prefix to `opentr_` (`opentr_policy`, `opentr_certification`, `opentr_subprocessor`, `opentr_data_practice`, `opentr_faq`) to meet the WordPress.org 4-character prefix rule. An automatic database migration rewrites your existing policies, certifications, subprocessors, data practices, and FAQs to the new types on the first load after upgrade. No action is required. See "Upgrade notice" below.
+* Fix: all output is now escaped at the point it is echoed, across the public trust center, the AI chat, and every admin screen. There is no visible change to rendered pages.
+* Change: front-end and chat CSS and JavaScript are now registered and enqueued through the standard WordPress asset API with real file URLs instead of being inlined, so browsers can cache them between page loads.
+* Change: uploaded import archives are now processed through the standard `wp_handle_upload()` pipeline, which applies core MIME-type validation and the `upload_mimes` filter chain.
+* Change: the AI chat's outbound streaming request now goes through the WordPress HTTP API (`wp_safe_remote_post()` with the documented `http_api_curl` hook) instead of a raw cURL call. Streaming, the Stop button, the host allowlist, and SSL verification are unchanged.
+* Fix: removed an unused `require` of a WordPress core admin file from the import routine.
+* Change: the review link in the admin footer and milestone notice now points to the plugin's neutral reviews page, and the five-star wording has been removed, per WordPress.org review-solicitation guidelines.
+* Internal: bundled translation template regenerated. Database schema version bumped to 4.
+
 = 1.0.1 =
 * Fix: the active AI model could be silently cleared 24 hours after the provider's model-list cache expired, leaving chat disabled until the admin reopened settings and re-picked.
 * Add: a daily cron refreshes each stored provider's model list ahead of cache expiry, and a persisted display-name snapshot keeps the saved model rendered even if the provider deprecates the id.
@@ -195,3 +207,8 @@ Not automatically — that's intentional. Auto-rendered PDFs from HTML almost al
 
 = 1.0.0 =
 * Initial public release.
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+This release renames the plugin's five custom post types to a longer prefix for WordPress.org compliance. An automatic, idempotent database migration rewrites your existing content to the new post types on the first load after upgrade, so no manual action is required. Post IDs, content, meta, revisions, version history, and translation links are all preserved. As with any schema migration, a database backup before upgrading is recommended. If you maintain custom code that references the old `ot_*` post type slugs directly, update those references to the new `opentr_*` slugs.
