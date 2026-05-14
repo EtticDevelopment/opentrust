@@ -31,7 +31,7 @@ OpenTrust is a self-hosted, open-source trust center for WordPress. Procurement 
 
 ## Install
 
-**From WordPress.org**: coming soon at https://wordpress.org/plugins/opentrust/ (pending review).
+**From WordPress.org**: coming soon at https://wordpress.org/plugins/opentrust/ (currently in review).
 
 **Manually:**
 
