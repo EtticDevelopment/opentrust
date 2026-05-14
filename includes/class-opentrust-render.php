@@ -178,7 +178,7 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     private function render_policy_single(): void {
-        $slug   = sanitize_title(get_query_var('ot_policy_slug', ''));
+        $slug   = sanitize_title(get_query_var('opentrust_policy_slug', ''));
         $policy = $this->find_policy_by_slug($slug);
 
         if (!$policy) {
@@ -191,7 +191,7 @@ final class OpenTrust_Render {
         $ot_data['current_policy']   = $policy;
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress filter
         $ot_data['policy_content']   = apply_filters('the_content', $policy->post_content);
-        $ot_data['policy_version']   = (int) get_post_meta($policy->ID, '_ot_version', true) ?: 1;
+        $ot_data['policy_version']   = (int) get_post_meta($policy->ID, '_opentrust_version', true) ?: 1;
         $ot_data['policy_meta']      = $this->get_policy_meta($policy->ID);
         $ot_data['policy_versions']  = $this->get_policy_versions($policy);
         $ot_data['is_pending']       = $this->is_future_dated($policy);
@@ -206,8 +206,8 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     private function render_policy_version(): void {
-        $slug    = sanitize_title(get_query_var('ot_policy_slug', ''));
-        $version = (int) get_query_var('ot_version', '0');
+        $slug    = sanitize_title(get_query_var('opentrust_policy_slug', ''));
+        $version = (int) get_query_var('opentrust_version', '0');
         $policy  = $this->find_policy_by_slug($slug);
 
         if (!$policy || $version < 1) {
@@ -216,7 +216,7 @@ final class OpenTrust_Render {
         }
 
         // Current version — redirect to canonical.
-        $current_version = (int) get_post_meta($policy->ID, '_ot_version', true) ?: 1;
+        $current_version = (int) get_post_meta($policy->ID, '_opentrust_version', true) ?: 1;
         if ($version === $current_version) {
             $settings = OpenTrust::get_settings();
             $base     = home_url('/' . $settings['endpoint_slug'] . '/policy/' . $policy->post_name . '/');
@@ -228,7 +228,7 @@ final class OpenTrust_Render {
         $revisions = wp_get_post_revisions($policy->ID, ['order' => 'ASC']);
         $target    = null;
         foreach ($revisions as $rev) {
-            if ((int) get_post_meta($rev->ID, '_ot_version', true) === $version) {
+            if ((int) get_post_meta($rev->ID, '_opentrust_version', true) === $version) {
                 $target = $rev;
                 break;
             }
@@ -353,7 +353,7 @@ final class OpenTrust_Render {
      * Whether a policy's effective date is in the future.
      */
     private function is_future_dated(\WP_Post $policy): bool {
-        $effective_date = get_post_meta($policy->ID, '_ot_policy_effective_date', true);
+        $effective_date = get_post_meta($policy->ID, '_opentrust_policy_effective_date', true);
         if (!$effective_date) {
             return false;
         }
@@ -372,12 +372,12 @@ final class OpenTrust_Render {
     private function get_policy_versions(\WP_Post $policy): array {
         $settings        = OpenTrust::get_settings();
         $endpoint        = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
-        $current_version = (int) get_post_meta($policy->ID, '_ot_version', true) ?: 1;
+        $current_version = (int) get_post_meta($policy->ID, '_opentrust_version', true) ?: 1;
         $current_url     = home_url('/' . $endpoint . '/policy/' . $policy->post_name . '/');
 
         // Start with the current version.
         $date_fmt    = get_option('date_format');
-        $current_eff = get_post_meta($policy->ID, '_ot_policy_effective_date', true);
+        $current_eff = get_post_meta($policy->ID, '_opentrust_policy_effective_date', true);
         $versions    = [];
         $versions[]  = [
             'version' => $current_version,
@@ -386,7 +386,7 @@ final class OpenTrust_Render {
                 : wp_date($date_fmt, strtotime($policy->post_modified)),
             'url'     => $current_url,
             'current' => true,
-            'summary' => get_post_meta($policy->ID, '_ot_version_summary', true) ?: '',
+            'summary' => get_post_meta($policy->ID, '_opentrust_version_summary', true) ?: '',
         ];
 
         // Add past versions from revisions.
@@ -397,13 +397,13 @@ final class OpenTrust_Render {
 
         $seen = [$current_version => true];
         foreach ($revisions as $rev) {
-            $rev_version = (int) get_post_meta($rev->ID, '_ot_version', true);
+            $rev_version = (int) get_post_meta($rev->ID, '_opentrust_version', true);
             if (!$rev_version || isset($seen[$rev_version])) {
                 continue;
             }
             $seen[$rev_version] = true;
 
-            $rev_eff = get_post_meta($rev->ID, '_ot_policy_effective_date', true);
+            $rev_eff = get_post_meta($rev->ID, '_opentrust_policy_effective_date', true);
             $versions[] = [
                 'version' => $rev_version,
                 'date'    => $rev_eff
@@ -411,7 +411,7 @@ final class OpenTrust_Render {
                     : wp_date($date_fmt, strtotime($rev->post_modified)),
                 'url'     => home_url('/' . $endpoint . '/policy/' . $policy->post_name . '/version/' . $rev_version . '/'),
                 'current' => false,
-                'summary' => get_post_meta($rev->ID, '_ot_version_summary', true) ?: '',
+                'summary' => get_post_meta($rev->ID, '_opentrust_version_summary', true) ?: '',
             ];
         }
 
@@ -494,11 +494,11 @@ final class OpenTrust_Render {
     private function get_policy_meta(int $post_id): array {
         $repo = OpenTrust_Repository::instance();
         return [
-            'ref_id'         => (string) (get_post_meta($post_id, '_ot_policy_ref_id', true) ?: ''),
-            'category'       => get_post_meta($post_id, '_ot_policy_category', true) ?: 'other',
-            'citations'      => $repo->normalize_citations(get_post_meta($post_id, '_ot_policy_citations', true)),
-            'effective_date' => get_post_meta($post_id, '_ot_policy_effective_date', true) ?: '',
-            'review_date'    => get_post_meta($post_id, '_ot_policy_review_date', true) ?: '',
+            'ref_id'         => (string) (get_post_meta($post_id, '_opentrust_policy_ref_id', true) ?: ''),
+            'category'       => get_post_meta($post_id, '_opentrust_policy_category', true) ?: 'other',
+            'citations'      => $repo->normalize_citations(get_post_meta($post_id, '_opentrust_policy_citations', true)),
+            'effective_date' => get_post_meta($post_id, '_opentrust_policy_effective_date', true) ?: '',
+            'review_date'    => get_post_meta($post_id, '_opentrust_policy_review_date', true) ?: '',
             'attachment'     => $repo->resolve_policy_attachment($post_id),
         ];
     }

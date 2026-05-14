@@ -654,8 +654,7 @@ abstract class OpenTrust_Chat_Provider {
                 $state->error_body = $state->buffer;
             }
             $detail = $this->describe_streaming_error($state->error_body, $state->response_headers, $http_code);
-            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic for upstream provider failures
-            error_log('[OpenTrust] ' . $detail);
+            OpenTrust::debug_log($detail);
             return ['ok' => false, 'code' => $http_code, 'error' => $detail];
         }
 

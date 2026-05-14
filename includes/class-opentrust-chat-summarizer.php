@@ -38,9 +38,9 @@ final class OpenTrust_Chat_Summarizer {
      * Postmeta key. Mirror of OpenTrust_Chat_Corpus::POLICY_SUMMARY_META —
      * declared in both classes so neither file requires the other to load.
      */
-    public const META_KEY            = '_ot_policy_chat_summary';
-    public const META_KEY_UPDATED_AT = '_ot_policy_chat_summary_updated_at';
-    public const META_KEY_ORIGIN     = '_ot_policy_chat_summary_origin'; // 'auto' | 'manual'
+    public const META_KEY            = '_opentrust_policy_chat_summary';
+    public const META_KEY_UPDATED_AT = '_opentrust_policy_chat_summary_updated_at';
+    public const META_KEY_ORIGIN     = '_opentrust_policy_chat_summary_origin'; // 'auto' | 'manual'
 
     public const CRON_HOOK           = 'opentrust_generate_policy_summary';
     public const SUMMARY_MAX_CHARS   = 320;
@@ -317,7 +317,6 @@ final class OpenTrust_Chat_Summarizer {
     }
 
     private static function log_failure(int $post_id, string $reason): void {
-        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic for upstream provider failures
-        error_log(sprintf('[OpenTrust] policy summary generation failed for post %d: %s', $post_id, $reason));
+        OpenTrust::debug_log(sprintf('policy summary generation failed for post %d: %s', $post_id, $reason));
     }
 }

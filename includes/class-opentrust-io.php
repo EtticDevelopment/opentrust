@@ -38,63 +38,63 @@ final class OpenTrust_IO {
     // Keep in sync with class-opentrust-cpt.php save handlers.
     private const META_KEYS = [
         OpenTrust_CPT::POLICY => [
-            '_ot_uuid',
-            '_ot_policy_ref_id',
-            '_ot_policy_category',
-            '_ot_policy_effective_date',
-            '_ot_policy_review_date',
-            '_ot_policy_sort_order',
-            '_ot_policy_citations',
-            '_ot_policy_attachment_id',
-            '_ot_version',
-            '_ot_version_summary',
-            '_ot_policy_chat_summary',
-            '_ot_policy_chat_summary_updated_at',
-            '_ot_policy_chat_summary_origin',
+            '_opentrust_uuid',
+            '_opentrust_policy_ref_id',
+            '_opentrust_policy_category',
+            '_opentrust_policy_effective_date',
+            '_opentrust_policy_review_date',
+            '_opentrust_policy_sort_order',
+            '_opentrust_policy_citations',
+            '_opentrust_policy_attachment_id',
+            '_opentrust_version',
+            '_opentrust_version_summary',
+            '_opentrust_policy_chat_summary',
+            '_opentrust_policy_chat_summary_updated_at',
+            '_opentrust_policy_chat_summary_origin',
         ],
         OpenTrust_CPT::CERTIFICATION => [
-            '_ot_uuid',
-            '_ot_cert_type',
-            '_ot_cert_status',
-            '_ot_cert_issuing_body',
-            '_ot_cert_issue_date',
-            '_ot_cert_expiry_date',
-            '_ot_cert_badge_id',
-            '_ot_cert_artifact_id',
-            '_ot_cert_description',
+            '_opentrust_uuid',
+            '_opentrust_cert_type',
+            '_opentrust_cert_status',
+            '_opentrust_cert_issuing_body',
+            '_opentrust_cert_issue_date',
+            '_opentrust_cert_expiry_date',
+            '_opentrust_cert_badge_id',
+            '_opentrust_cert_artifact_id',
+            '_opentrust_cert_description',
         ],
         OpenTrust_CPT::SUBPROCESSOR => [
-            '_ot_uuid',
-            '_ot_sub_purpose',
-            '_ot_sub_data_processed',
-            '_ot_sub_country',
-            '_ot_sub_website',
-            '_ot_sub_dpa_signed',
+            '_opentrust_uuid',
+            '_opentrust_sub_purpose',
+            '_opentrust_sub_data_processed',
+            '_opentrust_sub_country',
+            '_opentrust_sub_website',
+            '_opentrust_sub_dpa_signed',
         ],
         OpenTrust_CPT::DATA_PRACTICE => [
-            '_ot_uuid',
-            '_ot_dp_data_items',
-            '_ot_dp_purpose',
-            '_ot_dp_legal_basis',
-            '_ot_dp_retention_period',
-            '_ot_dp_shared_with',
-            '_ot_dp_sort_order',
-            '_ot_dp_collected',
-            '_ot_dp_stored',
-            '_ot_dp_shared',
-            '_ot_dp_sold',
-            '_ot_dp_encrypted',
+            '_opentrust_uuid',
+            '_opentrust_dp_data_items',
+            '_opentrust_dp_purpose',
+            '_opentrust_dp_legal_basis',
+            '_opentrust_dp_retention_period',
+            '_opentrust_dp_shared_with',
+            '_opentrust_dp_sort_order',
+            '_opentrust_dp_collected',
+            '_opentrust_dp_stored',
+            '_opentrust_dp_shared',
+            '_opentrust_dp_sold',
+            '_opentrust_dp_encrypted',
         ],
         OpenTrust_CPT::FAQ => [
-            '_ot_uuid',
-            '_ot_faq_related_policy',
+            '_opentrust_uuid',
+            '_opentrust_faq_related_policy',
         ],
     ];
 
     // Meta keys whose value is an attachment ID; serialized as __media_ref.
     private const ATTACHMENT_META_KEYS = [
-        OpenTrust_CPT::POLICY        => ['_ot_policy_attachment_id'],
-        OpenTrust_CPT::CERTIFICATION => ['_ot_cert_badge_id', '_ot_cert_artifact_id'],
+        OpenTrust_CPT::POLICY        => ['_opentrust_policy_attachment_id'],
+        OpenTrust_CPT::CERTIFICATION => ['_opentrust_cert_badge_id', '_opentrust_cert_artifact_id'],
         OpenTrust_CPT::SUBPROCESSOR  => [],
         OpenTrust_CPT::DATA_PRACTICE => [],
         OpenTrust_CPT::FAQ           => [],
@@ -103,7 +103,7 @@ final class OpenTrust_IO {
     // meta_key => target_cpt_slug. Cross-CPT refs serialized as __post_ref.
     private const POST_REF_META_KEYS = [
         OpenTrust_CPT::FAQ => [
-            '_ot_faq_related_policy' => OpenTrust_CPT::POLICY,
+            '_opentrust_faq_related_policy' => OpenTrust_CPT::POLICY,
         ],
     ];
 
@@ -270,6 +270,7 @@ final class OpenTrust_IO {
     // Dry-run: returns per-CPT counts and per-record actions, no DB writes.
     public static function preview_import(array $manifest, string $strategy = self::STRATEGY_SKIP): array {
         $manifest = self::remap_legacy_cpt_keys($manifest);
+        $manifest = self::remap_legacy_meta_keys($manifest);
         $records  = $manifest['records'] ?? [];
         $summary  = [];
         $detail   = [];
@@ -303,6 +304,7 @@ final class OpenTrust_IO {
 
     public static function apply_content_import(array $manifest, string $zip_path, string $strategy): array {
         $manifest = self::remap_legacy_cpt_keys($manifest);
+        $manifest = self::remap_legacy_meta_keys($manifest);
 
         $created = 0;
         $updated = 0;
@@ -437,6 +439,38 @@ final class OpenTrust_IO {
         return $manifest;
     }
 
+    /**
+     * Rewrite legacy `_ot_*` postmeta keys in an inbound manifest's record
+     * bodies to the v1.1.1+ `_opentrust_*` keys. Pre-1.1.1 exports carry the
+     * short prefix; without this remap their meta would be written under the
+     * old key names and read back as empty.
+     *
+     * @deprecated 1.1.1 Drop in 2.0.0 alongside remap_legacy_cpt_keys() and
+     *             OpenTrust_CPT::LEGACY_META_MAP.
+     */
+    private static function remap_legacy_meta_keys(array $manifest): array {
+        if (empty($manifest['records']) || !is_array($manifest['records'])) {
+            return $manifest;
+        }
+        $map = OpenTrust_CPT::LEGACY_META_MAP;
+        foreach ($manifest['records'] as $cpt => $recs) {
+            if (!is_array($recs)) {
+                continue;
+            }
+            foreach ($recs as $i => $rec) {
+                if (empty($rec['meta']) || !is_array($rec['meta'])) {
+                    continue;
+                }
+                $remapped = [];
+                foreach ($rec['meta'] as $key => $val) {
+                    $remapped[$map[$key] ?? $key] = $val;
+                }
+                $manifest['records'][$cpt][$i]['meta'] = $remapped;
+            }
+        }
+        return $manifest;
+    }
+
     private static function record_for_post(int $post_id, bool $include_media, array &$media): ?array {
         $post = get_post($post_id);
         if (!$post instanceof \WP_Post) {
@@ -475,7 +509,7 @@ final class OpenTrust_IO {
         foreach (self::POST_REF_META_KEYS[$cpt] ?? [] as $meta_key => $_target_cpt) {
             $ref_id = (int) ($meta_out[$meta_key] ?? 0);
             if ($ref_id > 0) {
-                $ref_uuid = (string) get_post_meta($ref_id, '_ot_uuid', true);
+                $ref_uuid = (string) get_post_meta($ref_id, '_opentrust_uuid', true);
                 if ($ref_uuid !== '') {
                     $meta_out[$meta_key] = ['__post_ref' => $ref_uuid];
                 } else {
@@ -485,7 +519,7 @@ final class OpenTrust_IO {
         }
 
         return [
-            'uuid'       => $meta_out['_ot_uuid'] ?? null,
+            'uuid'       => $meta_out['_opentrust_uuid'] ?? null,
             'slug'       => $post->post_name,
             'title'      => $post->post_title,
             'content'    => $post->post_content,
@@ -507,8 +541,8 @@ final class OpenTrust_IO {
         }
         // Stamp the source so a same-site re-import dedupes by hash instead
         // of re-uploading (and tripping WP's MIME allowlist on SVG, etc.).
-        if (!get_post_meta($att_id, '_ot_import_sha256', true)) {
-            update_post_meta($att_id, '_ot_import_sha256', $hash);
+        if (!get_post_meta($att_id, '_opentrust_import_sha256', true)) {
+            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
         }
         $att = get_post($att_id);
         $ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -538,7 +572,7 @@ final class OpenTrust_IO {
                 'posts_per_page' => 1,
                 'fields'         => 'ids',
                 'meta_query'     => [
-                    ['key' => '_ot_uuid', 'value' => $uuid],
+                    ['key' => '_opentrust_uuid', 'value' => $uuid],
                 ],
             ]);
             if (!empty($hits)) return (int) $hits[0];
@@ -621,8 +655,8 @@ final class OpenTrust_IO {
         }
 
         // Fresh UUID on create_new so we don't collide with the existing post.
-        if (empty($meta['_ot_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
-            $meta['_ot_uuid'] = wp_generate_uuid4();
+        if (empty($meta['_opentrust_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
+            $meta['_opentrust_uuid'] = wp_generate_uuid4();
         }
 
         foreach ($meta as $key => $val) {
@@ -726,7 +760,7 @@ final class OpenTrust_IO {
                 update_post_meta($att_id, '_wp_attachment_image_alt', (string) $entry['alt']);
             }
 
-            update_post_meta($att_id, '_ot_import_sha256', $hash);
+            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
 
             $map[$hash] = $att_id;
         }
@@ -741,7 +775,7 @@ final class OpenTrust_IO {
             'posts_per_page' => 1,
             'fields'         => 'ids',
             'meta_query'     => [
-                ['key' => '_ot_import_sha256', 'value' => $hash],
+                ['key' => '_opentrust_import_sha256', 'value' => $hash],
             ],
         ]);
         return !empty($hits) ? (int) $hits[0] : 0;

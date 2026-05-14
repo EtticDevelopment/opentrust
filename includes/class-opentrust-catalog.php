@@ -136,8 +136,8 @@ final class OpenTrust_Catalog {
      *
      * Gated by the `opentrust_faqs_seeded` option so deletions stick: once a
      * site has been seeded, re-activating the plugin will not recreate the
-     * FAQs. Each seeded post is tagged with `_ot_seeded=1` and a stable
-     * `_ot_seed_slug` meta for later bulk operations.
+     * FAQs. Each seeded post is tagged with `_opentrust_seeded=1` and a stable
+     * `_opentrust_seed_slug` meta for later bulk operations.
      */
     public static function seed_default_faqs(): void {
         if ( get_option( 'opentrust_faqs_seeded' ) ) {
@@ -164,8 +164,8 @@ final class OpenTrust_Catalog {
             );
 
             if ( is_int( $post_id ) && $post_id > 0 ) {
-                update_post_meta( $post_id, '_ot_seeded', 1 );
-                update_post_meta( $post_id, '_ot_seed_slug', $slug );
+                update_post_meta( $post_id, '_opentrust_seeded', 1 );
+                update_post_meta( $post_id, '_opentrust_seed_slug', $slug );
             }
         }
 

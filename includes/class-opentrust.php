@@ -146,12 +146,12 @@ final class OpenTrust {
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/?$',
-            'index.php?opentrust=policy&ot_policy_slug=$matches[1]',
+            'index.php?opentrust=policy&opentrust_policy_slug=$matches[1]',
             'top'
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/version/([0-9]+)/?$',
-            'index.php?opentrust=policy_version&ot_policy_slug=$matches[1]&ot_version=$matches[2]',
+            'index.php?opentrust=policy_version&opentrust_policy_slug=$matches[1]&opentrust_version=$matches[2]',
             'top'
         );
 
@@ -165,15 +165,17 @@ final class OpenTrust {
 
     public function register_query_vars(array $vars): array {
         $vars[] = 'opentrust';
-        $vars[] = 'ot_policy_slug';
-        $vars[] = 'ot_version';
+        $vars[] = 'opentrust_policy_slug';
+        $vars[] = 'opentrust_version';
         return $vars;
     }
 
     /**
-     * Schema upgrade hook. Runs on every init at priority 5. Empty in 1.0.0;
-     * future schema migrations land here, gated on the current value of
-     * opentrust_db_version vs. the OPENTRUST_DB_VERSION constant.
+     * Schema upgrade hook. Runs on every init at priority 5. Future schema
+     * migrations land here, gated on the current value of opentrust_db_version
+     * vs. the OPENTRUST_DB_VERSION constant. opentrust_db_version is only
+     * advanced once, at the tail — so an interrupted migration retries cleanly
+     * on the next init, and every migration step must be idempotent.
      */
     public function maybe_upgrade(): void {
         $current = (int) get_option('opentrust_db_version', 0);
@@ -202,6 +204,16 @@ final class OpenTrust {
         if ($current < 3) {
             OpenTrust_Admin_AI::schedule_cron();
             self::backfill_model_snapshot();
+        }
+
+        // v4 → v5: rename postmeta keys from `_ot_*` to `_opentrust_*` so the
+        // plugin no longer uses a 2-character prefix in the shared postmeta
+        // table. Ordering-independent: every runtime write path stamps the new
+        // key, so this step only cleans up rows left by older code — whether it
+        // runs before or after the v1→v2 UUID back-fill, the end state is the
+        // same set of `_opentrust_*` rows.
+        if ($current < 5) {
+            self::rename_postmeta_keys_v5();
         }
 
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
@@ -275,6 +287,46 @@ final class OpenTrust {
         }
     }
 
+    /**
+     * Rewrite wp_postmeta.meta_key for every plugin-owned postmeta key, from
+     * the legacy `_ot_*` prefix to `_opentrust_*`. Idempotent: a bulk UPDATE
+     * keyed on the old meta_key matches nothing on a re-run, and
+     * opentrust_db_version stays unadvanced until the tail of maybe_upgrade()
+     * so an interrupted migration retries cleanly.
+     *
+     * The UPDATE is keyed on meta_key alone, so it catches postmeta on posts,
+     * revisions, and attachments alike. Affected post IDs are collected first
+     * so each WP_Post's meta cache can be invalidated — otherwise get_post_meta
+     * would serve stale `_ot_*` lookups until the cache expires.
+     *
+     * @deprecated 1.1.1 Drop in 2.0.0 once v1.0.x upgrades are no longer
+     *             supported. Also remove the `if ($current < 5)` branch in
+     *             maybe_upgrade() and OpenTrust_CPT::LEGACY_META_MAP.
+     */
+    private static function rename_postmeta_keys_v5(): void {
+        global $wpdb;
+        foreach (OpenTrust_CPT::LEGACY_META_MAP as $old => $new) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
+            $ids = $wpdb->get_col(
+                $wpdb->prepare("SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s", $old)
+            );
+            if (empty($ids)) {
+                continue;
+            }
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
+            $wpdb->update(
+                $wpdb->postmeta,
+                ['meta_key' => $new],
+                ['meta_key' => $old],
+                ['%s'],
+                ['%s']
+            );
+            foreach ($ids as $id) {
+                clean_post_cache((int) $id);
+            }
+        }
+    }
+
     private static function backfill_uuids(): void {
         $posts = get_posts([
             'post_type'      => OpenTrust_CPT::ALL,
@@ -283,13 +335,13 @@ final class OpenTrust {
             'fields'         => 'ids',
             'meta_query'     => [
                 [
-                    'key'     => '_ot_uuid',
+                    'key'     => '_opentrust_uuid',
                     'compare' => 'NOT EXISTS',
                 ],
             ],
         ]);
         foreach ($posts as $post_id) {
-            update_post_meta((int) $post_id, '_ot_uuid', wp_generate_uuid4());
+            update_post_meta((int) $post_id, '_opentrust_uuid', wp_generate_uuid4());
         }
     }
 
@@ -326,6 +378,24 @@ final class OpenTrust {
         // on their existing TTL and are garbage-collected by WordPress.
         $version = (int) get_option('opentrust_cache_version', 1);
         update_option('opentrust_cache_version', $version + 1, false);
+    }
+
+
+    // ──────────────────────────────────────────────
+    // Debug logging
+    // ──────────────────────────────────────────────
+
+    /**
+     * Write a diagnostic line to the PHP error log, but only when WP_DEBUG is
+     * on. Production sites stay quiet; developers debugging an install still
+     * get provider/cron failure detail. Centralized so there is a single
+     * error_log() call site in the whole plugin.
+     */
+    public static function debug_log(string $message): void {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debug-gated diagnostic, only fires under WP_DEBUG
+            error_log('[OpenTrust] ' . $message);
+        }
     }
 
 

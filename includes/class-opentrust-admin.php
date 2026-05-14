@@ -122,11 +122,11 @@ final class OpenTrust_Admin {
             return;
         }
 
-        $is_ot_screen = str_starts_with($screen->id, 'toplevel_page_opentrust')
+        $is_opentrust_screen = str_starts_with($screen->id, 'toplevel_page_opentrust')
             || str_starts_with($screen->id, 'opentrust_page_')
             || in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
 
-        if (!$is_ot_screen) {
+        if (!$is_opentrust_screen) {
             return;
         }
 
@@ -247,7 +247,7 @@ final class OpenTrust_Admin {
                     </p>
                     <ul style="margin:0 0 0 18px;list-style:disc">
                         <li><code><?php echo esc_html($home_url); ?>?opentrust=main</code></li>
-                        <li><code><?php echo esc_html($home_url); ?>?opentrust=policy&amp;ot_policy_slug=YOUR-POLICY-SLUG</code></li>
+                        <li><code><?php echo esc_html($home_url); ?>?opentrust=policy&amp;opentrust_policy_slug=YOUR-POLICY-SLUG</code></li>
                         <li><code><?php echo esc_html($home_url); ?>?opentrust=ask</code></li>
                     </ul>
                     <p style="margin:6px 0 0">

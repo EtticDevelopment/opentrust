@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenTrust 1.1.0\n"
+"Project-Id-Version: OpenTrust 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/opentrust\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-14T11:26:04+00:00\n"
+"POT-Creation-Date: 2026-05-14T14:04:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -720,7 +720,7 @@ msgid "Use my exact color anyway — skip the contrast adjustment."
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:265
-#: includes/class-opentrust-cpt.php:414
+#: includes/class-opentrust-cpt.php:479
 msgid "Select Logo"
 msgstr ""
 
@@ -737,12 +737,12 @@ msgid "Square image used as the avatar on AI chat responses. Use a colored backg
 msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:289
-#: includes/class-opentrust-cpt.php:415
-#: includes/class-opentrust-cpt.php:427
-#: includes/class-opentrust-cpt.php:558
-#: includes/class-opentrust-cpt.php:574
-#: includes/class-opentrust-cpt.php:660
-#: includes/class-opentrust-cpt.php:698
+#: includes/class-opentrust-cpt.php:480
+#: includes/class-opentrust-cpt.php:492
+#: includes/class-opentrust-cpt.php:623
+#: includes/class-opentrust-cpt.php:639
+#: includes/class-opentrust-cpt.php:725
+#: includes/class-opentrust-cpt.php:763
 msgid "Remove"
 msgstr ""
 
@@ -761,8 +761,8 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:315
 #: includes/class-opentrust-admin-tools.php:592
-#: includes/class-opentrust-cpt.php:175
-#: includes/class-opentrust-cpt.php:185
+#: includes/class-opentrust-cpt.php:240
+#: includes/class-opentrust-cpt.php:250
 #: templates/chat.php:45
 #: templates/partials/hero.php:55
 #: templates/trust-center.php:107
@@ -771,8 +771,8 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:316
 #: includes/class-opentrust-admin-tools.php:594
-#: includes/class-opentrust-cpt.php:242
-#: includes/class-opentrust-cpt.php:251
+#: includes/class-opentrust-cpt.php:307
+#: includes/class-opentrust-cpt.php:316
 #: templates/chat.php:47
 #: templates/partials/hero.php:61
 #: templates/partials/subprocessors.php:20
@@ -782,8 +782,8 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:317
 #: includes/class-opentrust-admin-tools.php:595
-#: includes/class-opentrust-cpt.php:275
-#: includes/class-opentrust-cpt.php:284
+#: includes/class-opentrust-cpt.php:340
+#: includes/class-opentrust-cpt.php:349
 #: templates/chat.php:48
 #: templates/partials/data-practices.php:34
 #: templates/trust-center.php:110
@@ -792,8 +792,8 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:318
 #: includes/class-opentrust-admin-tools.php:596
-#: includes/class-opentrust-cpt.php:308
-#: includes/class-opentrust-cpt.php:318
+#: includes/class-opentrust-cpt.php:373
+#: includes/class-opentrust-cpt.php:383
 msgid "FAQs"
 msgstr ""
 
@@ -971,8 +971,8 @@ msgid "Errors:"
 msgstr ""
 
 #: includes/class-opentrust-admin-tools.php:593
-#: includes/class-opentrust-cpt.php:209
-#: includes/class-opentrust-cpt.php:218
+#: includes/class-opentrust-cpt.php:274
+#: includes/class-opentrust-cpt.php:283
 #: templates/chat.php:46
 #: templates/partials/hero.php:49
 #: templates/trust-center.php:108
@@ -1006,12 +1006,12 @@ msgid "Use This File"
 msgstr ""
 
 #: includes/class-opentrust-admin.php:162
-#: includes/class-opentrust-cpt.php:426
+#: includes/class-opentrust-cpt.php:491
 msgid "Upload File"
 msgstr ""
 
 #: includes/class-opentrust-admin.php:163
-#: includes/class-opentrust-cpt.php:426
+#: includes/class-opentrust-cpt.php:491
 msgid "Replace File"
 msgstr ""
 
@@ -1149,545 +1149,545 @@ msgstr ""
 msgid "Unknown tool: %s"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:156
+#: includes/class-opentrust-cpt.php:221
 msgid "Pick from the catalog or type your own subprocessor name"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:159
+#: includes/class-opentrust-cpt.php:224
 msgid "Pick from the catalog or type your own, e.g. Analytics or Transactional Email"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:162
+#: includes/class-opentrust-cpt.php:227
 msgid "Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:176
+#: includes/class-opentrust-cpt.php:241
 #: templates/partials/policies.php:54
 msgid "Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:177
+#: includes/class-opentrust-cpt.php:242
 msgid "Add Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:178
+#: includes/class-opentrust-cpt.php:243
 msgid "Add New Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:179
+#: includes/class-opentrust-cpt.php:244
 msgid "Edit Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:180
+#: includes/class-opentrust-cpt.php:245
 msgid "New Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:181
+#: includes/class-opentrust-cpt.php:246
 msgid "View Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:182
+#: includes/class-opentrust-cpt.php:247
 msgid "Search Policies"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:183
+#: includes/class-opentrust-cpt.php:248
 msgid "No policies found."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:184
+#: includes/class-opentrust-cpt.php:249
 msgid "No policies in trash."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:210
+#: includes/class-opentrust-cpt.php:275
 msgid "Certification"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:211
+#: includes/class-opentrust-cpt.php:276
 msgid "Add Certification"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:212
+#: includes/class-opentrust-cpt.php:277
 msgid "Add New Certification"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:213
+#: includes/class-opentrust-cpt.php:278
 msgid "Edit Certification"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:214
+#: includes/class-opentrust-cpt.php:279
 msgid "New Certification"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:215
+#: includes/class-opentrust-cpt.php:280
 msgid "Search Certifications"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:216
+#: includes/class-opentrust-cpt.php:281
 msgid "No certifications found."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:217
+#: includes/class-opentrust-cpt.php:282
 msgid "No certifications in trash."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:243
+#: includes/class-opentrust-cpt.php:308
 msgid "Subprocessor"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:244
+#: includes/class-opentrust-cpt.php:309
 msgid "Add Subprocessor"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:245
+#: includes/class-opentrust-cpt.php:310
 msgid "Add New Subprocessor"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:246
+#: includes/class-opentrust-cpt.php:311
 msgid "Edit Subprocessor"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:247
+#: includes/class-opentrust-cpt.php:312
 msgid "New Subprocessor"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:248
+#: includes/class-opentrust-cpt.php:313
 msgid "Search Subprocessors"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:249
+#: includes/class-opentrust-cpt.php:314
 msgid "No subprocessors found."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:250
+#: includes/class-opentrust-cpt.php:315
 msgid "No subprocessors in trash."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:276
+#: includes/class-opentrust-cpt.php:341
 msgid "Data Practice"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:277
+#: includes/class-opentrust-cpt.php:342
 msgid "Add Data Practice"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:278
+#: includes/class-opentrust-cpt.php:343
 msgid "Add New Data Practice"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:279
+#: includes/class-opentrust-cpt.php:344
 msgid "Edit Data Practice"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:280
+#: includes/class-opentrust-cpt.php:345
 msgid "New Data Practice"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:281
+#: includes/class-opentrust-cpt.php:346
 msgid "Search Data Practices"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:282
+#: includes/class-opentrust-cpt.php:347
 msgid "No data practices found."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:283
+#: includes/class-opentrust-cpt.php:348
 msgid "No data practices in trash."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:309
+#: includes/class-opentrust-cpt.php:374
 #: templates/chat.php:61
 #: templates/trust-center.php:112
 msgid "FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:310
+#: includes/class-opentrust-cpt.php:375
 msgid "Add FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:311
+#: includes/class-opentrust-cpt.php:376
 msgid "Add New FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:312
+#: includes/class-opentrust-cpt.php:377
 msgid "Edit FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:313
+#: includes/class-opentrust-cpt.php:378
 msgid "New FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:314
+#: includes/class-opentrust-cpt.php:379
 msgid "View FAQ"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:315
+#: includes/class-opentrust-cpt.php:380
 msgid "Search FAQs"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:316
+#: includes/class-opentrust-cpt.php:381
 msgid "No FAQs found."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:317
+#: includes/class-opentrust-cpt.php:382
 msgid "No FAQs in trash."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:340
+#: includes/class-opentrust-cpt.php:405
 msgid "Certification Details"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:341
+#: includes/class-opentrust-cpt.php:406
 msgid "Policy Details"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:342
+#: includes/class-opentrust-cpt.php:407
 msgid "Subprocessor Details"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:343
+#: includes/class-opentrust-cpt.php:408
 msgid "Data Practice Details"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:344
+#: includes/class-opentrust-cpt.php:409
 msgid "FAQ Details"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:365
+#: includes/class-opentrust-cpt.php:430
 msgid "Audited certification (issued by a third party)"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:366
+#: includes/class-opentrust-cpt.php:431
 msgid "Self-attested alignment (no external audit)"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:370
+#: includes/class-opentrust-cpt.php:435
 msgid "Active / currently met"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:371
+#: includes/class-opentrust-cpt.php:436
 msgid "In progress"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:372
+#: includes/class-opentrust-cpt.php:437
 msgid "Expired / lapsed"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:376
+#: includes/class-opentrust-cpt.php:441
 msgid "Certification Type"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:382
+#: includes/class-opentrust-cpt.php:447
 msgid "Audited means a third-party issued a formal certificate with dates (SOC 2, ISO 27001, PCI DSS). Self-attested means you adhere to the framework without an external audit — the honest framing for GDPR, CCPA, and most HIPAA posture claims."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:386
-#: includes/class-opentrust-cpt.php:961
+#: includes/class-opentrust-cpt.php:451
+#: includes/class-opentrust-cpt.php:1026
 msgid "Status"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:392
+#: includes/class-opentrust-cpt.php:457
 msgid "\"Active\" for audited means you hold a current certificate. \"Active\" for self-attested means you currently meet the framework. Use \"In progress\" while working toward either."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:396
-#: includes/class-opentrust-cpt.php:960
+#: includes/class-opentrust-cpt.php:461
+#: includes/class-opentrust-cpt.php:1025
 msgid "Issuing Body"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:397
+#: includes/class-opentrust-cpt.php:462
 msgid "e.g., AICPA, BSI Group, Schellman"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:401
+#: includes/class-opentrust-cpt.php:466
 msgid "Issue Date"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:406
-#: includes/class-opentrust-cpt.php:962
+#: includes/class-opentrust-cpt.php:471
+#: includes/class-opentrust-cpt.php:1027
 msgid "Expiry Date"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:411
+#: includes/class-opentrust-cpt.php:476
 msgid "Framework Logo"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:416
+#: includes/class-opentrust-cpt.php:481
 msgid "Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:420
+#: includes/class-opentrust-cpt.php:485
 msgid "Proof Artifact"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:423
-#: includes/class-opentrust-cpt.php:570
+#: includes/class-opentrust-cpt.php:488
+#: includes/class-opentrust-cpt.php:635
 msgid "View file"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:428
+#: includes/class-opentrust-cpt.php:493
 msgid "Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:432
+#: includes/class-opentrust-cpt.php:497
 msgid "Scope & Notes"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:433
+#: includes/class-opentrust-cpt.php:498
 msgid "e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:434
+#: includes/class-opentrust-cpt.php:499
 msgid "Required for self-attested frameworks so the card has meaningful content. One or two sentences on scope, how you meet the framework, or what prospects should know."
 msgstr ""
 
 #. translators: %s: policy version number
-#: includes/class-opentrust-cpt.php:489
+#: includes/class-opentrust-cpt.php:554
 #, php-format
 msgid "Version %s"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:492
+#: includes/class-opentrust-cpt.php:557
 msgid "Regular saves update the current version. Use the checkbox below to formally publish a new version."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:501
+#: includes/class-opentrust-cpt.php:566
 msgid "Publish as new version"
 msgstr ""
 
 #. translators: %1$d: current version number, %2$d: next version number
-#: includes/class-opentrust-cpt.php:506
+#: includes/class-opentrust-cpt.php:571
 #, php-format
 msgid "This will save the current content as v%1$d and create v%2$d. Only check this for formal, published changes — not minor edits."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:515
+#: includes/class-opentrust-cpt.php:580
 msgid "What changed?"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:518
+#: includes/class-opentrust-cpt.php:583
 msgid "e.g., Updated data retention from 90 to 60 days"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:519
+#: includes/class-opentrust-cpt.php:584
 msgid "Shown in the public version history."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:525
+#: includes/class-opentrust-cpt.php:590
 msgid "Policy ID"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:526
+#: includes/class-opentrust-cpt.php:591
 msgid "e.g., POL-012"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:527
+#: includes/class-opentrust-cpt.php:592
 msgid "Optional short reference (e.g., POL-012). Shown on the public listing and in security questionnaires."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:531
-#: includes/class-opentrust-cpt.php:1000
+#: includes/class-opentrust-cpt.php:596
+#: includes/class-opentrust-cpt.php:1065
 #: templates/partials/policies.php:55
 msgid "Category"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:540
+#: includes/class-opentrust-cpt.php:605
 msgid "Effective Date"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:545
+#: includes/class-opentrust-cpt.php:610
 msgid "Next Review Date"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:550
+#: includes/class-opentrust-cpt.php:615
 msgid "Framework Citations"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:561
+#: includes/class-opentrust-cpt.php:626
 msgid "e.g., SOC 2 CC6.1, ISO 27001 A.9.2…"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:563
+#: includes/class-opentrust-cpt.php:628
 msgid "Framework or control references this policy satisfies. Appears as pill badges on the public page."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:567
+#: includes/class-opentrust-cpt.php:632
 msgid "PDF Attachment"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:573
+#: includes/class-opentrust-cpt.php:638
 msgid "Replace PDF"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:573
+#: includes/class-opentrust-cpt.php:638
 msgid "Upload PDF"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:575
+#: includes/class-opentrust-cpt.php:640
 msgid "Upload the signed PDF. Visitors see a \"Download PDF\" button only when a file is attached."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:579
-#: includes/class-opentrust-cpt.php:735
+#: includes/class-opentrust-cpt.php:644
+#: includes/class-opentrust-cpt.php:800
 msgid "Sort Order"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:581
-#: includes/class-opentrust-cpt.php:737
+#: includes/class-opentrust-cpt.php:646
+#: includes/class-opentrust-cpt.php:802
 msgid "Lower numbers appear first."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:598
-#: includes/class-opentrust-cpt.php:669
-#: includes/class-opentrust-cpt.php:1031
+#: includes/class-opentrust-cpt.php:663
+#: includes/class-opentrust-cpt.php:734
+#: includes/class-opentrust-cpt.php:1096
 #: templates/partials/data-practices.php:96
 #: templates/partials/subprocessors.php:37
 msgid "Purpose"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:600
+#: includes/class-opentrust-cpt.php:665
 msgid "What does this subprocessor do for your company?"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:604
+#: includes/class-opentrust-cpt.php:669
 #: templates/partials/subprocessors.php:38
 msgid "Data Processed"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:606
+#: includes/class-opentrust-cpt.php:671
 msgid "What types of data does this subprocessor handle?"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:610
+#: includes/class-opentrust-cpt.php:675
 msgid "Country / Location"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:611
+#: includes/class-opentrust-cpt.php:676
 msgid "e.g., United States"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:615
+#: includes/class-opentrust-cpt.php:680
 #: templates/partials/subprocessors.php:41
 msgid "Website"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:622
+#: includes/class-opentrust-cpt.php:687
 msgid "DPA Signed"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:624
+#: includes/class-opentrust-cpt.php:689
 msgid "A Data Processing Agreement (DPA) is a contract between you and the subprocessor covering how they handle personal data on your behalf. Check this box once your organization has signed one with this vendor."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:654
+#: includes/class-opentrust-cpt.php:719
 msgid "Data Items Collected"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:663
-#: includes/class-opentrust-cpt.php:701
+#: includes/class-opentrust-cpt.php:728
+#: includes/class-opentrust-cpt.php:766
 msgid "Type and press Enter..."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:676
+#: includes/class-opentrust-cpt.php:741
 #: templates/partials/data-practices.php:103
 msgid "Legal Basis"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:678
+#: includes/class-opentrust-cpt.php:743
 msgid "— Select —"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:685
+#: includes/class-opentrust-cpt.php:750
 msgid "Retention Period"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:686
+#: includes/class-opentrust-cpt.php:751
 msgid "e.g., 30 days"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:692
+#: includes/class-opentrust-cpt.php:757
 #: templates/partials/data-practices.php:117
 msgid "Shared With"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:707
+#: includes/class-opentrust-cpt.php:772
 msgid "Properties"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:711
+#: includes/class-opentrust-cpt.php:776
 msgid "Collected"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:715
+#: includes/class-opentrust-cpt.php:780
 msgid "Stored"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:719
+#: includes/class-opentrust-cpt.php:784
 msgid "Shared with third parties"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:723
+#: includes/class-opentrust-cpt.php:788
 msgid "Sold to third parties"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:727
+#: includes/class-opentrust-cpt.php:792
 msgid "Encrypted"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:730
+#: includes/class-opentrust-cpt.php:795
 msgid "Unchecked means an explicit \"No\". The AI assistant reports these values verbatim to visitors asking questions like \"Do you sell customer data?\"."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:999
+#: includes/class-opentrust-cpt.php:1064
 #: templates/partials/policies.php:52
 msgid "ID"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1001
+#: includes/class-opentrust-cpt.php:1066
 #: includes/class-opentrust-version.php:160
 #: templates/partials/policies.php:56
 msgid "Version"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1002
+#: includes/class-opentrust-cpt.php:1067
 msgid "PDF"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1032
+#: includes/class-opentrust-cpt.php:1097
 #: templates/partials/subprocessors.php:39
 msgid "Location"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1033
+#: includes/class-opentrust-cpt.php:1098
 #: templates/partials/subprocessors.php:40
 msgid "DPA"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1052
+#: includes/class-opentrust-cpt.php:1117
 msgid "Data Items"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1053
-#: includes/class-opentrust-cpt.php:1122
+#: includes/class-opentrust-cpt.php:1118
+#: includes/class-opentrust-cpt.php:1187
 msgid "Order"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1082
+#: includes/class-opentrust-cpt.php:1147
 msgid "Related Policy"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1084
+#: includes/class-opentrust-cpt.php:1149
 msgid "— None —"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1089
+#: includes/class-opentrust-cpt.php:1154
 msgid "Optional — link this answer to a published policy for deeper context."
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1094
+#: includes/class-opentrust-cpt.php:1159
 msgid "Sort order:"
 msgstr ""
 
-#: includes/class-opentrust-cpt.php:1095
+#: includes/class-opentrust-cpt.php:1160
 msgid "Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first."
 msgstr ""
 
@@ -1719,39 +1719,39 @@ msgstr ""
 msgid "Plugin major version mismatch (export: %1$s, this site: %2$s)."
 msgstr ""
 
-#: includes/class-opentrust-io.php:394
+#: includes/class-opentrust-io.php:396
 msgid "PHP ZipArchive extension is required."
 msgstr ""
 
-#: includes/class-opentrust-io.php:398
+#: includes/class-opentrust-io.php:400
 msgid "Could not open uploaded archive."
 msgstr ""
 
-#: includes/class-opentrust-io.php:403
+#: includes/class-opentrust-io.php:405
 msgid "Archive is missing manifest.json."
 msgstr ""
 
-#: includes/class-opentrust-io.php:407
+#: includes/class-opentrust-io.php:409
 msgid "manifest.json could not be parsed."
 msgstr ""
 
-#: includes/class-opentrust-io.php:663
+#: includes/class-opentrust-io.php:697
 msgid "Could not reopen archive for media import."
 msgstr ""
 
 #. translators: %s: media path
-#: includes/class-opentrust-io.php:678
+#: includes/class-opentrust-io.php:712
 #, php-format
 msgid "Bundled media missing during import: %s"
 msgstr ""
 
 #. translators: %s: filename
-#: includes/class-opentrust-io.php:698
+#: includes/class-opentrust-io.php:732
 #, php-format
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-opentrust-io.php:716
+#: includes/class-opentrust-io.php:750
 msgid "Could not create attachment."
 msgstr ""
 
@@ -2153,8 +2153,8 @@ msgid "AI streaming requires the WordPress cURL transport."
 msgstr ""
 
 #. translators: %d: HTTP status code returned by the provider
-#: includes/providers/class-opentrust-chat-provider.php:674
-#: includes/providers/class-opentrust-chat-provider.php:729
+#: includes/providers/class-opentrust-chat-provider.php:673
+#: includes/providers/class-opentrust-chat-provider.php:728
 #, php-format
 msgid "Provider returned HTTP %d"
 msgstr ""
