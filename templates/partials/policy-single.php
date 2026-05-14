@@ -31,21 +31,13 @@ $ot_effective_date = $ot_meta['effective_date']
 $ot_modified_date = wp_date(get_option('date_format'), strtotime($ot_policy->post_modified));
 
 $ot_current_url = trailingslashit($ot_base_url) . 'policy/' . $ot_policy->post_name . '/';
-?>
 
-<nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'opentrust'); ?>">
-    <div class="ot-container ot-nav__inner">
-        <a href="<?php echo esc_url($ot_base_url); ?>" class="ot-nav__brand">
-            <?php if ($ot_logo_url): ?>
-                <img class="ot-nav__brand-logo"
-                     src="<?php echo esc_url($ot_logo_url); ?>"
-                     alt="<?php echo esc_attr($ot_company_name); ?>">
-            <?php else: ?>
-                <span class="ot-nav__brand-name"><?php echo esc_html($ot_company_name ?: get_bloginfo('name')); ?></span>
-            <?php endif; ?>
-        </a>
-    </div>
-</nav>
+// Section links jump back to the main trust center page; scroll-spy is off
+// since those sections don't exist on this page.
+$ot_nav_anchor_base = $ot_base_url;
+$ot_nav_scrollspy   = false;
+include OPENTRUST_PLUGIN_DIR . 'templates/partials/nav.php';
+?>
 
 <main id="ot-main" class="ot-policy-single">
     <div class="ot-container ot-container--narrow">
