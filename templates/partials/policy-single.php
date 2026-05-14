@@ -153,16 +153,17 @@ $ot_current_url = trailingslashit($ot_base_url) . 'policy/' . $ot_policy->post_n
             <ul class="ot-version-list" hidden>
                 <?php foreach ($ot_versions as $ot_v):
                     $ot_is_active = $ot_v['version'] === $ot_version;
-                    $ot_tag       = $ot_is_active ? 'span' : 'a';
-                    $ot_href      = $ot_is_active ? '' : ' href="' . esc_url($ot_v['url']) . '"';
                     $ot_classes   = 'ot-version-list__link' . ($ot_is_active ? ' ot-version-list__link--current' : '');
                 ?>
-                <li class="ot-version-list__item<?php echo esc_attr( $ot_is_active ? ' ot-version-list__item--active' : '' ); ?>">
-                    <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $ot_tag is hardcoded 'span'/'a', $ot_href uses esc_url() ?>
-                    <<?php echo $ot_tag . $ot_href; ?> class="<?php echo esc_attr( $ot_classes ); ?>">
+                <li class="ot-version-list__item<?php echo esc_attr($ot_is_active ? ' ot-version-list__item--active' : ''); ?>">
+                    <?php if ($ot_is_active): ?>
+                    <span class="<?php echo esc_attr($ot_classes); ?>">
+                    <?php else: ?>
+                    <a href="<?php echo esc_url($ot_v['url']); ?>" class="<?php echo esc_attr($ot_classes); ?>">
+                    <?php endif; ?>
                         <span class="ot-version-list__number"><?php
                         /* translators: %d: version number */
-                        printf(esc_html__('v%d', 'opentrust'), intval($ot_v['version'])); ?></span>
+                        printf(esc_html__('v%d', 'opentrust'), (int) $ot_v['version']); ?></span>
                         <span class="ot-version-list__sep">&middot;</span>
                         <span class="ot-version-list__date"><?php echo esc_html($ot_v['date']); ?></span>
                         <?php if (!empty($ot_v['summary'])): ?>
@@ -172,7 +173,11 @@ $ot_current_url = trailingslashit($ot_base_url) . 'policy/' . $ot_policy->post_n
                         <?php if ($ot_v['current']): ?>
                             <span class="ot-version-list__badge"><?php esc_html_e('Current', 'opentrust'); ?></span>
                         <?php endif; ?>
-                    </<?php echo $ot_tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded 'span' or 'a' ?>>
+                    <?php if ($ot_is_active): ?>
+                    </span>
+                    <?php else: ?>
+                    </a>
+                    <?php endif; ?>
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -180,10 +185,7 @@ $ot_current_url = trailingslashit($ot_base_url) . 'policy/' . $ot_policy->post_n
         <?php endif; ?>
 
         <article class="ot-policy-content">
-            <?php
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $ot_content;
-            ?>
+            <?php echo wp_kses_post($ot_content); ?>
         </article>
     </div>
 </main>

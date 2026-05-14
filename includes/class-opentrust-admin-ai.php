@@ -80,8 +80,8 @@ final class OpenTrust_Admin_AI {
                     <?php
                     printf(
                         /* translators: %s: provider label, e.g. OpenAI */
-                        esc_html__('You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'),
-                        '<strong>' . esc_html(ucfirst($active_provider)) . '</strong>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        wp_kses(__('You are currently using <strong>%s</strong>. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'), ['strong' => []]),
+                        esc_html(ucfirst($active_provider))
                     );
                     ?>
                 </p>

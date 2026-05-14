@@ -16,9 +16,9 @@ $ot_settings = $ot_data['settings'];
 $ot_hsl      = $ot_data['hsl'];
 $ot_view     = $ot_data['view'] ?? 'main';
 
-$ot_page_title   = esc_html($ot_settings['page_title'] ?: __('Trust Center', 'opentrust'));
+$ot_page_title   = (string) (($ot_settings['page_title'] ?? '') ?: __('Trust Center', 'opentrust'));
 $ot_company_name = (string) ($ot_settings['company_name'] ?? '');
-$ot_tagline      = esc_html($ot_settings['tagline'] ?: __('Transparency and security you can trust.', 'opentrust'));
+$ot_tagline      = (string) (($ot_settings['tagline'] ?? '') ?: __('Transparency and security you can trust.', 'opentrust'));
 $ot_logo_url     = $ot_data['logo_url'] ?? '';
 $ot_base_url     = $ot_data['base_url'] ?? '/';
 
@@ -73,8 +73,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         if ($ot_view === 'policy_single' && !empty($ot_data['current_policy'])) {
             echo esc_html($ot_data['current_policy']->post_title) . ' — ';
         }
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped via esc_html() in render class
-        echo $ot_page_title;
+        echo esc_html($ot_page_title);
         if ($ot_company_name) {
             echo ' | ' . esc_html($ot_company_name);
         }

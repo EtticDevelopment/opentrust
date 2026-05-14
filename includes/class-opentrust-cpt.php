@@ -409,22 +409,22 @@ final class OpenTrust_CPT {
 
         <div class="ot-meta-field">
             <label><?php esc_html_e('Framework Logo', 'opentrust'); ?></label>
-            <img class="ot-badge-preview" src="<?php echo esc_url($badge_url); ?>" alt="" <?php echo $badge_url ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>>
+            <img class="ot-badge-preview<?php echo esc_attr($badge_url ? '' : ' ot-hidden'); ?>" src="<?php echo esc_url($badge_url); ?>" alt="">
             <input type="hidden" class="ot-badge-input" name="ot_cert_badge_id" value="<?php echo esc_attr((string) $badge_id); ?>">
             <button type="button" class="button ot-upload-badge"><?php esc_html_e('Select Logo', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-badge" <?php echo $badge_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>><?php esc_html_e('Remove', 'opentrust'); ?></button>
+            <button type="button" class="button ot-remove-badge<?php echo esc_attr($badge_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44.', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field" data-ot-cert-artifact>
             <label><?php esc_html_e('Proof Artifact', 'opentrust'); ?></label>
-            <div class="ot-artifact-preview" <?php echo $artifact_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>>
+            <div class="ot-artifact-preview<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>">
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
                 <a class="ot-artifact-preview__link" href="<?php echo esc_url($artifact_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($artifact_name ?: __('View file', 'opentrust')); ?></a>
             </div>
             <input type="hidden" class="ot-artifact-input" name="ot_cert_artifact_id" value="<?php echo esc_attr((string) $artifact_id); ?>">
             <button type="button" class="button ot-upload-artifact"><?php echo $artifact_id ? esc_html__('Replace File', 'opentrust') : esc_html__('Upload File', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-artifact" <?php echo $artifact_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>><?php esc_html_e('Remove', 'opentrust'); ?></button>
+            <button type="button" class="button ot-remove-artifact<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card.', 'opentrust'); ?></p>
         </div>
 
@@ -565,13 +565,13 @@ final class OpenTrust_CPT {
 
         <div class="ot-meta-field" data-ot-policy-attachment>
             <label><?php esc_html_e('PDF Attachment', 'opentrust'); ?></label>
-            <div class="ot-artifact-preview" <?php echo $attachment_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>>
+            <div class="ot-artifact-preview<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>">
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
                 <a class="ot-artifact-preview__link" href="<?php echo esc_url($attachment_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($attachment_name ?: __('View file', 'opentrust')); ?></a>
             </div>
             <input type="hidden" class="ot-policy-attachment-input" name="ot_policy_attachment_id" value="<?php echo esc_attr((string) $attachment_id); ?>">
             <button type="button" class="button ot-upload-policy-attachment"><?php echo $attachment_id ? esc_html__('Replace PDF', 'opentrust') : esc_html__('Upload PDF', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-policy-attachment" <?php echo $attachment_id ? '' : 'style="display:none"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded string ?>><?php esc_html_e('Remove', 'opentrust'); ?></button>
+            <button type="button" class="button ot-remove-policy-attachment<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Upload the signed PDF. Visitors see a "Download PDF" button only when a file is attached.', 'opentrust'); ?></p>
         </div>
 

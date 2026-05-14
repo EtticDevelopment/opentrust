@@ -530,7 +530,7 @@ msgstr ""
 #. translators: %s: provider label, e.g. OpenAI
 #: includes/class-opentrust-admin.php:1036
 #, php-format
-msgid "You are currently using %s. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below."
+msgid "You are currently using <strong>%s</strong>. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below."
 msgstr ""
 
 #: includes/class-opentrust-admin.php:1047

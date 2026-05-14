@@ -493,16 +493,21 @@ final class OpenTrust_Chat {
     // ──────────────────────────────────────────────
 
     public static function send_sse(string $event, mixed $data): void {
-        $json = wp_json_encode($data);
+        // Encode with HEX flags so every <, &, ', and " inside JSON string values
+        // is serialized as \u00XX. The structural " around JSON keys stays raw —
+        // required by JSON grammar. All four flags are load-bearing: with them in
+        // place, wp_kses($line, []) below is provably byte-identical (no <, &, ',
+        // or " for kses to act on outside the structural delimiters, which it
+        // doesn't touch). SSE is text/event-stream, not HTML, so this wrap is
+        // defense-in-depth on top of the encoding contract.
+        $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         if ($json === false) {
             $json = '{}';
         }
         // Event name is an internal token (start|progress|complete|error|…); strip to [A-Za-z0-9_-].
-        $event = preg_replace('/[^A-Za-z0-9_-]/', '', $event);
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $event sanitized above; $json produced by wp_json_encode().
-        echo 'event: ' . $event . "\n";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $json produced by wp_json_encode().
-        echo 'data: ' . $json . "\n\n";
+        $event = (string) preg_replace('/[^A-Za-z0-9_-]/', '', $event);
+        echo wp_kses('event: ' . $event, []) . "\n";
+        echo wp_kses('data: ' . $json, []) . "\n\n";
         if (function_exists('flush')) {
             flush();
         }

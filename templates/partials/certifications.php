@@ -18,7 +18,7 @@ $ot_aligned_labels = OpenTrust_Render::cert_aligned_status_labels();
 <section id="ot-certifications" class="ot-section">
     <div class="ot-container">
         <div class="ot-section__header">
-            <?php echo OpenTrust_Render::updated_pill('certifications', $ot_data); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped within method ?>
+            <?php OpenTrust_Render::updated_pill('certifications', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Certifications & Compliance', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('Our active certifications and compliance frameworks demonstrate our commitment to protecting your data.', 'opentrust'); ?></p>
         </div>
@@ -101,7 +101,8 @@ $ot_aligned_labels = OpenTrust_Render::cert_aligned_status_labels();
                                 /* translators: %s: certification expiry date */
                                 $ot_date_parts[] = sprintf(esc_html__('Expires %s', 'opentrust'), esc_html($ot_expiry_date));
                             }
-                            echo implode(' &middot; ', $ot_date_parts); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each part escaped via esc_html() above
+                            // Parts are esc_html'd above; empty allow-list is the visible late escape.
+                            echo wp_kses(implode(' &middot; ', $ot_date_parts), []);
                             ?>
                         </p>
                     <?php endif; ?>

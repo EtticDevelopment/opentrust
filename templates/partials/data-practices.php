@@ -30,7 +30,7 @@ $ot_preview_limit = 5;
 
         <!-- Section header -->
         <div class="ot-section__header">
-            <?php echo OpenTrust_Render::updated_pill('data_practices', $ot_data); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped within method ?>
+            <?php OpenTrust_Render::updated_pill('data_practices', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Data Practices', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'opentrust'); ?></p>
         </div>
