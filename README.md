@@ -43,12 +43,14 @@ OpenTrust is a self-hosted, open-source trust center for WordPress. Procurement 
 
 ## AI chat
 
-Allow users to talk to your policies. AI will cite directly from policies. (Only via Anthropic Citations) 
+Add an optional chat assistant that answers visitor questions straight from your published trust center. Ask it "Where is our data hosted?" or "Are you SOC 2 certified?" and it searches your policies, certifications, subprocessors, and data practices, then answers with citations linking back to the exact source.
 
-If you want visitors to be able to ask questions:
+It only ever answers from what you've published — it can't retrieve a document you haven't given it, so it won't invent policy you don't have. Anthropic is the recommended provider because it returns native, verifiable citations; OpenAI and OpenRouter also work, using inline citation markers.
+
+To turn it on:
 
 1. **OpenTrust → Settings → AI Chat**
-2. Pick a provider (Anthropic recommended for citation accuracy), paste an API key (encrypted at rest with libsodium before it touches the database), and pick a model.
+2. Pick a provider, paste an API key (encrypted at rest with libsodium before it touches the database), and pick a model.
 3. Set the daily/monthly token budgets you're comfortable with.
 4. Optional: enable Cloudflare Turnstile in the same tab for bot defence.
 5. Visit `/trust-center/ask/`.
