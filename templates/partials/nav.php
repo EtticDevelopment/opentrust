@@ -25,7 +25,7 @@ $ot_nav_scrollspy   = $ot_nav_scrollspy ?? false;
             <?php if ($ot_logo_url): ?>
                 <img class="ot-nav__brand-logo"
                      src="<?php echo esc_url($ot_logo_url); ?>"
-                     alt="<?php echo esc_attr($ot_company_name); ?>">
+                     alt="<?php echo esc_attr($ot_company_name ?: get_bloginfo('name')); ?>">
             <?php else: ?>
                 <span class="ot-nav__brand-name"><?php echo esc_html($ot_company_name ?: get_bloginfo('name')); ?></span>
             <?php endif; ?>
