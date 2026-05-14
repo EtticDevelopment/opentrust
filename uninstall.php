@@ -82,6 +82,16 @@ delete_option('opentrust_db_version');
 delete_option('opentrust_cache_version');
 delete_option('opentrust_faqs_seeded');
 
+// Delete orphaned post and user meta the CPT-post deletion above does not
+// reach. The import dedupe marker lives on attachment posts (never an
+// OpenTrust CPT), and the review-notice dismissal lives in user meta. Both
+// the current `_opentrust_*` keys and the legacy `_ot_*` key are cleared —
+// the latter covers an install removed before the v4→v5 key migration ran.
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- One-shot uninstall cleanup, fixed key list, no user input.
+$wpdb->query("DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ('_opentrust_import_sha256', '_ot_import_sha256')");
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- One-shot uninstall cleanup, fixed key list, no user input.
+$wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = '_opentrust_review_dismissed_v1'");
+
 // Clean up any transients.
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Bulk cleanup of plugin transients on uninstall, no user input
 $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_opentrust_%' OR option_name LIKE '_transient_timeout_opentrust_%'");

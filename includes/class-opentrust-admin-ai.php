@@ -870,8 +870,7 @@ final class OpenTrust_Admin_AI {
         $self     = self::instance();
         $settings = OpenTrust::get_settings();
         $active   = (string) ($settings['ai_provider'] ?? '');
-        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic for cron refresh failures
-        $log      = static fn(string $slug, string $why) => error_log("[OpenTrust] AI model refresh failed for {$slug}: {$why}");
+        $log      = static fn(string $slug, string $why) => OpenTrust::debug_log("AI model refresh failed for {$slug}: {$why}");
         $dirty    = false;
 
         foreach ($stored_keys as $slug => $api_key) {

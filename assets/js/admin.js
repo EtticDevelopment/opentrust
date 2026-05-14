@@ -445,9 +445,9 @@
     if (!titleInput) return;
 
     // Meta keys (with leading underscore) map to DOM ids by stripping the
-    // leading "_ot_" and re-prefixing with "ot_".
+    // leading underscore: `_opentrust_cert_type` → `opentrust_cert_type`.
     var metaKeyToDomId = function (metaKey) {
-        return metaKey.replace(/^_ot_/, 'ot_');
+        return metaKey.replace(/^_opentrust_/, 'opentrust_');
     };
 
     var normalize = function (value) {
@@ -801,7 +801,7 @@
  * Certification type toggle.
  *
  * Shows or hides the "certified only" fields (issuing body, status, dates)
- * based on the `_ot_cert_type` select. A compliant certification has no
+ * based on the `_opentrust_cert_type` select. A compliant certification has no
  * audit and therefore no auditor, no issue date, no expiry, and no status
  * state machine, so those fields are hidden from the form entirely.
  * Hidden inputs still submit their values, which matches the "keep data
@@ -836,7 +836,7 @@
 (function () {
     'use strict';
 
-    var toggle = document.getElementById('ot_publish_new_version');
+    var toggle = document.getElementById('opentrust_publish_new_version');
     if (!toggle) return;
 
     toggle.addEventListener('change', function () {
@@ -845,7 +845,7 @@
             wrap.style.display = this.checked ? 'block' : 'none';
         }
         if (this.checked) {
-            var summary = document.getElementById('ot_version_summary');
+            var summary = document.getElementById('opentrust_version_summary');
             if (summary) summary.focus();
         }
     });

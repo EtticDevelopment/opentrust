@@ -182,11 +182,11 @@ final class OpenTrust_Admin_Tools {
             <fieldset class="ot-tools-fieldset">
                 <legend><?php esc_html_e('What to export', 'opentrust'); ?></legend>
                 <label class="ot-tools-radio">
-                    <input type="radio" name="ot_export_kind" value="content" checked>
+                    <input type="radio" name="opentrust_export_kind" value="content" checked>
                     <?php esc_html_e('Content (CPTs + bundled media)', 'opentrust'); ?>
                 </label>
                 <label class="ot-tools-radio">
-                    <input type="radio" name="ot_export_kind" value="settings">
+                    <input type="radio" name="opentrust_export_kind" value="settings">
                     <?php esc_html_e('Settings only', 'opentrust'); ?>
                 </label>
             </fieldset>
@@ -199,7 +199,7 @@ final class OpenTrust_Admin_Tools {
                 ?>
                     <details class="ot-tools-cpt-group">
                         <summary>
-                            <input type="checkbox" name="ot_export_cpt[<?php echo esc_attr($cpt); ?>]" value="all" checked>
+                            <input type="checkbox" name="opentrust_export_cpt[<?php echo esc_attr($cpt); ?>]" value="all" checked>
                             <?php echo esc_html($label); ?>
                             <span class="ot-tools-count">(<?php echo (int) $count; ?>)</span>
                         </summary>
@@ -207,7 +207,7 @@ final class OpenTrust_Admin_Tools {
                             <?php foreach ($items as $item): ?>
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="ot_export_ids[<?php echo esc_attr($cpt); ?>][]" value="<?php echo (int) $item['id']; ?>" checked>
+                                        <input type="checkbox" name="opentrust_export_ids[<?php echo esc_attr($cpt); ?>][]" value="<?php echo (int) $item['id']; ?>" checked>
                                         <?php echo esc_html($item['title']); ?>
                                         <?php if ($item['status'] !== 'publish'): ?>
                                             <em class="ot-tools-status">(<?php echo esc_html($item['status']); ?>)</em>
@@ -221,7 +221,7 @@ final class OpenTrust_Admin_Tools {
             </fieldset>
 
             <label class="ot-tools-radio">
-                <input type="checkbox" name="ot_include_media" value="1" checked>
+                <input type="checkbox" name="opentrust_include_media" value="1" checked>
                 <?php esc_html_e('Bundle attached PDFs and images', 'opentrust'); ?>
             </label>
 
@@ -245,8 +245,8 @@ final class OpenTrust_Admin_Tools {
             </div>
 
             <p>
-                <label for="ot_import_file"><strong><?php esc_html_e('Upload export file', 'opentrust'); ?></strong></label><br>
-                <input type="file" id="ot_import_file" name="ot_import_file" accept=".zip" required>
+                <label for="opentrust_import_file"><strong><?php esc_html_e('Upload export file', 'opentrust'); ?></strong></label><br>
+                <input type="file" id="opentrust_import_file" name="opentrust_import_file" accept=".zip" required>
                 <span class="ot-tools-hint">
                     <?php
                     /* translators: %d: max upload size in MB */
@@ -258,15 +258,15 @@ final class OpenTrust_Admin_Tools {
             <fieldset class="ot-tools-fieldset">
                 <legend><?php esc_html_e('On conflict', 'opentrust'); ?></legend>
                 <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="skip" checked>
+                    <input type="radio" name="opentrust_strategy" value="skip" checked>
                     <?php esc_html_e('Skip — keep existing records untouched', 'opentrust'); ?>
                 </label>
                 <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="overwrite">
+                    <input type="radio" name="opentrust_strategy" value="overwrite">
                     <?php esc_html_e('Overwrite — replace existing records', 'opentrust'); ?>
                 </label>
                 <label class="ot-tools-radio">
-                    <input type="radio" name="ot_strategy" value="create_new">
+                    <input type="radio" name="opentrust_strategy" value="create_new">
                     <?php esc_html_e('Create new — duplicate with a -import suffix', 'opentrust'); ?>
                 </label>
             </fieldset>
@@ -360,7 +360,7 @@ final class OpenTrust_Admin_Tools {
             <?php if (empty($preview['errors'])): ?>
                 <button type="submit" class="button button-primary"><?php esc_html_e('Confirm and import', 'opentrust'); ?></button>
             <?php endif; ?>
-            <button type="submit" name="ot_cancel" value="1" class="button"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
+            <button type="submit" name="opentrust_cancel" value="1" class="button"><?php esc_html_e('Cancel', 'opentrust'); ?></button>
         </form>
         <?php
     }
@@ -372,8 +372,8 @@ final class OpenTrust_Admin_Tools {
     public function handle_export(): void {
         $this->guard('opentrust_export');
 
-        $kind = isset($_POST['ot_export_kind']) ? sanitize_key((string) wp_unslash($_POST['ot_export_kind'])) : 'content';
-        $include_media = !empty($_POST['ot_include_media']);
+        $kind = isset($_POST['opentrust_export_kind']) ? sanitize_key((string) wp_unslash($_POST['opentrust_export_kind'])) : 'content';
+        $include_media = !empty($_POST['opentrust_include_media']);
 
         try {
             if ($kind === 'settings') {
@@ -411,12 +411,12 @@ final class OpenTrust_Admin_Tools {
     public function handle_import_preview(): void {
         $this->guard('opentrust_import_preview');
 
-        if (empty($_FILES['ot_import_file']['tmp_name']) || !is_uploaded_file((string) $_FILES['ot_import_file']['tmp_name'])) {
+        if (empty($_FILES['opentrust_import_file']['tmp_name']) || !is_uploaded_file((string) $_FILES['opentrust_import_file']['tmp_name'])) {
             $this->bounce_error(__('No file uploaded.', 'opentrust'));
             return;
         }
 
-        $size = (int) ($_FILES['ot_import_file']['size'] ?? 0);
+        $size = (int) ($_FILES['opentrust_import_file']['size'] ?? 0);
         if ($size > self::UPLOAD_MAX_MB * 1024 * 1024) {
             $this->bounce_error(__('Upload exceeds size limit.', 'opentrust'));
             return;
@@ -438,7 +438,7 @@ final class OpenTrust_Admin_Tools {
         // application/x-zip-compressed to application/zip, so one entry covers all
         // browsers without tripping the get_allowed_mime_types() global allowlist.
         $upload = wp_handle_upload(
-            $_FILES['ot_import_file'],
+            $_FILES['opentrust_import_file'],
             [
                 'test_form' => false,
                 'mimes'     => ['zip' => 'application/zip'],
@@ -461,7 +461,7 @@ final class OpenTrust_Admin_Tools {
             $manifest = $read['manifest'];
             $check = OpenTrust_IO::validate_manifest($manifest);
 
-            $strategy = isset($_POST['ot_strategy']) ? sanitize_key((string) wp_unslash($_POST['ot_strategy'])) : OpenTrust_IO::STRATEGY_SKIP;
+            $strategy = isset($_POST['opentrust_strategy']) ? sanitize_key((string) wp_unslash($_POST['opentrust_strategy'])) : OpenTrust_IO::STRATEGY_SKIP;
 
             $preview = [
                 'manifest' => $manifest,
@@ -506,7 +506,7 @@ final class OpenTrust_Admin_Tools {
         $stash_key = 'opentrust_io_preview_' . get_current_user_id();
         $preview = get_transient($stash_key);
 
-        if (!empty($_POST['ot_cancel']) || !is_array($preview)) {
+        if (!empty($_POST['opentrust_cancel']) || !is_array($preview)) {
             if (is_array($preview) && !empty($preview['zip_path'])) {
                 wp_delete_file((string) $preview['zip_path']);
             }
@@ -568,8 +568,8 @@ final class OpenTrust_Admin_Tools {
     }
 
     private function parse_selection(array $post): array {
-        $cpts = isset($post['ot_export_cpt']) && is_array($post['ot_export_cpt']) ? $post['ot_export_cpt'] : [];
-        $ids  = isset($post['ot_export_ids']) && is_array($post['ot_export_ids']) ? $post['ot_export_ids'] : [];
+        $cpts = isset($post['opentrust_export_cpt']) && is_array($post['opentrust_export_cpt']) ? $post['opentrust_export_cpt'] : [];
+        $ids  = isset($post['opentrust_export_ids']) && is_array($post['opentrust_export_ids']) ? $post['opentrust_export_ids'] : [];
 
         $out = [];
         foreach ($cpts as $cpt => $_) {

@@ -4,7 +4,7 @@ Tags: trust-center, compliance, gdpr, privacy, subprocessors
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -188,6 +188,13 @@ Not automatically — that's intentional. Auto-rendered PDFs from HTML almost al
 
 == Changelog ==
 
+= 1.1.1 =
+A proactive hardening release that extends the 1.1.0 prefix work. It contains no new features — every change is naming consistency or internal correctness.
+
+* Change: the short `ot_` / `_ot_` prefix has been removed from the rest of the plugin's identifiers — postmeta keys (`_ot_*` → `_opentrust_*`), the policy URL query variables, meta box IDs, admin list-table column IDs, and import/export form field names. An automatic database migration rewrites existing postmeta to the new keys on the first load after upgrade. No action is required. See "Upgrade notice" below.
+* Change: the plugin's diagnostic `error_log()` calls are now gated behind `WP_DEBUG`, so production sites stay quiet while the failure detail is still available to developers debugging an install.
+* Internal: bundled translation template regenerated. Database schema version bumped to 5.
+
 = 1.1.0 =
 This release implements the fixes requested in round 1 of the WordPress.org plugin review. It contains no new features. Every change is compliance, security hardening, or internal correctness work.
 
@@ -209,6 +216,9 @@ This release implements the fixes requested in round 1 of the WordPress.org plug
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+This release renames the plugin's postmeta keys and internal identifiers to a longer prefix for naming consistency. An automatic, idempotent database migration rewrites your existing postmeta to the new keys on the first load after upgrade, so no manual action is required. Post content, meta values, revisions, version history, and translation links are all preserved, and existing trust-center URLs are unaffected. A database backup before upgrading is recommended. If you maintain custom code that references the old `_ot_*` postmeta keys directly, update those references to the new `_opentrust_*` keys.
 
 = 1.1.0 =
 This release renames the plugin's five custom post types to a longer prefix for WordPress.org compliance. An automatic, idempotent database migration rewrites your existing content to the new post types on the first load after upgrade, so no manual action is required. Post IDs, content, meta, revisions, version history, and translation links are all preserved. As with any schema migration, a database backup before upgrading is recommended. If you maintain custom code that references the old `ot_*` post type slugs directly, update those references to the new `opentr_*` slugs.
