@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-14T14:04:32+00:00\n"
+"POT-Creation-Date: 2026-05-14T15:53:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -765,7 +765,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:250
 #: templates/chat.php:45
 #: templates/partials/hero.php:55
-#: templates/trust-center.php:107
+#: templates/trust-center.php:70
 msgid "Policies"
 msgstr ""
 
@@ -776,7 +776,7 @@ msgstr ""
 #: templates/chat.php:47
 #: templates/partials/hero.php:61
 #: templates/partials/subprocessors.php:20
-#: templates/trust-center.php:109
+#: templates/trust-center.php:72
 msgid "Subprocessors"
 msgstr ""
 
@@ -786,7 +786,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:349
 #: templates/chat.php:48
 #: templates/partials/data-practices.php:34
-#: templates/trust-center.php:110
+#: templates/trust-center.php:73
 msgid "Data Practices"
 msgstr ""
 
@@ -812,7 +812,7 @@ msgstr ""
 
 #: includes/class-opentrust-admin-settings.php:597
 #: templates/chat.php:60
-#: templates/trust-center.php:111
+#: templates/trust-center.php:74
 msgid "Contact"
 msgstr ""
 
@@ -975,7 +975,7 @@ msgstr ""
 #: includes/class-opentrust-cpt.php:283
 #: templates/chat.php:46
 #: templates/partials/hero.php:49
-#: templates/trust-center.php:108
+#: templates/trust-center.php:71
 msgid "Certifications"
 msgstr ""
 
@@ -1296,7 +1296,7 @@ msgstr ""
 
 #: includes/class-opentrust-cpt.php:374
 #: templates/chat.php:61
-#: templates/trust-center.php:112
+#: templates/trust-center.php:75
 msgid "FAQ"
 msgstr ""
 
@@ -1772,7 +1772,7 @@ msgid "Page not found."
 msgstr ""
 
 #: includes/class-opentrust-render.php:271
-#: templates/partials/policy-single.php:54
+#: templates/partials/policy-single.php:46
 msgid "Back to Trust Center"
 msgstr ""
 
@@ -1807,7 +1807,7 @@ msgstr[1] ""
 #. translators: %s = formatted date
 #. translators: %s: policy last updated date
 #: includes/class-opentrust-render.php:467
-#: templates/partials/policy-single.php:111
+#: templates/partials/policy-single.php:103
 #, php-format
 msgid "Updated %s"
 msgstr ""
@@ -1894,7 +1894,7 @@ msgid "Actions"
 msgstr ""
 
 #: includes/class-opentrust-version.php:169
-#: templates/partials/policy-single.php:174
+#: templates/partials/policy-single.php:166
 msgid "Current"
 msgstr ""
 
@@ -2166,18 +2166,17 @@ msgid "Ask %s — Trust Center"
 msgstr ""
 
 #: templates/chat.php:100
-#: templates/trust-center.php:101
+#: templates/trust-center.php:111
 msgid "Skip to content"
 msgstr ""
 
 #: templates/chat.php:102
-#: templates/partials/policy-single.php:36
-#: templates/trust-center.php:114
+#: templates/partials/nav.php:22
 msgid "Trust center navigation"
 msgstr ""
 
 #: templates/chat.php:131
-#: templates/trust-center.php:144
+#: templates/partials/nav.php:53
 msgid "Ask AI"
 msgstr ""
 
@@ -2300,7 +2299,7 @@ msgid "Copied"
 msgstr ""
 
 #: templates/chat.php:343
-#: templates/partials/policy-single.php:139
+#: templates/partials/policy-single.php:131
 msgid "Print"
 msgstr ""
 
@@ -2482,26 +2481,26 @@ msgid "Last Updated"
 msgstr ""
 
 #: templates/partials/policies.php:89
-#: templates/partials/policy-single.php:116
+#: templates/partials/policy-single.php:108
 msgid "Framework citations"
 msgstr ""
 
 #. translators: %s: policy version number
 #: templates/partials/policies.php:99
-#: templates/partials/policy-single.php:94
+#: templates/partials/policy-single.php:86
 #, php-format
 msgid "v%s"
 msgstr ""
 
 #. translators: %s: human-readable file size
 #: templates/partials/policies.php:106
-#: templates/partials/policy-single.php:130
+#: templates/partials/policy-single.php:122
 #, php-format
 msgid "Download PDF (%s)"
 msgstr ""
 
 #: templates/partials/policies.php:108
-#: templates/partials/policy-single.php:132
+#: templates/partials/policy-single.php:124
 msgid "Download PDF"
 msgstr ""
 
@@ -2512,36 +2511,36 @@ msgid "View %s"
 msgstr ""
 
 #. translators: %1$s: version number, %2$s: link to current version
-#: templates/partials/policy-single.php:63
+#: templates/partials/policy-single.php:55
 #, php-format
 msgid "You are viewing version %1$s. %2$s"
 msgstr ""
 
-#: templates/partials/policy-single.php:65
-#: templates/partials/policy-single.php:78
+#: templates/partials/policy-single.php:57
+#: templates/partials/policy-single.php:70
 msgid "View current version"
 msgstr ""
 
 #. translators: %1$s: effective date, %2$s: link to previous version
-#: templates/partials/policy-single.php:75
+#: templates/partials/policy-single.php:67
 #, php-format
 msgid "This version takes effect on %1$s. %2$s"
 msgstr ""
 
 #. translators: %s: policy effective date
-#: templates/partials/policy-single.php:105
+#: templates/partials/policy-single.php:97
 #, php-format
 msgid "Effective %s"
 msgstr ""
 
 #. translators: %d: number of policy versions
-#: templates/partials/policy-single.php:150
+#: templates/partials/policy-single.php:142
 #, php-format
 msgid "Version history (%d)"
 msgstr ""
 
 #. translators: %d: version number
-#: templates/partials/policy-single.php:166
+#: templates/partials/policy-single.php:158
 #, php-format
 msgid "v%d"
 msgstr ""
@@ -2567,16 +2566,16 @@ msgstr ""
 msgid "Transparency and security you can trust."
 msgstr ""
 
-#: templates/trust-center.php:196
+#: templates/trust-center.php:165
 msgid "Trust center content is being prepared. Check back soon."
 msgstr ""
 
 #. translators: %s: company name
-#: templates/trust-center.php:212
+#: templates/trust-center.php:181
 #, php-format
 msgid "© %1$s %2$s. All rights reserved."
 msgstr ""
 
-#: templates/trust-center.php:220
+#: templates/trust-center.php:189
 msgid "Powered by OpenTrust"
 msgstr ""
