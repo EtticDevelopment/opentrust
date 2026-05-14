@@ -428,7 +428,7 @@
  *   - `fields_review` → templates, amber highlight, "Verify" chip + notice
  *
  * All state is client-side. The bundle at window.OpenTrustCatalog is injected
- * only on post-new.php for ot_subprocessor / ot_data_practice screens.
+ * only on post-new.php for opentr_subprocessor / opentr_data_practice screens.
  */
 (function () {
     'use strict';

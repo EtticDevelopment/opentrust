@@ -181,6 +181,16 @@ final class OpenTrust {
             return;
         }
 
+        // v3 → v4: rename CPT slugs from `ot_*` to `opentr_*` to satisfy the
+        // wp.org 4-character-prefix rule. Runs first so any v1→v4 jump renames
+        // the rows before the v1→v2 UUID back-fill queries them — the back-fill
+        // resolves OpenTrust_CPT::ALL to the new slugs, so the rows must already
+        // carry those slugs by the time it runs. Runs at init priority 5,
+        // before OpenTrust_CPT::register_post_types() at priority 10.
+        if ($current < 4) {
+            self::rename_cpt_slugs_v4();
+        }
+
         // v1 → v2: back-fill _ot_uuid on existing CPT posts.
         if ($current < 2) {
             self::backfill_uuids();
@@ -197,6 +207,15 @@ final class OpenTrust {
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
         set_transient('opentrust_flush_rewrite', true);
         $this->invalidate_cache();
+
+        // The chat corpus transient is locale-keyed and not bound to
+        // opentrust_cache_version, so invalidate_cache() above doesn't bust
+        // it. After the v4 rename the surviving corpus would be valid but
+        // mention the old slug context in admin telemetry — drop it so the
+        // next chat request rebuilds against the renamed rows.
+        if (class_exists('OpenTrust_Chat_Corpus')) {
+            OpenTrust_Chat_Corpus::invalidate();
+        }
     }
 
     /**
@@ -215,6 +234,45 @@ final class OpenTrust {
         $settings['ai_model_display_name'] = $snap['display_name'];
         $settings['ai_model_recommended']  = $snap['recommended'];
         OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+    }
+
+    /**
+     * Rewrite wp_posts.post_type for each renamed CPT. Idempotent: if the
+     * migration is interrupted, opentrust_db_version stays unadvanced and the
+     * next init retries. Revisions carry post_type='revision' and are not
+     * matched. Translation linkage (WPML/Polylang) is keyed by post ID, not
+     * by slug, so existing translations stay paired.
+     *
+     * Collects affected IDs before the UPDATE so each row's WP_Post entry in
+     * the object cache can be invalidated — otherwise post_type checks that
+     * read from cache return stale 'ot_*' values until the cache expires.
+     *
+     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer
+     *             supported. Also remove the `if ($current < 4)` branch in
+     *             maybe_upgrade() and the OpenTrust_CPT::LEGACY_* constants.
+     */
+    private static function rename_cpt_slugs_v4(): void {
+        global $wpdb;
+        foreach (OpenTrust_CPT::LEGACY_MAP as $old => $new) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
+            $ids = $wpdb->get_col(
+                $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", $old)
+            );
+            if (empty($ids)) {
+                continue;
+            }
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
+            $wpdb->update(
+                $wpdb->posts,
+                ['post_type' => $new],
+                ['post_type' => $old],
+                ['%s'],
+                ['%s']
+            );
+            foreach ($ids as $id) {
+                clean_post_cache((int) $id);
+            }
+        }
     }
 
     private static function backfill_uuids(): void {

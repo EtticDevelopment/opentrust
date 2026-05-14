@@ -44,7 +44,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'certifications',
             [
-                'post_type'      => 'ot_certification',
+                'post_type'      => OpenTrust_CPT::CERTIFICATION,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'menu_order title',
@@ -76,7 +76,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'policies',
             [
-                'post_type'      => 'ot_policy',
+                'post_type'      => OpenTrust_CPT::POLICY,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
@@ -112,7 +112,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'subprocessors',
             [
-                'post_type'      => 'ot_subprocessor',
+                'post_type'      => OpenTrust_CPT::SUBPROCESSOR,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'title',
@@ -137,7 +137,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'data_practices',
             [
-                'post_type'      => 'ot_data_practice',
+                'post_type'      => OpenTrust_CPT::DATA_PRACTICE,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
@@ -174,7 +174,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'faqs',
             [
-                'post_type'      => 'ot_faq',
+                'post_type'      => OpenTrust_CPT::FAQ,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => ['menu_order' => 'ASC', 'title' => 'ASC'],
@@ -214,7 +214,7 @@ final class OpenTrust_Repository {
      */
     public function fetch_policy_posts(): array {
         return get_posts([
-            'post_type'      => 'ot_policy',
+            'post_type'      => OpenTrust_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'orderby'        => 'title',

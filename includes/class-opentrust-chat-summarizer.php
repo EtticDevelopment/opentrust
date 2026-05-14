@@ -1,6 +1,6 @@
 <?php
 /**
- * AI-generated 2–3 sentence summaries for ot_policy posts.
+ * AI-generated 2–3 sentence summaries for opentr_policy posts.
  *
  * The agentic chat engine reads a slim corpus index in its system prompt;
  * each policy line carries a one-paragraph summary used for routing decisions
@@ -11,7 +11,7 @@
  *
  * Lifecycle:
  *   - Gated by the `ai_auto_summarize` setting.
- *   - On every meaningful save_post for an ot_policy, a wp_schedule_single_event
+ *   - On every meaningful save_post for an opentr_policy, a wp_schedule_single_event
  *     fires ~5 seconds later (debounce; doesn't block the editor save).
  *   - The cron handler calls whichever AI provider the operator configured
  *     for chat, using the same key. Result is persisted to postmeta and the
@@ -55,7 +55,7 @@ final class OpenTrust_Chat_Summarizer {
     private const POLICY_INPUT_MAX_CHARS = 12_000;
 
     public static function bootstrap(): void {
-        add_action('save_post_ot_policy',           [self::class, 'on_save_post'], 20, 3);
+        add_action('save_post_' . OpenTrust_CPT::POLICY, [self::class, 'on_save_post'], 20, 3);
         add_action(self::CRON_HOOK,                 [self::class, 'generate']);
     }
 
@@ -105,7 +105,7 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function generate(int $post_id): void {
         $post = get_post($post_id);
-        if (!$post instanceof \WP_Post || $post->post_type !== 'ot_policy' || $post->post_status !== 'publish') {
+        if (!$post instanceof \WP_Post || $post->post_type !== OpenTrust_CPT::POLICY || $post->post_status !== 'publish') {
             return;
         }
 
@@ -212,7 +212,7 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function sweep_all(): int {
         $posts = get_posts([
-            'post_type'      => 'ot_policy',
+            'post_type'      => OpenTrust_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'fields'         => 'ids',
@@ -252,7 +252,7 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function missing_summary_count(): int {
         $posts = get_posts([
-            'post_type'      => 'ot_policy',
+            'post_type'      => OpenTrust_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'fields'         => 'ids',

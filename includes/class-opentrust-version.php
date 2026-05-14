@@ -126,7 +126,7 @@ final class OpenTrust_Version {
             'ot_version_history',
             __('Version History', 'opentrust'),
             [$this, 'render_version_history'],
-            'ot_policy',
+            OpenTrust_CPT::POLICY,
             'side',
             'default'
         );

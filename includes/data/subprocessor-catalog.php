@@ -3,7 +3,7 @@
  * Subprocessor catalog.
  *
  * Curated list of common SaaS vendors with factual information that can be
- * auto-filled into the ot_subprocessor meta box from the admin typeahead.
+ * auto-filled into the opentr_subprocessor meta box from the admin typeahead.
  *
  * Schema per entry:
  *   'slug' => [

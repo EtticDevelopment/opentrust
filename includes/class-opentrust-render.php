@@ -313,11 +313,11 @@ final class OpenTrust_Render {
         // gate is consumer-layer concern.
         $visible = $settings['sections_visible'] ?? [];
         $section_cpt_map = [
-            'certifications' => 'ot_certification',
-            'policies'       => 'ot_policy',
-            'subprocessors'  => 'ot_subprocessor',
-            'data_practices' => 'ot_data_practice',
-            'faqs'           => 'ot_faq',
+            'certifications' => OpenTrust_CPT::CERTIFICATION,
+            'policies'       => OpenTrust_CPT::POLICY,
+            'subprocessors'  => OpenTrust_CPT::SUBPROCESSOR,
+            'data_practices' => OpenTrust_CPT::DATA_PRACTICE,
+            'faqs'           => OpenTrust_CPT::FAQ,
         ];
 
         if (!empty($visible['certifications'])) {
@@ -483,7 +483,7 @@ final class OpenTrust_Render {
         }
 
         $posts = get_posts([
-            'post_type'      => 'ot_policy',
+            'post_type'      => OpenTrust_CPT::POLICY,
             'name'           => $slug,
             'posts_per_page' => 1,
             'post_status'    => 'publish',

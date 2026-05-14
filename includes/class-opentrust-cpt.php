@@ -15,11 +15,35 @@ final class OpenTrust_CPT {
      * CPT slug constants. Use these everywhere instead of bare strings so a
      * rename is one edit and a typo can't sneak through a `match` default arm.
      */
-    public const POLICY        = 'ot_policy';
-    public const CERTIFICATION = 'ot_certification';
-    public const SUBPROCESSOR  = 'ot_subprocessor';
-    public const DATA_PRACTICE = 'ot_data_practice';
-    public const FAQ           = 'ot_faq';
+    public const POLICY        = 'opentr_policy';
+    public const CERTIFICATION = 'opentr_certification';
+    public const SUBPROCESSOR  = 'opentr_subprocessor';
+    public const DATA_PRACTICE = 'opentr_data_practice';
+    public const FAQ           = 'opentr_faq';
+
+    /**
+     * Legacy slugs from v1.0.x. Kept solely for the v3→v4 migration and the
+     * import/export back-compat remap. Do not introduce new references.
+     *
+     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer supported.
+     *             The major-version mismatch check in OpenTrust_IO::validate_manifest()
+     *             already hard-rejects 1.x archives on a 2.x destination, so the
+     *             import remap becomes redundant at the same cutoff.
+     */
+    public const LEGACY_POLICY        = 'ot_policy';
+    public const LEGACY_CERTIFICATION = 'ot_certification';
+    public const LEGACY_SUBPROCESSOR  = 'ot_subprocessor';
+    public const LEGACY_DATA_PRACTICE = 'ot_data_practice';
+    public const LEGACY_FAQ           = 'ot_faq';
+
+    /** @deprecated 1.1.0 Drop in 2.0.0 alongside the LEGACY_* constants above. */
+    public const LEGACY_MAP = [
+        self::LEGACY_POLICY        => self::POLICY,
+        self::LEGACY_CERTIFICATION => self::CERTIFICATION,
+        self::LEGACY_SUBPROCESSOR  => self::SUBPROCESSOR,
+        self::LEGACY_DATA_PRACTICE => self::DATA_PRACTICE,
+        self::LEGACY_FAQ           => self::FAQ,
+    ];
 
     /**
      * Every OpenTrust CPT slug, in the order they appear in the trust center
@@ -57,16 +81,16 @@ final class OpenTrust_CPT {
         add_action('save_post', [$this, 'save_meta'], 10, 2);
 
         // Admin columns.
-        add_filter('manage_ot_certification_posts_columns', [$this, 'cert_columns']);
-        add_action('manage_ot_certification_posts_custom_column', [$this, 'cert_column_content'], 10, 2);
-        add_filter('manage_ot_policy_posts_columns', [$this, 'policy_columns']);
-        add_action('manage_ot_policy_posts_custom_column', [$this, 'policy_column_content'], 10, 2);
-        add_filter('manage_ot_subprocessor_posts_columns', [$this, 'sub_columns']);
-        add_action('manage_ot_subprocessor_posts_custom_column', [$this, 'sub_column_content'], 10, 2);
-        add_filter('manage_ot_data_practice_posts_columns', [$this, 'dp_columns']);
-        add_action('manage_ot_data_practice_posts_custom_column', [$this, 'dp_column_content'], 10, 2);
-        add_filter('manage_ot_faq_posts_columns', [$this, 'faq_columns']);
-        add_action('manage_ot_faq_posts_custom_column', [$this, 'faq_column_content'], 10, 2);
+        add_filter('manage_' . self::CERTIFICATION . '_posts_columns', [$this, 'cert_columns']);
+        add_action('manage_' . self::CERTIFICATION . '_posts_custom_column', [$this, 'cert_column_content'], 10, 2);
+        add_filter('manage_' . self::POLICY . '_posts_columns', [$this, 'policy_columns']);
+        add_action('manage_' . self::POLICY . '_posts_custom_column', [$this, 'policy_column_content'], 10, 2);
+        add_filter('manage_' . self::SUBPROCESSOR . '_posts_columns', [$this, 'sub_columns']);
+        add_action('manage_' . self::SUBPROCESSOR . '_posts_custom_column', [$this, 'sub_column_content'], 10, 2);
+        add_filter('manage_' . self::DATA_PRACTICE . '_posts_columns', [$this, 'dp_columns']);
+        add_action('manage_' . self::DATA_PRACTICE . '_posts_custom_column', [$this, 'dp_column_content'], 10, 2);
+        add_filter('manage_' . self::FAQ . '_posts_columns', [$this, 'faq_columns']);
+        add_action('manage_' . self::FAQ . '_posts_custom_column', [$this, 'faq_column_content'], 10, 2);
 
         // Catalog-autofill title-field prompt for subprocessor / data-practice CPTs.
         add_filter('enter_title_here', [$this, 'filter_enter_title_here'], 10, 2);
@@ -128,13 +152,13 @@ final class OpenTrust_CPT {
      * screens so users know the title field is also a catalog lookup.
      */
     public function filter_enter_title_here(string $text, \WP_Post $post): string {
-        if ($post->post_type === 'ot_subprocessor') {
+        if ($post->post_type === self::SUBPROCESSOR) {
             return __('Pick from the catalog or type your own subprocessor name', 'opentrust');
         }
-        if ($post->post_type === 'ot_data_practice') {
+        if ($post->post_type === self::DATA_PRACTICE) {
             return __('Pick from the catalog or type your own, e.g. Analytics or Transactional Email', 'opentrust');
         }
-        if ($post->post_type === 'ot_certification') {
+        if ($post->post_type === self::CERTIFICATION) {
             return __('Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001', 'opentrust');
         }
         return $text;
@@ -146,7 +170,7 @@ final class OpenTrust_CPT {
 
     public static function register_post_types(): void {
         // ── Policies ──
-        register_post_type('ot_policy', [
+        register_post_type(self::POLICY, [
             'labels' => [
                 'name'               => __('Policies', 'opentrust'),
                 'singular_name'      => __('Policy', 'opentrust'),
@@ -180,7 +204,7 @@ final class OpenTrust_CPT {
         ]);
 
         // ── Certifications ──
-        register_post_type('ot_certification', [
+        register_post_type(self::CERTIFICATION, [
             'labels' => [
                 'name'               => __('Certifications', 'opentrust'),
                 'singular_name'      => __('Certification', 'opentrust'),
@@ -213,7 +237,7 @@ final class OpenTrust_CPT {
         ]);
 
         // ── Subprocessors ──
-        register_post_type('ot_subprocessor', [
+        register_post_type(self::SUBPROCESSOR, [
             'labels' => [
                 'name'               => __('Subprocessors', 'opentrust'),
                 'singular_name'      => __('Subprocessor', 'opentrust'),
@@ -246,7 +270,7 @@ final class OpenTrust_CPT {
         ]);
 
         // ── Data Practices ──
-        register_post_type('ot_data_practice', [
+        register_post_type(self::DATA_PRACTICE, [
             'labels' => [
                 'name'               => __('Data Practices', 'opentrust'),
                 'singular_name'      => __('Data Practice', 'opentrust'),
@@ -279,7 +303,7 @@ final class OpenTrust_CPT {
         ]);
 
         // ── FAQs ──
-        register_post_type('ot_faq', [
+        register_post_type(self::FAQ, [
             'labels' => [
                 'name'               => __('FAQs', 'opentrust'),
                 'singular_name'      => __('FAQ', 'opentrust'),
@@ -313,11 +337,11 @@ final class OpenTrust_CPT {
     // ──────────────────────────────────────────────
 
     public function add_meta_boxes(): void {
-        add_meta_box('ot_cert_details', __('Certification Details', 'opentrust'), [$this, 'render_cert_meta_box'], 'ot_certification', 'normal', 'high');
-        add_meta_box('ot_policy_details', __('Policy Details', 'opentrust'), [$this, 'render_policy_meta_box'], 'ot_policy', 'side', 'high');
-        add_meta_box('ot_sub_details', __('Subprocessor Details', 'opentrust'), [$this, 'render_sub_meta_box'], 'ot_subprocessor', 'normal', 'high');
-        add_meta_box('ot_dp_details', __('Data Practice Details', 'opentrust'), [$this, 'render_dp_meta_box'], 'ot_data_practice', 'normal', 'high');
-        add_meta_box('ot_faq_details', __('FAQ Details', 'opentrust'), [$this, 'render_faq_meta_box'], 'ot_faq', 'side', 'high');
+        add_meta_box('ot_cert_details', __('Certification Details', 'opentrust'), [$this, 'render_cert_meta_box'], self::CERTIFICATION, 'normal', 'high');
+        add_meta_box('ot_policy_details', __('Policy Details', 'opentrust'), [$this, 'render_policy_meta_box'], self::POLICY, 'side', 'high');
+        add_meta_box('ot_sub_details', __('Subprocessor Details', 'opentrust'), [$this, 'render_sub_meta_box'], self::SUBPROCESSOR, 'normal', 'high');
+        add_meta_box('ot_dp_details', __('Data Practice Details', 'opentrust'), [$this, 'render_dp_meta_box'], self::DATA_PRACTICE, 'normal', 'high');
+        add_meta_box('ot_faq_details', __('FAQ Details', 'opentrust'), [$this, 'render_faq_meta_box'], self::FAQ, 'side', 'high');
     }
 
     // ── Certification meta box ──
@@ -418,7 +442,7 @@ final class OpenTrust_CPT {
      * embed, or widget blocks that don't belong in a compliance document.
      */
     public static function filter_policy_allowed_blocks(array|bool $allowed, \WP_Block_Editor_Context $context): array|bool {
-        if (empty($context->post) || $context->post->post_type !== 'ot_policy') {
+        if (empty($context->post) || $context->post->post_type !== self::POLICY) {
             return $allowed;
         }
         return [
@@ -746,11 +770,11 @@ final class OpenTrust_CPT {
         }
 
         match ($post->post_type) {
-            'ot_certification' => $this->save_cert_meta($post_id),
-            'ot_policy'        => $this->save_policy_meta($post_id),
-            'ot_subprocessor'  => $this->save_sub_meta($post_id),
-            'ot_data_practice' => $this->save_dp_meta($post_id),
-            'ot_faq'           => $this->save_faq_meta($post_id),
+            self::CERTIFICATION => $this->save_cert_meta($post_id),
+            self::POLICY        => $this->save_policy_meta($post_id),
+            self::SUBPROCESSOR  => $this->save_sub_meta($post_id),
+            self::DATA_PRACTICE => $this->save_dp_meta($post_id),
+            self::FAQ           => $this->save_faq_meta($post_id),
             default            => null,
         };
     }
@@ -1047,7 +1071,7 @@ final class OpenTrust_CPT {
         $policy_id = (int) get_post_meta($post->ID, '_ot_faq_related_policy', true);
 
         $policies = get_posts([
-            'post_type'      => 'ot_policy',
+            'post_type'      => self::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'orderby'        => 'title',
@@ -1083,7 +1107,7 @@ final class OpenTrust_CPT {
         }
 
         $related = absint( wp_unslash( $_POST['ot_faq_related_policy'] ?? 0 ) );
-        if ($related > 0 && get_post_type($related) === 'ot_policy') {
+        if ($related > 0 && get_post_type($related) === self::POLICY) {
             update_post_meta($post_id, '_ot_faq_related_policy', $related);
         } else {
             delete_post_meta($post_id, '_ot_faq_related_policy');
