@@ -53,6 +53,10 @@ wp_clear_scheduled_hook('opentrust_ai_models_refresh');
 // gone — wp_clear_scheduled_hook() removes every scheduled occurrence.
 wp_clear_scheduled_hook('opentrust_generate_policy_summary');
 
+// Clear any pending import-preview cleanup single-events. The handler lives on
+// OpenTrust_Admin_Tools, which won't load post-uninstall.
+wp_clear_scheduled_hook('opentrust_io_preview_cleanup');
+
 // Delete plugin options.
 delete_option('opentrust_settings');
 delete_option('opentrust_provider_keys');
@@ -63,6 +67,40 @@ delete_option('opentrust_faqs_seeded');
 // Clean up any transients.
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Bulk cleanup of plugin transients on uninstall, no user input
 $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_opentrust_%' OR option_name LIKE '_transient_timeout_opentrust_%'");
+
+// Sweep the import-stash directory. Pre-1.1.0 installs created files directly
+// under wp-content/uploads/opentrust-tmp/. From 1.1.0 onward wp_handle_upload()
+// (scoped via an upload_dir filter) also lands here, so the runtime path is
+// the same as the legacy path. Walk depth-first to cover any nested layout —
+// the legacy structure was flat in practice but we cannot rely on that, and
+// orphaned import-preview ZIPs may have collected here over time.
+$ot_uploads = wp_upload_dir();
+if (!empty($ot_uploads['basedir'])) {
+    $ot_stash = rtrim((string) $ot_uploads['basedir'], '/') . '/opentrust-tmp';
+    if (is_dir($ot_stash)) {
+        try {
+            $ot_iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($ot_stash, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($ot_iterator as $ot_entry) {
+                /** @var SplFileInfo $ot_entry */
+                $ot_path = (string) $ot_entry->getPathname();
+                if ($ot_entry->isDir()) {
+                    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- one-shot uninstall cleanup; WP_Filesystem is disproportionate for tearing down a plugin-private temp dir.
+                    @rmdir($ot_path);
+                } else {
+                    wp_delete_file($ot_path);
+                }
+            }
+        } catch (\Throwable $ot_e) {
+            // Best-effort cleanup; never fatal during uninstall.
+            unset($ot_e);
+        }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- one-shot uninstall cleanup; WP_Filesystem is disproportionate here.
+        @rmdir($ot_stash);
+    }
+}
 
 // Flush rewrite rules.
 flush_rewrite_rules();
