@@ -513,111 +513,147 @@ abstract class OpenTrust_Chat_Provider {
             return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'opentrust')];
         }
 
+        // SSE chunk callbacks require cURL transport. Streams/fsockopen buffer the full response.
+        if (!function_exists('curl_init')) {
+            return ['ok' => false, 'error' => __('AI streaming requires the PHP cURL extension.', 'opentrust')];
+        }
+
         $body = wp_json_encode($payload);
         if ($body === false) {
             return ['ok' => false, 'error' => 'Payload JSON encoding failed.'];
         }
 
-        $curl_headers = ['Content-Type: application/json', 'Accept: text/event-stream'];
-        foreach ($headers as $k => $v) {
-            $curl_headers[] = $k . ': ' . $v;
-        }
+        // Shared state between the http_api_curl callback and the post-request branch.
+        $state = (object) [
+            'url'              => $url,
+            'on_line'          => $on_line,
+            'buffer'           => '',
+            'error_body'       => '',
+            'early_status'     => 0,
+            'response_headers' => [],
+            'connect_timeout'  => 15,
+            'curl_hook_ran'    => false,
+        ];
 
-        $buffer           = '';
-        $error_body       = '';
-        $response_headers = [];
-        $early_status     = 0;
+        // wp_safe_remote_post collapses connect + total timeout into one 'timeout' arg,
+        // and never sets CURLOPT_WRITEFUNCTION. Inject ours on the live cURL handle via the
+        // documented http_api_curl escape hatch, scoped to this request's URL so it doesn't
+        // leak to other outbound HTTP calls in the same PHP request.
+        //
+        // We deliberately do NOT install CURLOPT_HEADERFUNCTION. WP's Requests Curl
+        // transport sets it to its own stream_headers() in setup_handle(), which
+        // populates the transport's internal $this->headers buffer. If we replace that,
+        // $this->headers stays empty, and after curl_exec the Requests parser throws
+        // "Missing header/body separator" out of WpOrg\Requests\Requests::parse_response
+        // (it splits on \r\n\r\n and finds nothing) → WP returns a WP_Error and the
+        // upstream call fails before we can read the response. The early HTTP status we
+        // need for our error-body branch is fetched lazily inside WRITEFUNCTION via
+        // curl_getinfo(); response headers are read after the call via
+        // wp_remote_retrieve_headers(). Do not re-add a header callback here.
+        $filter = function ($handle, $args, $filter_url) use ($state): void {
+            if ((string) $filter_url !== $state->url) {
+                return;
+            }
+            $state->curl_hook_ran = true;
+            // phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_getinfo -- documented http_api_curl escape hatch for SSE streaming.
+            curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $state->connect_timeout);
+            curl_setopt($handle, CURLOPT_FOLLOWLOCATION, false);
+            curl_setopt($handle, CURLOPT_WRITEFUNCTION, function ($ch, string $chunk) use ($state): int {
+                // cURL has parsed the response status line before any body callback
+                // fires, so CURLINFO_HTTP_CODE is reliable here. Capture once.
+                if ($state->early_status === 0) {
+                    $state->early_status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                }
 
-        // phpcs:disable WordPress.WP.AlternativeFunctions.curl_curl_init, WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_exec, WordPress.WP.AlternativeFunctions.curl_curl_getinfo, WordPress.WP.AlternativeFunctions.curl_curl_errno, WordPress.WP.AlternativeFunctions.curl_curl_error, WordPress.WP.AlternativeFunctions.curl_curl_close -- SSE streaming requires CURLOPT_WRITEFUNCTION; wp_remote_* does not support streaming callbacks.
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,            $url);
-        curl_setopt($ch, CURLOPT_POST,           true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $body);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,     $curl_headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-        curl_setopt($ch, CURLOPT_HEADER,         false);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        $timeout);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION,  function ($ch, string $line) use (&$early_status, &$response_headers): int {
-            $len     = strlen($line);
-            $trimmed = trim($line);
-            if ($trimmed === '') {
-                return $len;
-            }
-            if (preg_match('#^HTTP/[\d.]+\s+(\d{3})#', $trimmed, $m)) {
-                $early_status = (int) $m[1];
-                return $len;
-            }
-            $colon = strpos($trimmed, ':');
-            if ($colon !== false) {
-                $k = strtolower(trim(substr($trimmed, 0, $colon)));
-                $v = trim(substr($trimmed, $colon + 1));
-                $response_headers[$k] = $v;
-            }
-            return $len;
-        });
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION,  function ($ch, string $chunk) use (&$buffer, &$error_body, &$early_status, $on_line): int {
-            // Non-2xx response — accumulate the body as an error payload
-            // instead of feeding it to the SSE parser. Anthropic returns
-            // plain JSON like {"type":"error","error":{"type":"...","message":"..."}}
-            // on errors, which doesn't match the SSE line shape and would
-            // otherwise be silently dropped.
-            if ($early_status >= 300) {
-                $error_body .= $chunk;
+                // Non-2xx: accumulate as an error payload. Anthropic returns plain JSON
+                // ({"type":"error",…}) that doesn't match SSE line shape.
+                if ($state->early_status >= 300) {
+                    $state->error_body .= $chunk;
+                    if (function_exists('connection_aborted') && connection_aborted()) {
+                        return 0;
+                    }
+                    return strlen($chunk);
+                }
+
+                $state->buffer .= $chunk;
+
+                while (($pos = strpos($state->buffer, "\n")) !== false) {
+                    $line          = substr($state->buffer, 0, $pos);
+                    $state->buffer = substr($state->buffer, $pos + 1);
+                    $line          = rtrim($line, "\r");
+                    ($state->on_line)($line);
+                }
+
+                // Honor visitor aborts; short write cancels the transfer.
                 if (function_exists('connection_aborted') && connection_aborted()) {
                     return 0;
                 }
+
                 return strlen($chunk);
-            }
+            });
+            // phpcs:enable WordPress.WP.AlternativeFunctions.curl_curl_setopt, WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+        };
 
-            $buffer .= $chunk;
+        add_action('http_api_curl', $filter, 10, 3);
 
-            // Process complete lines. SSE line terminator is LF; events separated by blank line.
-            while (($pos = strpos($buffer, "\n")) !== false) {
-                $line   = substr($buffer, 0, $pos);
-                $buffer = substr($buffer, $pos + 1);
-                $line   = rtrim($line, "\r");
-                $on_line($line);
-            }
-
-            // Honor visitor aborts.
-            if (function_exists('connection_aborted') && connection_aborted()) {
-                return 0; // return value < chunk length aborts curl
-            }
-
-            return strlen($chunk);
-        });
-
-        $ok         = curl_exec($ch);
-        $http_code  = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curl_errno = curl_errno($ch);
-        $curl_err   = curl_error($ch);
-        curl_close($ch);
-        // phpcs:enable
-
-        // Flush any trailing line not followed by newline — but only on success;
-        // on an error response the buffer holds the JSON error body, which the
-        // SSE parser would mis-interpret.
-        if ($buffer !== '' && $http_code >= 200 && $http_code < 300) {
-            $on_line(rtrim($buffer, "\r"));
+        try {
+            $response = wp_safe_remote_post($url, [
+                'timeout'     => $timeout,
+                'redirection' => 0,
+                'sslverify'   => true,
+                'blocking'    => true,
+                'headers'     => array_merge(
+                    ['Content-Type' => 'application/json', 'Accept' => 'text/event-stream'],
+                    $headers
+                ),
+                'body'        => $body,
+            ]);
+        } finally {
+            // $on_line is caller-supplied; if it throws inside WRITEFUNCTION the
+            // exception unwinds through cURL → wp_safe_remote_post. Always detach.
+            remove_action('http_api_curl', $filter, 10);
         }
 
-        if ($ok === false && $curl_errno !== 0) {
-            return ['ok' => false, 'code' => $http_code, 'error' => $curl_err ?: 'cURL request failed.'];
+        // If WP picked Streams/fsockopen, http_api_curl never fired and our SSE callbacks
+        // never installed — the response body was buffered, not streamed. Fail loudly.
+        if (!$state->curl_hook_ran) {
+            return ['ok' => false, 'error' => __('AI streaming requires the WordPress cURL transport.', 'opentrust')];
+        }
+
+        // Copy parsed response headers (Requests' stream_headers still ran since we
+        // didn't override it) into our state so describe_streaming_error() can surface
+        // rate-limit hints (retry-after, anthropic-ratelimit-*, x-ratelimit-*).
+        if (!is_wp_error($response)) {
+            foreach (wp_remote_retrieve_headers($response) as $k => $v) {
+                $state->response_headers[strtolower((string) $k)]
+                    = is_array($v) ? implode(', ', $v) : (string) $v;
+            }
+        }
+
+        // early_status is populated by the first WRITEFUNCTION call via curl_getinfo.
+        // Fall back to the WP response code if for any reason it wasn't captured (e.g.,
+        // 0-byte response, transport never invoked the write callback).
+        $http_code = $state->early_status > 0
+            ? $state->early_status
+            : (is_wp_error($response) ? 0 : (int) wp_remote_retrieve_response_code($response));
+
+        // Flush trailing partial line — only on success; on error the buffer holds JSON.
+        if ($state->buffer !== '' && $http_code >= 200 && $http_code < 300) {
+            ($state->on_line)(rtrim($state->buffer, "\r"));
+        }
+
+        if (is_wp_error($response)) {
+            return ['ok' => false, 'code' => $http_code, 'error' => $response->get_error_message()];
         }
 
         if ($http_code < 200 || $http_code >= 300) {
-            // Some hosts return the body via WRITEFUNCTION before
-            // HEADERFUNCTION has set $early_status; fall back to $buffer.
-            if ($error_body === '' && $buffer !== '') {
-                $error_body = $buffer;
+            // Paranoia: if early_status was 0 on the very first WRITEFUNCTION call (the
+            // status hadn't been parsed yet for some transports), the first chunk landed
+            // in $buffer instead of $error_body. Rescue it.
+            if ($state->error_body === '' && $state->buffer !== '') {
+                $state->error_body = $state->buffer;
             }
-            $detail = $this->describe_streaming_error($error_body, $response_headers, $http_code);
-            // Log unconditionally so post-mortem doesn't depend on whether
-            // the message survived translation to the client.
+            $detail = $this->describe_streaming_error($state->error_body, $state->response_headers, $http_code);
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic for upstream provider failures
             error_log('[OpenTrust] ' . $detail);
             return ['ok' => false, 'code' => $http_code, 'error' => $detail];

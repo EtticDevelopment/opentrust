@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-12T20:24:53+00:00\n"
+"POT-Creation-Date: 2026-05-13T15:28:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: opentrust\n"
@@ -1739,23 +1739,23 @@ msgstr ""
 msgid "manifest.json could not be parsed."
 msgstr ""
 
-#: includes/class-opentrust-io.php:636
+#: includes/class-opentrust-io.php:637
 msgid "Could not reopen archive for media import."
 msgstr ""
 
 #. translators: %s: media path
-#: includes/class-opentrust-io.php:651
+#: includes/class-opentrust-io.php:652
 #, php-format
 msgid "Bundled media missing during import: %s"
 msgstr ""
 
 #. translators: %s: filename
-#: includes/class-opentrust-io.php:671
+#: includes/class-opentrust-io.php:672
 #, php-format
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-opentrust-io.php:689
+#: includes/class-opentrust-io.php:690
 msgid "Could not create attachment."
 msgstr ""
 
@@ -2148,9 +2148,17 @@ msgstr ""
 msgid "Refused outbound request to disallowed host."
 msgstr ""
 
+#: includes/providers/class-opentrust-chat-provider.php:518
+msgid "AI streaming requires the PHP cURL extension."
+msgstr ""
+
+#: includes/providers/class-opentrust-chat-provider.php:620
+msgid "AI streaming requires the WordPress cURL transport."
+msgstr ""
+
 #. translators: %d: HTTP status code returned by the provider
-#: includes/providers/class-opentrust-chat-provider.php:638
-#: includes/providers/class-opentrust-chat-provider.php:693
+#: includes/providers/class-opentrust-chat-provider.php:674
+#: includes/providers/class-opentrust-chat-provider.php:729
 #, php-format
 msgid "Provider returned HTTP %d"
 msgstr ""
