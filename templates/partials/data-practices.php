@@ -31,8 +31,8 @@ $ot_preview_limit = 5;
         <!-- Section header -->
         <div class="ot-section__header">
             <?php Ettic_OTC_Render::updated_pill('data_practices', $ot_data); ?>
-            <h2 class="ot-section__title"><?php esc_html_e('Data Practices', 'opentrust'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'opentrust'); ?></p>
+            <h2 class="ot-section__title"><?php esc_html_e('Data Practices', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ot-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <!-- Card grid -->
@@ -70,7 +70,7 @@ $ot_preview_limit = 5;
                     <?php
                     printf(
                         /* translators: %1$d = number, %2$s = category name */
-                        esc_html__('View %1$d more %2$s items', 'opentrust'),
+                        esc_html__('View %1$d more %2$s items', 'open-trust-center-by-ettic'),
                         intval( $ot_overflow ),
                         esc_html($ot_dp['title'])
                     );
@@ -93,28 +93,28 @@ $ot_preview_limit = 5;
                     <div class="ot-dp-card__details-inner">
                         <?php if ($ot_dp['purpose']): ?>
                         <div class="ot-dp-card__detail">
-                            <dt><?php esc_html_e('Purpose', 'opentrust'); ?></dt>
+                            <dt><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_dp['purpose']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if ($ot_dp['legal_basis']): ?>
                         <div class="ot-dp-card__detail">
-                            <dt><?php esc_html_e('Legal Basis', 'opentrust'); ?></dt>
+                            <dt><?php esc_html_e('Legal Basis', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_basis_labels[$ot_dp['legal_basis']] ?? $ot_dp['legal_basis']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if ($ot_dp['retention_period']): ?>
                         <div class="ot-dp-card__detail">
-                            <dt><?php esc_html_e('Retention', 'opentrust'); ?></dt>
+                            <dt><?php esc_html_e('Retention', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_dp['retention_period']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if (!empty($ot_dp['shared_with'])): ?>
                         <div class="ot-dp-card__detail">
-                            <dt><?php esc_html_e('Shared With', 'opentrust'); ?></dt>
+                            <dt><?php esc_html_e('Shared With', 'open-trust-center-by-ettic'); ?></dt>
                             <dd>
                                 <?php
                                 $ot_names = array_map(fn($ot_s) => $ot_s['name'], $ot_dp['shared_with']);

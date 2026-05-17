@@ -80,13 +80,13 @@ final class Ettic_OTC_Render {
     private function handle_chat_noscript_post(array $settings): array {
         $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field((string) wp_unslash($_POST['_wpnonce'])) : '';
         if (!wp_verify_nonce($nonce, 'ettic_otc_chat_noscript')) {
-            return ['error' => __('Session expired. Please reload the page and try again.', 'opentrust')];
+            return ['error' => __('Session expired. Please reload the page and try again.', 'open-trust-center-by-ettic')];
         }
 
         $question = isset($_POST['question']) ? sanitize_textarea_field((string) wp_unslash($_POST['question'])) : '';
         $max_len  = (int) ($settings['ai_max_message_length'] ?? Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH);
         if ($question === '') {
-            return ['error' => __('Please enter a question.', 'opentrust')];
+            return ['error' => __('Please enter a question.', 'open-trust-center-by-ettic')];
         }
         if (strlen($question) > $max_len) {
             $question = substr($question, 0, $max_len);
@@ -95,7 +95,7 @@ final class Ettic_OTC_Render {
         $adapter = Ettic_OTC_Chat_Provider::for((string) $settings['ai_provider']);
         $api_key = Ettic_OTC_Chat_Secrets::get((string) $settings['ai_provider']);
         if (!$adapter || $api_key === null) {
-            return ['error' => __('AI chat is not configured.', 'opentrust')];
+            return ['error' => __('AI chat is not configured.', 'open-trust-center-by-ettic')];
         }
 
         $locale = (string) determine_locale();
@@ -267,8 +267,8 @@ final class Ettic_OTC_Render {
         echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not Found</title></head>';
         echo '<body style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Inter,Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f9fa;color:#374151">';
         echo '<div style="text-align:center"><h1 style="font-size:4rem;margin:0;color:#d1d5db">404</h1>';
-        echo '<p style="font-size:1.125rem;margin:1rem 0">' . esc_html__('Page not found.', 'opentrust') . '</p>';
-        echo '<a href="' . esc_url(home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/')) . '" style="color:hsl(' . (int) $hsl['h'] . ',' . (int) $hsl['s'] . '%,' . (int) $hsl['l'] . '%);text-decoration:none">' . esc_html__('Back to Trust Center', 'opentrust') . '</a>';
+        echo '<p style="font-size:1.125rem;margin:1rem 0">' . esc_html__('Page not found.', 'open-trust-center-by-ettic') . '</p>';
+        echo '<a href="' . esc_url(home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/')) . '" style="color:hsl(' . (int) $hsl['h'] . ',' . (int) $hsl['s'] . '%,' . (int) $hsl['l'] . '%);text-decoration:none">' . esc_html__('Back to Trust Center', 'open-trust-center-by-ettic') . '</a>';
         echo '</div></body></html>';
     }
 
@@ -439,32 +439,32 @@ final class Ettic_OTC_Render {
         $diff = time() - (int) $timestamp;
 
         if ($diff < 60) {
-            $text = __('Updated just now', 'opentrust');
+            $text = __('Updated just now', 'open-trust-center-by-ettic');
         } elseif ($diff < 3600) {
             $minutes = (int) floor($diff / 60);
             $text = sprintf(
                 /* translators: %d: number of minutes since last update */
-                _n('Updated %d minute ago', 'Updated %d minutes ago', $minutes, 'opentrust'),
+                _n('Updated %d minute ago', 'Updated %d minutes ago', $minutes, 'open-trust-center-by-ettic'),
                 $minutes
             );
         } elseif ($diff < 86400) {
             $hours = (int) floor($diff / 3600);
             $text = sprintf(
                 /* translators: %d: number of hours since last update */
-                _n('Updated %d hour ago', 'Updated %d hours ago', $hours, 'opentrust'),
+                _n('Updated %d hour ago', 'Updated %d hours ago', $hours, 'open-trust-center-by-ettic'),
                 $hours
             );
         } elseif ($diff < 2592000) {
             $days = (int) floor($diff / 86400);
             $text = sprintf(
                 /* translators: %d: number of days since last update */
-                _n('Updated %d day ago', 'Updated %d days ago', $days, 'opentrust'),
+                _n('Updated %d day ago', 'Updated %d days ago', $days, 'open-trust-center-by-ettic'),
                 $days
             );
         } else {
             $text = sprintf(
                 /* translators: %s = formatted date */
-                __('Updated %s', 'opentrust'),
+                __('Updated %s', 'open-trust-center-by-ettic'),
                 wp_date('M j, Y', (int) $timestamp)
             );
         }
@@ -508,11 +508,11 @@ final class Ettic_OTC_Render {
      */
     public static function policy_category_labels(): array {
         return [
-            'security'    => __('Security', 'opentrust'),
-            'privacy'     => __('Privacy', 'opentrust'),
-            'compliance'  => __('Compliance', 'opentrust'),
-            'operational' => __('Operational', 'opentrust'),
-            'other'       => __('General', 'opentrust'),
+            'security'    => __('Security', 'open-trust-center-by-ettic'),
+            'privacy'     => __('Privacy', 'open-trust-center-by-ettic'),
+            'compliance'  => __('Compliance', 'open-trust-center-by-ettic'),
+            'operational' => __('Operational', 'open-trust-center-by-ettic'),
+            'other'       => __('General', 'open-trust-center-by-ettic'),
         ];
     }
 
@@ -523,9 +523,9 @@ final class Ettic_OTC_Render {
      */
     public static function cert_status_labels(): array {
         return [
-            'active'      => __('Certified', 'opentrust'),
-            'in_progress' => __('In audit', 'opentrust'),
-            'expired'     => __('Expired', 'opentrust'),
+            'active'      => __('Certified', 'open-trust-center-by-ettic'),
+            'in_progress' => __('In audit', 'open-trust-center-by-ettic'),
+            'expired'     => __('Expired', 'open-trust-center-by-ettic'),
         ];
     }
 
@@ -534,20 +534,20 @@ final class Ettic_OTC_Render {
      */
     public static function cert_aligned_status_labels(): array {
         return [
-            'active'      => __('Compliant', 'opentrust'),
-            'in_progress' => __('Working toward', 'opentrust'),
-            'expired'     => __('Lapsed', 'opentrust'),
+            'active'      => __('Compliant', 'open-trust-center-by-ettic'),
+            'in_progress' => __('Working toward', 'open-trust-center-by-ettic'),
+            'expired'     => __('Lapsed', 'open-trust-center-by-ettic'),
         ];
     }
 
     public static function legal_basis_labels(): array {
         return [
-            'consent'             => __('Consent', 'opentrust'),
-            'contract'            => __('Contractual Necessity', 'opentrust'),
-            'legitimate_interest' => __('Legitimate Interest', 'opentrust'),
-            'legal_obligation'    => __('Legal Obligation', 'opentrust'),
-            'vital_interest'      => __('Vital Interest', 'opentrust'),
-            'public_interest'     => __('Public Interest', 'opentrust'),
+            'consent'             => __('Consent', 'open-trust-center-by-ettic'),
+            'contract'            => __('Contractual Necessity', 'open-trust-center-by-ettic'),
+            'legitimate_interest' => __('Legitimate Interest', 'open-trust-center-by-ettic'),
+            'legal_obligation'    => __('Legal Obligation', 'open-trust-center-by-ettic'),
+            'vital_interest'      => __('Vital Interest', 'open-trust-center-by-ettic'),
+            'public_interest'     => __('Public Interest', 'open-trust-center-by-ettic'),
         ];
     }
 

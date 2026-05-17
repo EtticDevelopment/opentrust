@@ -78,7 +78,7 @@ final class Ettic_OTC_Admin_Review {
         $link = sprintf(
             '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
             esc_url(self::review_url()),
-            esc_html__('review on WordPress.org', 'opentrust')
+            esc_html__('review on WordPress.org', 'open-trust-center-by-ettic')
         );
 
         // The static English string contains no HTML; the only insertion is
@@ -86,7 +86,7 @@ final class Ettic_OTC_Admin_Review {
         // the result — same risk model as core's admin_footer_text usage.
         return sprintf(
             /* translators: %s: link to the WordPress.org reviews page */
-            __('Ettic_OTC is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'opentrust'),
+            __('Ettic_OTC is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'open-trust-center-by-ettic'),
             $link
         );
     }
@@ -112,18 +112,18 @@ final class Ettic_OTC_Admin_Review {
         ?>
         <div class="notice notice-info ettic-otc-review-notice">
             <p>
-                <strong><?php esc_html_e('Your trust center is up and running.', 'opentrust'); ?></strong>
-                <?php esc_html_e('Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'opentrust'); ?>
+                <strong><?php esc_html_e('Your trust center is up and running.', 'open-trust-center-by-ettic'); ?></strong>
+                <?php esc_html_e('Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'open-trust-center-by-ettic'); ?>
             </p>
             <p>
                 <a href="<?php echo esc_url($review_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary">
-                    <?php esc_html_e('Leave a review', 'opentrust'); ?>
+                    <?php esc_html_e('Leave a review', 'open-trust-center-by-ettic'); ?>
                 </a>
                 <a href="<?php echo esc_url($already_url); ?>" class="button">
-                    <?php esc_html_e('Already did, thanks', 'opentrust'); ?>
+                    <?php esc_html_e('Already did, thanks', 'open-trust-center-by-ettic'); ?>
                 </a>
                 <a href="<?php echo esc_url($not_now_url); ?>" class="button-link" style="margin-left:8px">
-                    <?php esc_html_e('Not now', 'opentrust'); ?>
+                    <?php esc_html_e('Not now', 'open-trust-center-by-ettic'); ?>
                 </a>
             </p>
         </div>
@@ -165,7 +165,7 @@ final class Ettic_OTC_Admin_Review {
     public function handle_dismiss(): void {
         if (!current_user_can('manage_options')) {
             wp_die(
-                esc_html__('You do not have permission to dismiss this notice.', 'opentrust'),
+                esc_html__('You do not have permission to dismiss this notice.', 'open-trust-center-by-ettic'),
                 '',
                 ['response' => 403]
             );
@@ -191,7 +191,7 @@ final class Ettic_OTC_Admin_Review {
 
     /**
      * Match the scoping rule used by render_plain_permalinks_notice in
-     * Ettic_OTC_Admin: any screen whose id contains "opentrust" plus the
+     * Ettic_OTC_Admin: any screen whose id contains "open-trust-center-by-ettic" plus the
      * five content CPTs. Identical pattern keeps both notices in lockstep.
      */
     private static function is_ettic_otc_screen(): bool {
@@ -203,7 +203,7 @@ final class Ettic_OTC_Admin_Review {
             return false;
         }
 
-        return str_contains((string) $screen->id, 'opentrust')
+        return str_contains((string) $screen->id, 'open-trust-center-by-ettic')
             || in_array($screen->post_type, Ettic_OTC_CPT::CORPUS, true);
     }
 

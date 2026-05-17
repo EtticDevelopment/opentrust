@@ -19,8 +19,8 @@ $ot_aligned_labels = Ettic_OTC_Render::cert_aligned_status_labels();
     <div class="ot-container">
         <div class="ot-section__header">
             <?php Ettic_OTC_Render::updated_pill('certifications', $ot_data); ?>
-            <h2 class="ot-section__title"><?php esc_html_e('Certifications & Compliance', 'opentrust'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('Our active certifications and compliance frameworks demonstrate our commitment to protecting your data.', 'opentrust'); ?></p>
+            <h2 class="ot-section__title"><?php esc_html_e('Certifications & Compliance', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ot-section__description"><?php esc_html_e('Our active certifications and compliance frameworks demonstrate our commitment to protecting your data.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-cert-grid">
@@ -56,7 +56,7 @@ $ot_aligned_labels = Ettic_OTC_Render::cert_aligned_status_labels();
                 // the same typographic slot audited cards use for the auditor.
                 $ot_subline = $ot_is_audited
                     ? ($ot_cert['issuing_body'] ?: '')
-                    : __('Self-attested framework', 'opentrust');
+                    : __('Self-attested framework', 'open-trust-center-by-ettic');
             ?>
             <div class="ot-cert-tile">
                 <div class="ot-cert-tile__badge">
@@ -95,11 +95,11 @@ $ot_aligned_labels = Ettic_OTC_Render::cert_aligned_status_labels();
                             $ot_date_parts = [];
                             if ($ot_issue_date) {
                                 /* translators: %s: certification issue date */
-                                $ot_date_parts[] = sprintf(esc_html__('Issued %s', 'opentrust'), esc_html($ot_issue_date));
+                                $ot_date_parts[] = sprintf(esc_html__('Issued %s', 'open-trust-center-by-ettic'), esc_html($ot_issue_date));
                             }
                             if ($ot_expiry_date) {
                                 /* translators: %s: certification expiry date */
-                                $ot_date_parts[] = sprintf(esc_html__('Expires %s', 'opentrust'), esc_html($ot_expiry_date));
+                                $ot_date_parts[] = sprintf(esc_html__('Expires %s', 'open-trust-center-by-ettic'), esc_html($ot_expiry_date));
                             }
                             // Parts are esc_html'd above; empty allow-list is the visible late escape.
                             echo wp_kses(implode(' &middot; ', $ot_date_parts), []);
@@ -111,8 +111,8 @@ $ot_aligned_labels = Ettic_OTC_Render::cert_aligned_status_labels();
                         <a class="ot-cert-tile__artifact" href="<?php echo esc_url($ot_artifact_url); ?>" target="_blank" rel="noopener">
                             <svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14"><path d="M5 20h14v-2H5v2zm7-18l-5.5 5.5 1.41 1.41L11 5.83V16h2V5.83l3.09 3.08 1.41-1.41L12 2z" transform="rotate(180 12 12)"/></svg>
                             <?php echo $ot_is_audited
-                                ? esc_html__('Download report', 'opentrust')
-                                : esc_html__('View documentation', 'opentrust'); ?>
+                                ? esc_html__('Download report', 'open-trust-center-by-ettic')
+                                : esc_html__('View documentation', 'open-trust-center-by-ettic'); ?>
                         </a>
                     <?php endif; ?>
                 </div>

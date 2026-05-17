@@ -214,13 +214,13 @@ final class Ettic_OTC_CPT {
      */
     public function filter_enter_title_here(string $text, \WP_Post $post): string {
         if ($post->post_type === self::SUBPROCESSOR) {
-            return __('Pick from the catalog or type your own subprocessor name', 'opentrust');
+            return __('Pick from the catalog or type your own subprocessor name', 'open-trust-center-by-ettic');
         }
         if ($post->post_type === self::DATA_PRACTICE) {
-            return __('Pick from the catalog or type your own, e.g. Analytics or Transactional Email', 'opentrust');
+            return __('Pick from the catalog or type your own, e.g. Analytics or Transactional Email', 'open-trust-center-by-ettic');
         }
         if ($post->post_type === self::CERTIFICATION) {
-            return __('Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001', 'opentrust');
+            return __('Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001', 'open-trust-center-by-ettic');
         }
         return $text;
     }
@@ -233,17 +233,17 @@ final class Ettic_OTC_CPT {
         // ── Policies ──
         register_post_type(self::POLICY, [
             'labels' => [
-                'name'               => __('Policies', 'opentrust'),
-                'singular_name'      => __('Policy', 'opentrust'),
-                'add_new'            => __('Add Policy', 'opentrust'),
-                'add_new_item'       => __('Add New Policy', 'opentrust'),
-                'edit_item'          => __('Edit Policy', 'opentrust'),
-                'new_item'           => __('New Policy', 'opentrust'),
-                'view_item'          => __('View Policy', 'opentrust'),
-                'search_items'       => __('Search Policies', 'opentrust'),
-                'not_found'          => __('No policies found.', 'opentrust'),
-                'not_found_in_trash' => __('No policies in trash.', 'opentrust'),
-                'all_items'          => __('Policies', 'opentrust'),
+                'name'               => __('Policies', 'open-trust-center-by-ettic'),
+                'singular_name'      => __('Policy', 'open-trust-center-by-ettic'),
+                'add_new'            => __('Add Policy', 'open-trust-center-by-ettic'),
+                'add_new_item'       => __('Add New Policy', 'open-trust-center-by-ettic'),
+                'edit_item'          => __('Edit Policy', 'open-trust-center-by-ettic'),
+                'new_item'           => __('New Policy', 'open-trust-center-by-ettic'),
+                'view_item'          => __('View Policy', 'open-trust-center-by-ettic'),
+                'search_items'       => __('Search Policies', 'open-trust-center-by-ettic'),
+                'not_found'          => __('No policies found.', 'open-trust-center-by-ettic'),
+                'not_found_in_trash' => __('No policies in trash.', 'open-trust-center-by-ettic'),
+                'all_items'          => __('Policies', 'open-trust-center-by-ettic'),
             ],
             // public=>true is required so WPML and Polylang detect the post type
             // as translatable content and offer per-language variants in their UIs.
@@ -267,16 +267,16 @@ final class Ettic_OTC_CPT {
         // ── Certifications ──
         register_post_type(self::CERTIFICATION, [
             'labels' => [
-                'name'               => __('Certifications', 'opentrust'),
-                'singular_name'      => __('Certification', 'opentrust'),
-                'add_new'            => __('Add Certification', 'opentrust'),
-                'add_new_item'       => __('Add New Certification', 'opentrust'),
-                'edit_item'          => __('Edit Certification', 'opentrust'),
-                'new_item'           => __('New Certification', 'opentrust'),
-                'search_items'       => __('Search Certifications', 'opentrust'),
-                'not_found'          => __('No certifications found.', 'opentrust'),
-                'not_found_in_trash' => __('No certifications in trash.', 'opentrust'),
-                'all_items'          => __('Certifications', 'opentrust'),
+                'name'               => __('Certifications', 'open-trust-center-by-ettic'),
+                'singular_name'      => __('Certification', 'open-trust-center-by-ettic'),
+                'add_new'            => __('Add Certification', 'open-trust-center-by-ettic'),
+                'add_new_item'       => __('Add New Certification', 'open-trust-center-by-ettic'),
+                'edit_item'          => __('Edit Certification', 'open-trust-center-by-ettic'),
+                'new_item'           => __('New Certification', 'open-trust-center-by-ettic'),
+                'search_items'       => __('Search Certifications', 'open-trust-center-by-ettic'),
+                'not_found'          => __('No certifications found.', 'open-trust-center-by-ettic'),
+                'not_found_in_trash' => __('No certifications in trash.', 'open-trust-center-by-ettic'),
+                'all_items'          => __('Certifications', 'open-trust-center-by-ettic'),
             ],
             // public=>true is required so WPML and Polylang detect the post type
             // as translatable content and offer per-language variants in their UIs.
@@ -300,16 +300,16 @@ final class Ettic_OTC_CPT {
         // ── Subprocessors ──
         register_post_type(self::SUBPROCESSOR, [
             'labels' => [
-                'name'               => __('Subprocessors', 'opentrust'),
-                'singular_name'      => __('Subprocessor', 'opentrust'),
-                'add_new'            => __('Add Subprocessor', 'opentrust'),
-                'add_new_item'       => __('Add New Subprocessor', 'opentrust'),
-                'edit_item'          => __('Edit Subprocessor', 'opentrust'),
-                'new_item'           => __('New Subprocessor', 'opentrust'),
-                'search_items'       => __('Search Subprocessors', 'opentrust'),
-                'not_found'          => __('No subprocessors found.', 'opentrust'),
-                'not_found_in_trash' => __('No subprocessors in trash.', 'opentrust'),
-                'all_items'          => __('Subprocessors', 'opentrust'),
+                'name'               => __('Subprocessors', 'open-trust-center-by-ettic'),
+                'singular_name'      => __('Subprocessor', 'open-trust-center-by-ettic'),
+                'add_new'            => __('Add Subprocessor', 'open-trust-center-by-ettic'),
+                'add_new_item'       => __('Add New Subprocessor', 'open-trust-center-by-ettic'),
+                'edit_item'          => __('Edit Subprocessor', 'open-trust-center-by-ettic'),
+                'new_item'           => __('New Subprocessor', 'open-trust-center-by-ettic'),
+                'search_items'       => __('Search Subprocessors', 'open-trust-center-by-ettic'),
+                'not_found'          => __('No subprocessors found.', 'open-trust-center-by-ettic'),
+                'not_found_in_trash' => __('No subprocessors in trash.', 'open-trust-center-by-ettic'),
+                'all_items'          => __('Subprocessors', 'open-trust-center-by-ettic'),
             ],
             // public=>true is required so WPML and Polylang detect the post type
             // as translatable content and offer per-language variants in their UIs.
@@ -333,16 +333,16 @@ final class Ettic_OTC_CPT {
         // ── Data Practices ──
         register_post_type(self::DATA_PRACTICE, [
             'labels' => [
-                'name'               => __('Data Practices', 'opentrust'),
-                'singular_name'      => __('Data Practice', 'opentrust'),
-                'add_new'            => __('Add Data Practice', 'opentrust'),
-                'add_new_item'       => __('Add New Data Practice', 'opentrust'),
-                'edit_item'          => __('Edit Data Practice', 'opentrust'),
-                'new_item'           => __('New Data Practice', 'opentrust'),
-                'search_items'       => __('Search Data Practices', 'opentrust'),
-                'not_found'          => __('No data practices found.', 'opentrust'),
-                'not_found_in_trash' => __('No data practices in trash.', 'opentrust'),
-                'all_items'          => __('Data Practices', 'opentrust'),
+                'name'               => __('Data Practices', 'open-trust-center-by-ettic'),
+                'singular_name'      => __('Data Practice', 'open-trust-center-by-ettic'),
+                'add_new'            => __('Add Data Practice', 'open-trust-center-by-ettic'),
+                'add_new_item'       => __('Add New Data Practice', 'open-trust-center-by-ettic'),
+                'edit_item'          => __('Edit Data Practice', 'open-trust-center-by-ettic'),
+                'new_item'           => __('New Data Practice', 'open-trust-center-by-ettic'),
+                'search_items'       => __('Search Data Practices', 'open-trust-center-by-ettic'),
+                'not_found'          => __('No data practices found.', 'open-trust-center-by-ettic'),
+                'not_found_in_trash' => __('No data practices in trash.', 'open-trust-center-by-ettic'),
+                'all_items'          => __('Data Practices', 'open-trust-center-by-ettic'),
             ],
             // public=>true is required so WPML and Polylang detect the post type
             // as translatable content and offer per-language variants in their UIs.
@@ -366,17 +366,17 @@ final class Ettic_OTC_CPT {
         // ── FAQs ──
         register_post_type(self::FAQ, [
             'labels' => [
-                'name'               => __('FAQs', 'opentrust'),
-                'singular_name'      => __('FAQ', 'opentrust'),
-                'add_new'            => __('Add FAQ', 'opentrust'),
-                'add_new_item'       => __('Add New FAQ', 'opentrust'),
-                'edit_item'          => __('Edit FAQ', 'opentrust'),
-                'new_item'           => __('New FAQ', 'opentrust'),
-                'view_item'          => __('View FAQ', 'opentrust'),
-                'search_items'       => __('Search FAQs', 'opentrust'),
-                'not_found'          => __('No FAQs found.', 'opentrust'),
-                'not_found_in_trash' => __('No FAQs in trash.', 'opentrust'),
-                'all_items'          => __('FAQs', 'opentrust'),
+                'name'               => __('FAQs', 'open-trust-center-by-ettic'),
+                'singular_name'      => __('FAQ', 'open-trust-center-by-ettic'),
+                'add_new'            => __('Add FAQ', 'open-trust-center-by-ettic'),
+                'add_new_item'       => __('Add New FAQ', 'open-trust-center-by-ettic'),
+                'edit_item'          => __('Edit FAQ', 'open-trust-center-by-ettic'),
+                'new_item'           => __('New FAQ', 'open-trust-center-by-ettic'),
+                'view_item'          => __('View FAQ', 'open-trust-center-by-ettic'),
+                'search_items'       => __('Search FAQs', 'open-trust-center-by-ettic'),
+                'not_found'          => __('No FAQs found.', 'open-trust-center-by-ettic'),
+                'not_found_in_trash' => __('No FAQs in trash.', 'open-trust-center-by-ettic'),
+                'all_items'          => __('FAQs', 'open-trust-center-by-ettic'),
             ],
             'public'              => true,
             'publicly_queryable'  => false,
@@ -398,11 +398,11 @@ final class Ettic_OTC_CPT {
     // ──────────────────────────────────────────────
 
     public function add_meta_boxes(): void {
-        add_meta_box('ettic_otc_cert_details', __('Certification Details', 'opentrust'), [$this, 'render_cert_meta_box'], self::CERTIFICATION, 'normal', 'high');
-        add_meta_box('ettic_otc_policy_details', __('Policy Details', 'opentrust'), [$this, 'render_policy_meta_box'], self::POLICY, 'side', 'high');
-        add_meta_box('ettic_otc_sub_details', __('Subprocessor Details', 'opentrust'), [$this, 'render_sub_meta_box'], self::SUBPROCESSOR, 'normal', 'high');
-        add_meta_box('ettic_otc_dp_details', __('Data Practice Details', 'opentrust'), [$this, 'render_dp_meta_box'], self::DATA_PRACTICE, 'normal', 'high');
-        add_meta_box('ettic_otc_faq_details', __('FAQ Details', 'opentrust'), [$this, 'render_faq_meta_box'], self::FAQ, 'side', 'high');
+        add_meta_box('ettic_otc_cert_details', __('Certification Details', 'open-trust-center-by-ettic'), [$this, 'render_cert_meta_box'], self::CERTIFICATION, 'normal', 'high');
+        add_meta_box('ettic_otc_policy_details', __('Policy Details', 'open-trust-center-by-ettic'), [$this, 'render_policy_meta_box'], self::POLICY, 'side', 'high');
+        add_meta_box('ettic_otc_sub_details', __('Subprocessor Details', 'open-trust-center-by-ettic'), [$this, 'render_sub_meta_box'], self::SUBPROCESSOR, 'normal', 'high');
+        add_meta_box('ettic_otc_dp_details', __('Data Practice Details', 'open-trust-center-by-ettic'), [$this, 'render_dp_meta_box'], self::DATA_PRACTICE, 'normal', 'high');
+        add_meta_box('ettic_otc_faq_details', __('FAQ Details', 'open-trust-center-by-ettic'), [$this, 'render_faq_meta_box'], self::FAQ, 'side', 'high');
     }
 
     // ── Certification meta box ──
@@ -423,76 +423,76 @@ final class Ettic_OTC_CPT {
         $artifact_name = $artifact_id ? get_the_title($artifact_id) : '';
 
         $types = [
-            'certified' => __('Audited certification (issued by a third party)', 'opentrust'),
-            'compliant' => __('Self-attested alignment (no external audit)', 'opentrust'),
+            'certified' => __('Audited certification (issued by a third party)', 'open-trust-center-by-ettic'),
+            'compliant' => __('Self-attested alignment (no external audit)', 'open-trust-center-by-ettic'),
         ];
 
         $statuses = [
-            'active'      => __('Active / currently met', 'opentrust'),
-            'in_progress' => __('In progress', 'opentrust'),
-            'expired'     => __('Expired / lapsed', 'opentrust'),
+            'active'      => __('Active / currently met', 'open-trust-center-by-ettic'),
+            'in_progress' => __('In progress', 'open-trust-center-by-ettic'),
+            'expired'     => __('Expired / lapsed', 'open-trust-center-by-ettic'),
         ];
         ?>
         <div class="ot-meta-field">
-            <label for="ettic_otc_cert_type"><?php esc_html_e('Certification Type', 'opentrust'); ?></label>
+            <label for="ettic_otc_cert_type"><?php esc_html_e('Certification Type', 'open-trust-center-by-ettic'); ?></label>
             <select id="ettic_otc_cert_type" name="ettic_otc_cert_type" data-ot-cert-type>
                 <?php foreach ($types as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($type, $key); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
             </select>
-            <p class="description"><?php esc_html_e('Audited means a third-party issued a formal certificate with dates (SOC 2, ISO 27001, PCI DSS). Self-attested means you adhere to the framework without an external audit — the honest framing for GDPR, CCPA, and most HIPAA posture claims.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Audited means a third-party issued a formal certificate with dates (SOC 2, ISO 27001, PCI DSS). Self-attested means you adhere to the framework without an external audit — the honest framing for GDPR, CCPA, and most HIPAA posture claims.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_cert_status"><?php esc_html_e('Status', 'opentrust'); ?></label>
+            <label for="ettic_otc_cert_status"><?php esc_html_e('Status', 'open-trust-center-by-ettic'); ?></label>
             <select id="ettic_otc_cert_status" name="ettic_otc_cert_status">
                 <?php foreach ($statuses as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($status, $key); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
             </select>
-            <p class="description"><?php esc_html_e('"Active" for audited means you hold a current certificate. "Active" for self-attested means you currently meet the framework. Use "In progress" while working toward either.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('"Active" for audited means you hold a current certificate. "Active" for self-attested means you currently meet the framework. Use "In progress" while working toward either.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="ettic_otc_cert_issuing_body"><?php esc_html_e('Issuing Body', 'opentrust'); ?></label>
-            <input type="text" id="ettic_otc_cert_issuing_body" name="ettic_otc_cert_issuing_body" value="<?php echo esc_attr($issuing_body); ?>" placeholder="<?php esc_attr_e('e.g., AICPA, BSI Group, Schellman', 'opentrust'); ?>">
+            <label for="ettic_otc_cert_issuing_body"><?php esc_html_e('Issuing Body', 'open-trust-center-by-ettic'); ?></label>
+            <input type="text" id="ettic_otc_cert_issuing_body" name="ettic_otc_cert_issuing_body" value="<?php echo esc_attr($issuing_body); ?>" placeholder="<?php esc_attr_e('e.g., AICPA, BSI Group, Schellman', 'open-trust-center-by-ettic'); ?>">
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="ettic_otc_cert_issue_date"><?php esc_html_e('Issue Date', 'opentrust'); ?></label>
+            <label for="ettic_otc_cert_issue_date"><?php esc_html_e('Issue Date', 'open-trust-center-by-ettic'); ?></label>
             <input type="date" id="ettic_otc_cert_issue_date" name="ettic_otc_cert_issue_date" value="<?php echo esc_attr($issue_date); ?>">
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="ettic_otc_cert_expiry_date"><?php esc_html_e('Expiry Date', 'opentrust'); ?></label>
+            <label for="ettic_otc_cert_expiry_date"><?php esc_html_e('Expiry Date', 'open-trust-center-by-ettic'); ?></label>
             <input type="date" id="ettic_otc_cert_expiry_date" name="ettic_otc_cert_expiry_date" value="<?php echo esc_attr($expiry_date); ?>">
         </div>
 
         <div class="ot-meta-field">
-            <label><?php esc_html_e('Framework Logo', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Framework Logo', 'open-trust-center-by-ettic'); ?></label>
             <img class="ot-badge-preview<?php echo esc_attr($badge_url ? '' : ' ot-hidden'); ?>" src="<?php echo esc_url($badge_url); ?>" alt="">
             <input type="hidden" class="ot-badge-input" name="ettic_otc_cert_badge_id" value="<?php echo esc_attr((string) $badge_id); ?>">
-            <button type="button" class="button ot-upload-badge"><?php esc_html_e('Select Logo', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-badge<?php echo esc_attr($badge_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
-            <p class="description"><?php esc_html_e('Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44.', 'opentrust'); ?></p>
+            <button type="button" class="button ot-upload-badge"><?php esc_html_e('Select Logo', 'open-trust-center-by-ettic'); ?></button>
+            <button type="button" class="button ot-remove-badge<?php echo esc_attr($badge_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'open-trust-center-by-ettic'); ?></button>
+            <p class="description"><?php esc_html_e('Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field" data-ot-cert-artifact>
-            <label><?php esc_html_e('Proof Artifact', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Proof Artifact', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-artifact-preview<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>">
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
-                <a class="ot-artifact-preview__link" href="<?php echo esc_url($artifact_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($artifact_name ?: __('View file', 'opentrust')); ?></a>
+                <a class="ot-artifact-preview__link" href="<?php echo esc_url($artifact_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($artifact_name ?: __('View file', 'open-trust-center-by-ettic')); ?></a>
             </div>
             <input type="hidden" class="ot-artifact-input" name="ettic_otc_cert_artifact_id" value="<?php echo esc_attr((string) $artifact_id); ?>">
-            <button type="button" class="button ot-upload-artifact"><?php echo $artifact_id ? esc_html__('Replace File', 'opentrust') : esc_html__('Upload File', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-artifact<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
-            <p class="description"><?php esc_html_e('Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card.', 'opentrust'); ?></p>
+            <button type="button" class="button ot-upload-artifact"><?php echo $artifact_id ? esc_html__('Replace File', 'open-trust-center-by-ettic') : esc_html__('Upload File', 'open-trust-center-by-ettic'); ?></button>
+            <button type="button" class="button ot-remove-artifact<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'open-trust-center-by-ettic'); ?></button>
+            <p class="description"><?php esc_html_e('Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_cert_description"><?php esc_html_e('Scope & Notes', 'opentrust'); ?></label>
-            <textarea id="ettic_otc_cert_description" name="ettic_otc_cert_description" rows="3" placeholder="<?php esc_attr_e('e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days.', 'opentrust'); ?>"><?php echo esc_textarea($description); ?></textarea>
-            <p class="description"><?php esc_html_e('Required for self-attested frameworks so the card has meaningful content. One or two sentences on scope, how you meet the framework, or what prospects should know.', 'opentrust'); ?></p>
+            <label for="ettic_otc_cert_description"><?php esc_html_e('Scope & Notes', 'open-trust-center-by-ettic'); ?></label>
+            <textarea id="ettic_otc_cert_description" name="ettic_otc_cert_description" rows="3" placeholder="<?php esc_attr_e('e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days.', 'open-trust-center-by-ettic'); ?>"><?php echo esc_textarea($description); ?></textarea>
+            <p class="description"><?php esc_html_e('Required for self-attested frameworks so the card has meaningful content. One or two sentences on scope, how you meet the framework, or what prospects should know.', 'open-trust-center-by-ettic'); ?></p>
         </div>
         <?php
     }
@@ -547,10 +547,10 @@ final class Ettic_OTC_CPT {
             <p style="font-size:20px;font-weight:700;margin:0 0 4px;color:#2563eb;">
                 <?php
                 /* translators: %s: policy version number */
-                printf(esc_html__('Version %s', 'opentrust'), esc_html((string) $version)); ?>
+                printf(esc_html__('Version %s', 'open-trust-center-by-ettic'), esc_html((string) $version)); ?>
             </p>
             <p class="description" style="margin:0;color:#6b7280;">
-                <?php esc_html_e('Regular saves update the current version. Use the checkbox below to formally publish a new version.', 'opentrust'); ?>
+                <?php esc_html_e('Regular saves update the current version. Use the checkbox below to formally publish a new version.', 'open-trust-center-by-ettic'); ?>
             </p>
         </div>
 
@@ -559,12 +559,12 @@ final class Ettic_OTC_CPT {
             <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
                 <input type="checkbox" name="ettic_otc_publish_new_version" value="1" id="ettic_otc_publish_new_version" style="margin-top:2px;">
                 <span>
-                    <strong><?php esc_html_e('Publish as new version', 'opentrust'); ?></strong><br>
+                    <strong><?php esc_html_e('Publish as new version', 'open-trust-center-by-ettic'); ?></strong><br>
                     <span class="description" style="font-size:12px;">
                         <?php
                         printf(
                             /* translators: %1$d: current version number, %2$d: next version number */
-                            esc_html__('This will save the current content as v%1$d and create v%2$d. Only check this for formal, published changes — not minor edits.', 'opentrust'),
+                            esc_html__('This will save the current content as v%1$d and create v%2$d. Only check this for formal, published changes — not minor edits.', 'open-trust-center-by-ettic'),
                             intval( $version ),
                             intval( $version + 1 )
                         ); ?>
@@ -573,23 +573,23 @@ final class Ettic_OTC_CPT {
             </label>
             <div id="ot-version-summary-wrap" style="margin-top:10px;display:none;">
                 <label for="ettic_otc_version_summary" style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;">
-                    <?php esc_html_e('What changed?', 'opentrust'); ?>
+                    <?php esc_html_e('What changed?', 'open-trust-center-by-ettic'); ?>
                 </label>
                 <input type="text" id="ettic_otc_version_summary" name="ettic_otc_version_summary" value="" style="width:100%;"
-                    placeholder="<?php esc_attr_e('e.g., Updated data retention from 90 to 60 days', 'opentrust'); ?>">
-                <p class="description" style="margin-top:2px;font-size:11px;"><?php esc_html_e('Shown in the public version history.', 'opentrust'); ?></p>
+                    placeholder="<?php esc_attr_e('e.g., Updated data retention from 90 to 60 days', 'open-trust-center-by-ettic'); ?>">
+                <p class="description" style="margin-top:2px;font-size:11px;"><?php esc_html_e('Shown in the public version history.', 'open-trust-center-by-ettic'); ?></p>
             </div>
         </div>
         <?php endif; ?>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_policy_ref_id"><?php esc_html_e('Policy ID', 'opentrust'); ?></label>
-            <input type="text" id="ettic_otc_policy_ref_id" name="ettic_otc_policy_ref_id" value="<?php echo esc_attr($ref_id); ?>" style="width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace" placeholder="<?php esc_attr_e('e.g., POL-012', 'opentrust'); ?>" maxlength="40">
-            <p class="description"><?php esc_html_e('Optional short reference (e.g., POL-012). Shown on the public listing and in security questionnaires.', 'opentrust'); ?></p>
+            <label for="ettic_otc_policy_ref_id"><?php esc_html_e('Policy ID', 'open-trust-center-by-ettic'); ?></label>
+            <input type="text" id="ettic_otc_policy_ref_id" name="ettic_otc_policy_ref_id" value="<?php echo esc_attr($ref_id); ?>" style="width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace" placeholder="<?php esc_attr_e('e.g., POL-012', 'open-trust-center-by-ettic'); ?>" maxlength="40">
+            <p class="description"><?php esc_html_e('Optional short reference (e.g., POL-012). Shown on the public listing and in security questionnaires.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_policy_category"><?php esc_html_e('Category', 'opentrust'); ?></label>
+            <label for="ettic_otc_policy_category"><?php esc_html_e('Category', 'open-trust-center-by-ettic'); ?></label>
             <select id="ettic_otc_policy_category" name="ettic_otc_policy_category" style="width:100%">
                 <?php foreach ($categories as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($category, $key); ?>><?php echo esc_html($label); ?></option>
@@ -598,17 +598,17 @@ final class Ettic_OTC_CPT {
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_policy_effective_date"><?php esc_html_e('Effective Date', 'opentrust'); ?></label>
+            <label for="ettic_otc_policy_effective_date"><?php esc_html_e('Effective Date', 'open-trust-center-by-ettic'); ?></label>
             <input type="date" id="ettic_otc_policy_effective_date" name="ettic_otc_policy_effective_date" value="<?php echo esc_attr($effective_date); ?>" style="width:100%">
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_policy_review_date"><?php esc_html_e('Next Review Date', 'opentrust'); ?></label>
+            <label for="ettic_otc_policy_review_date"><?php esc_html_e('Next Review Date', 'open-trust-center-by-ettic'); ?></label>
             <input type="date" id="ettic_otc_policy_review_date" name="ettic_otc_policy_review_date" value="<?php echo esc_attr($review_date); ?>" style="width:100%">
         </div>
 
         <div class="ot-meta-field">
-            <label><?php esc_html_e('Framework Citations', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Framework Citations', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-tags" data-ot-tags="ettic_otc_policy_citations">
                 <?php foreach ($citations as $ot_i => $ot_citation):
                     $ot_citation_name = is_array($ot_citation) ? ($ot_citation['name'] ?? '') : (string) $ot_citation;
@@ -616,30 +616,30 @@ final class Ettic_OTC_CPT {
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($ot_citation_name); ?></span>
                     <input type="hidden" name="ettic_otc_policy_citations[<?php echo (int) $ot_i; ?>][name]" value="<?php echo esc_attr($ot_citation_name); ?>">
-                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
+                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'open-trust-center-by-ettic'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
-                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('e.g., SOC 2 CC6.1, ISO 27001 A.9.2…', 'opentrust'); ?>" />
+                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('e.g., SOC 2 CC6.1, ISO 27001 A.9.2…', 'open-trust-center-by-ettic'); ?>" />
             </div>
-            <p class="description"><?php esc_html_e('Framework or control references this policy satisfies. Appears as pill badges on the public page.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Framework or control references this policy satisfies. Appears as pill badges on the public page.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field" data-ot-policy-attachment>
-            <label><?php esc_html_e('PDF Attachment', 'opentrust'); ?></label>
+            <label><?php esc_html_e('PDF Attachment', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-artifact-preview<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>">
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
-                <a class="ot-artifact-preview__link" href="<?php echo esc_url($attachment_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($attachment_name ?: __('View file', 'opentrust')); ?></a>
+                <a class="ot-artifact-preview__link" href="<?php echo esc_url($attachment_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($attachment_name ?: __('View file', 'open-trust-center-by-ettic')); ?></a>
             </div>
             <input type="hidden" class="ot-policy-attachment-input" name="ettic_otc_policy_attachment_id" value="<?php echo esc_attr((string) $attachment_id); ?>">
-            <button type="button" class="button ot-upload-policy-attachment"><?php echo $attachment_id ? esc_html__('Replace PDF', 'opentrust') : esc_html__('Upload PDF', 'opentrust'); ?></button>
-            <button type="button" class="button ot-remove-policy-attachment<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
-            <p class="description"><?php esc_html_e('Upload the signed PDF. Visitors see a "Download PDF" button only when a file is attached.', 'opentrust'); ?></p>
+            <button type="button" class="button ot-upload-policy-attachment"><?php echo $attachment_id ? esc_html__('Replace PDF', 'open-trust-center-by-ettic') : esc_html__('Upload PDF', 'open-trust-center-by-ettic'); ?></button>
+            <button type="button" class="button ot-remove-policy-attachment<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'open-trust-center-by-ettic'); ?></button>
+            <p class="description"><?php esc_html_e('Upload the signed PDF. Visitors see a "Download PDF" button only when a file is attached.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_policy_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
+            <label for="ettic_otc_policy_sort_order"><?php esc_html_e('Sort Order', 'open-trust-center-by-ettic'); ?></label>
             <input type="number" id="ettic_otc_policy_sort_order" name="ettic_otc_policy_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1" style="width:100%">
-            <p class="description"><?php esc_html_e('Lower numbers appear first.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Lower numbers appear first.', 'open-trust-center-by-ettic'); ?></p>
         </div>
         <?php
     }
@@ -656,33 +656,33 @@ final class Ettic_OTC_CPT {
         $dpa_signed     = (bool) get_post_meta($post->ID, '_ettic_otc_sub_dpa_signed', true);
         ?>
         <div class="ot-meta-field">
-            <label for="ettic_otc_sub_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
+            <label for="ettic_otc_sub_purpose"><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></label>
             <textarea id="ettic_otc_sub_purpose" name="ettic_otc_sub_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
-            <p class="description"><?php esc_html_e('What does this subprocessor do for your company?', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('What does this subprocessor do for your company?', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_sub_data_processed"><?php esc_html_e('Data Processed', 'opentrust'); ?></label>
+            <label for="ettic_otc_sub_data_processed"><?php esc_html_e('Data Processed', 'open-trust-center-by-ettic'); ?></label>
             <textarea id="ettic_otc_sub_data_processed" name="ettic_otc_sub_data_processed" rows="2"><?php echo esc_textarea($data_processed); ?></textarea>
-            <p class="description"><?php esc_html_e('What types of data does this subprocessor handle?', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('What types of data does this subprocessor handle?', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_sub_country"><?php esc_html_e('Country / Location', 'opentrust'); ?></label>
-            <input type="text" id="ettic_otc_sub_country" name="ettic_otc_sub_country" value="<?php echo esc_attr($country); ?>" placeholder="<?php esc_attr_e('e.g., United States', 'opentrust'); ?>">
+            <label for="ettic_otc_sub_country"><?php esc_html_e('Country / Location', 'open-trust-center-by-ettic'); ?></label>
+            <input type="text" id="ettic_otc_sub_country" name="ettic_otc_sub_country" value="<?php echo esc_attr($country); ?>" placeholder="<?php esc_attr_e('e.g., United States', 'open-trust-center-by-ettic'); ?>">
         </div>
 
         <div class="ot-meta-field">
-            <label for="ettic_otc_sub_website"><?php esc_html_e('Website', 'opentrust'); ?></label>
+            <label for="ettic_otc_sub_website"><?php esc_html_e('Website', 'open-trust-center-by-ettic'); ?></label>
             <input type="url" id="ettic_otc_sub_website" name="ettic_otc_sub_website" value="<?php echo esc_attr($website); ?>" placeholder="https://">
         </div>
 
         <div class="ot-meta-field">
             <label>
                 <input type="checkbox" name="ettic_otc_sub_dpa_signed" value="1" <?php checked($dpa_signed); ?>>
-                <?php esc_html_e('DPA Signed', 'opentrust'); ?>
+                <?php esc_html_e('DPA Signed', 'open-trust-center-by-ettic'); ?>
             </label>
-            <p class="description"><?php esc_html_e('A Data Processing Agreement (DPA) is a contract between you and the subprocessor covering how they handle personal data on your behalf. Check this box once your organization has signed one with this vendor.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('A Data Processing Agreement (DPA) is a contract between you and the subprocessor covering how they handle personal data on your behalf. Check this box once your organization has signed one with this vendor.', 'open-trust-center-by-ettic'); ?></p>
         </div>
         <?php
     }
@@ -712,90 +712,90 @@ final class Ettic_OTC_CPT {
 
         <!-- Data Items — tag input -->
         <div class="ot-meta-field">
-            <label><?php esc_html_e('Data Items Collected', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Data Items Collected', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-tags" data-ot-tags="ettic_otc_dp_data_items">
                 <?php foreach ($data_items as $i => $item): ?>
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($item['name'] ?? ''); ?></span>
                     <input type="hidden" name="ettic_otc_dp_data_items[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($item['name'] ?? ''); ?>">
-                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
+                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'open-trust-center-by-ettic'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
-                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('Type and press Enter...', 'opentrust'); ?>" />
+                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('Type and press Enter...', 'open-trust-center-by-ettic'); ?>" />
             </div>
         </div>
 
         <!-- Purpose -->
         <div class="ot-meta-field">
-            <label for="ettic_otc_dp_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
+            <label for="ettic_otc_dp_purpose"><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></label>
             <textarea id="ettic_otc_dp_purpose" name="ettic_otc_dp_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
         </div>
 
         <!-- Legal Basis & Retention row -->
         <div class="ot-meta-row">
             <div class="ot-meta-field">
-                <label for="ettic_otc_dp_legal_basis"><?php esc_html_e('Legal Basis', 'opentrust'); ?></label>
+                <label for="ettic_otc_dp_legal_basis"><?php esc_html_e('Legal Basis', 'open-trust-center-by-ettic'); ?></label>
                 <select id="ettic_otc_dp_legal_basis" name="ettic_otc_dp_legal_basis">
-                    <option value=""><?php esc_html_e('— Select —', 'opentrust'); ?></option>
+                    <option value=""><?php esc_html_e('— Select —', 'open-trust-center-by-ettic'); ?></option>
                     <?php foreach ($basis_options as $key => $label): ?>
                         <option value="<?php echo esc_attr($key); ?>" <?php selected($legal_basis, $key); ?>><?php echo esc_html($label); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="ot-meta-field">
-                <label for="ettic_otc_dp_retention_period"><?php esc_html_e('Retention Period', 'opentrust'); ?></label>
-                <input type="text" id="ettic_otc_dp_retention_period" name="ettic_otc_dp_retention_period" value="<?php echo esc_attr($retention_period); ?>" placeholder="<?php esc_attr_e('e.g., 30 days', 'opentrust'); ?>">
+                <label for="ettic_otc_dp_retention_period"><?php esc_html_e('Retention Period', 'open-trust-center-by-ettic'); ?></label>
+                <input type="text" id="ettic_otc_dp_retention_period" name="ettic_otc_dp_retention_period" value="<?php echo esc_attr($retention_period); ?>" placeholder="<?php esc_attr_e('e.g., 30 days', 'open-trust-center-by-ettic'); ?>">
             </div>
         </div>
 
         <!-- Shared With — tag input -->
         <div class="ot-meta-field">
-            <label><?php esc_html_e('Shared With', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Shared With', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-tags" data-ot-tags="ettic_otc_dp_shared_with">
                 <?php foreach ($shared_with as $i => $entry): ?>
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($entry['name'] ?? ''); ?></span>
                     <input type="hidden" name="ettic_otc_dp_shared_with[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($entry['name'] ?? ''); ?>">
-                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
+                    <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'open-trust-center-by-ettic'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
-                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('Type and press Enter...', 'opentrust'); ?>" />
+                <input type="text" class="ot-tags__input" placeholder="<?php esc_attr_e('Type and press Enter...', 'open-trust-center-by-ettic'); ?>" />
             </div>
         </div>
 
         <!-- Properties — binary flags the AI assistant reports verbatim -->
         <div class="ot-meta-field">
-            <label><?php esc_html_e('Properties', 'opentrust'); ?></label>
+            <label><?php esc_html_e('Properties', 'open-trust-center-by-ettic'); ?></label>
             <div class="ot-dp-props">
                 <label class="ot-dp-props__item">
                     <input type="checkbox" name="ettic_otc_dp_collected" value="1" <?php checked($prop_collected); ?>>
-                    <span><?php esc_html_e('Collected', 'opentrust'); ?></span>
+                    <span><?php esc_html_e('Collected', 'open-trust-center-by-ettic'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
                     <input type="checkbox" name="ettic_otc_dp_stored" value="1" <?php checked($prop_stored); ?>>
-                    <span><?php esc_html_e('Stored', 'opentrust'); ?></span>
+                    <span><?php esc_html_e('Stored', 'open-trust-center-by-ettic'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
                     <input type="checkbox" name="ettic_otc_dp_shared" value="1" <?php checked($prop_shared); ?>>
-                    <span><?php esc_html_e('Shared with third parties', 'opentrust'); ?></span>
+                    <span><?php esc_html_e('Shared with third parties', 'open-trust-center-by-ettic'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
                     <input type="checkbox" name="ettic_otc_dp_sold" value="1" <?php checked($prop_sold); ?>>
-                    <span><?php esc_html_e('Sold to third parties', 'opentrust'); ?></span>
+                    <span><?php esc_html_e('Sold to third parties', 'open-trust-center-by-ettic'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
                     <input type="checkbox" name="ettic_otc_dp_encrypted" value="1" <?php checked($prop_encrypted); ?>>
-                    <span><?php esc_html_e('Encrypted', 'opentrust'); ?></span>
+                    <span><?php esc_html_e('Encrypted', 'open-trust-center-by-ettic'); ?></span>
                 </label>
             </div>
-            <p class="description"><?php esc_html_e('Unchecked means an explicit "No". The AI assistant reports these values verbatim to visitors asking questions like "Do you sell customer data?".', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Unchecked means an explicit "No". The AI assistant reports these values verbatim to visitors asking questions like "Do you sell customer data?".', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <!-- Sort order -->
         <div class="ot-meta-field">
-            <label for="ettic_otc_dp_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
+            <label for="ettic_otc_dp_sort_order"><?php esc_html_e('Sort Order', 'open-trust-center-by-ettic'); ?></label>
             <input type="number" id="ettic_otc_dp_sort_order" name="ettic_otc_dp_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1">
-            <p class="description"><?php esc_html_e('Lower numbers appear first.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Lower numbers appear first.', 'open-trust-center-by-ettic'); ?></p>
         </div>
         <?php
     }
@@ -1018,9 +1018,9 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['ettic_otc_issuing_body'] = __('Issuing Body', 'opentrust');
-        $new['ettic_otc_status']       = __('Status', 'opentrust');
-        $new['ettic_otc_expiry']       = __('Expiry Date', 'opentrust');
+        $new['ettic_otc_issuing_body'] = __('Issuing Body', 'open-trust-center-by-ettic');
+        $new['ettic_otc_status']       = __('Status', 'open-trust-center-by-ettic');
+        $new['ettic_otc_expiry']       = __('Expiry Date', 'open-trust-center-by-ettic');
         $new['date']  = $columns['date'];
         return $new;
     }
@@ -1057,10 +1057,10 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['ettic_otc_ref_id']   = __('ID', 'opentrust');
-        $new['ettic_otc_category'] = __('Category', 'opentrust');
-        $new['ettic_otc_version']  = __('Version', 'opentrust');
-        $new['ettic_otc_pdf']      = __('PDF', 'opentrust');
+        $new['ettic_otc_ref_id']   = __('ID', 'open-trust-center-by-ettic');
+        $new['ettic_otc_category'] = __('Category', 'open-trust-center-by-ettic');
+        $new['ettic_otc_version']  = __('Version', 'open-trust-center-by-ettic');
+        $new['ettic_otc_pdf']      = __('PDF', 'open-trust-center-by-ettic');
         $new['date']  = $columns['date'];
         return $new;
     }
@@ -1089,9 +1089,9 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['ettic_otc_purpose'] = __('Purpose', 'opentrust');
-        $new['ettic_otc_country'] = __('Location', 'opentrust');
-        $new['ettic_otc_dpa']     = __('DPA', 'opentrust');
+        $new['ettic_otc_purpose'] = __('Purpose', 'open-trust-center-by-ettic');
+        $new['ettic_otc_country'] = __('Location', 'open-trust-center-by-ettic');
+        $new['ettic_otc_dpa']     = __('DPA', 'open-trust-center-by-ettic');
         $new['date']  = $columns['date'];
         return $new;
     }
@@ -1110,8 +1110,8 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']          = $columns['cb'];
         $new['title']       = $columns['title'];
-        $new['ettic_otc_dp_items'] = __('Data Items', 'opentrust');
-        $new['ettic_otc_dp_sort']  = __('Order', 'opentrust');
+        $new['ettic_otc_dp_items'] = __('Data Items', 'open-trust-center-by-ettic');
+        $new['ettic_otc_dp_sort']  = __('Order', 'open-trust-center-by-ettic');
         $new['date']        = $columns['date'];
         return $new;
     }
@@ -1140,20 +1140,20 @@ final class Ettic_OTC_CPT {
         ]);
         ?>
         <div class="ot-meta-field">
-            <label for="ettic_otc_faq_related_policy"><?php esc_html_e('Related Policy', 'opentrust'); ?></label>
+            <label for="ettic_otc_faq_related_policy"><?php esc_html_e('Related Policy', 'open-trust-center-by-ettic'); ?></label>
             <select id="ettic_otc_faq_related_policy" name="ettic_otc_faq_related_policy" style="width:100%">
-                <option value="0"><?php esc_html_e('— None —', 'opentrust'); ?></option>
+                <option value="0"><?php esc_html_e('— None —', 'open-trust-center-by-ettic'); ?></option>
                 <?php foreach ($policies as $policy): ?>
                     <option value="<?php echo esc_attr((string) $policy->ID); ?>" <?php selected($policy_id, $policy->ID); ?>><?php echo esc_html($policy->post_title); ?></option>
                 <?php endforeach; ?>
             </select>
-            <p class="description"><?php esc_html_e('Optional — link this answer to a published policy for deeper context.', 'opentrust'); ?></p>
+            <p class="description"><?php esc_html_e('Optional — link this answer to a published policy for deeper context.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-meta-field">
             <p class="description">
-                <strong><?php esc_html_e('Sort order:', 'opentrust'); ?></strong>
-                <?php esc_html_e('Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first.', 'opentrust'); ?>
+                <strong><?php esc_html_e('Sort order:', 'open-trust-center-by-ettic'); ?></strong>
+                <?php esc_html_e('Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first.', 'open-trust-center-by-ettic'); ?>
             </p>
         </div>
         <?php
@@ -1180,7 +1180,7 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']           = $columns['cb'];
         $new['title']        = $columns['title'];
-        $new['ettic_otc_faq_order'] = __('Order', 'opentrust');
+        $new['ettic_otc_faq_order'] = __('Order', 'open-trust-center-by-ettic');
         $new['date']         = $columns['date'];
         return $new;
     }

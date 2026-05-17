@@ -84,29 +84,29 @@ final class Ettic_OTC_Admin_Questions {
 
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('AI Questions', 'opentrust'); ?></h1>
+            <h1><?php esc_html_e('AI Questions', 'open-trust-center-by-ettic'); ?></h1>
 
             <p style="color:#50575e;max-width:720px">
-                <?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed and rows auto-purge after 90 days.', 'opentrust'); ?>
+                <?php esc_html_e('Questions visitors have asked your trust center chat. Identifiers are hashed and rows auto-purge after 90 days.', 'open-trust-center-by-ettic'); ?>
             </p>
 
             <div style="<?php echo esc_attr('display:flex;align-items:center;gap:16px;margin:16px 0;padding:12px 16px;background:' . (!empty($settings['ai_logging_enabled']) ? '#dcfce7' : '#fef2f2') . ';border-radius:6px'); ?>">
                 <strong>
                     <?php if (!empty($settings['ai_logging_enabled'])): ?>
-                        ✓ <?php esc_html_e('Logging is ON', 'opentrust'); ?>
+                        ✓ <?php esc_html_e('Logging is ON', 'open-trust-center-by-ettic'); ?>
                     <?php else: ?>
-                        ✗ <?php esc_html_e('Logging is OFF', 'opentrust'); ?>
+                        ✗ <?php esc_html_e('Logging is OFF', 'open-trust-center-by-ettic'); ?>
                     <?php endif; ?>
                 </strong>
                 <span style="color:#50575e">
                     <?php
                     /* translators: %d: number of questions */
-                    printf(esc_html(_n('%d question logged in the last 90 days', '%d questions logged in the last 90 days', (int) $counts, 'opentrust')), (int) $counts);
+                    printf(esc_html(_n('%d question logged in the last 90 days', '%d questions logged in the last 90 days', (int) $counts, 'open-trust-center-by-ettic')), (int) $counts);
                     ?>
                 </span>
                 <a href="<?php echo esc_url($toggle_url); ?>" class="button button-small" style="margin-left:auto"
-                   onclick="return confirm('<?php echo esc_js(__('Toggle visitor question logging?', 'opentrust')); ?>')">
-                    <?php echo !empty($settings['ai_logging_enabled']) ? esc_html__('Disable logging', 'opentrust') : esc_html__('Enable logging', 'opentrust'); ?>
+                   onclick="return confirm('<?php echo esc_js(__('Toggle visitor question logging?', 'open-trust-center-by-ettic')); ?>')">
+                    <?php echo !empty($settings['ai_logging_enabled']) ? esc_html__('Disable logging', 'open-trust-center-by-ettic') : esc_html__('Enable logging', 'open-trust-center-by-ettic'); ?>
                 </a>
             </div>
 
@@ -114,46 +114,46 @@ final class Ettic_OTC_Admin_Questions {
                 <input type="hidden" name="page" value="ettic-otc-questions">
                 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
                     <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Search', 'opentrust'); ?></label>
-                        <input type="text" name="q" value="<?php echo esc_attr($filters['search']); ?>" class="regular-text" placeholder="<?php esc_attr_e('Search questions…', 'opentrust'); ?>">
+                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Search', 'open-trust-center-by-ettic'); ?></label>
+                        <input type="text" name="q" value="<?php echo esc_attr($filters['search']); ?>" class="regular-text" placeholder="<?php esc_attr_e('Search questions…', 'open-trust-center-by-ettic'); ?>">
                     </div>
                     <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Model', 'opentrust'); ?></label>
+                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Model', 'open-trust-center-by-ettic'); ?></label>
                         <select name="model">
-                            <option value=""><?php esc_html_e('Any', 'opentrust'); ?></option>
+                            <option value=""><?php esc_html_e('Any', 'open-trust-center-by-ettic'); ?></option>
                             <?php foreach ($models as $m): ?>
                                 <option value="<?php echo esc_attr($m); ?>" <?php selected($filters['model'], $m); ?>><?php echo esc_html($m); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('From', 'opentrust'); ?></label>
+                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('From', 'open-trust-center-by-ettic'); ?></label>
                         <input type="date" name="date_from" value="<?php echo esc_attr($filters['date_from']); ?>">
                     </div>
                     <div>
-                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('To', 'opentrust'); ?></label>
+                        <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('To', 'open-trust-center-by-ettic'); ?></label>
                         <input type="date" name="date_to" value="<?php echo esc_attr($filters['date_to']); ?>">
                     </div>
-                    <button type="submit" class="button"><?php esc_html_e('Filter', 'opentrust'); ?></button>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=ettic-otc-questions')); ?>" class="button"><?php esc_html_e('Reset', 'opentrust'); ?></a>
-                    <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'opentrust'); ?></a>
+                    <button type="submit" class="button"><?php esc_html_e('Filter', 'open-trust-center-by-ettic'); ?></button>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=ettic-otc-questions')); ?>" class="button"><?php esc_html_e('Reset', 'open-trust-center-by-ettic'); ?></a>
+                    <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'open-trust-center-by-ettic'); ?></a>
                 </div>
             </form>
 
             <table class="wp-list-table widefat fixed striped">
                 <thead>
                     <tr>
-                        <th scope="col" style="width:150px"><?php esc_html_e('Date', 'opentrust'); ?></th>
-                        <th scope="col"><?php esc_html_e('Question', 'opentrust'); ?></th>
-                        <th scope="col" style="width:140px"><?php esc_html_e('Model', 'opentrust'); ?></th>
-                        <th scope="col" style="width:80px"><?php esc_html_e('Cites', 'opentrust'); ?></th>
-                        <th scope="col" style="width:120px"><?php esc_html_e('Tokens', 'opentrust'); ?></th>
-                        <th scope="col" style="width:90px"><?php esc_html_e('Latency', 'opentrust'); ?></th>
+                        <th scope="col" style="width:150px"><?php esc_html_e('Date', 'open-trust-center-by-ettic'); ?></th>
+                        <th scope="col"><?php esc_html_e('Question', 'open-trust-center-by-ettic'); ?></th>
+                        <th scope="col" style="width:140px"><?php esc_html_e('Model', 'open-trust-center-by-ettic'); ?></th>
+                        <th scope="col" style="width:80px"><?php esc_html_e('Cites', 'open-trust-center-by-ettic'); ?></th>
+                        <th scope="col" style="width:120px"><?php esc_html_e('Tokens', 'open-trust-center-by-ettic'); ?></th>
+                        <th scope="col" style="width:90px"><?php esc_html_e('Latency', 'open-trust-center-by-ettic'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($rows)): ?>
-                        <tr><td colspan="6"><?php esc_html_e('No questions logged yet.', 'opentrust'); ?></td></tr>
+                        <tr><td colspan="6"><?php esc_html_e('No questions logged yet.', 'open-trust-center-by-ettic'); ?></td></tr>
                     <?php else: ?>
                         <?php foreach ($rows as $row):
                             $row_bg = $row->refused ? 'background:#fef9c3' : '';
@@ -162,7 +162,7 @@ final class Ettic_OTC_Admin_Questions {
                                 <td><?php echo esc_html(wp_date('M j, Y H:i', strtotime($row->created_at . ' UTC'))); ?></td>
                                 <td>
                                     <?php if ($row->refused): ?>
-                                        <span style="display:inline-block;padding:1px 6px;background:#fde68a;color:#854d0e;border-radius:8px;font-size:10px;font-weight:700;margin-right:6px"><?php esc_html_e('REFUSED', 'opentrust'); ?></span>
+                                        <span style="display:inline-block;padding:1px 6px;background:#fde68a;color:#854d0e;border-radius:8px;font-size:10px;font-weight:700;margin-right:6px"><?php esc_html_e('REFUSED', 'open-trust-center-by-ettic'); ?></span>
                                     <?php endif; ?>
                                     <?php echo esc_html($row->question); ?>
                                 </td>
@@ -206,9 +206,9 @@ final class Ettic_OTC_Admin_Questions {
             <?php endif; ?>
 
             <hr style="margin:32px 0">
-            <h3 style="color:#b91c1c"><?php esc_html_e('Danger zone', 'opentrust'); ?></h3>
-            <p><a href="<?php echo esc_url($clear_url); ?>" class="button button-link-delete" onclick="return confirm('<?php echo esc_js(__('Permanently delete all logged questions? This cannot be undone.', 'opentrust')); ?>')">
-                <?php esc_html_e('Clear entire question log', 'opentrust'); ?>
+            <h3 style="color:#b91c1c"><?php esc_html_e('Danger zone', 'open-trust-center-by-ettic'); ?></h3>
+            <p><a href="<?php echo esc_url($clear_url); ?>" class="button button-link-delete" onclick="return confirm('<?php echo esc_js(__('Permanently delete all logged questions? This cannot be undone.', 'open-trust-center-by-ettic')); ?>')">
+                <?php esc_html_e('Clear entire question log', 'open-trust-center-by-ettic'); ?>
             </a></p>
         </div>
         <?php
@@ -220,7 +220,7 @@ final class Ettic_OTC_Admin_Questions {
 
     public function handle_export(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
         check_admin_referer('ettic_otc_ai_questions_export');
 
@@ -261,7 +261,7 @@ final class Ettic_OTC_Admin_Questions {
 
     public function handle_clear(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
         check_admin_referer('ettic_otc_ai_questions_clear');
 
@@ -269,7 +269,7 @@ final class Ettic_OTC_Admin_Questions {
 
         set_transient(
             'ettic_otc_ai_notice_' . get_current_user_id(),
-            ['type' => 'success', 'message' => __('Question log cleared.', 'opentrust')],
+            ['type' => 'success', 'message' => __('Question log cleared.', 'open-trust-center-by-ettic')],
             MINUTE_IN_SECONDS
         );
         wp_safe_redirect(admin_url('admin.php?page=ettic-otc-questions'));
@@ -278,7 +278,7 @@ final class Ettic_OTC_Admin_Questions {
 
     public function handle_toggle_logging(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
         check_admin_referer('ettic_otc_ai_toggle_logging');
 
@@ -288,7 +288,7 @@ final class Ettic_OTC_Admin_Questions {
 
         set_transient(
             'ettic_otc_ai_notice_' . get_current_user_id(),
-            ['type' => 'success', 'message' => $settings['ai_logging_enabled'] ? __('Logging enabled.', 'opentrust') : __('Logging disabled.', 'opentrust')],
+            ['type' => 'success', 'message' => $settings['ai_logging_enabled'] ? __('Logging enabled.', 'open-trust-center-by-ettic') : __('Logging disabled.', 'open-trust-center-by-ettic')],
             MINUTE_IN_SECONDS
         );
         wp_safe_redirect(admin_url('admin.php?page=ettic-otc-questions'));

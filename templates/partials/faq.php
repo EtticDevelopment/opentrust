@@ -39,8 +39,8 @@ foreach ($ot_faqs as $ot_faq_item) {
 <section id="ot-faqs" class="ot-section ot-section--faqs">
     <div class="ot-container">
         <div class="ot-section__header">
-            <h2 class="ot-section__title"><?php esc_html_e('Frequently Asked Questions', 'opentrust'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('Quick answers to the questions we hear most.', 'opentrust'); ?></p>
+            <h2 class="ot-section__title"><?php esc_html_e('Frequently Asked Questions', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ot-section__description"><?php esc_html_e('Quick answers to the questions we hear most.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <div class="ot-faq-list">
@@ -54,7 +54,7 @@ foreach ($ot_faqs as $ot_faq_item) {
                         <?php echo wp_kses_post($ot_faq_item['answer_html']); ?>
                         <?php if (!empty($ot_faq_item['related_url']) && !empty($ot_faq_item['related_title'])): ?>
                             <p class="ot-faq-item__related">
-                                <?php esc_html_e('Related:', 'opentrust'); ?>
+                                <?php esc_html_e('Related:', 'open-trust-center-by-ettic'); ?>
                                 <a href="<?php echo esc_url($ot_faq_item['related_url']); ?>"><?php echo esc_html($ot_faq_item['related_title']); ?></a>
                             </p>
                         <?php endif; ?>

@@ -16,9 +16,9 @@ $ot_settings = $ot_data['settings'];
 $ot_hsl      = $ot_data['hsl'];
 $ot_view     = $ot_data['view'] ?? 'main';
 
-$ot_page_title   = (string) (($ot_settings['page_title'] ?? '') ?: __('Trust Center', 'opentrust'));
+$ot_page_title   = (string) (($ot_settings['page_title'] ?? '') ?: __('Trust Center', 'open-trust-center-by-ettic'));
 $ot_company_name = (string) ($ot_settings['company_name'] ?? '');
-$ot_tagline      = (string) (($ot_settings['tagline'] ?? '') ?: __('Transparency and security you can trust.', 'opentrust'));
+$ot_tagline      = (string) (($ot_settings['tagline'] ?? '') ?: __('Transparency and security you can trust.', 'open-trust-center-by-ettic'));
 $ot_logo_url     = $ot_data['logo_url'] ?? '';
 $ot_base_url     = $ot_data['base_url'] ?? '/';
 
@@ -98,20 +98,20 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
 </head>
 <body class="ot-body">
 
-    <a class="ot-skip-link" href="#ot-main"><?php esc_html_e('Skip to content', 'opentrust'); ?></a>
+    <a class="ot-skip-link" href="#ot-main"><?php esc_html_e('Skip to content', 'open-trust-center-by-ettic'); ?></a>
 
     <?php
     if ($ot_view === 'main') {
         // ── Navigation (above hero) ──
         $ot_nav_items = [];
-        if (!empty($ot_visible['policies']) && $ot_policy_count)       $ot_nav_items['policies']       = __('Policies', 'opentrust');
-        if (!empty($ot_visible['certifications']) && $ot_cert_count)  $ot_nav_items['certifications'] = __('Certifications', 'opentrust');
-        if (!empty($ot_visible['subprocessors']) && $ot_sub_count)     $ot_nav_items['subprocessors']   = __('Subprocessors', 'opentrust');
-        if (!empty($ot_visible['data_practices']) && count($ot_data['data_practices'] ?? [])) $ot_nav_items['data-practices'] = __('Data Practices', 'opentrust');
-        if (!empty($ot_visible['contact']) && $ot_contact_has_content) $ot_nav_items['contact']        = __('Contact', 'opentrust');
-        if (!empty($ot_visible['faqs']) && $ot_faq_count)              $ot_nav_items['faqs']           = __('FAQ', 'opentrust');
+        if (!empty($ot_visible['policies']) && $ot_policy_count)       $ot_nav_items['policies']       = __('Policies', 'open-trust-center-by-ettic');
+        if (!empty($ot_visible['certifications']) && $ot_cert_count)  $ot_nav_items['certifications'] = __('Certifications', 'open-trust-center-by-ettic');
+        if (!empty($ot_visible['subprocessors']) && $ot_sub_count)     $ot_nav_items['subprocessors']   = __('Subprocessors', 'open-trust-center-by-ettic');
+        if (!empty($ot_visible['data_practices']) && count($ot_data['data_practices'] ?? [])) $ot_nav_items['data-practices'] = __('Data Practices', 'open-trust-center-by-ettic');
+        if (!empty($ot_visible['contact']) && $ot_contact_has_content) $ot_nav_items['contact']        = __('Contact', 'open-trust-center-by-ettic');
+        if (!empty($ot_visible['faqs']) && $ot_faq_count)              $ot_nav_items['faqs']           = __('FAQ', 'open-trust-center-by-ettic');
         ?>
-            <nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'opentrust'); ?>">
+            <nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'open-trust-center-by-ettic'); ?>">
                 <div class="ot-container ot-nav__inner">
                     <a href="<?php echo esc_url($ot_base_url); ?>" class="ot-nav__brand">
                         <?php if ($ot_logo_url): ?>
@@ -141,7 +141,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                                     <path d="M4 17v2"/>
                                     <path d="M5 18H3"/>
                                 </svg>
-                                <span class="ot-nav__ask-label"><?php esc_html_e('Ask AI', 'opentrust'); ?></span>
+                                <span class="ot-nav__ask-label"><?php esc_html_e('Ask AI', 'open-trust-center-by-ettic'); ?></span>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -193,7 +193,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
                             </svg>
                         </div>
-                        <p class="ot-empty__text"><?php esc_html_e('Trust center content is being prepared. Check back soon.', 'opentrust'); ?></p>
+                        <p class="ot-empty__text"><?php esc_html_e('Trust center content is being prepared. Check back soon.', 'open-trust-center-by-ettic'); ?></p>
                     </div>
                 <?php endif; ?>
         </main>
@@ -209,7 +209,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                 <?php
                 printf(
                     /* translators: %s: company name */
-                    esc_html__('© %1$s %2$s. All rights reserved.', 'opentrust'),
+                    esc_html__('© %1$s %2$s. All rights reserved.', 'open-trust-center-by-ettic'),
                     esc_html(wp_date('Y')),
                     esc_html($ot_company_name ?: get_bloginfo('name'))
                 );
@@ -217,7 +217,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                 <?php if (!empty($ot_settings['show_powered_by'])): ?>
                     &nbsp;·&nbsp;
                     <a href="https://plugins.ettic.nl/open-trust-center-by-ettic" target="_blank" rel="noopener">
-                        <?php esc_html_e('Powered by Open Trust Center', 'opentrust'); ?>
+                        <?php esc_html_e('Powered by Open Trust Center', 'open-trust-center-by-ettic'); ?>
                     </a>
                 <?php endif; ?>
             </p>

@@ -42,10 +42,10 @@ $ot_accent_contrast = ((int) $ot_hsl['l'] < 55) ? '#ffffff' : '#111827';
 // Build nav items so we inherit the same header as the main trust center.
 $ot_visible   = $ot_settings['sections_visible'] ?? [];
 $ot_nav_items = [];
-if (!empty($ot_visible['policies']) && !empty($ot_data['policies']))              $ot_nav_items['policies']       = __('Policies', 'opentrust');
-if (!empty($ot_visible['certifications']) && !empty($ot_data['certifications'])) $ot_nav_items['certifications'] = __('Certifications', 'opentrust');
-if (!empty($ot_visible['subprocessors']) && !empty($ot_data['subprocessors']))   $ot_nav_items['subprocessors']  = __('Subprocessors', 'opentrust');
-if (!empty($ot_visible['data_practices']) && !empty($ot_data['data_practices'])) $ot_nav_items['data-practices'] = __('Data Practices', 'opentrust');
+if (!empty($ot_visible['policies']) && !empty($ot_data['policies']))              $ot_nav_items['policies']       = __('Policies', 'open-trust-center-by-ettic');
+if (!empty($ot_visible['certifications']) && !empty($ot_data['certifications'])) $ot_nav_items['certifications'] = __('Certifications', 'open-trust-center-by-ettic');
+if (!empty($ot_visible['subprocessors']) && !empty($ot_data['subprocessors']))   $ot_nav_items['subprocessors']  = __('Subprocessors', 'open-trust-center-by-ettic');
+if (!empty($ot_visible['data_practices']) && !empty($ot_data['data_practices'])) $ot_nav_items['data-practices'] = __('Data Practices', 'open-trust-center-by-ettic');
 $ot_contact_has_content = (bool) (
     trim((string) ($ot_settings['company_description'] ?? ''))
     || trim((string) ($ot_settings['dpo_name']         ?? ''))
@@ -57,8 +57,8 @@ $ot_contact_has_content = (bool) (
     || trim((string) ($ot_settings['company_registration'] ?? ''))
     || trim((string) ($ot_settings['vat_number']       ?? ''))
 );
-if (!empty($ot_visible['contact']) && $ot_contact_has_content)                   $ot_nav_items['contact']        = __('Contact', 'opentrust');
-if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                     $ot_nav_items['faqs']           = __('FAQ', 'opentrust');
+if (!empty($ot_visible['contact']) && $ot_contact_has_content)                   $ot_nav_items['contact']        = __('Contact', 'open-trust-center-by-ettic');
+if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                     $ot_nav_items['faqs']           = __('FAQ', 'open-trust-center-by-ettic');
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -67,7 +67,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo esc_html(sprintf(
         /* translators: %s: company name */
-        __('Ask %s — Trust Center', 'opentrust'),
+        __('Ask %s — Trust Center', 'open-trust-center-by-ettic'),
         $ot_company_name ?: get_bloginfo('name')
     )); ?></title>
     <meta name="robots" content="noindex, nofollow">
@@ -97,9 +97,9 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
 </head>
 <body class="ot-body ot-chat-body">
 
-    <a class="ot-skip-link" href="#ot-chat-main"><?php esc_html_e('Skip to content', 'opentrust'); ?></a>
+    <a class="ot-skip-link" href="#ot-chat-main"><?php esc_html_e('Skip to content', 'open-trust-center-by-ettic'); ?></a>
 
-    <nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'opentrust'); ?>">
+    <nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'open-trust-center-by-ettic'); ?>">
         <div class="ot-container ot-nav__inner">
             <a href="<?php echo esc_url($ot_base_url); ?>" class="ot-nav__brand">
                 <?php if ($ot_logo_url): ?>
@@ -128,7 +128,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                         <path d="M4 17v2"/>
                         <path d="M5 18H3"/>
                     </svg>
-                    <span class="ot-nav__ask-label"><?php esc_html_e('Ask AI', 'opentrust'); ?></span>
+                    <span class="ot-nav__ask-label"><?php esc_html_e('Ask AI', 'open-trust-center-by-ettic'); ?></span>
                 </span>
             </div>
         </div>
@@ -142,10 +142,10 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                     <div class="ot-chat-state__icon" aria-hidden="true">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     </div>
-                    <h1><?php esc_html_e('Ask AI is not configured', 'opentrust'); ?></h1>
-                    <p><?php esc_html_e('The site administrator has not enabled the AI chat feature yet.', 'opentrust'); ?></p>
+                    <h1><?php esc_html_e('Ask AI is not configured', 'open-trust-center-by-ettic'); ?></h1>
+                    <p><?php esc_html_e('The site administrator has not enabled the AI chat feature yet.', 'open-trust-center-by-ettic'); ?></p>
                     <p><a href="<?php echo esc_url($ot_base_url); ?>" class="ot-button ot-button--primary">
-                        <?php esc_html_e('Browse trust center', 'opentrust'); ?>
+                        <?php esc_html_e('Browse trust center', 'open-trust-center-by-ettic'); ?>
                     </a></p>
                 </section>
 
@@ -173,9 +173,9 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                                 </div>
                                 <div class="ot-chat-msg__content">
                                     <header class="ot-chat-msg__header">
-                                        <strong class="ot-chat-msg__name"><?php esc_html_e('You', 'opentrust'); ?></strong>
+                                        <strong class="ot-chat-msg__name"><?php esc_html_e('You', 'open-trust-center-by-ettic'); ?></strong>
                                         <span class="ot-chat-msg__separator">·</span>
-                                        <time class="ot-chat-msg__time"><?php esc_html_e('just now', 'opentrust'); ?></time>
+                                        <time class="ot-chat-msg__time"><?php esc_html_e('just now', 'open-trust-center-by-ettic'); ?></time>
                                     </header>
                                     <div class="ot-chat-msg__body"><?php echo esc_html((string) ($ot_ns_response['question'] ?? '')); ?></div>
                                 </div>
@@ -192,14 +192,14 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                                     <header class="ot-chat-msg__header">
                                         <strong class="ot-chat-msg__name"><?php echo esc_html($ot_assistant_name); ?></strong>
                                         <span class="ot-chat-msg__separator">·</span>
-                                        <time class="ot-chat-msg__time"><?php esc_html_e('just now', 'opentrust'); ?></time>
+                                        <time class="ot-chat-msg__time"><?php esc_html_e('just now', 'open-trust-center-by-ettic'); ?></time>
                                     </header>
                                     <div class="ot-chat-msg__body">
                                         <?php echo nl2br(esc_html((string) ($ot_ns_response['answer'] ?? ''))); ?>
                                     </div>
                                     <?php if (!empty($ot_ns_response['citations'])): ?>
                                         <div class="ot-chat-msg__sources">
-                                            <h4><?php esc_html_e('Sources', 'opentrust'); ?></h4>
+                                            <h4><?php esc_html_e('Sources', 'open-trust-center-by-ettic'); ?></h4>
                                             <ol>
                                                 <?php foreach ($ot_ns_response['citations'] as $ot_cite): ?>
                                                     <li><a href="<?php echo esc_url((string) ($ot_cite['url'] ?? '')); ?>"><?php echo esc_html((string) ($ot_cite['title'] ?? $ot_cite['url'] ?? '')); ?></a></li>
@@ -209,7 +209,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                                     <?php endif; ?>
                                     <?php if (empty($ot_ns_response['refused'])): ?>
                                         <p class="ot-chat-msg__disclaimer">
-                                            <?php esc_html_e('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'opentrust'); ?>
+                                            <?php esc_html_e('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'open-trust-center-by-ettic'); ?>
                                         </p>
                                     <?php endif; ?>
                                 </div>
@@ -219,17 +219,17 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                 <?php endif; ?>
                 <noscript>
                     <div class="ot-chat-noscript">
-                        <p><?php esc_html_e('JavaScript is disabled — you can still ask one question below. The answer will load as a regular page.', 'opentrust'); ?></p>
+                        <p><?php esc_html_e('JavaScript is disabled — you can still ask one question below. The answer will load as a regular page.', 'open-trust-center-by-ettic'); ?></p>
                         <form method="post" action="" class="ot-chat-noscript__form">
                             <input type="hidden" name="_wpnonce" value="<?php echo esc_attr($ot_ns_nonce); ?>">
-                            <label for="ot-chat-noscript-input"><?php esc_html_e('Your question', 'opentrust'); ?></label>
+                            <label for="ot-chat-noscript-input"><?php esc_html_e('Your question', 'open-trust-center-by-ettic'); ?></label>
                             <textarea
                                 id="ot-chat-noscript-input"
                                 name="question"
                                 maxlength="<?php echo (int) $ot_max_len; ?>"
                                 rows="3"
                                 required><?php echo esc_textarea($ot_prefill_q); ?></textarea>
-                            <button type="submit"><?php esc_html_e('Ask', 'opentrust'); ?></button>
+                            <button type="submit"><?php esc_html_e('Ask', 'open-trust-center-by-ettic'); ?></button>
                         </form>
                     </div>
                 </noscript>
@@ -240,10 +240,10 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
 
     <?php if ($ot_state === 'ready'):
         $ot_suggested = [
-            ['label' => __('Are you SOC 2 compliant?', 'opentrust'),           'icon' => 'shield'],
-            ['label' => __('Where is customer data stored?', 'opentrust'),      'icon' => 'database'],
-            ['label' => __('What\'s your incident response process?', 'opentrust'), 'icon' => 'alert'],
-            ['label' => __('Which subprocessors do you use?', 'opentrust'),     'icon' => 'share'],
+            ['label' => __('Are you SOC 2 compliant?', 'open-trust-center-by-ettic'),           'icon' => 'shield'],
+            ['label' => __('Where is customer data stored?', 'open-trust-center-by-ettic'),      'icon' => 'database'],
+            ['label' => __('What\'s your incident response process?', 'open-trust-center-by-ettic'), 'icon' => 'alert'],
+            ['label' => __('Which subprocessors do you use?', 'open-trust-center-by-ettic'),     'icon' => 'share'],
         ];
         $ot_icons = [
             'shield'   => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
@@ -268,7 +268,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         <div class="ot-chat-dock" data-ot-chat-dock>
             <div class="ot-container ot-chat-dock__inner">
 
-                <div class="ot-chat-chips" data-ot-chat-chips aria-label="<?php esc_attr_e('Suggested questions', 'opentrust'); ?>">
+                <div class="ot-chat-chips" data-ot-chat-chips aria-label="<?php esc_attr_e('Suggested questions', 'open-trust-center-by-ettic'); ?>">
                     <?php foreach ($ot_suggested as $ot_q): ?>
                         <button type="button" class="ot-chat-chip" data-ot-chat-chip="<?php echo esc_attr($ot_q['label']); ?>">
                             <span class="ot-chat-chip__icon" aria-hidden="true"><?php
@@ -283,19 +283,19 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                     <form class="ot-chat-form" data-ot-chat-form autocomplete="off">
                         <div class="ot-chat-inputbar__field">
                             <label for="ot-chat-input" class="ot-visually-hidden">
-                                <?php esc_html_e('Ask a question', 'opentrust'); ?>
+                                <?php esc_html_e('Ask a question', 'open-trust-center-by-ettic'); ?>
                             </label>
                             <textarea
                                 id="ot-chat-input"
                                 data-ot-chat-input
                                 rows="1"
                                 maxlength="<?php echo (int) $ot_max_len; ?>"
-                                placeholder="<?php esc_attr_e('Ask anything about our security and compliance…', 'opentrust'); ?>"
+                                placeholder="<?php esc_attr_e('Ask anything about our security and compliance…', 'open-trust-center-by-ettic'); ?>"
                             ><?php echo esc_textarea($ot_prefill_q); ?></textarea>
-                            <button type="button" class="ot-chat-reset" data-ot-chat-reset aria-label="<?php esc_attr_e('Start a new conversation', 'opentrust'); ?>" title="<?php esc_attr_e('Start a new conversation', 'opentrust'); ?>" disabled>
+                            <button type="button" class="ot-chat-reset" data-ot-chat-reset aria-label="<?php esc_attr_e('Start a new conversation', 'open-trust-center-by-ettic'); ?>" title="<?php esc_attr_e('Start a new conversation', 'open-trust-center-by-ettic'); ?>" disabled>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>
                             </button>
-                            <button type="submit" class="ot-chat-send" data-ot-chat-send aria-label="<?php esc_attr_e('Send', 'opentrust'); ?>">
+                            <button type="submit" class="ot-chat-send" data-ot-chat-send aria-label="<?php esc_attr_e('Send', 'open-trust-center-by-ettic'); ?>">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                             </button>
                         </div>
@@ -306,8 +306,8 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                     <?php
                     printf(
                         /* translators: 1: link to trust center, 2: company name */
-                        esc_html__('Grounded in the published %1$s for %2$s. AI-generated, not legal, security, or compliance advice. Always check the sources.', 'opentrust'),
-                        '<a href="' . esc_url($ot_base_url) . '">' . esc_html__('trust center', 'opentrust') . '</a>',
+                        esc_html__('Grounded in the published %1$s for %2$s. AI-generated, not legal, security, or compliance advice. Always check the sources.', 'open-trust-center-by-ettic'),
+                        '<a href="' . esc_url($ot_base_url) . '">' . esc_html__('trust center', 'open-trust-center-by-ettic') . '</a>',
                         esc_html($ot_company_name)
                     );
                     ?>
@@ -332,28 +332,28 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
             'turnstile_key'  => $ot_ts_key,
             'turnstile_required' => $ot_ts_key !== '',
             'strings'        => [
-                'placeholder'       => __('Ask anything about our security and compliance…', 'opentrust'),
-                'send'              => __('Send', 'opentrust'),
-                'stop'              => __('Stop', 'opentrust'),
-                'thinking'          => __('Thinking…', 'opentrust'),
-                'retry'             => __('Connection lost. Retry?', 'opentrust'),
-                'refused_contact'   => __('Contact security team →', 'opentrust'),
-                'copy'              => __('Copy', 'opentrust'),
-                'copied'            => __('Copied', 'opentrust'),
-                'print'             => __('Print', 'opentrust'),
-                'start_new'         => __('Start a new conversation', 'opentrust'),
-                'long_hint'         => __('This conversation is getting long. Start fresh for better answers.', 'opentrust'),
-                'sources_label'     => __('Sources', 'opentrust'),
-                'refused_headline'  => __("I don't see enough information in our trust center to answer that confidently.", 'opentrust'),
-                'provider_error'    => __('The AI provider returned an error. Please try again.', 'opentrust'),
-                'unavailable'       => __('AI is temporarily unavailable. Please try again in a few minutes or browse our published content.', 'opentrust'),
-                'message_too_long'  => __('Message is too long.', 'opentrust'),
-                'rate_limited'      => __('Please wait a moment before asking again.', 'opentrust'),
-                'cite'              => __('Cite source', 'opentrust'),
-                'user_name'         => __('You', 'opentrust'),
-                'just_now'          => __('just now', 'opentrust'),
-                'empty_response'    => __('No content returned by the model.', 'opentrust'),
-                'disclaimer'        => __('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'opentrust'),
+                'placeholder'       => __('Ask anything about our security and compliance…', 'open-trust-center-by-ettic'),
+                'send'              => __('Send', 'open-trust-center-by-ettic'),
+                'stop'              => __('Stop', 'open-trust-center-by-ettic'),
+                'thinking'          => __('Thinking…', 'open-trust-center-by-ettic'),
+                'retry'             => __('Connection lost. Retry?', 'open-trust-center-by-ettic'),
+                'refused_contact'   => __('Contact security team →', 'open-trust-center-by-ettic'),
+                'copy'              => __('Copy', 'open-trust-center-by-ettic'),
+                'copied'            => __('Copied', 'open-trust-center-by-ettic'),
+                'print'             => __('Print', 'open-trust-center-by-ettic'),
+                'start_new'         => __('Start a new conversation', 'open-trust-center-by-ettic'),
+                'long_hint'         => __('This conversation is getting long. Start fresh for better answers.', 'open-trust-center-by-ettic'),
+                'sources_label'     => __('Sources', 'open-trust-center-by-ettic'),
+                'refused_headline'  => __("I don't see enough information in our trust center to answer that confidently.", 'open-trust-center-by-ettic'),
+                'provider_error'    => __('The AI provider returned an error. Please try again.', 'open-trust-center-by-ettic'),
+                'unavailable'       => __('AI is temporarily unavailable. Please try again in a few minutes or browse our published content.', 'open-trust-center-by-ettic'),
+                'message_too_long'  => __('Message is too long.', 'open-trust-center-by-ettic'),
+                'rate_limited'      => __('Please wait a moment before asking again.', 'open-trust-center-by-ettic'),
+                'cite'              => __('Cite source', 'open-trust-center-by-ettic'),
+                'user_name'         => __('You', 'open-trust-center-by-ettic'),
+                'just_now'          => __('just now', 'open-trust-center-by-ettic'),
+                'empty_response'    => __('No content returned by the model.', 'open-trust-center-by-ettic'),
+                'disclaimer'        => __('AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.', 'open-trust-center-by-ettic'),
             ],
         ];
         wp_print_inline_script_tag(

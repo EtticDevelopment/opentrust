@@ -63,7 +63,7 @@ class Ettic_OTC_Chat_Provider_OpenAI extends Ettic_OTC_Chat_Provider {
     }
 
     public function label(): string {
-        return __('OpenAI', 'opentrust');
+        return __('OpenAI', 'open-trust-center-by-ettic');
     }
 
     public function allowed_hosts(): array {
@@ -163,7 +163,7 @@ class Ettic_OTC_Chat_Provider_OpenAI extends Ettic_OTC_Chat_Provider {
         $tools     = is_array($args['tools']     ?? null) ? $args['tools']    : [];
 
         if ($api_key === '' || $model === '' || empty($messages)) {
-            $on_chunk(['type' => 'error', 'data' => ['message' => __('OpenAI adapter missing required args.', 'opentrust')]]);
+            $on_chunk(['type' => 'error', 'data' => ['message' => __('OpenAI adapter missing required args.', 'open-trust-center-by-ettic')]]);
             return null;
         }
 
@@ -250,7 +250,7 @@ class Ettic_OTC_Chat_Provider_OpenAI extends Ettic_OTC_Chat_Provider {
         if (empty($response['ok'])) {
             $on_chunk([
                 'type' => 'error',
-                'data' => ['message' => $response['error'] ?? __('OpenAI request failed.', 'opentrust')],
+                'data' => ['message' => $response['error'] ?? __('OpenAI request failed.', 'open-trust-center-by-ettic')],
             ]);
             return null;
         }

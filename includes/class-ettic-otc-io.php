@@ -190,12 +190,12 @@ final class Ettic_OTC_IO {
     // Returns the path to a temp ZIP. Caller deletes it when done.
     public static function write_zip(array $manifest, string $filename_prefix): string {
         if (!class_exists('ZipArchive')) {
-            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required for export.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required for export.', 'open-trust-center-by-ettic'));
         }
 
         $tmp = wp_tempnam($filename_prefix . '.zip');
         if (!$tmp) {
-            throw new \RuntimeException(esc_html__('Could not create temp file for export.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not create temp file for export.', 'open-trust-center-by-ettic'));
         }
 
         // Source paths are local-only — pull them out before the manifest is encoded.
@@ -209,7 +209,7 @@ final class Ettic_OTC_IO {
 
         $zip = new \ZipArchive();
         if ($zip->open($tmp, \ZipArchive::OVERWRITE | \ZipArchive::CREATE) !== true) {
-            throw new \RuntimeException(esc_html__('Could not open ZIP for writing.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not open ZIP for writing.', 'open-trust-center-by-ettic'));
         }
 
         $zip->addFromString('manifest.json', wp_json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -237,13 +237,13 @@ final class Ettic_OTC_IO {
 
         $format = (string) ($manifest['format'] ?? '');
         if (!in_array($format, [self::FORMAT_SETTINGS, self::FORMAT_CONTENT], true)) {
-            $errors[] = __('Unrecognised export format.', 'opentrust');
+            $errors[] = __('Unrecognised export format.', 'open-trust-center-by-ettic');
         }
 
         if ((int) ($manifest['schema'] ?? 0) !== self::SCHEMA_VERSION) {
             $errors[] = sprintf(
                 /* translators: %1$d: schema version found, %2$d: schema version expected */
-                __('Schema version mismatch (found %1$d, expected %2$d).', 'opentrust'),
+                __('Schema version mismatch (found %1$d, expected %2$d).', 'open-trust-center-by-ettic'),
                 (int) ($manifest['schema'] ?? 0),
                 self::SCHEMA_VERSION
             );
@@ -254,7 +254,7 @@ final class Ettic_OTC_IO {
         if ($their_major !== $our_major) {
             $errors[] = sprintf(
                 /* translators: %1$s: their version, %2$s: our version */
-                __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'opentrust'),
+                __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'open-trust-center-by-ettic'),
                 (string) ($manifest['ettic_otc_version'] ?? '?'),
                 ETTIC_OTC_VERSION
             );
@@ -393,20 +393,20 @@ final class Ettic_OTC_IO {
 
     public static function read_zip(string $zip_path): array {
         if (!class_exists('ZipArchive')) {
-            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required.', 'open-trust-center-by-ettic'));
         }
         $zip = new \ZipArchive();
         if ($zip->open($zip_path) !== true) {
-            throw new \RuntimeException(esc_html__('Could not open uploaded archive.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not open uploaded archive.', 'open-trust-center-by-ettic'));
         }
         $raw = $zip->getFromName('manifest.json');
         $zip->close();
         if ($raw === false) {
-            throw new \RuntimeException(esc_html__('Archive is missing manifest.json.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Archive is missing manifest.json.', 'open-trust-center-by-ettic'));
         }
         $manifest = json_decode($raw, true);
         if (!is_array($manifest)) {
-            throw new \RuntimeException(esc_html__('manifest.json could not be parsed.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('manifest.json could not be parsed.', 'open-trust-center-by-ettic'));
         }
         return ['manifest' => $manifest, 'zip_path' => $zip_path];
     }
@@ -689,7 +689,7 @@ final class Ettic_OTC_IO {
         $map = [];
         $zip = new \ZipArchive();
         if ($zip->open($zip_path) !== true) {
-            $errors[] = __('Could not reopen archive for media import.', 'opentrust');
+            $errors[] = __('Could not reopen archive for media import.', 'open-trust-center-by-ettic');
             return [];
         }
 
@@ -704,7 +704,7 @@ final class Ettic_OTC_IO {
             if ($contents === false) {
                 $errors[] = sprintf(
                     /* translators: %s: media path */
-                    __('Bundled media missing during import: %s', 'opentrust'),
+                    __('Bundled media missing during import: %s', 'open-trust-center-by-ettic'),
                     (string) $entry['path']
                 );
                 continue;
@@ -724,7 +724,7 @@ final class Ettic_OTC_IO {
             if (file_put_contents($dest_path, $contents) === false) {
                 $errors[] = sprintf(
                     /* translators: %s: filename */
-                    __('Could not write attachment file: %s', 'opentrust'),
+                    __('Could not write attachment file: %s', 'open-trust-center-by-ettic'),
                     $filename
                 );
                 continue;
@@ -742,7 +742,7 @@ final class Ettic_OTC_IO {
                 continue;
             }
             if (!$att_id) {
-                $errors[] = __('Could not create attachment.', 'opentrust');
+                $errors[] = __('Could not create attachment.', 'open-trust-center-by-ettic');
                 wp_delete_file($dest_path);
                 continue;
             }

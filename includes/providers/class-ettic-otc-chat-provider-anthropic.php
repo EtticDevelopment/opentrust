@@ -41,7 +41,7 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
     }
 
     public function label(): string {
-        return __('Anthropic', 'opentrust');
+        return __('Anthropic', 'open-trust-center-by-ettic');
     }
 
     public function allowed_hosts(): array {
@@ -60,7 +60,7 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
     }
 
     protected function no_models_message(): string {
-        return __('No models available — your account may not be authorized.', 'opentrust');
+        return __('No models available — your account may not be authorized.', 'open-trust-center-by-ettic');
     }
 
     public function curate_models(mixed $raw): array {
@@ -124,7 +124,7 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
         $tools     = is_array($args['tools']     ?? null) ? $args['tools']    : [];
 
         if ($api_key === '' || $model === '' || empty($messages)) {
-            $on_chunk(['type' => 'error', 'data' => ['message' => __('Anthropic adapter missing required args.', 'opentrust')]]);
+            $on_chunk(['type' => 'error', 'data' => ['message' => __('Anthropic adapter missing required args.', 'open-trust-center-by-ettic')]]);
             return null;
         }
 
@@ -216,7 +216,7 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
         if (empty($response['ok'])) {
             $on_chunk([
                 'type' => 'error',
-                'data' => ['message' => $response['error'] ?? __('Anthropic request failed.', 'opentrust')],
+                'data' => ['message' => $response['error'] ?? __('Anthropic request failed.', 'open-trust-center-by-ettic')],
             ]);
             return null;
         }
@@ -411,8 +411,8 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
                         $state['tool_intent_emitted'] = true;
                         $tool_name = (string) ($block['name'] ?? '');
                         $intent_label = $tool_name === 'search_documents'
-                            ? __('Searching documents…', 'opentrust')
-                            : __('Reading documents…', 'opentrust');
+                            ? __('Searching documents…', 'open-trust-center-by-ettic')
+                            : __('Reading documents…', 'open-trust-center-by-ettic');
                         ($state['on_chunk'])([
                             'type' => 'tool_intent',
                             'data' => [

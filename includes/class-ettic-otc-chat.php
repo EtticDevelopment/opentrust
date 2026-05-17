@@ -109,7 +109,7 @@ final class Ettic_OTC_Chat {
         if ($nonce === null || !wp_verify_nonce($nonce, 'wp_rest')) {
             return new WP_Error(
                 'rest_forbidden',
-                __('Invalid nonce — refresh the page and try again.', 'opentrust'),
+                __('Invalid nonce — refresh the page and try again.', 'open-trust-center-by-ettic'),
                 ['status' => 403]
             );
         }
@@ -137,7 +137,7 @@ final class Ettic_OTC_Chat {
                 if (!$ok) {
                     return new WP_Error(
                         'ai_turnstile_required',
-                        __('Please complete the anti-abuse challenge and try again.', 'opentrust'),
+                        __('Please complete the anti-abuse challenge and try again.', 'open-trust-center-by-ettic'),
                         ['status' => 403]
                     );
                 }
@@ -149,7 +149,7 @@ final class Ettic_OTC_Chat {
         if (empty($ip_check['ok'])) {
             return new WP_Error(
                 'ai_rate_limited_ip',
-                __('You are sending messages too fast. Please wait a moment and try again.', 'opentrust'),
+                __('You are sending messages too fast. Please wait a moment and try again.', 'open-trust-center-by-ettic'),
                 ['status' => 429, 'retry_after' => $ip_check['retry_after'] ?? 30]
             );
         }
@@ -160,7 +160,7 @@ final class Ettic_OTC_Chat {
             if (empty($sess_check['ok'])) {
                 return new WP_Error(
                     'ai_rate_limited_session',
-                    __('You have reached the per-session message limit. Please wait a bit and try again.', 'opentrust'),
+                    __('You have reached the per-session message limit. Please wait a bit and try again.', 'open-trust-center-by-ettic'),
                     ['status' => 429, 'retry_after' => $sess_check['retry_after'] ?? 60]
                 );
             }
@@ -180,7 +180,7 @@ final class Ettic_OTC_Chat {
         if (empty($settings['ai_enabled']) || empty($settings['ai_provider']) || empty($settings['ai_model'])) {
             return new WP_Error(
                 'ai_not_configured',
-                __('AI chat is not configured on this site.', 'opentrust'),
+                __('AI chat is not configured on this site.', 'open-trust-center-by-ettic'),
                 ['status' => 503]
             );
         }
@@ -189,7 +189,7 @@ final class Ettic_OTC_Chat {
         if (!$adapter) {
             return new WP_Error(
                 'ai_bad_provider',
-                __('Configured provider is unknown.', 'opentrust'),
+                __('Configured provider is unknown.', 'open-trust-center-by-ettic'),
                 ['status' => 500]
             );
         }
@@ -198,7 +198,7 @@ final class Ettic_OTC_Chat {
         if ($api_key === null) {
             return new WP_Error(
                 'ai_no_key',
-                __('No API key stored for the configured provider.', 'opentrust'),
+                __('No API key stored for the configured provider.', 'open-trust-center-by-ettic'),
                 ['status' => 503]
             );
         }
@@ -211,7 +211,7 @@ final class Ettic_OTC_Chat {
         if (empty($messages)) {
             return new WP_Error(
                 'ai_empty_messages',
-                __('Your message is empty.', 'opentrust'),
+                __('Your message is empty.', 'open-trust-center-by-ettic'),
                 ['status' => 400]
             );
         }
@@ -229,7 +229,7 @@ final class Ettic_OTC_Chat {
         if (!Ettic_OTC_Chat_Budget::check_and_reserve($estimated)) {
             return new WP_Error(
                 'budget_exhausted',
-                __('The daily chat budget for this site has been reached. Please try again later.', 'opentrust'),
+                __('The daily chat budget for this site has been reached. Please try again later.', 'open-trust-center-by-ettic'),
                 [
                     'status'   => 503,
                     'reset_at' => gmdate('c', Ettic_OTC_Chat_Budget::daily_reset_at()),
@@ -391,7 +391,7 @@ final class Ettic_OTC_Chat {
         $exception = $this->run_chat($adapter, $args, $on_chunk);
         if ($exception !== null) {
             self::send_sse('error', [
-                'message' => __('Chat provider failed unexpectedly.', 'opentrust'),
+                'message' => __('Chat provider failed unexpectedly.', 'open-trust-center-by-ettic'),
                 'detail'  => $exception->getMessage(),
             ]);
         }
@@ -719,7 +719,7 @@ final class Ettic_OTC_Chat {
         if (isset($seen_calls[$signature])) {
             return [self::error_search_result(sprintf(
                 /* translators: %s is the tool name (get_document or search_documents). */
-                __('You already called %s with the same arguments earlier in this conversation. Pick a different document id from the index, or rephrase the search query with different keywords.', 'opentrust'),
+                __('You already called %s with the same arguments earlier in this conversation. Pick a different document id from the index, or rephrase the search query with different keywords.', 'open-trust-center-by-ettic'),
                 $name
             ))];
         }
@@ -729,7 +729,7 @@ final class Ettic_OTC_Chat {
             case 'get_document':
                 $id = trim((string) ($args['id'] ?? ''));
                 if ($id === '') {
-                    return [self::error_search_result(__('Document id is required.', 'opentrust'))];
+                    return [self::error_search_result(__('Document id is required.', 'open-trust-center-by-ettic'))];
                 }
                 foreach ($documents as $doc) {
                     if ((string) ($doc['id'] ?? '') === $id) {
@@ -738,7 +738,7 @@ final class Ettic_OTC_Chat {
                 }
                 return [self::error_search_result(sprintf(
                     /* translators: %s is the requested document id. */
-                    __('No document with id "%s". Pick one of the ids listed in the corpus index above.', 'opentrust'),
+                    __('No document with id "%s". Pick one of the ids listed in the corpus index above.', 'open-trust-center-by-ettic'),
                     $id
                 ))];
 
@@ -746,16 +746,16 @@ final class Ettic_OTC_Chat {
                 $query = trim((string) ($args['query'] ?? ''));
                 $limit = max(1, min(10, (int) ($args['limit'] ?? 5)));
                 if ($query === '') {
-                    return [self::error_search_result(__('Search query is empty.', 'opentrust'))];
+                    return [self::error_search_result(__('Search query is empty.', 'open-trust-center-by-ettic'))];
                 }
                 if ($bm25 === null) {
-                    return [self::error_search_result(__('Search index unavailable.', 'opentrust'))];
+                    return [self::error_search_result(__('Search index unavailable.', 'open-trust-center-by-ettic'))];
                 }
                 $hits = Ettic_OTC_Chat_Search::search($bm25, $query, $limit);
                 if (empty($hits)) {
                     return [self::error_search_result(sprintf(
                         /* translators: %s is the search query. */
-                        __('No documents matched "%s". Try broader keywords or pick a document id from the corpus index above.', 'opentrust'),
+                        __('No documents matched "%s". Try broader keywords or pick a document id from the corpus index above.', 'open-trust-center-by-ettic'),
                         $query
                     ))];
                 }
@@ -767,12 +767,12 @@ final class Ettic_OTC_Chat {
                 }
                 return $results !== []
                     ? $results
-                    : [self::error_search_result(__('Search ranking returned no usable results.', 'opentrust'))];
+                    : [self::error_search_result(__('Search ranking returned no usable results.', 'open-trust-center-by-ettic'))];
         }
 
         return [self::error_search_result(sprintf(
             /* translators: %s is the unknown tool name. */
-            __('Unknown tool: %s', 'opentrust'),
+            __('Unknown tool: %s', 'open-trust-center-by-ettic'),
             $name
         ))];
     }

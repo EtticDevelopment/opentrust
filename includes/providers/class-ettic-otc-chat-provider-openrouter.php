@@ -35,7 +35,7 @@ final class Ettic_OTC_Chat_Provider_OpenRouter extends Ettic_OTC_Chat_Provider_O
     }
 
     public function label(): string {
-        return __('OpenRouter', 'opentrust');
+        return __('OpenRouter', 'open-trust-center-by-ettic');
     }
 
     public function allowed_hosts(): array {

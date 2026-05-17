@@ -53,8 +53,8 @@ final class Ettic_OTC_Admin {
         $settings_page = [Ettic_OTC_Admin_Settings::instance(), 'render_settings_page'];
 
         add_menu_page(
-            __('Open Trust Center', 'opentrust'),
-            __('Open Trust Center', 'opentrust'),
+            __('Open Trust Center', 'open-trust-center-by-ettic'),
+            __('Open Trust Center', 'open-trust-center-by-ettic'),
             'manage_options',
             'ettic-otc',
             $settings_page,
@@ -64,8 +64,8 @@ final class Ettic_OTC_Admin {
 
         add_submenu_page(
             'ettic-otc',
-            __('Settings', 'opentrust'),
-            __('Settings', 'opentrust'),
+            __('Settings', 'open-trust-center-by-ettic'),
+            __('Settings', 'open-trust-center-by-ettic'),
             'manage_options',
             'ettic-otc',
             $settings_page
@@ -76,8 +76,8 @@ final class Ettic_OTC_Admin {
         if (!empty($settings['ai_enabled'])) {
             add_submenu_page(
                 'ettic-otc',
-                __('Questions', 'opentrust'),
-                __('Questions', 'opentrust'),
+                __('Questions', 'open-trust-center-by-ettic'),
+                __('Questions', 'open-trust-center-by-ettic'),
                 'manage_options',
                 'ettic-otc-questions',
                 [Ettic_OTC_Admin_Questions::instance(), 'render_page']
@@ -155,12 +155,12 @@ final class Ettic_OTC_Admin {
             'ettic-otc-admin',
             'window.OpenTrustAdmin = ' . wp_json_encode([
                 'i18n' => [
-                    'selectBadgeImage' => __('Select Badge Image', 'opentrust'),
-                    'useAsBadge'       => __('Use as Badge', 'opentrust'),
-                    'selectArtifact'   => __('Select Proof Artifact', 'opentrust'),
-                    'useAsArtifact'    => __('Use This File', 'opentrust'),
-                    'uploadArtifact'   => __('Upload File', 'opentrust'),
-                    'replaceArtifact'  => __('Replace File', 'opentrust'),
+                    'selectBadgeImage' => __('Select Badge Image', 'open-trust-center-by-ettic'),
+                    'useAsBadge'       => __('Use as Badge', 'open-trust-center-by-ettic'),
+                    'selectArtifact'   => __('Select Proof Artifact', 'open-trust-center-by-ettic'),
+                    'useAsArtifact'    => __('Use This File', 'open-trust-center-by-ettic'),
+                    'uploadArtifact'   => __('Upload File', 'open-trust-center-by-ettic'),
+                    'replaceArtifact'  => __('Replace File', 'open-trust-center-by-ettic'),
                 ],
             ]) . ';',
             'before'
@@ -175,11 +175,11 @@ final class Ettic_OTC_Admin {
                 'postType' => $screen->post_type,
                 'catalog'  => Ettic_OTC_Catalog::for_js($screen->post_type),
                 'i18n'     => [
-                    'noMatchHint' => __('No match in catalog, just keep typing to add manually.', 'opentrust'),
-                    'helpFact'    => __('Auto-filled from catalog, you may want to verify this.', 'opentrust'),
-                    'helpReview'  => __('Auto-filled template, please verify this matches how you use this service.', 'opentrust'),
-                    'optionHint'  => __('click to autofill', 'opentrust'),
-                    'suggestions' => __('Catalog suggestions', 'opentrust'),
+                    'noMatchHint' => __('No match in catalog, just keep typing to add manually.', 'open-trust-center-by-ettic'),
+                    'helpFact'    => __('Auto-filled from catalog, you may want to verify this.', 'open-trust-center-by-ettic'),
+                    'helpReview'  => __('Auto-filled template, please verify this matches how you use this service.', 'open-trust-center-by-ettic'),
+                    'optionHint'  => __('click to autofill', 'open-trust-center-by-ettic'),
+                    'suggestions' => __('Catalog suggestions', 'open-trust-center-by-ettic'),
                 ],
             ];
             wp_add_inline_script(
@@ -225,25 +225,25 @@ final class Ettic_OTC_Admin {
         ?>
         <div class="notice notice-error">
             <p>
-                <strong><?php esc_html_e('Ettic_OTC requires pretty permalinks.', 'opentrust'); ?></strong>
+                <strong><?php esc_html_e('Ettic_OTC requires pretty permalinks.', 'open-trust-center-by-ettic'); ?></strong>
                 <?php
                 printf(
                     /* translators: %s: link to Settings → Permalinks */
-                    esc_html__('Your site is using "Plain" permalinks. Please go to %s and choose any other option (Post name is the WordPress default).', 'opentrust'),
-                    '<a href="' . esc_url($permalinks_url) . '">' . esc_html__('Settings → Permalinks', 'opentrust') . '</a>'
+                    esc_html__('Your site is using "Plain" permalinks. Please go to %s and choose any other option (Post name is the WordPress default).', 'open-trust-center-by-ettic'),
+                    '<a href="' . esc_url($permalinks_url) . '">' . esc_html__('Settings → Permalinks', 'open-trust-center-by-ettic') . '</a>'
                 );
                 ?>
             </p>
             <p style="font-size:12px;color:#50575e">
-                <?php esc_html_e('Without pretty permalinks, every link Ettic_OTC generates returns 404 — including the trust center page itself. Visitors will not be able to reach your policies, certifications, or chat.', 'opentrust'); ?>
+                <?php esc_html_e('Without pretty permalinks, every link Ettic_OTC generates returns 404 — including the trust center page itself. Visitors will not be able to reach your policies, certifications, or chat.', 'open-trust-center-by-ettic'); ?>
             </p>
             <details style="margin-top:8px">
                 <summary style="cursor:pointer;font-size:12px;color:#50575e">
-                    <?php esc_html_e('Read-only fallback if you cannot change permalinks', 'opentrust'); ?>
+                    <?php esc_html_e('Read-only fallback if you cannot change permalinks', 'open-trust-center-by-ettic'); ?>
                 </summary>
                 <div style="margin-top:8px;padding:10px 14px;background:#f6f7f7;border-left:3px solid #dcdcde;font-size:12px;color:#50575e">
                     <p style="margin:0 0 6px">
-                        <?php esc_html_e('You can preview the trust center via raw query-string URLs:', 'opentrust'); ?>
+                        <?php esc_html_e('You can preview the trust center via raw query-string URLs:', 'open-trust-center-by-ettic'); ?>
                     </p>
                     <ul style="margin:0 0 0 18px;list-style:disc">
                         <li><code><?php echo esc_html($home_url); ?>?ettic_otc=main</code></li>
@@ -251,8 +251,8 @@ final class Ettic_OTC_Admin {
                         <li><code><?php echo esc_html($home_url); ?>?ettic_otc=ask</code></li>
                     </ul>
                     <p style="margin:6px 0 0">
-                        <strong><?php esc_html_e('This is for testing only.', 'opentrust'); ?></strong>
-                        <?php esc_html_e('Switching to pretty permalinks is the only supported configuration.', 'opentrust'); ?>
+                        <strong><?php esc_html_e('This is for testing only.', 'open-trust-center-by-ettic'); ?></strong>
+                        <?php esc_html_e('Switching to pretty permalinks is the only supported configuration.', 'open-trust-center-by-ettic'); ?>
                     </p>
                 </div>
             </details>

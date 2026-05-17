@@ -1,0 +1,2955 @@
+# Copyright (C) 2026 Ettic. Licensed under GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Open Trust Center by Ettic 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/open-trust-center-"
+"by-ettic\n"
+"POT-Creation-Date: 2026-05-17T12:29:04+00:00\n"
+"PO-Revision-Date: 2026-04-14 21:55+0000\n"
+"Last-Translator: Ettic bundled starter <noreply@ettic.nl>\n"
+"Language-Team: Dutch (Netherlands)\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: open-trust-center-by-ettic\n"
+
+#. Plugin Name of the plugin
+#: open-trust-center-by-ettic.php
+msgid "Open Trust Center by Ettic"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: open-trust-center-by-ettic.php
+msgid "https://plugins.ettic.nl/open-trust-center-by-ettic"
+msgstr ""
+
+#. Description of the plugin
+#: open-trust-center-by-ettic.php
+#, fuzzy
+msgid ""
+"A self-hosted, open-source trust center for publishing security policies, "
+"subprocessors, certifications, and data practices."
+msgstr ""
+"Een zelf-gehost, open-source vertrouwenscentrum voor het publiceren van "
+"beveiligingsbeleid, subverwerkers, certificeringen en gegevenspraktijken."
+
+#. Author of the plugin
+#: open-trust-center-by-ettic.php
+msgid "Ettic"
+msgstr ""
+
+#. Author URI of the plugin
+#: open-trust-center-by-ettic.php
+msgid "https://plugins.ettic.nl"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:78
+msgid "Heads up: citation fidelity is not guaranteed on your active provider."
+msgstr ""
+
+#. translators: %s: provider label, e.g. OpenAI
+#: includes/class-ettic-otc-admin-ai.php:83
+#, php-format
+msgid ""
+"You are currently using <strong>%s</strong>. Only Anthropic uses a "
+"structural Citations API — every other provider relies on prompted citation "
+"tags the model can ignore or fabricate. For a published trust center, switch "
+"to Anthropic below."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:94
+msgid ""
+"Ettic_OTC uses <strong>Anthropic Claude with the native Citations API</"
+"strong> to answer visitor questions about your trust center. Every claim the "
+"assistant makes is tied to an exact quote from one of your published "
+"documents — so no policy text is invented and nothing is paraphrased into "
+"something you did not actually publish."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:101
+msgid "Why Anthropic, and not OpenAI or any other provider?"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:106
+msgid ""
+"A trust center is a <strong>compliance surface</strong>. If the assistant "
+"invents a security commitment you never made, that is not a UX papercut — it "
+"is a misrepresentation of your security posture, and your customers and "
+"auditors will hold you to it."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:114
+msgid ""
+"Anthropic is the <strong>only major provider</strong> that exposes a "
+"structural Citations API. Documents are sent as typed blocks and the model "
+"emits citations as first-class events containing the exact source document "
+"and the exact quoted text. The model literally cannot return a citation for "
+"text that is not in your source documents."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:120
+msgid ""
+"Every other provider (including OpenAI and any model accessed via "
+"OpenRouter) relies on prompted citation tags that we parse out of the answer "
+"after the fact. That works most of the time, but the model can ignore the "
+"instructions, make up document IDs, or attach a citation to a sentence it "
+"actually hallucinated. We support these providers as an escape hatch for "
+"organizations that genuinely cannot use Anthropic for procurement or data-"
+"residency reasons — but we very, very strongly recommend you do not run a "
+"public trust center on them."
+msgstr ""
+
+#. translators: %d is the number of policies missing AI summaries.
+#: includes/class-ettic-otc-admin-ai.php:159
+#, php-format
+msgid "%d policy is missing an AI summary."
+msgid_plural "%d policies are missing AI summaries."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-ettic-otc-admin-ai.php:170
+msgid "Generate them now so the assistant can route questions accurately."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:175
+msgid "Generate now"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:199
+msgid "Choose a provider and add your key"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:211
+msgid "Step 1 — Connect Anthropic"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:217
+msgid "Advanced: use a different provider (not recommended)"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:220
+msgid "These providers cannot guarantee citation fidelity."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:222
+msgid ""
+"OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we "
+"parse out of the answer after generation. The model can ignore the "
+"instruction, invent document IDs, or attach a citation to a sentence it "
+"actually hallucinated. We cannot detect when this happens."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:225
+msgid "Do not use these providers for a published trust center"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:226
+msgid ""
+"unless your organization genuinely cannot use Anthropic for procurement, "
+"contractual, or data-residency reasons. Inaccurate claims about your "
+"security posture are a real compliance risk."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:265
+msgid "Required for citation fidelity"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:271
+msgid ""
+"Uses Claude with the native Citations API. Every quote the assistant "
+"attributes to one of your documents is structurally guaranteed to come from "
+"that document."
+msgstr ""
+
+#. translators: %s: provider name (e.g. Anthropic)
+#: includes/class-ettic-otc-admin-ai.php:279
+#, php-format
+msgid "Get a %s API key"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:292
+msgid "Remove the saved key for this provider?"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:293
+msgid "Replace key"
+msgstr ""
+
+#. translators: %s: provider name (e.g. Anthropic)
+#: includes/class-ettic-otc-admin-ai.php:303
+#, php-format
+msgid "Paste your %s API key…"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:307
+msgid "Validate & save"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:346
+msgid "Step 2 — Pick a model and tune defaults"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:359
+msgid "Active model"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:363
+msgid "No cached models found. Use Refresh to re-fetch the model list."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:372
+msgid "(unavailable)"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:376
+msgid "Recommended"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:387
+msgid "Model unavailable"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:392
+msgid "Refresh models"
+msgstr ""
+
+#. translators: %s: human-readable time difference (e.g. "5 minutes")
+#: includes/class-ettic-otc-admin-ai.php:402
+#, php-format
+msgid "Model list cached %s ago."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:410
+msgid "Daily token budget"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:413
+msgid ""
+"Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 "
+"rates)."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:417
+msgid "Monthly token budget"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:420
+msgid "Hard cap per site per month. Default 10,000,000 tokens."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:424
+msgid "Rate limit — per IP"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:426
+msgid "messages per minute"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:430
+msgid "Rate limit — per session"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:432
+msgid "messages per hour"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:436
+msgid "Max message length"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:438
+msgid "characters"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:443
+msgid "Refuse-to-answer contact URL"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:446
+msgid ""
+"When the AI cannot confidently answer a question, it links here. Leave blank "
+"to use the trust center home."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:451
+msgid "Visitor display"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:455
+msgid "Show the active model name under the chat input"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:461
+msgid "Analytics logging"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:465
+msgid ""
+"Log anonymized visitor questions for admin review (90-day auto-purge, no PII)"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:471
+msgid "Improve answer quality"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:475
+msgid "Generate AI summaries of each policy"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:478
+msgid ""
+"When on, the AI generates a 2–3 sentence summary of each published policy "
+"and stores it for routing decisions. Improves answers on questions like "
+"\"What's your data deletion policy?\" that don't match a title literally. "
+"Cost is roughly $0.05–$0.10 per 50 policies, lifetime — pennies per edit "
+"afterward. Uses your configured AI key."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:487
+msgid "Oversized policies"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:491
+msgid ""
+"The following policies are large enough that the AI will receive only a "
+"truncated version when retrieving them. Consider splitting them into shorter "
+"documents:"
+msgstr ""
+
+#. translators: 1: policy title, 2: token count.
+#: includes/class-ettic-otc-admin-ai.php:498
+#, php-format
+msgid "%1$s (~%2$s tokens)"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:512
+msgid "Advanced — Turnstile anti-abuse"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:514
+msgid ""
+"Cloudflare Turnstile is optional but recommended for public sites. It "
+"challenges suspicious visitors on the first message of each session. You "
+"need a free Cloudflare account to get site/secret keys."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:518
+msgid "Enable Turnstile for chat"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:522
+msgid "Require Turnstile verification on first chat message"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:527
+msgid "Turnstile Site Key"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:530
+msgid "Public site key from your Cloudflare Turnstile widget."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:534
+msgid "Turnstile Secret Key"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:537
+msgid "Enter secret key…"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:539
+msgid "Key saved"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:541
+msgid ""
+"Secret key from Cloudflare Turnstile. Stored server-side — never exposed to "
+"the frontend."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:546
+msgid "Save AI settings"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:657
+#: includes/class-ettic-otc-admin-ai.php:714
+#: includes/class-ettic-otc-admin-ai.php:751
+#: includes/class-ettic-otc-admin-ai.php:796
+#: includes/class-ettic-otc-admin-questions.php:223
+#: includes/class-ettic-otc-admin-questions.php:264
+#: includes/class-ettic-otc-admin-questions.php:281
+#: includes/class-ettic-otc-admin-tools.php:565
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:666
+#: includes/class-ettic-otc-admin-ai.php:722
+#: includes/class-ettic-otc-admin-ai.php:758
+msgid "Unknown provider."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:670
+msgid "API key cannot be empty."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:677
+msgid "Validation failed."
+msgstr ""
+
+#. translators: 1: provider label, 2: provider error message
+#: includes/class-ettic-otc-admin-ai.php:679
+#, php-format
+msgid "%1$s rejected the key: %2$s"
+msgstr ""
+
+#. translators: 1: provider label, 2: number of models
+#: includes/class-ettic-otc-admin-ai.php:707
+#, php-format
+msgid "%1$s key validated. Found %2$d model(s)."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:745
+msgid "Key removed."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:764
+msgid "No key on file for this provider."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-ai.php:770
+msgid "Refresh failed."
+msgstr ""
+
+#. translators: %s: error message from the provider
+#: includes/class-ettic-otc-admin-ai.php:772
+#, php-format
+msgid "Refresh failed: %s"
+msgstr ""
+
+#. translators: %d: number of models
+#: includes/class-ettic-otc-admin-ai.php:782
+#, php-format
+msgid "Model list refreshed. Found %d model(s)."
+msgstr ""
+
+#. translators: %d is the number of policies enqueued for summary generation.
+#: includes/class-ettic-otc-admin-ai.php:812
+#, php-format
+msgid ""
+"Queued %d policy for AI summary generation. Summaries will appear over the "
+"next minute."
+msgid_plural ""
+"Queued %d policies for AI summary generation. Summaries will appear over the "
+"next few minutes."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-ettic-otc-admin-ai.php:820
+msgid "All policies already have up-to-date AI summaries."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:87
+msgid "AI Questions"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:90
+msgid ""
+"Questions visitors have asked your trust center chat. Identifiers are hashed "
+"and rows auto-purge after 90 days."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:96
+msgid "Logging is ON"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:98
+msgid "Logging is OFF"
+msgstr ""
+
+#. translators: %d: number of questions
+#: includes/class-ettic-otc-admin-questions.php:104
+#, php-format
+msgid "%d question logged in the last 90 days"
+msgid_plural "%d questions logged in the last 90 days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-ettic-otc-admin-questions.php:108
+msgid "Toggle visitor question logging?"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:109
+msgid "Disable logging"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:109
+msgid "Enable logging"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:117
+#, fuzzy
+msgid "Search"
+msgstr "Zoeken"
+
+#: includes/class-ettic-otc-admin-questions.php:118
+msgid "Search questions…"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:121
+#: includes/class-ettic-otc-admin-questions.php:148
+msgid "Model"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:123
+msgid "Any"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:130
+msgid "From"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:134
+msgid "To"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:137
+msgid "Filter"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:138
+msgid "Reset"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:139
+msgid "Download CSV"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:146
+#: includes/class-ettic-otc-version.php:161
+msgid "Date"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:147
+msgid "Question"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:149
+msgid "Cites"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:150
+msgid "Tokens"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:151
+msgid "Latency"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:156
+msgid "No questions logged yet."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:165
+msgid "REFUSED"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:209
+msgid "Danger zone"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:210
+msgid "Permanently delete all logged questions? This cannot be undone."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:211
+msgid "Clear entire question log"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:272
+msgid "Question log cleared."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:291
+msgid "Logging enabled."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-questions.php:291
+msgid "Logging disabled."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:81
+msgid "review on WordPress.org"
+msgstr ""
+
+#. translators: %s: link to the WordPress.org reviews page
+#: includes/class-ettic-otc-admin-review.php:89
+#, php-format
+msgid ""
+"Ettic_OTC is built and maintained in the open. If it is helping your team, a "
+"%s keeps the project moving."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:115
+msgid "Your trust center is up and running."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:116
+msgid ""
+"Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org "
+"are how the project gets seen. If it has earned a kind word, we would be "
+"grateful."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:120
+msgid "Leave a review"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:123
+msgid "Already did, thanks"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:126
+msgid "Not now"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-review.php:168
+msgid "You do not have permission to dismiss this notice."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:55
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:60
+msgid "Endpoint Slug"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:61
+msgid ""
+"The URL path for your trust center (e.g., \"trust-center\" = yoursite.com/"
+"trust-center/)."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:64
+msgid "Page Title"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:66
+msgid "Company Name"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:68
+msgid "Tagline"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:69
+msgid ""
+"A short description displayed below the company name in the hero section."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:75
+msgid "Branding"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:80
+msgid "Logo"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:81
+msgid "AI Avatar"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:83
+msgid "Accent Color"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:84
+msgid ""
+"Used for buttons, links, and highlights. Choose a color that matches your "
+"brand."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:87
+msgid "Credit Link"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:92
+msgid "Visible Sections"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:93
+msgid "Choose which sections to display on the trust center."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:97
+msgid "Sections"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:103
+#: templates/partials/contact.php:111
+msgid "Get in touch"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:104
+msgid ""
+"Publish a dark-accent \"Get in touch\" block on the trust center. Every "
+"field is optional — the block only appears if at least one is filled in."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:108
+msgid "Company Description"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:109
+msgid ""
+"Two or three sentences describing what the company does. Rendered under the "
+"\"Get in touch\" section title."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:112
+msgid "DPO Name"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:113
+msgid ""
+"Data Protection Officer name. Required under GDPR for many organisations."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:116
+msgid "DPO Email"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:117
+msgid "Dedicated DPO mailbox. Rendered as a mailto link."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:120
+msgid "Security Contact Email"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:121
+msgid ""
+"For vulnerability reports and security questions. Often separate from the "
+"DPO."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:124
+msgid "Contact Form URL"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:125
+msgid "Optional link to a gated contact form."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:128
+#: templates/partials/contact.php:84
+msgid "Mailing Address"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:129
+msgid "Postal address for formal GDPR / legal notices."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:132
+msgid "PGP Public Key URL"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:133
+msgid "Optional link to your security team's PGP public key."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:136
+msgid "Company Registration Number"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:137
+msgid ""
+"KvK (NL), Companies House (UK), Handelsregister (DE), EIN (US), or "
+"equivalent business registration."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:140
+#: templates/partials/contact.php:100
+msgid "VAT / Tax ID"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:141
+msgid "VAT number, sales-tax ID, or equivalent international tax identifier."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:222
+msgid "Low contrast on white backgrounds"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:223
+msgid "Using your exact color on white backgrounds"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:226
+msgid ""
+"Your chosen color is too light for buttons, links, and borders on white "
+"sections. On those surfaces Ettic_OTC will use a darker, on-brand variant:"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:229
+msgid ""
+"You've chosen to keep your exact color on white backgrounds. Buttons, links, "
+"and borders in those sections may be hard to read."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:241
+msgid "The hero and navigation still use your exact color."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:252
+msgid "Use my exact color anyway — skip the contrast adjustment."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:265
+#: includes/class-ettic-otc-cpt.php:475
+msgid "Select Logo"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:266
+msgid ""
+"Used in the hero and sticky nav. A white version is recommended — it sits on "
+"a dark background."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:273
+msgid "Select Avatar"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:274
+msgid ""
+"Square image used as the avatar on AI chat responses. Use a colored "
+"background with a light or dark favicon or logo on top."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:289
+#: includes/class-ettic-otc-cpt.php:476 includes/class-ettic-otc-cpt.php:488
+#: includes/class-ettic-otc-cpt.php:619 includes/class-ettic-otc-cpt.php:635
+#: includes/class-ettic-otc-cpt.php:721 includes/class-ettic-otc-cpt.php:759
+msgid "Remove"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:301
+msgid ""
+"Show a \"Powered by Open Trust Center\" credit in the trust center footer."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:305
+msgid "Off by default. Public credits are opt-in."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:314
+#: templates/partials/certifications.php:22
+#, fuzzy
+msgid "Certifications & Compliance"
+msgstr "Certificeringen & compliance"
+
+#: includes/class-ettic-otc-admin-settings.php:315
+#: includes/class-ettic-otc-admin-tools.php:592
+#: includes/class-ettic-otc-cpt.php:236 includes/class-ettic-otc-cpt.php:246
+#: templates/chat.php:45 templates/partials/hero.php:55
+#: templates/trust-center.php:107
+#, fuzzy
+msgid "Policies"
+msgstr "Beleid"
+
+#: includes/class-ettic-otc-admin-settings.php:316
+#: includes/class-ettic-otc-admin-tools.php:594
+#: includes/class-ettic-otc-cpt.php:303 includes/class-ettic-otc-cpt.php:312
+#: templates/chat.php:47 templates/partials/hero.php:61
+#: templates/partials/subprocessors.php:20 templates/trust-center.php:109
+#, fuzzy
+msgid "Subprocessors"
+msgstr "Subverwerkers"
+
+#: includes/class-ettic-otc-admin-settings.php:317
+#: includes/class-ettic-otc-admin-tools.php:595
+#: includes/class-ettic-otc-cpt.php:336 includes/class-ettic-otc-cpt.php:345
+#: templates/chat.php:48 templates/partials/data-practices.php:34
+#: templates/trust-center.php:110
+#, fuzzy
+msgid "Data Practices"
+msgstr "Gegevensverwerking"
+
+#: includes/class-ettic-otc-admin-settings.php:318
+#: includes/class-ettic-otc-admin-tools.php:596
+#: includes/class-ettic-otc-cpt.php:369 includes/class-ettic-otc-cpt.php:379
+msgid "FAQs"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:319
+msgid "Contact & DPO"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:586
+msgid "View Trust Center"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:593
+#: includes/class-ettic-otc-render.php:515
+msgid "General"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:597 templates/chat.php:60
+#: templates/trust-center.php:111
+msgid "Contact"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:601
+msgid "AI Chat"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:604
+msgid "Live"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-settings.php:610
+msgid "Import & Export"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:155
+msgid ""
+"Move trust center content and settings between sites, or seed a fresh "
+"install from another. API keys and the Turnstile secret are never included — "
+"re-enter them on the destination."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:163
+msgid "Export"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:167
+msgid "Import"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:183
+msgid "What to export"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:186
+msgid "Content (CPTs + bundled media)"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:190
+msgid "Settings only"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:195
+msgid "Content selection"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:225
+msgid "Bundle attached PDFs and images"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:229
+msgid "Download export"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:243
+msgid "Only upload your own exports."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:244
+msgid ""
+"Export files contain your trust-center content and may include sensitive "
+"material. Never import a file you received from someone else."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:248
+msgid "Upload export file"
+msgstr ""
+
+#. translators: %d: max upload size in MB
+#: includes/class-ettic-otc-admin-tools.php:253
+#, php-format
+msgid "Max %d MB"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:259
+msgid "On conflict"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:262
+msgid "Skip — keep existing records untouched"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:266
+msgid "Overwrite — replace existing records"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:270
+msgid "Create new — duplicate with a -import suffix"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:275
+msgid "Preview import"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:292
+msgid "Import preview"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:296
+msgid "Import blocked:"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:317
+msgid ""
+"Settings export — current values will be merged with imported values. "
+"Excluded keys (encrypted secrets, salt, server-controlled flags) are kept as-"
+"is."
+msgstr ""
+
+#. translators: %1$d: create count, %2$d: update count, %3$d: skip count
+#: includes/class-ettic-otc-admin-tools.php:324
+#, php-format
+msgid "Will create %1$d, update %2$d, skip %3$d."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:338
+msgid "Title"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:339
+msgid "Action"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:340
+msgid "UUID"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:361
+msgid "Confirm and import"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:363
+msgid "Cancel"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:385
+msgid "Pick at least one record to export."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:415
+msgid "No file uploaded."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:421
+msgid "Upload exceeds size limit."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:514
+msgid "Import cancelled."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:519
+msgid "Import has unresolved errors."
+msgstr ""
+
+#. translators: %1$d: created, %2$d: updated, %3$d: skipped
+#: includes/class-ettic-otc-admin-tools.php:539
+#, php-format
+msgid "Imported: %1$d created, %2$d updated, %3$d skipped."
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:547
+msgid "Errors:"
+msgstr ""
+
+#: includes/class-ettic-otc-admin-tools.php:593
+#: includes/class-ettic-otc-cpt.php:270 includes/class-ettic-otc-cpt.php:279
+#: templates/chat.php:46 templates/partials/hero.php:49
+#: templates/trust-center.php:108
+#, fuzzy
+msgid "Certifications"
+msgstr "Certificeringen"
+
+#: includes/class-ettic-otc-admin.php:56 includes/class-ettic-otc-admin.php:57
+msgid "Open Trust Center"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:67 includes/class-ettic-otc-admin.php:68
+msgid "Settings"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:79 includes/class-ettic-otc-admin.php:80
+msgid "Questions"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:158
+msgid "Select Badge Image"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:159
+msgid "Use as Badge"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:160
+msgid "Select Proof Artifact"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:161
+msgid "Use This File"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:162 includes/class-ettic-otc-cpt.php:487
+msgid "Upload File"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:163 includes/class-ettic-otc-cpt.php:487
+msgid "Replace File"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:178
+msgid "No match in catalog, just keep typing to add manually."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:179
+msgid "Auto-filled from catalog, you may want to verify this."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:180
+msgid ""
+"Auto-filled template, please verify this matches how you use this service."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:181
+msgid "click to autofill"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:182
+msgid "Catalog suggestions"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:228
+msgid "Ettic_OTC requires pretty permalinks."
+msgstr ""
+
+#. translators: %s: link to Settings → Permalinks
+#: includes/class-ettic-otc-admin.php:232
+#, php-format
+msgid ""
+"Your site is using \"Plain\" permalinks. Please go to %s and choose any "
+"other option (Post name is the WordPress default)."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:233
+msgid "Settings → Permalinks"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:238
+msgid ""
+"Without pretty permalinks, every link Ettic_OTC generates returns 404 — "
+"including the trust center page itself. Visitors will not be able to reach "
+"your policies, certifications, or chat."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:242
+msgid "Read-only fallback if you cannot change permalinks"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:246
+msgid "You can preview the trust center via raw query-string URLs:"
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:254
+msgid "This is for testing only."
+msgstr ""
+
+#: includes/class-ettic-otc-admin.php:255
+msgid "Switching to pretty permalinks is the only supported configuration."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:112
+#, fuzzy
+msgid "Invalid nonce — refresh the page and try again."
+msgstr "Ongeldige nonce — ververs de pagina en probeer opnieuw."
+
+#: includes/class-ettic-otc-chat.php:140
+#, fuzzy
+msgid "Please complete the anti-abuse challenge and try again."
+msgstr "Voltooi de anti-misbruikcontrole en probeer opnieuw."
+
+#: includes/class-ettic-otc-chat.php:152
+msgid "You are sending messages too fast. Please wait a moment and try again."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:163
+msgid ""
+"You have reached the per-session message limit. Please wait a bit and try "
+"again."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:183
+msgid "AI chat is not configured on this site."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:192
+msgid "Configured provider is unknown."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:201
+msgid "No API key stored for the configured provider."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:214
+msgid "Your message is empty."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:232
+msgid ""
+"The daily chat budget for this site has been reached. Please try again later."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:394
+msgid "Chat provider failed unexpectedly."
+msgstr ""
+
+#. translators: %s is the tool name (get_document or search_documents).
+#: includes/class-ettic-otc-chat.php:722
+#, php-format
+msgid ""
+"You already called %s with the same arguments earlier in this conversation. "
+"Pick a different document id from the index, or rephrase the search query "
+"with different keywords."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:732
+msgid "Document id is required."
+msgstr ""
+
+#. translators: %s is the requested document id.
+#: includes/class-ettic-otc-chat.php:741
+#, php-format
+msgid ""
+"No document with id \"%s\". Pick one of the ids listed in the corpus index "
+"above."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:749
+msgid "Search query is empty."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:752
+msgid "Search index unavailable."
+msgstr ""
+
+#. translators: %s is the search query.
+#: includes/class-ettic-otc-chat.php:758
+#, php-format
+msgid ""
+"No documents matched \"%s\". Try broader keywords or pick a document id from "
+"the corpus index above."
+msgstr ""
+
+#: includes/class-ettic-otc-chat.php:770
+msgid "Search ranking returned no usable results."
+msgstr ""
+
+#. translators: %s is the unknown tool name.
+#: includes/class-ettic-otc-chat.php:775
+#, php-format
+msgid "Unknown tool: %s"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:217
+msgid "Pick from the catalog or type your own subprocessor name"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:220
+msgid ""
+"Pick from the catalog or type your own, e.g. Analytics or Transactional Email"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:223
+msgid "Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:237 templates/partials/policies.php:54
+#, fuzzy
+msgid "Policy"
+msgstr "Beleid"
+
+#: includes/class-ettic-otc-cpt.php:238
+msgid "Add Policy"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:239
+msgid "Add New Policy"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:240
+msgid "Edit Policy"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:241
+msgid "New Policy"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:242
+#, fuzzy
+msgid "View Policy"
+msgstr "Beleid bekijken"
+
+#: includes/class-ettic-otc-cpt.php:243
+msgid "Search Policies"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:244
+msgid "No policies found."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:245
+msgid "No policies in trash."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:271
+msgid "Certification"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:272
+msgid "Add Certification"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:273
+msgid "Add New Certification"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:274
+msgid "Edit Certification"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:275
+msgid "New Certification"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:276
+msgid "Search Certifications"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:277
+msgid "No certifications found."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:278
+msgid "No certifications in trash."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:304
+msgid "Subprocessor"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:305
+msgid "Add Subprocessor"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:306
+msgid "Add New Subprocessor"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:307
+msgid "Edit Subprocessor"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:308
+msgid "New Subprocessor"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:309
+msgid "Search Subprocessors"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:310
+msgid "No subprocessors found."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:311
+msgid "No subprocessors in trash."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:337
+msgid "Data Practice"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:338
+msgid "Add Data Practice"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:339
+msgid "Add New Data Practice"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:340
+msgid "Edit Data Practice"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:341
+msgid "New Data Practice"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:342
+msgid "Search Data Practices"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:343
+msgid "No data practices found."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:344
+msgid "No data practices in trash."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:370 templates/chat.php:61
+#: templates/trust-center.php:112
+msgid "FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:371
+msgid "Add FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:372
+msgid "Add New FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:373
+msgid "Edit FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:374
+msgid "New FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:375
+msgid "View FAQ"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:376
+msgid "Search FAQs"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:377
+msgid "No FAQs found."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:378
+msgid "No FAQs in trash."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:401
+msgid "Certification Details"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:402
+msgid "Policy Details"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:403
+msgid "Subprocessor Details"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:404
+msgid "Data Practice Details"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:405
+msgid "FAQ Details"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:426
+msgid "Audited certification (issued by a third party)"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:427
+msgid "Self-attested alignment (no external audit)"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:431
+msgid "Active / currently met"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:432
+msgid "In progress"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:433
+msgid "Expired / lapsed"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:437
+msgid "Certification Type"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:443
+msgid ""
+"Audited means a third-party issued a formal certificate with dates (SOC 2, "
+"ISO 27001, PCI DSS). Self-attested means you adhere to the framework without "
+"an external audit — the honest framing for GDPR, CCPA, and most HIPAA "
+"posture claims."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:447 includes/class-ettic-otc-cpt.php:1022
+#, fuzzy
+msgid "Status"
+msgstr "Status"
+
+#: includes/class-ettic-otc-cpt.php:453
+msgid ""
+"\"Active\" for audited means you hold a current certificate. \"Active\" for "
+"self-attested means you currently meet the framework. Use \"In progress\" "
+"while working toward either."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:457 includes/class-ettic-otc-cpt.php:1021
+#, fuzzy
+msgid "Issuing Body"
+msgstr "Uitgegeven door"
+
+#: includes/class-ettic-otc-cpt.php:458
+msgid "e.g., AICPA, BSI Group, Schellman"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:462
+msgid "Issue Date"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:467 includes/class-ettic-otc-cpt.php:1023
+#, fuzzy
+msgid "Expiry Date"
+msgstr "Vervaldatum"
+
+#: includes/class-ettic-otc-cpt.php:472
+msgid "Framework Logo"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:477
+msgid ""
+"Use the official framework mark where licensing allows (SOC 2, ISO, GDPR "
+"shield). Square images work best at 44×44."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:481
+msgid "Proof Artifact"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:484 includes/class-ettic-otc-cpt.php:631
+msgid "View file"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:489
+msgid ""
+"Optional PDF the trust center can link to — e.g. the audit report, "
+"certificate, or policy mapping document. Shown as a download button on the "
+"card."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:493
+msgid "Scope & Notes"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:494
+msgid ""
+"e.g., We process EU personal data under GDPR. Our DPA covers customer data, "
+"and we support DSARs within 30 days."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:495
+msgid ""
+"Required for self-attested frameworks so the card has meaningful content. "
+"One or two sentences on scope, how you meet the framework, or what prospects "
+"should know."
+msgstr ""
+
+#. translators: %s: policy version number
+#: includes/class-ettic-otc-cpt.php:550
+#, fuzzy, php-format
+msgid "Version %s"
+msgstr "Versie %s"
+
+#: includes/class-ettic-otc-cpt.php:553
+msgid ""
+"Regular saves update the current version. Use the checkbox below to formally "
+"publish a new version."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:562
+msgid "Publish as new version"
+msgstr ""
+
+#. translators: %1$d: current version number, %2$d: next version number
+#: includes/class-ettic-otc-cpt.php:567
+#, php-format
+msgid ""
+"This will save the current content as v%1$d and create v%2$d. Only check "
+"this for formal, published changes — not minor edits."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:576
+msgid "What changed?"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:579
+msgid "e.g., Updated data retention from 90 to 60 days"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:580
+msgid "Shown in the public version history."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:586
+msgid "Policy ID"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:587
+msgid "e.g., POL-012"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:588
+msgid ""
+"Optional short reference (e.g., POL-012). Shown on the public listing and in "
+"security questionnaires."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:592 includes/class-ettic-otc-cpt.php:1061
+#: templates/partials/policies.php:55
+#, fuzzy
+msgid "Category"
+msgstr "Categorie"
+
+#: includes/class-ettic-otc-cpt.php:601
+msgid "Effective Date"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:606
+msgid "Next Review Date"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:611
+msgid "Framework Citations"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:622
+msgid "e.g., SOC 2 CC6.1, ISO 27001 A.9.2…"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:624
+msgid ""
+"Framework or control references this policy satisfies. Appears as pill "
+"badges on the public page."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:628
+msgid "PDF Attachment"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:634
+msgid "Replace PDF"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:634
+msgid "Upload PDF"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:636
+msgid ""
+"Upload the signed PDF. Visitors see a \"Download PDF\" button only when a "
+"file is attached."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:640 includes/class-ettic-otc-cpt.php:796
+msgid "Sort Order"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:642 includes/class-ettic-otc-cpt.php:798
+msgid "Lower numbers appear first."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:659 includes/class-ettic-otc-cpt.php:730
+#: includes/class-ettic-otc-cpt.php:1092
+#: templates/partials/data-practices.php:96
+#: templates/partials/subprocessors.php:37
+#, fuzzy
+msgid "Purpose"
+msgstr "Doel"
+
+#: includes/class-ettic-otc-cpt.php:661
+msgid "What does this subprocessor do for your company?"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:665 templates/partials/subprocessors.php:38
+#, fuzzy
+msgid "Data Processed"
+msgstr "Verwerkte gegevens"
+
+#: includes/class-ettic-otc-cpt.php:667
+msgid "What types of data does this subprocessor handle?"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:671
+msgid "Country / Location"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:672
+msgid "e.g., United States"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:676 templates/partials/subprocessors.php:41
+#, fuzzy
+msgid "Website"
+msgstr "Website"
+
+#: includes/class-ettic-otc-cpt.php:683
+#, fuzzy
+msgid "DPA Signed"
+msgstr "DPA ondertekend"
+
+#: includes/class-ettic-otc-cpt.php:685
+msgid ""
+"A Data Processing Agreement (DPA) is a contract between you and the "
+"subprocessor covering how they handle personal data on your behalf. Check "
+"this box once your organization has signed one with this vendor."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:715
+msgid "Data Items Collected"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:724 includes/class-ettic-otc-cpt.php:762
+msgid "Type and press Enter..."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:737
+#: templates/partials/data-practices.php:103
+#, fuzzy
+msgid "Legal Basis"
+msgstr "Wettelijke grondslag"
+
+#: includes/class-ettic-otc-cpt.php:739
+msgid "— Select —"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:746
+msgid "Retention Period"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:747
+msgid "e.g., 30 days"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:753
+#: templates/partials/data-practices.php:117
+#, fuzzy
+msgid "Shared With"
+msgstr "Gedeeld met"
+
+#: includes/class-ettic-otc-cpt.php:768
+msgid "Properties"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:772
+msgid "Collected"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:776
+msgid "Stored"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:780
+msgid "Shared with third parties"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:784
+msgid "Sold to third parties"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:788
+msgid "Encrypted"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:791
+msgid ""
+"Unchecked means an explicit \"No\". The AI assistant reports these values "
+"verbatim to visitors asking questions like \"Do you sell customer data?\"."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1060 templates/partials/policies.php:52
+msgid "ID"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1062
+#: includes/class-ettic-otc-version.php:160 templates/partials/policies.php:56
+#, fuzzy
+msgid "Version"
+msgstr "Versie"
+
+#: includes/class-ettic-otc-cpt.php:1063
+msgid "PDF"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1093
+#: templates/partials/subprocessors.php:39
+#, fuzzy
+msgid "Location"
+msgstr "Locatie"
+
+#: includes/class-ettic-otc-cpt.php:1094
+#: templates/partials/subprocessors.php:40
+#, fuzzy
+msgid "DPA"
+msgstr "DPA"
+
+#: includes/class-ettic-otc-cpt.php:1113
+#, fuzzy
+msgid "Data Items"
+msgstr "Gegevensitems"
+
+#: includes/class-ettic-otc-cpt.php:1114 includes/class-ettic-otc-cpt.php:1183
+msgid "Order"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1143
+msgid "Related Policy"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1145
+msgid "— None —"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1150
+msgid "Optional — link this answer to a published policy for deeper context."
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1155
+msgid "Sort order:"
+msgstr ""
+
+#: includes/class-ettic-otc-cpt.php:1156
+msgid ""
+"Use the Page Attributes box below (Order field) to control FAQ order. Lower "
+"numbers appear first."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:193
+msgid "PHP ZipArchive extension is required for export."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:198
+msgid "Could not create temp file for export."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:212
+msgid "Could not open ZIP for writing."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:240
+msgid "Unrecognised export format."
+msgstr ""
+
+#. translators: %1$d: schema version found, %2$d: schema version expected
+#: includes/class-ettic-otc-io.php:246
+#, php-format
+msgid "Schema version mismatch (found %1$d, expected %2$d)."
+msgstr ""
+
+#. translators: %1$s: their version, %2$s: our version
+#: includes/class-ettic-otc-io.php:257
+#, php-format
+msgid "Plugin major version mismatch (export: %1$s, this site: %2$s)."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:396
+msgid "PHP ZipArchive extension is required."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:400
+msgid "Could not open uploaded archive."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:405
+msgid "Archive is missing manifest.json."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:409
+msgid "manifest.json could not be parsed."
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:692
+msgid "Could not reopen archive for media import."
+msgstr ""
+
+#. translators: %s: media path
+#: includes/class-ettic-otc-io.php:707
+#, php-format
+msgid "Bundled media missing during import: %s"
+msgstr ""
+
+#. translators: %s: filename
+#: includes/class-ettic-otc-io.php:727
+#, php-format
+msgid "Could not write attachment file: %s"
+msgstr ""
+
+#: includes/class-ettic-otc-io.php:745
+msgid "Could not create attachment."
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:83
+msgid "Session expired. Please reload the page and try again."
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:89
+#, fuzzy
+msgid "Please enter a question."
+msgstr "Voer een vraag in."
+
+#: includes/class-ettic-otc-render.php:98
+msgid "AI chat is not configured."
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:270
+msgid "Page not found."
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:271
+#: templates/partials/policy-single.php:54
+#, fuzzy
+msgid "Back to Trust Center"
+msgstr "Terug naar Trust Center"
+
+#: includes/class-ettic-otc-render.php:442
+msgid "Updated just now"
+msgstr ""
+
+#. translators: %d: number of minutes since last update
+#: includes/class-ettic-otc-render.php:447
+#, fuzzy, php-format
+msgid "Updated %d minute ago"
+msgid_plural "Updated %d minutes ago"
+msgstr[0] "%d minuut geleden bijgewerkt"
+msgstr[1] "%d minuten geleden bijgewerkt"
+
+#. translators: %d: number of hours since last update
+#: includes/class-ettic-otc-render.php:454
+#, fuzzy, php-format
+msgid "Updated %d hour ago"
+msgid_plural "Updated %d hours ago"
+msgstr[0] "%d uur geleden bijgewerkt"
+msgstr[1] "%d uur geleden bijgewerkt"
+
+#. translators: %d: number of days since last update
+#: includes/class-ettic-otc-render.php:461
+#, fuzzy, php-format
+msgid "Updated %d day ago"
+msgid_plural "Updated %d days ago"
+msgstr[0] "%d dag geleden bijgewerkt"
+msgstr[1] "%d dagen geleden bijgewerkt"
+
+#. translators: %s = formatted date
+#. translators: %s: policy last updated date
+#: includes/class-ettic-otc-render.php:467
+#: templates/partials/policy-single.php:111
+#, fuzzy, php-format
+msgid "Updated %s"
+msgstr "Bijgewerkt op %s"
+
+#: includes/class-ettic-otc-render.php:511
+msgid "Security"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:512
+msgid "Privacy"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:513
+msgid "Compliance"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:514
+msgid "Operational"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:526
+msgid "Certified"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:527
+msgid "In audit"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:528
+#, fuzzy
+msgid "Expired"
+msgstr "Verlopen"
+
+#: includes/class-ettic-otc-render.php:537
+#, fuzzy
+msgid "Compliant"
+msgstr "Compliant"
+
+#: includes/class-ettic-otc-render.php:538
+msgid "Working toward"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:539
+msgid "Lapsed"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:545
+msgid "Consent"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:546
+msgid "Contractual Necessity"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:547
+msgid "Legitimate Interest"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:548
+msgid "Legal Obligation"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:549
+msgid "Vital Interest"
+msgstr ""
+
+#: includes/class-ettic-otc-render.php:550
+msgid "Public Interest"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:127
+msgid "Version History"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:149
+msgid "Current version:"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:152
+msgid "Version history will appear after the first update."
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:162 templates/partials/policies.php:58
+#, fuzzy
+msgid "Actions"
+msgstr "Acties"
+
+#: includes/class-ettic-otc-version.php:169
+#: templates/partials/policy-single.php:174
+msgid "Current"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:183
+#: includes/class-ettic-otc-version.php:184
+msgid "View"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:187
+msgid "Compare"
+msgstr ""
+
+#: includes/class-ettic-otc-version.php:188
+msgid "Diff"
+msgstr ""
+
+#: includes/data/faq-catalog.php:29
+msgid "What is a trust center?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:30
+msgid ""
+"A trust center is a public page where a company shares information about how "
+"it handles security, privacy, and compliance. It usually includes security "
+"policies, a list of subprocessors, compliance certifications, and details "
+"about how customer data is handled. The goal is to give customers, partners, "
+"and prospects one place to answer due diligence questions without having to "
+"email anyone."
+msgstr ""
+
+#: includes/data/faq-catalog.php:34
+msgid "What is a Data Processing Agreement (DPA)?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:35
+msgid ""
+"A Data Processing Agreement, or DPA, is a contract between a company that "
+"collects personal data and a company that processes that data on its behalf. "
+"It defines what data can be processed, for what purpose, how long it can be "
+"kept, and what security measures must be in place. Under privacy laws like "
+"the GDPR, a DPA is required whenever one company processes personal data for "
+"another."
+msgstr ""
+
+#: includes/data/faq-catalog.php:39
+msgid "What is a subprocessor?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:40
+msgid ""
+"A subprocessor is a third-party service that a company uses to help deliver "
+"its product, and that may come into contact with customer data along the "
+"way. Common examples include cloud hosting providers, email delivery "
+"services, analytics platforms, and customer support tools. Companies publish "
+"subprocessor lists so customers can see exactly which vendors may handle "
+"their data."
+msgstr ""
+
+#: includes/data/faq-catalog.php:44
+msgid "What is the difference between a data controller and a data processor?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:45
+msgid ""
+"The data controller is the party that decides why and how personal data is "
+"collected and used. The data processor is the party that handles that data "
+"on the controller's behalf, following the controller's instructions. A SaaS "
+"customer is usually the controller of their end-user data, while the SaaS "
+"vendor acts as the processor. Each role carries different legal "
+"responsibilities under privacy laws like the GDPR."
+msgstr ""
+
+#: includes/data/faq-catalog.php:49
+msgid "What is personal data?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:50
+msgid ""
+"Personal data is any information that can be used to identify a living "
+"person, either on its own or when combined with other information. Obvious "
+"examples include names, email addresses, phone numbers, and home addresses. "
+"Less obvious examples include IP addresses, device identifiers, cookies, and "
+"location data. Privacy laws such as the GDPR and CCPA treat personal data as "
+"something that must be collected, stored, and shared with care."
+msgstr ""
+
+#: includes/data/faq-catalog.php:54
+msgid "What is responsible disclosure?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:55
+msgid ""
+"Responsible disclosure is the practice of reporting a security vulnerability "
+"privately to the company that owns the affected system, giving them a "
+"reasonable amount of time to fix it before any details are shared publicly. "
+"It protects users from being exposed to a known issue before a patch is "
+"available. Most trust centers include a contact address or form for "
+"reporting vulnerabilities this way."
+msgstr ""
+
+#: includes/data/faq-catalog.php:59
+msgid "What is a compliance certification?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:60
+msgid ""
+"A compliance certification is a formal statement, usually issued by an "
+"independent auditor, confirming that a company meets the requirements of a "
+"specific security or privacy standard. Certifications give customers a way "
+"to trust a company's practices without having to inspect them directly. The "
+"scope, issuing body, and validity period are typically listed alongside each "
+"certification in a trust center."
+msgstr ""
+
+#: includes/data/faq-catalog.php:64
+msgid "What is a security policy?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:65
+msgid ""
+"A security policy is a written document that describes how a company "
+"protects its systems, data, and people. Policies commonly cover topics like "
+"access control, incident response, acceptable use, vendor management, and "
+"business continuity. Publishing policies in a trust center lets customers "
+"see how security is handled without needing to sign an NDA first."
+msgstr ""
+
+#: includes/data/faq-catalog.php:69
+msgid "Why do companies publish a list of subprocessors?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:70
+msgid ""
+"Publishing a subprocessor list is a transparency practice, and in many cases "
+"a legal requirement, that lets customers see every third party that may "
+"handle their data. It gives customers the chance to review new vendors "
+"before they start processing data, and it makes it easier to meet their own "
+"compliance obligations. Most trust centers also offer a way to be notified "
+"when the list changes."
+msgstr ""
+
+#: includes/data/faq-catalog.php:74
+msgid "What is a data practice?"
+msgstr ""
+
+#: includes/data/faq-catalog.php:75
+msgid ""
+"A data practice describes a specific way a company collects, uses, stores, "
+"or shares information. Each practice usually spells out what data is "
+"involved, why it is collected, how long it is kept, and who it is shared "
+"with. Grouping data practices by category, such as account data, usage data, "
+"or support data, helps customers understand exactly what happens to their "
+"information."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:44
+#: includes/providers/class-ettic-otc-chat-provider.php:46
+msgid "Anthropic"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:63
+msgid "No models available — your account may not be authorized."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:127
+msgid "Anthropic adapter missing required args."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:219
+msgid "Anthropic request failed."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:414
+msgid "Searching documents…"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-anthropic.php:415
+msgid "Reading documents…"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-openai.php:66
+#: includes/providers/class-ettic-otc-chat-provider.php:52
+msgid "OpenAI"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-openai.php:166
+msgid "OpenAI adapter missing required args."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-openai.php:253
+msgid "OpenAI request failed."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider-openrouter.php:38
+#: includes/providers/class-ettic-otc-chat-provider.php:58
+msgid "OpenRouter"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:104
+msgid "No chat models available for this key."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:117
+msgid "API key is empty."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:123
+msgid "Request failed."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:268
+msgid ""
+"I couldn't find a confident answer in the published trust center documents. "
+"Please contact the team for help."
+msgstr ""
+
+#. translators: %s is the document title.
+#: includes/providers/class-ettic-otc-chat-provider.php:342
+#, php-format
+msgid "Read \"%s\""
+msgstr ""
+
+#. translators: %s is the document title.
+#: includes/providers/class-ettic-otc-chat-provider.php:344
+#, php-format
+msgid "Reading \"%s\""
+msgstr ""
+
+#. translators: %s is the document id.
+#: includes/providers/class-ettic-otc-chat-provider.php:350
+#, php-format
+msgid "Read %s"
+msgstr ""
+
+#. translators: %s is the document id.
+#: includes/providers/class-ettic-otc-chat-provider.php:352
+#, php-format
+msgid "Reading %s"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:354
+msgid "Read a document"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:354
+msgid "Reading a document"
+msgstr ""
+
+#. translators: %s is the search query.
+#: includes/providers/class-ettic-otc-chat-provider.php:367
+#, php-format
+msgid "Searched for \"%s\""
+msgstr ""
+
+#. translators: %s is the search query.
+#: includes/providers/class-ettic-otc-chat-provider.php:369
+#, php-format
+msgid "Searching for \"%s\""
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:371
+msgid "Searched documents"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:371
+msgid "Searching documents"
+msgstr ""
+
+#. translators: %d is the number of documents that were read in parallel.
+#: includes/providers/class-ettic-otc-chat-provider.php:399
+#, php-format
+msgid "Read %d documents"
+msgstr ""
+
+#. translators: %d is the number of documents being read in parallel.
+#: includes/providers/class-ettic-otc-chat-provider.php:401
+#, php-format
+msgid "Reading %d documents"
+msgstr ""
+
+#. translators: %d is the number of search queries that were fired in parallel.
+#: includes/providers/class-ettic-otc-chat-provider.php:406
+#, php-format
+msgid "Ran %d searches"
+msgstr ""
+
+#. translators: %d is the number of search queries fired in parallel.
+#: includes/providers/class-ettic-otc-chat-provider.php:408
+#, php-format
+msgid "Running %d searches"
+msgstr ""
+
+#. translators: %d is the number of parallel retrieval calls (mixed types).
+#: includes/providers/class-ettic-otc-chat-provider.php:412
+#, php-format
+msgid "Ran %d retrievals"
+msgstr ""
+
+#. translators: %d is the number of parallel retrieval calls (mixed types).
+#: includes/providers/class-ettic-otc-chat-provider.php:414
+#, php-format
+msgid "Running %d retrievals"
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:443
+#: includes/providers/class-ettic-otc-chat-provider.php:462
+#: includes/providers/class-ettic-otc-chat-provider.php:513
+msgid "Refused outbound request to disallowed host."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:518
+msgid "AI streaming requires the PHP cURL extension."
+msgstr ""
+
+#: includes/providers/class-ettic-otc-chat-provider.php:620
+msgid "AI streaming requires the WordPress cURL transport."
+msgstr ""
+
+#. translators: %d: HTTP status code returned by the provider
+#: includes/providers/class-ettic-otc-chat-provider.php:673
+#: includes/providers/class-ettic-otc-chat-provider.php:728
+#, php-format
+msgid "Provider returned HTTP %d"
+msgstr ""
+
+#. translators: %s: company name
+#: templates/chat.php:70
+#, fuzzy, php-format
+msgid "Ask %s — Trust Center"
+msgstr "Vraag het aan %s — Trust Center"
+
+#: templates/chat.php:100 templates/trust-center.php:101
+msgid "Skip to content"
+msgstr ""
+
+#: templates/chat.php:102 templates/partials/policy-single.php:36
+#: templates/trust-center.php:114
+msgid "Trust center navigation"
+msgstr ""
+
+#: templates/chat.php:131 templates/trust-center.php:144
+#, fuzzy
+msgid "Ask AI"
+msgstr "Vraag de AI"
+
+#: templates/chat.php:145
+msgid "Ask AI is not configured"
+msgstr ""
+
+#: templates/chat.php:146
+msgid "The site administrator has not enabled the AI chat feature yet."
+msgstr ""
+
+#: templates/chat.php:148
+msgid "Browse trust center"
+msgstr ""
+
+#: templates/chat.php:176 templates/chat.php:353
+#, fuzzy
+msgid "You"
+msgstr "Jij"
+
+#: templates/chat.php:178 templates/chat.php:195 templates/chat.php:354
+#, fuzzy
+msgid "just now"
+msgstr "zojuist"
+
+#: templates/chat.php:202 templates/chat.php:346
+#, fuzzy
+msgid "Sources"
+msgstr "Bronnen"
+
+#: templates/chat.php:212 templates/chat.php:356
+#, fuzzy
+msgid ""
+"AI-generated answer. Not legal, security, or compliance advice. Verify "
+"against the sources above."
+msgstr ""
+"Dit antwoord is door AI gegenereerd. Geen juridisch, beveiligings- of "
+"compliance-advies. Controleer het altijd aan de hand van de bronnen "
+"hierboven."
+
+#: templates/chat.php:222
+msgid ""
+"JavaScript is disabled — you can still ask one question below. The answer "
+"will load as a regular page."
+msgstr ""
+
+#: templates/chat.php:225
+msgid "Your question"
+msgstr ""
+
+#: templates/chat.php:232
+msgid "Ask"
+msgstr ""
+
+#: templates/chat.php:243
+#, fuzzy
+msgid "Are you SOC 2 compliant?"
+msgstr "Zijn jullie SOC 2-compliant?"
+
+#: templates/chat.php:244
+#, fuzzy
+msgid "Where is customer data stored?"
+msgstr "Waar worden klantgegevens opgeslagen?"
+
+#: templates/chat.php:245
+msgid "What's your incident response process?"
+msgstr ""
+
+#: templates/chat.php:246
+#, fuzzy
+msgid "Which subprocessors do you use?"
+msgstr "Welke subverwerkers gebruiken jullie?"
+
+#: templates/chat.php:271
+msgid "Suggested questions"
+msgstr ""
+
+#: templates/chat.php:286
+msgid "Ask a question"
+msgstr ""
+
+#: templates/chat.php:293 templates/chat.php:335
+#, fuzzy
+msgid "Ask anything about our security and compliance…"
+msgstr "Stel een vraag over onze beveiliging en compliance…"
+
+#: templates/chat.php:295 templates/chat.php:344
+#, fuzzy
+msgid "Start a new conversation"
+msgstr "Start een nieuw gesprek"
+
+#: templates/chat.php:298 templates/chat.php:336
+#, fuzzy
+msgid "Send"
+msgstr "Versturen"
+
+#. translators: 1: link to trust center, 2: company name
+#: templates/chat.php:309
+#, php-format
+msgid ""
+"Grounded in the published %1$s for %2$s. AI-generated, not legal, security, "
+"or compliance advice. Always check the sources."
+msgstr ""
+
+#: templates/chat.php:310
+msgid "trust center"
+msgstr ""
+
+#: templates/chat.php:337
+#, fuzzy
+msgid "Stop"
+msgstr "Stoppen"
+
+#: templates/chat.php:338
+#, fuzzy
+msgid "Thinking…"
+msgstr "Denkt na…"
+
+#: templates/chat.php:339
+#, fuzzy
+msgid "Connection lost. Retry?"
+msgstr "Verbinding verbroken. Opnieuw proberen?"
+
+#: templates/chat.php:340
+#, fuzzy
+msgid "Contact security team →"
+msgstr "Neem contact op met het beveiligingsteam →"
+
+#: templates/chat.php:341
+#, fuzzy
+msgid "Copy"
+msgstr "Kopiëren"
+
+#: templates/chat.php:342
+#, fuzzy
+msgid "Copied"
+msgstr "Gekopieerd"
+
+#: templates/chat.php:343 templates/partials/policy-single.php:139
+#, fuzzy
+msgid "Print"
+msgstr "Afdrukken"
+
+#: templates/chat.php:345
+#, fuzzy
+msgid "This conversation is getting long. Start fresh for better answers."
+msgstr "Dit gesprek wordt lang — begin opnieuw voor de beste antwoorden."
+
+#: templates/chat.php:347
+#, fuzzy
+msgid ""
+"I don't see enough information in our trust center to answer that "
+"confidently."
+msgstr ""
+"In ons Trust Center staat niet genoeg informatie om die vraag met zekerheid "
+"te beantwoorden."
+
+#: templates/chat.php:348
+#, fuzzy
+msgid "The AI provider returned an error. Please try again."
+msgstr "De AI-provider gaf een fout. Probeer het opnieuw."
+
+#: templates/chat.php:349
+#, fuzzy
+msgid ""
+"AI is temporarily unavailable. Please try again in a few minutes or browse "
+"our published content."
+msgstr ""
+"De AI is tijdelijk niet beschikbaar. Probeer het over enkele minuten opnieuw "
+"of bekijk onze gepubliceerde content."
+
+#: templates/chat.php:350
+#, fuzzy
+msgid "Message is too long."
+msgstr "Het bericht is te lang."
+
+#: templates/chat.php:351
+#, fuzzy
+msgid "Please wait a moment before asking again."
+msgstr "Wacht even voordat je opnieuw een vraag stelt."
+
+#: templates/chat.php:352
+#, fuzzy
+msgid "Cite source"
+msgstr "Bron citeren"
+
+#: templates/chat.php:355
+#, fuzzy
+msgid "No content returned by the model."
+msgstr "Het model gaf geen antwoord terug."
+
+#: templates/partials/certifications.php:23
+#, fuzzy
+msgid ""
+"Our active certifications and compliance frameworks demonstrate our "
+"commitment to protecting your data."
+msgstr ""
+"Onze actieve certificeringen en compliance-frameworks laten zien hoe serieus "
+"we jouw gegevens beschermen."
+
+#: templates/partials/certifications.php:59
+msgid "Self-attested framework"
+msgstr ""
+
+#. translators: %s: certification issue date
+#: templates/partials/certifications.php:98
+#, fuzzy, php-format
+msgid "Issued %s"
+msgstr "Uitgegeven op %s"
+
+#. translators: %s: certification expiry date
+#: templates/partials/certifications.php:102
+#, fuzzy, php-format
+msgid "Expires %s"
+msgstr "Verloopt op %s"
+
+#: templates/partials/certifications.php:114
+msgid "Download report"
+msgstr ""
+
+#: templates/partials/certifications.php:115
+msgid "View documentation"
+msgstr ""
+
+#: templates/partials/chat-budget-exhausted.php:18
+msgid "Ask AI is taking a breather"
+msgstr ""
+
+#: templates/partials/chat-budget-exhausted.php:19
+msgid ""
+"We've hit the daily question limit. Chat will be back soon — in the "
+"meantime, you can still browse the full trust center."
+msgstr ""
+
+#: templates/partials/chat-budget-exhausted.php:22
+msgid "Browse policies"
+msgstr ""
+
+#: templates/partials/chat-budget-exhausted.php:29
+msgid "Contact us"
+msgstr ""
+
+#. translators: %s: company name
+#: templates/partials/chat-empty-state.php:29
+#, fuzzy, php-format
+msgid "Ask about %s's security and compliance"
+msgstr "Vraag ons over de beveiliging en compliance van %s"
+
+#. translators: 1: model identifier, 2: sources summary
+#: templates/partials/chat-empty-state.php:37
+#, php-format
+msgid "Using model %1$s. Grounded in %2$s."
+msgstr ""
+
+#. translators: %s: sources summary
+#: templates/partials/chat-empty-state.php:49
+#, fuzzy, php-format
+msgid "Grounded in %s."
+msgstr "Gebaseerd op %s."
+
+#: templates/partials/chat-empty-state.php:60
+msgid "Conversation"
+msgstr ""
+
+#: templates/partials/contact.php:41
+msgid "Data Protection Officer"
+msgstr ""
+
+#: templates/partials/contact.php:48
+msgid "Security Team"
+msgstr ""
+
+#: templates/partials/contact.php:57
+msgid "Contact Form"
+msgstr ""
+
+#: templates/partials/contact.php:59
+msgid "Open the contact form"
+msgstr ""
+
+#: templates/partials/contact.php:66
+msgid "PGP Public Key"
+msgstr ""
+
+#: templates/partials/contact.php:68
+msgid "Download public key"
+msgstr ""
+
+#: templates/partials/contact.php:91
+msgid "Company Registration"
+msgstr ""
+
+#: templates/partials/data-practices.php:35
+#, fuzzy
+msgid "What we collect and how we handle your data."
+msgstr "Welke gegevens we verzamelen en hoe we ze gebruiken."
+
+#. translators: %1$d = number, %2$s = category name
+#: templates/partials/data-practices.php:73
+#, fuzzy, php-format
+msgid "View %1$d more %2$s items"
+msgstr "Bekijk nog %1$d %2$s-items"
+
+#: templates/partials/data-practices.php:110
+#, fuzzy
+msgid "Retention"
+msgstr "Bewaartermijn"
+
+#: templates/partials/faq.php:42
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: templates/partials/faq.php:43
+msgid "Quick answers to the questions we hear most."
+msgstr ""
+
+#: templates/partials/faq.php:57
+msgid "Related:"
+msgstr ""
+
+#. translators: %d: number of active certifications
+#: templates/partials/hero.php:31
+#, fuzzy, php-format
+msgid "%d Active Certification"
+msgid_plural "%d Active Certifications"
+msgstr[0] "%d Actieve certificering"
+msgstr[1] "%d Actieve certificeringen"
+
+#: templates/partials/hero.php:38 templates/trust-center.php:19
+#, fuzzy
+msgid "Trust Center"
+msgstr "Trust Center"
+
+#: templates/partials/policies.php:27
+#, fuzzy
+msgid "Security Policies"
+msgstr "Beveiligingsbeleid"
+
+#: templates/partials/policies.php:28
+#, fuzzy
+msgid ""
+"Our published security and compliance policies are regularly reviewed and "
+"updated."
+msgstr ""
+"Ons gepubliceerde beveiligings- en compliancebeleid wordt regelmatig herzien "
+"en bijgewerkt."
+
+#: templates/partials/policies.php:57
+#, fuzzy
+msgid "Last Updated"
+msgstr "Laatst bijgewerkt"
+
+#: templates/partials/policies.php:89 templates/partials/policy-single.php:116
+msgid "Framework citations"
+msgstr ""
+
+#. translators: %s: policy version number
+#: templates/partials/policies.php:99 templates/partials/policy-single.php:94
+#, fuzzy, php-format
+msgid "v%s"
+msgstr "v%s"
+
+#. translators: %s: human-readable file size
+#: templates/partials/policies.php:106 templates/partials/policy-single.php:130
+#, php-format
+msgid "Download PDF (%s)"
+msgstr ""
+
+#: templates/partials/policies.php:108 templates/partials/policy-single.php:132
+#, fuzzy
+msgid "Download PDF"
+msgstr "Download PDF"
+
+#. translators: %s: policy title
+#: templates/partials/policies.php:116
+#, fuzzy, php-format
+msgid "View %s"
+msgstr "%s bekijken"
+
+#. translators: %1$s: version number, %2$s: link to current version
+#: templates/partials/policy-single.php:63
+#, fuzzy, php-format
+msgid "You are viewing version %1$s. %2$s"
+msgstr "Je bekijkt versie %1$s. %2$s"
+
+#: templates/partials/policy-single.php:65
+#: templates/partials/policy-single.php:78
+#, fuzzy
+msgid "View current version"
+msgstr "Huidige versie bekijken"
+
+#. translators: %1$s: effective date, %2$s: link to previous version
+#: templates/partials/policy-single.php:75
+#, fuzzy, php-format
+msgid "This version takes effect on %1$s. %2$s"
+msgstr "Deze versie gaat in op %1$s. %2$s"
+
+#. translators: %s: policy effective date
+#: templates/partials/policy-single.php:105
+#, php-format
+msgid "Effective %s"
+msgstr ""
+
+#. translators: %d: number of policy versions
+#: templates/partials/policy-single.php:150
+#, fuzzy, php-format
+msgid "Version history (%d)"
+msgstr "Versiegeschiedenis (%d)"
+
+#. translators: %d: version number
+#: templates/partials/policy-single.php:166
+#, fuzzy, php-format
+msgid "v%d"
+msgstr "v%d"
+
+#: templates/partials/subprocessors.php:21
+#, fuzzy
+msgid ""
+"Third-party services that process data on our behalf, along with their "
+"purposes and data handling agreements."
+msgstr ""
+"Externe diensten die namens ons gegevens verwerken, met hun doel en "
+"verwerkersovereenkomsten."
+
+#: templates/partials/subprocessors.php:36
+#, fuzzy
+msgid "Name"
+msgstr "Naam"
+
+#: templates/partials/subprocessors.php:53
+#: templates/partials/subprocessors.php:57
+#, fuzzy
+msgid "more"
+msgstr "meer"
+
+#: templates/partials/subprocessors.php:64
+#, fuzzy
+msgid "Signed"
+msgstr "Ondertekend"
+
+#: templates/trust-center.php:21
+#, fuzzy
+msgid "Transparency and security you can trust."
+msgstr "Transparante beveiliging om op te vertrouwen."
+
+#: templates/trust-center.php:196
+msgid "Trust center content is being prepared. Check back soon."
+msgstr ""
+
+#. translators: %s: company name
+#: templates/trust-center.php:212
+#, fuzzy, php-format
+msgid "© %1$s %2$s. All rights reserved."
+msgstr "© %1$s %2$s. Alle rechten voorbehouden."
+
+#: templates/trust-center.php:220
+msgid "Powered by Open Trust Center"
+msgstr ""
+
+#, fuzzy
+#~ msgid "OpenTrust"
+#~ msgstr "OpenTrust"
+
+#, fuzzy
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#, fuzzy
+#~ msgid "Company"
+#~ msgstr "Bedrijf"
+
+#, fuzzy
+#~ msgid "Active"
+#~ msgstr "Actief"
+
+#, fuzzy
+#~ msgid "In Progress"
+#~ msgstr "In aanvraag"
+
+#, fuzzy
+#~ msgid "Please enter a valid email address."
+#~ msgstr "Voer een geldig e-mailadres in."
+
+#, fuzzy
+#~ msgid "Please check your inbox and click the confirmation link."
+#~ msgstr "Controleer je inbox en klik op de bevestigingslink."
+
+#, fuzzy, php-format
+#~ msgid "Hi %s,"
+#~ msgstr "Hoi %s,"
+
+#, fuzzy, php-format
+#~ msgid "[%1$s] Policy updated: %2$s"
+#~ msgstr "[%1$s] Beleid bijgewerkt: %2$s"
+
+#, fuzzy, php-format
+#~ msgid "Confirm your subscription to %s Trust Center updates"
+#~ msgstr "Bevestig je aanmelding voor Trust Center-updates van %s"
+
+#, fuzzy
+#~ msgid "Invalid request."
+#~ msgstr "Ongeldig verzoek."
+
+#, fuzzy
+#~ msgid "Please complete the security check."
+#~ msgstr "Voltooi de beveiligingscontrole."
+
+#, fuzzy
+#~ msgid "Please select at least one category."
+#~ msgstr "Selecteer ten minste één categorie."
+
+#, fuzzy
+#~ msgid "Share"
+#~ msgstr "Delen"
+
+#, fuzzy
+#~ msgid "Link copied"
+#~ msgstr "Link gekopieerd"
+
+#, fuzzy, php-format
+#~ msgid ""
+#~ "Thank you for subscribing to trust center updates from %s. Please confirm "
+#~ "your subscription by clicking the button below."
+#~ msgstr ""
+#~ "Bedankt dat je je hebt aangemeld voor Trust Center-updates van %s. "
+#~ "Bevestig je aanmelding door op de knop hieronder te klikken."
+
+#, fuzzy, php-format
+#~ msgid "%1$s has updated the following policy on our trust center:"
+#~ msgstr "%1$s heeft het volgende beleid bijgewerkt op het Trust Center:"
+
+#, fuzzy
+#~ msgid "Unsubscribe"
+#~ msgstr "Uitschrijven"
+
+#, fuzzy, php-format
+#~ msgid "Powered by %1$s. Grounded in %2$s."
+#~ msgstr "Mogelijk gemaakt door %1$s. Gebaseerd op %2$s."
+
+#, fuzzy, php-format
+#~ msgid "Effective: %s"
+#~ msgstr "Ingangsdatum: %s"
+
+#, fuzzy, php-format
+#~ msgid "Updated: %s"
+#~ msgstr "Bijgewerkt: %s"
+
+#, fuzzy
+#~ msgid "Subscribe to updates"
+#~ msgstr "Abonneer op updates"
+
+#, fuzzy, php-format
+#~ msgid "Get email notifications when %s updates their trust center."
+#~ msgstr "Ontvang e-mailmeldingen zodra %s hun Trust Center bijwerkt."
+
+#, fuzzy
+#~ msgid "Email address"
+#~ msgstr "E-mailadres"
+
+#, fuzzy
+#~ msgid "Subscribe"
+#~ msgstr "Abonneren"
+
+#, fuzzy, php-format
+#~ msgid "Manage notifications for %s."
+#~ msgstr "Beheer meldingen voor %s."

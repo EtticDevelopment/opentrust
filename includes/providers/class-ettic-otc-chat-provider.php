@@ -43,19 +43,19 @@ abstract class Ettic_OTC_Chat_Provider {
         return [
             [
                 'slug'        => 'anthropic',
-                'label'       => __('Anthropic', 'opentrust'),
+                'label'       => __('Anthropic', 'open-trust-center-by-ettic'),
                 'key_url'     => 'https://console.anthropic.com/settings/keys',
                 'recommended' => true,
             ],
             [
                 'slug'        => 'openai',
-                'label'       => __('OpenAI', 'opentrust'),
+                'label'       => __('OpenAI', 'open-trust-center-by-ettic'),
                 'key_url'     => 'https://platform.openai.com/api-keys',
                 'recommended' => false,
             ],
             [
                 'slug'        => 'openrouter',
-                'label'       => __('OpenRouter', 'opentrust'),
+                'label'       => __('OpenRouter', 'open-trust-center-by-ettic'),
                 'key_url'     => 'https://openrouter.ai/settings/keys',
                 'recommended' => false,
             ],
@@ -101,7 +101,7 @@ abstract class Ettic_OTC_Chat_Provider {
      * Subclasses override when they want a more specific phrasing.
      */
     protected function no_models_message(): string {
-        return __('No chat models available for this key.', 'opentrust');
+        return __('No chat models available for this key.', 'open-trust-center-by-ettic');
     }
 
     /**
@@ -114,13 +114,13 @@ abstract class Ettic_OTC_Chat_Provider {
     public function validate_and_list_models(string $key): array {
         $key = trim($key);
         if ($key === '') {
-            return ['ok' => false, 'error' => __('API key is empty.', 'opentrust')];
+            return ['ok' => false, 'error' => __('API key is empty.', 'open-trust-center-by-ettic')];
         }
 
         $response = $this->http_get($this->models_endpoint(), $this->auth_headers($key), 15);
 
         if (!$response['ok']) {
-            return ['ok' => false, 'error' => $response['error'] ?? __('Request failed.', 'opentrust')];
+            return ['ok' => false, 'error' => $response['error'] ?? __('Request failed.', 'open-trust-center-by-ettic')];
         }
 
         $models = $this->curate_models($response['body']);
@@ -265,7 +265,7 @@ abstract class Ettic_OTC_Chat_Provider {
         $on_chunk([
             'type' => 'token',
             'data' => [
-                'text' => __("I couldn't find a confident answer in the published trust center documents. Please contact the team for help.", 'opentrust'),
+                'text' => __("I couldn't find a confident answer in the published trust center documents. Please contact the team for help.", 'open-trust-center-by-ettic'),
             ],
         ]);
     }
@@ -339,19 +339,19 @@ abstract class Ettic_OTC_Chat_Provider {
                         if ($title !== '') {
                             return $is_settled
                                 /* translators: %s is the document title. */
-                                ? sprintf(__('Read "%s"', 'opentrust'), $title)
+                                ? sprintf(__('Read "%s"', 'open-trust-center-by-ettic'), $title)
                                 /* translators: %s is the document title. */
-                                : sprintf(__('Reading "%s"', 'opentrust'), $title);
+                                : sprintf(__('Reading "%s"', 'open-trust-center-by-ettic'), $title);
                         }
                     }
                 }
                 return $is_settled
                     /* translators: %s is the document id. */
-                    ? sprintf(__('Read %s', 'opentrust'), $id)
+                    ? sprintf(__('Read %s', 'open-trust-center-by-ettic'), $id)
                     /* translators: %s is the document id. */
-                    : sprintf(__('Reading %s', 'opentrust'), $id);
+                    : sprintf(__('Reading %s', 'open-trust-center-by-ettic'), $id);
             }
-            return $is_settled ? __('Read a document', 'opentrust') : __('Reading a document', 'opentrust');
+            return $is_settled ? __('Read a document', 'open-trust-center-by-ettic') : __('Reading a document', 'open-trust-center-by-ettic');
         }
 
         if ($name === 'search_documents') {
@@ -364,11 +364,11 @@ abstract class Ettic_OTC_Chat_Provider {
                 }
                 return $is_settled
                     /* translators: %s is the search query. */
-                    ? sprintf(__('Searched for "%s"', 'opentrust'), $q)
+                    ? sprintf(__('Searched for "%s"', 'open-trust-center-by-ettic'), $q)
                     /* translators: %s is the search query. */
-                    : sprintf(__('Searching for "%s"', 'opentrust'), $q);
+                    : sprintf(__('Searching for "%s"', 'open-trust-center-by-ettic'), $q);
             }
-            return $is_settled ? __('Searched documents', 'opentrust') : __('Searching documents', 'opentrust');
+            return $is_settled ? __('Searched documents', 'open-trust-center-by-ettic') : __('Searching documents', 'open-trust-center-by-ettic');
         }
 
         return $name;
@@ -396,22 +396,22 @@ abstract class Ettic_OTC_Chat_Provider {
         if ($all_get) {
             return $is_settled
                 /* translators: %d is the number of documents that were read in parallel. */
-                ? sprintf(__('Read %d documents', 'opentrust'), $count)
+                ? sprintf(__('Read %d documents', 'open-trust-center-by-ettic'), $count)
                 /* translators: %d is the number of documents being read in parallel. */
-                : sprintf(__('Reading %d documents', 'opentrust'), $count);
+                : sprintf(__('Reading %d documents', 'open-trust-center-by-ettic'), $count);
         }
         if ($all_search) {
             return $is_settled
                 /* translators: %d is the number of search queries that were fired in parallel. */
-                ? sprintf(__('Ran %d searches', 'opentrust'), $count)
+                ? sprintf(__('Ran %d searches', 'open-trust-center-by-ettic'), $count)
                 /* translators: %d is the number of search queries fired in parallel. */
-                : sprintf(__('Running %d searches', 'opentrust'), $count);
+                : sprintf(__('Running %d searches', 'open-trust-center-by-ettic'), $count);
         }
         return $is_settled
             /* translators: %d is the number of parallel retrieval calls (mixed types). */
-            ? sprintf(__('Ran %d retrievals', 'opentrust'), $count)
+            ? sprintf(__('Ran %d retrievals', 'open-trust-center-by-ettic'), $count)
             /* translators: %d is the number of parallel retrieval calls (mixed types). */
-            : sprintf(__('Running %d retrievals', 'opentrust'), $count);
+            : sprintf(__('Running %d retrievals', 'open-trust-center-by-ettic'), $count);
     }
 
     // ──────────────────────────────────────────────
@@ -440,7 +440,7 @@ abstract class Ettic_OTC_Chat_Provider {
      */
     final protected function http_get(string $url, array $headers = [], int $timeout = 15): array {
         if (!$this->host_allowed($url)) {
-            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'opentrust')];
+            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'open-trust-center-by-ettic')];
         }
 
         $response = wp_safe_remote_get($url, [
@@ -459,7 +459,7 @@ abstract class Ettic_OTC_Chat_Provider {
      */
     final protected function http_post(string $url, array $payload, array $headers = [], int $timeout = 60): array {
         if (!$this->host_allowed($url)) {
-            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'opentrust')];
+            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'open-trust-center-by-ettic')];
         }
 
         $headers = array_merge(['Content-Type' => 'application/json'], $headers);
@@ -510,12 +510,12 @@ abstract class Ettic_OTC_Chat_Provider {
      */
     final protected function stream_post(string $url, array $payload, array $headers, callable $on_line, int $timeout = 90): array {
         if (!$this->host_allowed($url)) {
-            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'opentrust')];
+            return ['ok' => false, 'error' => __('Refused outbound request to disallowed host.', 'open-trust-center-by-ettic')];
         }
 
         // SSE chunk callbacks require cURL transport. Streams/fsockopen buffer the full response.
         if (!function_exists('curl_init')) {
-            return ['ok' => false, 'error' => __('AI streaming requires the PHP cURL extension.', 'opentrust')];
+            return ['ok' => false, 'error' => __('AI streaming requires the PHP cURL extension.', 'open-trust-center-by-ettic')];
         }
 
         $body = wp_json_encode($payload);
@@ -617,7 +617,7 @@ abstract class Ettic_OTC_Chat_Provider {
         // If WP picked Streams/fsockopen, http_api_curl never fired and our SSE callbacks
         // never installed — the response body was buffered, not streamed. Fail loudly.
         if (!$state->curl_hook_ran) {
-            return ['ok' => false, 'error' => __('AI streaming requires the WordPress cURL transport.', 'opentrust')];
+            return ['ok' => false, 'error' => __('AI streaming requires the WordPress cURL transport.', 'open-trust-center-by-ettic')];
         }
 
         // Copy parsed response headers (Requests' stream_headers still ran since we
@@ -670,7 +670,7 @@ abstract class Ettic_OTC_Chat_Provider {
      */
     final protected function describe_streaming_error(string $body, array $headers, int $code): string {
         /* translators: %d: HTTP status code returned by the provider */
-        $parts = [sprintf(__('Provider returned HTTP %d', 'opentrust'), $code)];
+        $parts = [sprintf(__('Provider returned HTTP %d', 'open-trust-center-by-ettic'), $code)];
 
         $body = trim($body);
         if ($body !== '') {
@@ -725,6 +725,6 @@ abstract class Ettic_OTC_Chat_Provider {
             }
         }
         /* translators: %d: HTTP status code returned by the provider */
-        return sprintf(__('Provider returned HTTP %d', 'opentrust'), $code);
+        return sprintf(__('Provider returned HTTP %d', 'open-trust-center-by-ettic'), $code);
     }
 }
