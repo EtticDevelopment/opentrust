@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Ettic_OTC_IO {
 
     public const SCHEMA_VERSION  = 1;
-    public const FORMAT_SETTINGS = 'opentrust-settings';
-    public const FORMAT_CONTENT  = 'opentrust-content';
+    public const FORMAT_SETTINGS = 'ettic-otc-settings';
+    public const FORMAT_CONTENT  = 'ettic-otc-content';
 
     public const STRATEGY_SKIP       = 'skip';
     public const STRATEGY_OVERWRITE  = 'overwrite';
@@ -22,7 +22,7 @@ final class Ettic_OTC_IO {
     // Encrypted secrets, per-site salt, and server-controlled flags. Never exported.
     public const SETTINGS_EXCLUDE = [
         'turnstile_secret_key',
-        'opentrust_site_salt',
+        'ettic_otc_site_salt',
         'ai_enabled',
         'ai_provider',
         // ai_model is paired with ai_provider — exporting it without the provider
@@ -38,63 +38,63 @@ final class Ettic_OTC_IO {
     // Keep in sync with class-ettic-otc-cpt.php save handlers.
     private const META_KEYS = [
         Ettic_OTC_CPT::POLICY => [
-            '_opentrust_uuid',
-            '_opentrust_policy_ref_id',
-            '_opentrust_policy_category',
-            '_opentrust_policy_effective_date',
-            '_opentrust_policy_review_date',
-            '_opentrust_policy_sort_order',
-            '_opentrust_policy_citations',
-            '_opentrust_policy_attachment_id',
-            '_opentrust_version',
-            '_opentrust_version_summary',
-            '_opentrust_policy_chat_summary',
-            '_opentrust_policy_chat_summary_updated_at',
-            '_opentrust_policy_chat_summary_origin',
+            '_ettic_otc_uuid',
+            '_ettic_otc_policy_ref_id',
+            '_ettic_otc_policy_category',
+            '_ettic_otc_policy_effective_date',
+            '_ettic_otc_policy_review_date',
+            '_ettic_otc_policy_sort_order',
+            '_ettic_otc_policy_citations',
+            '_ettic_otc_policy_attachment_id',
+            '_ettic_otc_version',
+            '_ettic_otc_version_summary',
+            '_ettic_otc_policy_chat_summary',
+            '_ettic_otc_policy_chat_summary_updated_at',
+            '_ettic_otc_policy_chat_summary_origin',
         ],
         Ettic_OTC_CPT::CERTIFICATION => [
-            '_opentrust_uuid',
-            '_opentrust_cert_type',
-            '_opentrust_cert_status',
-            '_opentrust_cert_issuing_body',
-            '_opentrust_cert_issue_date',
-            '_opentrust_cert_expiry_date',
-            '_opentrust_cert_badge_id',
-            '_opentrust_cert_artifact_id',
-            '_opentrust_cert_description',
+            '_ettic_otc_uuid',
+            '_ettic_otc_cert_type',
+            '_ettic_otc_cert_status',
+            '_ettic_otc_cert_issuing_body',
+            '_ettic_otc_cert_issue_date',
+            '_ettic_otc_cert_expiry_date',
+            '_ettic_otc_cert_badge_id',
+            '_ettic_otc_cert_artifact_id',
+            '_ettic_otc_cert_description',
         ],
         Ettic_OTC_CPT::SUBPROCESSOR => [
-            '_opentrust_uuid',
-            '_opentrust_sub_purpose',
-            '_opentrust_sub_data_processed',
-            '_opentrust_sub_country',
-            '_opentrust_sub_website',
-            '_opentrust_sub_dpa_signed',
+            '_ettic_otc_uuid',
+            '_ettic_otc_sub_purpose',
+            '_ettic_otc_sub_data_processed',
+            '_ettic_otc_sub_country',
+            '_ettic_otc_sub_website',
+            '_ettic_otc_sub_dpa_signed',
         ],
         Ettic_OTC_CPT::DATA_PRACTICE => [
-            '_opentrust_uuid',
-            '_opentrust_dp_data_items',
-            '_opentrust_dp_purpose',
-            '_opentrust_dp_legal_basis',
-            '_opentrust_dp_retention_period',
-            '_opentrust_dp_shared_with',
-            '_opentrust_dp_sort_order',
-            '_opentrust_dp_collected',
-            '_opentrust_dp_stored',
-            '_opentrust_dp_shared',
-            '_opentrust_dp_sold',
-            '_opentrust_dp_encrypted',
+            '_ettic_otc_uuid',
+            '_ettic_otc_dp_data_items',
+            '_ettic_otc_dp_purpose',
+            '_ettic_otc_dp_legal_basis',
+            '_ettic_otc_dp_retention_period',
+            '_ettic_otc_dp_shared_with',
+            '_ettic_otc_dp_sort_order',
+            '_ettic_otc_dp_collected',
+            '_ettic_otc_dp_stored',
+            '_ettic_otc_dp_shared',
+            '_ettic_otc_dp_sold',
+            '_ettic_otc_dp_encrypted',
         ],
         Ettic_OTC_CPT::FAQ => [
-            '_opentrust_uuid',
-            '_opentrust_faq_related_policy',
+            '_ettic_otc_uuid',
+            '_ettic_otc_faq_related_policy',
         ],
     ];
 
     // Meta keys whose value is an attachment ID; serialized as __media_ref.
     private const ATTACHMENT_META_KEYS = [
-        Ettic_OTC_CPT::POLICY        => ['_opentrust_policy_attachment_id'],
-        Ettic_OTC_CPT::CERTIFICATION => ['_opentrust_cert_badge_id', '_opentrust_cert_artifact_id'],
+        Ettic_OTC_CPT::POLICY        => ['_ettic_otc_policy_attachment_id'],
+        Ettic_OTC_CPT::CERTIFICATION => ['_ettic_otc_cert_badge_id', '_ettic_otc_cert_artifact_id'],
         Ettic_OTC_CPT::SUBPROCESSOR  => [],
         Ettic_OTC_CPT::DATA_PRACTICE => [],
         Ettic_OTC_CPT::FAQ           => [],
@@ -103,7 +103,7 @@ final class Ettic_OTC_IO {
     // meta_key => target_cpt_slug. Cross-CPT refs serialized as __post_ref.
     private const POST_REF_META_KEYS = [
         Ettic_OTC_CPT::FAQ => [
-            '_opentrust_faq_related_policy' => Ettic_OTC_CPT::POLICY,
+            '_ettic_otc_faq_related_policy' => Ettic_OTC_CPT::POLICY,
         ],
     ];
 
@@ -133,7 +133,7 @@ final class Ettic_OTC_IO {
         return [
             'format'            => self::FORMAT_SETTINGS,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => ETTIC_OTC_VERSION,
+            'ettic_otc_version' => ETTIC_OTC_VERSION,
             'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
@@ -177,7 +177,7 @@ final class Ettic_OTC_IO {
         return [
             'format'            => self::FORMAT_CONTENT,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => ETTIC_OTC_VERSION,
+            'ettic_otc_version' => ETTIC_OTC_VERSION,
             'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
@@ -249,13 +249,13 @@ final class Ettic_OTC_IO {
             );
         }
 
-        $their_major = (int) explode('.', (string) ($manifest['opentrust_version'] ?? '0.0.0'))[0];
+        $their_major = (int) explode('.', (string) ($manifest['ettic_otc_version'] ?? '0.0.0'))[0];
         $our_major   = (int) explode('.', ETTIC_OTC_VERSION)[0];
         if ($their_major !== $our_major) {
             $errors[] = sprintf(
                 /* translators: %1$s: their version, %2$s: our version */
                 __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'opentrust'),
-                (string) ($manifest['opentrust_version'] ?? '?'),
+                (string) ($manifest['ettic_otc_version'] ?? '?'),
                 ETTIC_OTC_VERSION
             );
         }
@@ -375,11 +375,11 @@ final class Ettic_OTC_IO {
             $merged[$k] = $current[$k] ?? '';
         }
 
-        update_option('opentrust_settings', $merged, false);
+        update_option('ettic_otc_settings', $merged, false);
 
         // Slug change → flush rewrites on next admin load.
         if (isset($imported['endpoint_slug']) && $imported['endpoint_slug'] !== ($current['endpoint_slug'] ?? '')) {
-            set_transient('opentrust_flush_rewrite', true);
+            set_transient('ettic_otc_flush_rewrite', true);
         }
 
         Ettic_OTC::instance()->invalidate_cache();
@@ -416,16 +416,11 @@ final class Ettic_OTC_IO {
     // ──────────────────────────────────────────────
 
     /**
-     * Rewrite v1.0.x CPT slugs (ot_*) in an inbound manifest to the v1.1+
-     * slugs (opentr_*). Touches top-level record keys only — record bodies
-     * carry __post_ref values as UUIDs (not slugs) and resolve fine once the
-     * outer key is corrected.
-     *
-     * @deprecated 1.1.0 Drop in 2.0.0. The major-version mismatch check in
-     *             validate_manifest() already hard-rejects 1.x archives on a
-     *             2.x destination, so this remap becomes redundant. Also
-     *             remove the two call sites in preview_import() and
-     *             apply_content_import().
+     * Rewrite legacy CPT slugs (v1.0.x `ot_*`, v1.1.x `opentr_*`) in an
+     * inbound manifest to the current `eotc_*` slugs. Touches top-level
+     * record keys only — record bodies carry __post_ref values as UUIDs
+     * (not slugs) and resolve fine once the outer key is corrected. Phase 8
+     * extends Ettic_OTC_CPT::LEGACY_MAP with the v1.1.x entries.
      */
     private static function remap_legacy_cpt_keys(array $manifest): array {
         if (empty($manifest['records']) || !is_array($manifest['records'])) {
@@ -441,7 +436,7 @@ final class Ettic_OTC_IO {
 
     /**
      * Rewrite legacy `_ot_*` postmeta keys in an inbound manifest's record
-     * bodies to the v1.1.1+ `_opentrust_*` keys. Pre-1.1.1 exports carry the
+     * bodies to the v1.1.1+ `_ettic_otc_*` keys. Pre-1.1.1 exports carry the
      * short prefix; without this remap their meta would be written under the
      * old key names and read back as empty.
      *
@@ -509,7 +504,7 @@ final class Ettic_OTC_IO {
         foreach (self::POST_REF_META_KEYS[$cpt] ?? [] as $meta_key => $_target_cpt) {
             $ref_id = (int) ($meta_out[$meta_key] ?? 0);
             if ($ref_id > 0) {
-                $ref_uuid = (string) get_post_meta($ref_id, '_opentrust_uuid', true);
+                $ref_uuid = (string) get_post_meta($ref_id, '_ettic_otc_uuid', true);
                 if ($ref_uuid !== '') {
                     $meta_out[$meta_key] = ['__post_ref' => $ref_uuid];
                 } else {
@@ -519,7 +514,7 @@ final class Ettic_OTC_IO {
         }
 
         return [
-            'uuid'       => $meta_out['_opentrust_uuid'] ?? null,
+            'uuid'       => $meta_out['_ettic_otc_uuid'] ?? null,
             'slug'       => $post->post_name,
             'title'      => $post->post_title,
             'content'    => $post->post_content,
@@ -541,8 +536,8 @@ final class Ettic_OTC_IO {
         }
         // Stamp the source so a same-site re-import dedupes by hash instead
         // of re-uploading (and tripping WP's MIME allowlist on SVG, etc.).
-        if (!get_post_meta($att_id, '_opentrust_import_sha256', true)) {
-            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
+        if (!get_post_meta($att_id, '_ettic_otc_import_sha256', true)) {
+            update_post_meta($att_id, '_ettic_otc_import_sha256', $hash);
         }
         $att = get_post($att_id);
         $ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -572,7 +567,7 @@ final class Ettic_OTC_IO {
                 'posts_per_page' => 1,
                 'fields'         => 'ids',
                 'meta_query'     => [
-                    ['key' => '_opentrust_uuid', 'value' => $uuid],
+                    ['key' => '_ettic_otc_uuid', 'value' => $uuid],
                 ],
             ]);
             if (!empty($hits)) return (int) $hits[0];
@@ -655,8 +650,8 @@ final class Ettic_OTC_IO {
         }
 
         // Fresh UUID on create_new so we don't collide with the existing post.
-        if (empty($meta['_opentrust_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
-            $meta['_opentrust_uuid'] = wp_generate_uuid4();
+        if (empty($meta['_ettic_otc_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
+            $meta['_ettic_otc_uuid'] = wp_generate_uuid4();
         }
 
         foreach ($meta as $key => $val) {
@@ -760,7 +755,7 @@ final class Ettic_OTC_IO {
                 update_post_meta($att_id, '_wp_attachment_image_alt', (string) $entry['alt']);
             }
 
-            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
+            update_post_meta($att_id, '_ettic_otc_import_sha256', $hash);
 
             $map[$hash] = $att_id;
         }
@@ -775,7 +770,7 @@ final class Ettic_OTC_IO {
             'posts_per_page' => 1,
             'fields'         => 'ids',
             'meta_query'     => [
-                ['key' => '_opentrust_import_sha256', 'value' => $hash],
+                ['key' => '_ettic_otc_import_sha256', 'value' => $hash],
             ],
         ]);
         return !empty($hits) ? (int) $hits[0] : 0;

@@ -2,7 +2,7 @@
 /**
  * Chat orchestration singleton.
  *
- * Registers the POST /wp-json/opentrust/v1/chat REST route, wires corpus
+ * Registers the POST /wp-json/ettic-otc/v1/chat REST route, wires corpus
  * invalidation to CPT save events, provides the tool surface (static method),
  * and implements the handler that dispatches to the configured provider
  * adapter via either a streaming (SSE) or a blocking (JSON fallback) transport.
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Ettic_OTC_Chat {
 
-    public const REST_NAMESPACE = 'opentrust/v1';
+    public const REST_NAMESPACE = 'ettic-otc/v1';
     public const REST_ROUTE     = '/chat';
     /**
      * Cap on how many round-trips the model can make in one chat request.
@@ -67,7 +67,7 @@ final class Ettic_OTC_Chat {
             Ettic_OTC_CPT::CORPUS,
             [Ettic_OTC_Chat_Corpus::class, 'invalidate']
         );
-        add_action('update_option_opentrust_settings', [Ettic_OTC_Chat_Corpus::class, 'invalidate']);
+        add_action('update_option_ettic_otc_settings', [Ettic_OTC_Chat_Corpus::class, 'invalidate']);
 
         // Auto-summarize hooks. Independent of corpus invalidation — the
         // summarizer schedules a debounced cron call rather than running
@@ -123,7 +123,7 @@ final class Ettic_OTC_Chat {
         if (Ettic_OTC_Chat_Budget::turnstile_required($settings)) {
             if (!Ettic_OTC_Chat_Budget::turnstile_session_verified($session_hash)) {
                 // The secret is stored as a libsodium ciphertext blob in
-                // opentrust_settings; decrypt at the edge — if decryption
+                // ettic_otc_settings; decrypt at the edge — if decryption
                 // fails we fail closed and surface the challenge error.
                 $stored_secret = (string) ($settings['turnstile_secret_key'] ?? '');
                 $secret        = Ettic_OTC_Chat_Secrets::decrypt($stored_secret) ?? '';
@@ -360,7 +360,7 @@ final class Ettic_OTC_Chat {
         }
 
         // Prime the stream with a keepalive comment so proxies start forwarding.
-        echo ": opentrust-chat-ready\n\n";
+        echo ": ettic-otc-chat-ready\n\n";
         flush();
     }
 

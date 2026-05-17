@@ -33,7 +33,7 @@ if ($ot_contact_url === '') {
 $ot_max_len   = (int) ($ot_settings['ai_max_message_length'] ?? 1000);
 $ot_ts_key    = !empty($ot_settings['ai_turnstile_enabled']) ? (string) ($ot_settings['turnstile_site_key'] ?? '') : '';
 
-$ot_rest_url  = esc_url_raw(rest_url('opentrust/v1/chat'));
+$ot_rest_url  = esc_url_raw(rest_url('ettic-otc/v1/chat'));
 $ot_nonce     = wp_create_nonce('wp_rest');
 
 // Contrast-safe text color against the user's accent color.
@@ -81,17 +81,17 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         (int) $ot_hsl['l'],
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
-    wp_register_style('opentrust-chat', plugins_url('assets/css/chat.css', ETTIC_OTC_PLUGIN_FILE), ['opentrust-frontend'], ETTIC_OTC_VERSION);
-    wp_enqueue_style('opentrust-chat');
-    wp_add_inline_style('opentrust-chat', $ot_root_vars);
-    wp_print_styles(['opentrust-frontend', 'opentrust-chat']);
+    wp_register_style('ettic-otc-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
+    wp_register_style('ettic-otc-chat', plugins_url('assets/css/chat.css', ETTIC_OTC_PLUGIN_FILE), ['ettic-otc-frontend'], ETTIC_OTC_VERSION);
+    wp_enqueue_style('ettic-otc-chat');
+    wp_add_inline_style('ettic-otc-chat', $ot_root_vars);
+    wp_print_styles(['ettic-otc-frontend', 'ettic-otc-chat']);
     ?>
     <?php if ($ot_ts_key !== ''): ?>
         <?php
         // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent, PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent, WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Turnstile must load from Cloudflare CDN
-        wp_register_script('opentrust-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], null, ['strategy' => 'defer']);
-        wp_print_scripts('opentrust-turnstile');
+        wp_register_script('ettic-otc-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], null, ['strategy' => 'defer']);
+        wp_print_scripts('ettic-otc-turnstile');
         ?>
     <?php endif; ?>
 </head>
@@ -158,7 +158,7 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
 
             <?php if ($ot_state === 'ready'):
                 $ot_ns_response = $ot_data['noscript_response'] ?? null;
-                $ot_ns_nonce    = wp_create_nonce('opentrust_chat_noscript');
+                $ot_ns_nonce    = wp_create_nonce('ettic_otc_chat_noscript');
                 ?>
                 <?php if (is_array($ot_ns_response)): ?>
                     <div class="ot-chat-noscript">
@@ -362,14 +362,14 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         );
 
         wp_register_script(
-            'opentrust-chat',
+            'ettic-otc-chat',
             plugins_url('assets/js/chat.js', ETTIC_OTC_PLUGIN_FILE),
             [],
             ETTIC_OTC_VERSION,
             ['in_footer' => true, 'strategy' => 'defer']
         );
-        wp_enqueue_script('opentrust-chat');
-        wp_print_scripts(['opentrust-chat']);
+        wp_enqueue_script('ettic-otc-chat');
+        wp_print_scripts(['ettic-otc-chat']);
         ?>
     <?php endif; ?>
 

@@ -2,7 +2,7 @@
 /**
  * Default FAQ catalog.
  *
- * Generic, content-agnostic glossary entries seeded into the opentr_faq CPT on
+ * Generic, content-agnostic glossary entries seeded into the eotc_faq CPT on
  * first plugin activation. These explain universal trust-center concepts and
  * make no claims about the specific company running the plugin.
  *
@@ -13,8 +13,8 @@
  *                      block at seed time and stored as post_content).',
  *   ]
  *
- * Filterable via the `opentrust_faq_catalog` filter. Because seeding is gated
- * by the `opentrust_faqs_seeded` option, editing this file after first
+ * Filterable via the `ettic_otc_faq_catalog` filter. Because seeding is gated
+ * by the `ettic_otc_faqs_seeded` option, editing this file after first
  * activation has no effect on existing installs.
  */
 

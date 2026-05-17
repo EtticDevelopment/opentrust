@@ -63,8 +63,8 @@ register_activation_hook(__FILE__, static function (): void {
     // First-install defaults. Autoload=no — the option is a sizeable array
     // carrying encrypted Turnstile secret + per-site salt, and we'd rather
     // not load it on every front-end request that never touches Ettic_OTC.
-    if (false === get_option('opentrust_settings')) {
-        add_option('opentrust_settings', Ettic_OTC::defaults(), '', false);
+    if (false === get_option('ettic_otc_settings')) {
+        add_option('ettic_otc_settings', Ettic_OTC::defaults(), '', false);
     }
 
     // Custom tables.
@@ -72,8 +72,8 @@ register_activation_hook(__FILE__, static function (): void {
 
     // Stamp the schema version on a true first install only. Future schema
     // changes (none today) would bump this constant and re-check here.
-    if (false === get_option('opentrust_db_version', false)) {
-        update_option('opentrust_db_version', ETTIC_OTC_DB_VERSION, false);
+    if (false === get_option('ettic_otc_db_version', false)) {
+        update_option('ettic_otc_db_version', ETTIC_OTC_DB_VERSION, false);
     }
 
     // Seed default FAQs on first activation. Gated internally so deletions

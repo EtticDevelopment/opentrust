@@ -90,7 +90,7 @@ final class Ettic_OTC {
             // on first access. Empty here so a fresh install starts in the
             // "needs lazy generation" state; once written, sanitize_settings
             // carries it forward byte-for-byte.
-            'opentrust_site_salt'  => '',
+            'ettic_otc_site_salt'  => '',
 
             // ── AI chat (OTC) ──────────────────────────
             'ai_enabled'                => false,
@@ -124,7 +124,7 @@ final class Ettic_OTC {
     }
 
     public static function get_settings(): array {
-        $saved = get_option('opentrust_settings', []);
+        $saved = get_option('ettic_otc_settings', []);
         return wp_parse_args($saved, self::defaults());
     }
 
@@ -138,38 +138,38 @@ final class Ettic_OTC {
 
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/?$',
-            'index.php?opentrust=main',
+            'index.php?ettic_otc=main',
             'top'
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/?$',
-            'index.php?opentrust=policy&opentrust_policy_slug=$matches[1]',
+            'index.php?ettic_otc=policy&ettic_otc_policy_slug=$matches[1]',
             'top'
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/version/([0-9]+)/?$',
-            'index.php?opentrust=policy_version&opentrust_policy_slug=$matches[1]&opentrust_version=$matches[2]',
+            'index.php?ettic_otc=policy_version&ettic_otc_policy_slug=$matches[1]&ettic_otc_version=$matches[2]',
             'top'
         );
 
         // AI chat (OTC).
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/ask/?$',
-            'index.php?opentrust=ask',
+            'index.php?ettic_otc=ask',
             'top'
         );
     }
 
     public function register_query_vars(array $vars): array {
-        $vars[] = 'opentrust';
-        $vars[] = 'opentrust_policy_slug';
-        $vars[] = 'opentrust_version';
+        $vars[] = 'ettic_otc';
+        $vars[] = 'ettic_otc_policy_slug';
+        $vars[] = 'ettic_otc_version';
         return $vars;
     }
 
     public function maybe_flush_rewrites(): void {
-        if (get_transient('opentrust_flush_rewrite')) {
-            delete_transient('opentrust_flush_rewrite');
+        if (get_transient('ettic_otc_flush_rewrite')) {
+            delete_transient('ettic_otc_flush_rewrite');
             flush_rewrite_rules();
         }
     }
@@ -179,7 +179,7 @@ final class Ettic_OTC {
     // ──────────────────────────────────────────────
 
     public function maybe_render_trust_center(): void {
-        $page = get_query_var('opentrust');
+        $page = get_query_var('ettic_otc');
         if (!$page) {
             return;
         }
@@ -198,8 +198,8 @@ final class Ettic_OTC {
         // this version in every key, so every cached locale variant is
         // instantly stale after the bump. Stale transients expire naturally
         // on their existing TTL and are garbage-collected by WordPress.
-        $version = (int) get_option('opentrust_cache_version', 1);
-        update_option('opentrust_cache_version', $version + 1, false);
+        $version = (int) get_option('ettic_otc_cache_version', 1);
+        update_option('ettic_otc_cache_version', $version + 1, false);
     }
 
 

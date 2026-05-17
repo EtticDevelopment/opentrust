@@ -90,10 +90,10 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         (int) $ot_accent_l_safe,
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
-    wp_enqueue_style('opentrust-frontend');
-    wp_add_inline_style('opentrust-frontend', $ot_root_vars);
-    wp_print_styles(['opentrust-frontend']);
+    wp_register_style('ettic-otc-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
+    wp_enqueue_style('ettic-otc-frontend');
+    wp_add_inline_style('ettic-otc-frontend', $ot_root_vars);
+    wp_print_styles(['ettic-otc-frontend']);
     ?>
 </head>
 <body class="ot-body">
@@ -226,14 +226,14 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
 
     <?php
     wp_register_script(
-        'opentrust-frontend',
+        'ettic-otc-frontend',
         plugins_url('assets/js/frontend.js', ETTIC_OTC_PLUGIN_FILE),
         [],
         ETTIC_OTC_VERSION,
         ['in_footer' => true, 'strategy' => 'defer']
     );
-    wp_enqueue_script('opentrust-frontend');
-    wp_print_scripts(['opentrust-frontend']);
+    wp_enqueue_script('ettic-otc-frontend');
+    wp_print_scripts(['ettic-otc-frontend']);
     ?>
 
 </body>

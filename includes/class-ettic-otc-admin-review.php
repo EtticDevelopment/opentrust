@@ -30,9 +30,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Ettic_OTC_Admin_Review {
 
-    private const DISMISS_META_KEY  = '_opentrust_review_dismissed_v1';
-    private const FIRST_SEEN_OPTION = 'opentrust_first_activated_at';
-    private const ACTION            = 'opentrust_dismiss_review_notice';
+    private const DISMISS_META_KEY  = '_ettic_otc_review_dismissed_v1';
+    private const FIRST_SEEN_OPTION = 'ettic_otc_first_activated_at';
+    private const ACTION            = 'ettic_otc_dismiss_review_notice';
     private const POLICY_THRESHOLD  = 3;
     private const DAYS_THRESHOLD    = 14;
     private const SNOOZE_DAYS       = 30;
@@ -71,7 +71,7 @@ final class Ettic_OTC_Admin_Review {
     // ──────────────────────────────────────────────
 
     public function footer_text(string $text): string {
-        if (!self::is_opentrust_screen()) {
+        if (!self::is_ettic_otc_screen()) {
             return $text;
         }
 
@@ -99,7 +99,7 @@ final class Ettic_OTC_Admin_Review {
         if (!current_user_can('manage_options')) {
             return;
         }
-        if (!self::is_opentrust_screen()) {
+        if (!self::is_ettic_otc_screen()) {
             return;
         }
         if (!$this->should_show_milestone_notice()) {
@@ -110,7 +110,7 @@ final class Ettic_OTC_Admin_Review {
         $not_now_url   = self::dismiss_url('snooze');
         $already_url   = self::dismiss_url('permanent');
         ?>
-        <div class="notice notice-info opentrust-review-notice">
+        <div class="notice notice-info ettic-otc-review-notice">
             <p>
                 <strong><?php esc_html_e('Your trust center is up and running.', 'opentrust'); ?></strong>
                 <?php esc_html_e('Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'opentrust'); ?>
@@ -135,7 +135,7 @@ final class Ettic_OTC_Admin_Review {
      * edits, and a per-user dismissal check.
      */
     private function should_show_milestone_notice(): bool {
-        if (!apply_filters('opentrust_show_review_notice', true)) {
+        if (!apply_filters('ettic_otc_show_review_notice', true)) {
             return false;
         }
 
@@ -181,7 +181,7 @@ final class Ettic_OTC_Admin_Review {
         update_user_meta(get_current_user_id(), self::DISMISS_META_KEY, $value);
 
         $referer = wp_get_referer();
-        wp_safe_redirect($referer ?: admin_url('admin.php?page=opentrust'));
+        wp_safe_redirect($referer ?: admin_url('admin.php?page=ettic-otc'));
         exit;
     }
 
@@ -194,7 +194,7 @@ final class Ettic_OTC_Admin_Review {
      * Ettic_OTC_Admin: any screen whose id contains "opentrust" plus the
      * five content CPTs. Identical pattern keeps both notices in lockstep.
      */
-    private static function is_opentrust_screen(): bool {
+    private static function is_ettic_otc_screen(): bool {
         if (!function_exists('get_current_screen')) {
             return false;
         }
@@ -211,8 +211,8 @@ final class Ettic_OTC_Admin_Review {
         // Neutral reviews index — wp.org Detailed Plugin Guideline 9 forbids
         // linking to a pre-rated/filtered review surface (e.g. ?rate=5#new-post),
         // which hides constructive feedback and pressures positive ratings.
-        $url = 'https://wordpress.org/support/plugin/opentrust/reviews/';
-        return (string) apply_filters('opentrust_review_url', $url);
+        $url = 'https://wordpress.org/support/plugin/open-trust-center-by-ettic/reviews/';
+        return (string) apply_filters('ettic_otc_review_url', $url);
     }
 
     private static function dismiss_url(string $type): string {

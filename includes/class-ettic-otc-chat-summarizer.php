@@ -1,6 +1,6 @@
 <?php
 /**
- * AI-generated 2–3 sentence summaries for opentr_policy posts.
+ * AI-generated 2–3 sentence summaries for eotc_policy posts.
  *
  * The agentic chat engine reads a slim corpus index in its system prompt;
  * each policy line carries a one-paragraph summary used for routing decisions
@@ -11,7 +11,7 @@
  *
  * Lifecycle:
  *   - Gated by the `ai_auto_summarize` setting.
- *   - On every meaningful save_post for an opentr_policy, a wp_schedule_single_event
+ *   - On every meaningful save_post for an eotc_policy, a wp_schedule_single_event
  *     fires ~5 seconds later (debounce; doesn't block the editor save).
  *   - The cron handler calls whichever AI provider the operator configured
  *     for chat, using the same key. Result is persisted to postmeta and the
@@ -38,11 +38,11 @@ final class Ettic_OTC_Chat_Summarizer {
      * Postmeta key. Mirror of Ettic_OTC_Chat_Corpus::POLICY_SUMMARY_META —
      * declared in both classes so neither file requires the other to load.
      */
-    public const META_KEY            = '_opentrust_policy_chat_summary';
-    public const META_KEY_UPDATED_AT = '_opentrust_policy_chat_summary_updated_at';
-    public const META_KEY_ORIGIN     = '_opentrust_policy_chat_summary_origin'; // 'auto' | 'manual'
+    public const META_KEY            = '_ettic_otc_policy_chat_summary';
+    public const META_KEY_UPDATED_AT = '_ettic_otc_policy_chat_summary_updated_at';
+    public const META_KEY_ORIGIN     = '_ettic_otc_policy_chat_summary_origin'; // 'auto' | 'manual'
 
-    public const CRON_HOOK           = 'opentrust_generate_policy_summary';
+    public const CRON_HOOK           = 'ettic_otc_generate_policy_summary';
     public const SUMMARY_MAX_CHARS   = 320;
     public const SUMMARY_DEBOUNCE_S  = 5;
     public const SWEEP_STAGGER_S     = 2;

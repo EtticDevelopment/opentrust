@@ -2,7 +2,7 @@
 /**
  * Visitor question log.
  *
- * - Custom table `wp_opentrust_chat_log` with hashed-only identifiers.
+ * - Custom table `wp_ettic_otc_chat_log` with hashed-only identifiers.
  * - Zero PII: no raw IPs, no UAs, no referers, no response bodies, no history.
  * - Only the question text (truncated) and aggregate metrics.
  * - 90-day auto-purge via wp_cron.
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Ettic_OTC_Chat_Log {
 
-    public const CRON_HOOK      = 'opentrust_chat_log_purge';
+    public const CRON_HOOK      = 'ettic_otc_chat_log_purge';
     /**
      * Daily purge cutoff. Three i18n strings in Ettic_OTC_Admin
      * (the AI-tab logging-toggle label, the Questions-page intro, and the
@@ -33,7 +33,7 @@ final class Ettic_OTC_Chat_Log {
 
     public static function table_name(): string {
         global $wpdb;
-        return $wpdb->prefix . 'opentrust_chat_log';
+        return $wpdb->prefix . 'ettic_otc_chat_log';
     }
 
     /**

@@ -15,11 +15,11 @@ final class Ettic_OTC_CPT {
      * CPT slug constants. Use these everywhere instead of bare strings so a
      * rename is one edit and a typo can't sneak through a `match` default arm.
      */
-    public const POLICY        = 'opentr_policy';
-    public const CERTIFICATION = 'opentr_certification';
-    public const SUBPROCESSOR  = 'opentr_subprocessor';
-    public const DATA_PRACTICE = 'opentr_data_practice';
-    public const FAQ           = 'opentr_faq';
+    public const POLICY        = 'eotc_policy';
+    public const CERTIFICATION = 'eotc_certification';
+    public const SUBPROCESSOR  = 'eotc_subprocessor';
+    public const DATA_PRACTICE = 'eotc_data_practice';
+    public const FAQ           = 'eotc_faq';
 
     /**
      * Legacy slugs from v1.0.x. Kept solely for the v3→v4 migration and the
@@ -47,63 +47,63 @@ final class Ettic_OTC_CPT {
 
     /**
      * Legacy postmeta keys from v1.0–v1.1, mapped old `_ot_*` → new
-     * `_opentrust_*`. Retained for import back-compat: legacy archives
+     * `_ettic_otc_*`. Retained for import back-compat: legacy archives
      * (exported by v1.0.x/v1.1.x) still carry these keys, and the importer
      * remaps them on read via Ettic_OTC_IO::remap_legacy_meta_keys().
      * Phase 8 extends the chain through `_ettic_otc_*`.
      */
     public const LEGACY_META_MAP = [
         // Shared identity.
-        '_ot_uuid'                            => '_opentrust_uuid',
+        '_ot_uuid'                            => '_ettic_otc_uuid',
         // Certifications.
-        '_ot_cert_type'                       => '_opentrust_cert_type',
-        '_ot_cert_issuing_body'               => '_opentrust_cert_issuing_body',
-        '_ot_cert_status'                     => '_opentrust_cert_status',
-        '_ot_cert_issue_date'                 => '_opentrust_cert_issue_date',
-        '_ot_cert_expiry_date'                => '_opentrust_cert_expiry_date',
-        '_ot_cert_badge_id'                   => '_opentrust_cert_badge_id',
-        '_ot_cert_artifact_id'                => '_opentrust_cert_artifact_id',
-        '_ot_cert_description'                => '_opentrust_cert_description',
+        '_ot_cert_type'                       => '_ettic_otc_cert_type',
+        '_ot_cert_issuing_body'               => '_ettic_otc_cert_issuing_body',
+        '_ot_cert_status'                     => '_ettic_otc_cert_status',
+        '_ot_cert_issue_date'                 => '_ettic_otc_cert_issue_date',
+        '_ot_cert_expiry_date'                => '_ettic_otc_cert_expiry_date',
+        '_ot_cert_badge_id'                   => '_ettic_otc_cert_badge_id',
+        '_ot_cert_artifact_id'                => '_ettic_otc_cert_artifact_id',
+        '_ot_cert_description'                => '_ettic_otc_cert_description',
         // Policies.
-        '_ot_policy_ref_id'                   => '_opentrust_policy_ref_id',
-        '_ot_policy_category'                 => '_opentrust_policy_category',
-        '_ot_policy_effective_date'           => '_opentrust_policy_effective_date',
-        '_ot_policy_review_date'              => '_opentrust_policy_review_date',
-        '_ot_policy_sort_order'               => '_opentrust_policy_sort_order',
-        '_ot_policy_citations'                => '_opentrust_policy_citations',
-        '_ot_policy_attachment_id'            => '_opentrust_policy_attachment_id',
-        '_ot_version'                         => '_opentrust_version',
-        '_ot_version_summary'                 => '_opentrust_version_summary',
-        '_ot_policy_chat_summary'             => '_opentrust_policy_chat_summary',
-        '_ot_policy_chat_summary_updated_at'  => '_opentrust_policy_chat_summary_updated_at',
-        '_ot_policy_chat_summary_origin'      => '_opentrust_policy_chat_summary_origin',
+        '_ot_policy_ref_id'                   => '_ettic_otc_policy_ref_id',
+        '_ot_policy_category'                 => '_ettic_otc_policy_category',
+        '_ot_policy_effective_date'           => '_ettic_otc_policy_effective_date',
+        '_ot_policy_review_date'              => '_ettic_otc_policy_review_date',
+        '_ot_policy_sort_order'               => '_ettic_otc_policy_sort_order',
+        '_ot_policy_citations'                => '_ettic_otc_policy_citations',
+        '_ot_policy_attachment_id'            => '_ettic_otc_policy_attachment_id',
+        '_ot_version'                         => '_ettic_otc_version',
+        '_ot_version_summary'                 => '_ettic_otc_version_summary',
+        '_ot_policy_chat_summary'             => '_ettic_otc_policy_chat_summary',
+        '_ot_policy_chat_summary_updated_at'  => '_ettic_otc_policy_chat_summary_updated_at',
+        '_ot_policy_chat_summary_origin'      => '_ettic_otc_policy_chat_summary_origin',
         // Subprocessors.
-        '_ot_sub_purpose'                     => '_opentrust_sub_purpose',
-        '_ot_sub_data_processed'              => '_opentrust_sub_data_processed',
-        '_ot_sub_country'                     => '_opentrust_sub_country',
-        '_ot_sub_website'                     => '_opentrust_sub_website',
-        '_ot_sub_dpa_signed'                  => '_opentrust_sub_dpa_signed',
+        '_ot_sub_purpose'                     => '_ettic_otc_sub_purpose',
+        '_ot_sub_data_processed'              => '_ettic_otc_sub_data_processed',
+        '_ot_sub_country'                     => '_ettic_otc_sub_country',
+        '_ot_sub_website'                     => '_ettic_otc_sub_website',
+        '_ot_sub_dpa_signed'                  => '_ettic_otc_sub_dpa_signed',
         // Data practices.
-        '_ot_dp_data_items'                   => '_opentrust_dp_data_items',
-        '_ot_dp_purpose'                      => '_opentrust_dp_purpose',
-        '_ot_dp_legal_basis'                  => '_opentrust_dp_legal_basis',
-        '_ot_dp_retention_period'             => '_opentrust_dp_retention_period',
-        '_ot_dp_shared_with'                  => '_opentrust_dp_shared_with',
-        '_ot_dp_sort_order'                   => '_opentrust_dp_sort_order',
-        '_ot_dp_collected'                    => '_opentrust_dp_collected',
-        '_ot_dp_stored'                       => '_opentrust_dp_stored',
-        '_ot_dp_shared'                       => '_opentrust_dp_shared',
-        '_ot_dp_sold'                         => '_opentrust_dp_sold',
-        '_ot_dp_encrypted'                    => '_opentrust_dp_encrypted',
-        '_ot_dp_data_type'                    => '_opentrust_dp_data_type',
-        '_ot_dp_collection_method'            => '_opentrust_dp_collection_method',
-        '_ot_dp_is_sensitive'                 => '_opentrust_dp_is_sensitive',
+        '_ot_dp_data_items'                   => '_ettic_otc_dp_data_items',
+        '_ot_dp_purpose'                      => '_ettic_otc_dp_purpose',
+        '_ot_dp_legal_basis'                  => '_ettic_otc_dp_legal_basis',
+        '_ot_dp_retention_period'             => '_ettic_otc_dp_retention_period',
+        '_ot_dp_shared_with'                  => '_ettic_otc_dp_shared_with',
+        '_ot_dp_sort_order'                   => '_ettic_otc_dp_sort_order',
+        '_ot_dp_collected'                    => '_ettic_otc_dp_collected',
+        '_ot_dp_stored'                       => '_ettic_otc_dp_stored',
+        '_ot_dp_shared'                       => '_ettic_otc_dp_shared',
+        '_ot_dp_sold'                         => '_ettic_otc_dp_sold',
+        '_ot_dp_encrypted'                    => '_ettic_otc_dp_encrypted',
+        '_ot_dp_data_type'                    => '_ettic_otc_dp_data_type',
+        '_ot_dp_collection_method'            => '_ettic_otc_dp_collection_method',
+        '_ot_dp_is_sensitive'                 => '_ettic_otc_dp_is_sensitive',
         // FAQs.
-        '_ot_faq_related_policy'              => '_opentrust_faq_related_policy',
+        '_ot_faq_related_policy'              => '_ettic_otc_faq_related_policy',
         // Catalog seeding + import dedupe.
-        '_ot_seed_slug'                       => '_opentrust_seed_slug',
-        '_ot_seeded'                          => '_opentrust_seeded',
-        '_ot_import_sha256'                   => '_opentrust_import_sha256',
+        '_ot_seed_slug'                       => '_ettic_otc_seed_slug',
+        '_ot_seeded'                          => '_ettic_otc_seeded',
+        '_ot_import_sha256'                   => '_ettic_otc_import_sha256',
     ];
 
     /**
@@ -255,7 +255,7 @@ final class Ettic_OTC_CPT {
             'exclude_from_search' => true,
             'show_in_nav_menus'   => false,
             'show_ui'             => true,
-            'show_in_menu'        => 'opentrust',
+            'show_in_menu'        => 'ettic-otc',
             'show_in_rest'        => true,
             'supports'      => ['title', 'editor', 'revisions', 'excerpt'],
             'has_archive'   => false,
@@ -288,7 +288,7 @@ final class Ettic_OTC_CPT {
             'exclude_from_search' => true,
             'show_in_nav_menus'   => false,
             'show_ui'             => true,
-            'show_in_menu'        => 'opentrust',
+            'show_in_menu'        => 'ettic-otc',
             'show_in_rest'        => true,
             'supports'      => ['title'],
             'has_archive'   => false,
@@ -321,7 +321,7 @@ final class Ettic_OTC_CPT {
             'exclude_from_search' => true,
             'show_in_nav_menus'   => false,
             'show_ui'             => true,
-            'show_in_menu'        => 'opentrust',
+            'show_in_menu'        => 'ettic-otc',
             'show_in_rest'        => true,
             'supports'      => ['title'],
             'has_archive'   => false,
@@ -354,7 +354,7 @@ final class Ettic_OTC_CPT {
             'exclude_from_search' => true,
             'show_in_nav_menus'   => false,
             'show_ui'             => true,
-            'show_in_menu'        => 'opentrust',
+            'show_in_menu'        => 'ettic-otc',
             'show_in_rest'        => true,
             'supports'      => ['title'],
             'has_archive'   => false,
@@ -383,7 +383,7 @@ final class Ettic_OTC_CPT {
             'exclude_from_search' => true,
             'show_in_nav_menus'   => false,
             'show_ui'             => true,
-            'show_in_menu'        => 'opentrust',
+            'show_in_menu'        => 'ettic-otc',
             'show_in_rest'        => true,
             'supports'      => ['title', 'editor', 'page-attributes'],
             'has_archive'   => false,
@@ -398,27 +398,27 @@ final class Ettic_OTC_CPT {
     // ──────────────────────────────────────────────
 
     public function add_meta_boxes(): void {
-        add_meta_box('opentrust_cert_details', __('Certification Details', 'opentrust'), [$this, 'render_cert_meta_box'], self::CERTIFICATION, 'normal', 'high');
-        add_meta_box('opentrust_policy_details', __('Policy Details', 'opentrust'), [$this, 'render_policy_meta_box'], self::POLICY, 'side', 'high');
-        add_meta_box('opentrust_sub_details', __('Subprocessor Details', 'opentrust'), [$this, 'render_sub_meta_box'], self::SUBPROCESSOR, 'normal', 'high');
-        add_meta_box('opentrust_dp_details', __('Data Practice Details', 'opentrust'), [$this, 'render_dp_meta_box'], self::DATA_PRACTICE, 'normal', 'high');
-        add_meta_box('opentrust_faq_details', __('FAQ Details', 'opentrust'), [$this, 'render_faq_meta_box'], self::FAQ, 'side', 'high');
+        add_meta_box('ettic_otc_cert_details', __('Certification Details', 'opentrust'), [$this, 'render_cert_meta_box'], self::CERTIFICATION, 'normal', 'high');
+        add_meta_box('ettic_otc_policy_details', __('Policy Details', 'opentrust'), [$this, 'render_policy_meta_box'], self::POLICY, 'side', 'high');
+        add_meta_box('ettic_otc_sub_details', __('Subprocessor Details', 'opentrust'), [$this, 'render_sub_meta_box'], self::SUBPROCESSOR, 'normal', 'high');
+        add_meta_box('ettic_otc_dp_details', __('Data Practice Details', 'opentrust'), [$this, 'render_dp_meta_box'], self::DATA_PRACTICE, 'normal', 'high');
+        add_meta_box('ettic_otc_faq_details', __('FAQ Details', 'opentrust'), [$this, 'render_faq_meta_box'], self::FAQ, 'side', 'high');
     }
 
     // ── Certification meta box ──
 
     public function render_cert_meta_box(\WP_Post $post): void {
-        wp_nonce_field('opentrust_save_cert', 'opentrust_cert_nonce');
+        wp_nonce_field('ettic_otc_save_cert', 'ettic_otc_cert_nonce');
 
-        $type         = get_post_meta($post->ID, '_opentrust_cert_type', true) ?: 'compliant';
-        $issuing_body = get_post_meta($post->ID, '_opentrust_cert_issuing_body', true) ?: '';
-        $status       = get_post_meta($post->ID, '_opentrust_cert_status', true) ?: 'active';
-        $issue_date   = get_post_meta($post->ID, '_opentrust_cert_issue_date', true) ?: '';
-        $expiry_date  = get_post_meta($post->ID, '_opentrust_cert_expiry_date', true) ?: '';
-        $badge_id     = (int) get_post_meta($post->ID, '_opentrust_cert_badge_id', true);
+        $type         = get_post_meta($post->ID, '_ettic_otc_cert_type', true) ?: 'compliant';
+        $issuing_body = get_post_meta($post->ID, '_ettic_otc_cert_issuing_body', true) ?: '';
+        $status       = get_post_meta($post->ID, '_ettic_otc_cert_status', true) ?: 'active';
+        $issue_date   = get_post_meta($post->ID, '_ettic_otc_cert_issue_date', true) ?: '';
+        $expiry_date  = get_post_meta($post->ID, '_ettic_otc_cert_expiry_date', true) ?: '';
+        $badge_id     = (int) get_post_meta($post->ID, '_ettic_otc_cert_badge_id', true);
         $badge_url    = $badge_id ? wp_get_attachment_image_url($badge_id, 'thumbnail') : '';
-        $description  = get_post_meta($post->ID, '_opentrust_cert_description', true) ?: '';
-        $artifact_id  = (int) get_post_meta($post->ID, '_opentrust_cert_artifact_id', true);
+        $description  = get_post_meta($post->ID, '_ettic_otc_cert_description', true) ?: '';
+        $artifact_id  = (int) get_post_meta($post->ID, '_ettic_otc_cert_artifact_id', true);
         $artifact_url = $artifact_id ? wp_get_attachment_url($artifact_id) : '';
         $artifact_name = $artifact_id ? get_the_title($artifact_id) : '';
 
@@ -434,8 +434,8 @@ final class Ettic_OTC_CPT {
         ];
         ?>
         <div class="ot-meta-field">
-            <label for="opentrust_cert_type"><?php esc_html_e('Certification Type', 'opentrust'); ?></label>
-            <select id="opentrust_cert_type" name="opentrust_cert_type" data-ot-cert-type>
+            <label for="ettic_otc_cert_type"><?php esc_html_e('Certification Type', 'opentrust'); ?></label>
+            <select id="ettic_otc_cert_type" name="ettic_otc_cert_type" data-ot-cert-type>
                 <?php foreach ($types as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($type, $key); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
@@ -444,8 +444,8 @@ final class Ettic_OTC_CPT {
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_cert_status"><?php esc_html_e('Status', 'opentrust'); ?></label>
-            <select id="opentrust_cert_status" name="opentrust_cert_status">
+            <label for="ettic_otc_cert_status"><?php esc_html_e('Status', 'opentrust'); ?></label>
+            <select id="ettic_otc_cert_status" name="ettic_otc_cert_status">
                 <?php foreach ($statuses as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($status, $key); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
@@ -454,24 +454,24 @@ final class Ettic_OTC_CPT {
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="opentrust_cert_issuing_body"><?php esc_html_e('Issuing Body', 'opentrust'); ?></label>
-            <input type="text" id="opentrust_cert_issuing_body" name="opentrust_cert_issuing_body" value="<?php echo esc_attr($issuing_body); ?>" placeholder="<?php esc_attr_e('e.g., AICPA, BSI Group, Schellman', 'opentrust'); ?>">
+            <label for="ettic_otc_cert_issuing_body"><?php esc_html_e('Issuing Body', 'opentrust'); ?></label>
+            <input type="text" id="ettic_otc_cert_issuing_body" name="ettic_otc_cert_issuing_body" value="<?php echo esc_attr($issuing_body); ?>" placeholder="<?php esc_attr_e('e.g., AICPA, BSI Group, Schellman', 'opentrust'); ?>">
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="opentrust_cert_issue_date"><?php esc_html_e('Issue Date', 'opentrust'); ?></label>
-            <input type="date" id="opentrust_cert_issue_date" name="opentrust_cert_issue_date" value="<?php echo esc_attr($issue_date); ?>">
+            <label for="ettic_otc_cert_issue_date"><?php esc_html_e('Issue Date', 'opentrust'); ?></label>
+            <input type="date" id="ettic_otc_cert_issue_date" name="ettic_otc_cert_issue_date" value="<?php echo esc_attr($issue_date); ?>">
         </div>
 
         <div class="ot-meta-field" data-ot-cert-certified-only>
-            <label for="opentrust_cert_expiry_date"><?php esc_html_e('Expiry Date', 'opentrust'); ?></label>
-            <input type="date" id="opentrust_cert_expiry_date" name="opentrust_cert_expiry_date" value="<?php echo esc_attr($expiry_date); ?>">
+            <label for="ettic_otc_cert_expiry_date"><?php esc_html_e('Expiry Date', 'opentrust'); ?></label>
+            <input type="date" id="ettic_otc_cert_expiry_date" name="ettic_otc_cert_expiry_date" value="<?php echo esc_attr($expiry_date); ?>">
         </div>
 
         <div class="ot-meta-field">
             <label><?php esc_html_e('Framework Logo', 'opentrust'); ?></label>
             <img class="ot-badge-preview<?php echo esc_attr($badge_url ? '' : ' ot-hidden'); ?>" src="<?php echo esc_url($badge_url); ?>" alt="">
-            <input type="hidden" class="ot-badge-input" name="opentrust_cert_badge_id" value="<?php echo esc_attr((string) $badge_id); ?>">
+            <input type="hidden" class="ot-badge-input" name="ettic_otc_cert_badge_id" value="<?php echo esc_attr((string) $badge_id); ?>">
             <button type="button" class="button ot-upload-badge"><?php esc_html_e('Select Logo', 'opentrust'); ?></button>
             <button type="button" class="button ot-remove-badge<?php echo esc_attr($badge_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44.', 'opentrust'); ?></p>
@@ -483,15 +483,15 @@ final class Ettic_OTC_CPT {
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
                 <a class="ot-artifact-preview__link" href="<?php echo esc_url($artifact_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($artifact_name ?: __('View file', 'opentrust')); ?></a>
             </div>
-            <input type="hidden" class="ot-artifact-input" name="opentrust_cert_artifact_id" value="<?php echo esc_attr((string) $artifact_id); ?>">
+            <input type="hidden" class="ot-artifact-input" name="ettic_otc_cert_artifact_id" value="<?php echo esc_attr((string) $artifact_id); ?>">
             <button type="button" class="button ot-upload-artifact"><?php echo $artifact_id ? esc_html__('Replace File', 'opentrust') : esc_html__('Upload File', 'opentrust'); ?></button>
             <button type="button" class="button ot-remove-artifact<?php echo esc_attr($artifact_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card.', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_cert_description"><?php esc_html_e('Scope & Notes', 'opentrust'); ?></label>
-            <textarea id="opentrust_cert_description" name="opentrust_cert_description" rows="3" placeholder="<?php esc_attr_e('e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days.', 'opentrust'); ?>"><?php echo esc_textarea($description); ?></textarea>
+            <label for="ettic_otc_cert_description"><?php esc_html_e('Scope & Notes', 'opentrust'); ?></label>
+            <textarea id="ettic_otc_cert_description" name="ettic_otc_cert_description" rows="3" placeholder="<?php esc_attr_e('e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days.', 'opentrust'); ?>"><?php echo esc_textarea($description); ?></textarea>
             <p class="description"><?php esc_html_e('Required for self-attested frameworks so the card has meaningful content. One or two sentences on scope, how you meet the framework, or what prospects should know.', 'opentrust'); ?></p>
         </div>
         <?php
@@ -523,21 +523,21 @@ final class Ettic_OTC_CPT {
     // ── Policy meta box (sidebar) ──
 
     public function render_policy_meta_box(\WP_Post $post): void {
-        wp_nonce_field('opentrust_save_policy', 'opentrust_policy_nonce');
+        wp_nonce_field('ettic_otc_save_policy', 'ettic_otc_policy_nonce');
 
-        $ref_id          = get_post_meta($post->ID, '_opentrust_policy_ref_id', true) ?: '';
-        $category        = get_post_meta($post->ID, '_opentrust_policy_category', true) ?: 'other';
-        $effective_date  = get_post_meta($post->ID, '_opentrust_policy_effective_date', true) ?: '';
-        $review_date     = get_post_meta($post->ID, '_opentrust_policy_review_date', true) ?: '';
-        $sort_order      = metadata_exists('post', $post->ID, '_opentrust_policy_sort_order')
-            ? (int) get_post_meta($post->ID, '_opentrust_policy_sort_order', true)
+        $ref_id          = get_post_meta($post->ID, '_ettic_otc_policy_ref_id', true) ?: '';
+        $category        = get_post_meta($post->ID, '_ettic_otc_policy_category', true) ?: 'other';
+        $effective_date  = get_post_meta($post->ID, '_ettic_otc_policy_effective_date', true) ?: '';
+        $review_date     = get_post_meta($post->ID, '_ettic_otc_policy_review_date', true) ?: '';
+        $sort_order      = metadata_exists('post', $post->ID, '_ettic_otc_policy_sort_order')
+            ? (int) get_post_meta($post->ID, '_ettic_otc_policy_sort_order', true)
             : 10;
-        $version         = (int) get_post_meta($post->ID, '_opentrust_version', true) ?: 1;
+        $version         = (int) get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1;
 
-        $citations       = get_post_meta($post->ID, '_opentrust_policy_citations', true);
+        $citations       = get_post_meta($post->ID, '_ettic_otc_policy_citations', true);
         $citations       = is_array($citations) ? $citations : [];
 
-        $attachment_id   = (int) get_post_meta($post->ID, '_opentrust_policy_attachment_id', true);
+        $attachment_id   = (int) get_post_meta($post->ID, '_ettic_otc_policy_attachment_id', true);
         $attachment_url  = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
         $attachment_name = $attachment_id ? get_the_title($attachment_id) : '';
 
@@ -557,7 +557,7 @@ final class Ettic_OTC_CPT {
         <?php if ('publish' === $post->post_status): ?>
         <div class="ot-meta-field ot-version-bump" style="border:2px solid #e5e7eb;border-radius:6px;padding:12px;margin-bottom:16px;">
             <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
-                <input type="checkbox" name="opentrust_publish_new_version" value="1" id="opentrust_publish_new_version" style="margin-top:2px;">
+                <input type="checkbox" name="ettic_otc_publish_new_version" value="1" id="ettic_otc_publish_new_version" style="margin-top:2px;">
                 <span>
                     <strong><?php esc_html_e('Publish as new version', 'opentrust'); ?></strong><br>
                     <span class="description" style="font-size:12px;">
@@ -572,10 +572,10 @@ final class Ettic_OTC_CPT {
                 </span>
             </label>
             <div id="ot-version-summary-wrap" style="margin-top:10px;display:none;">
-                <label for="opentrust_version_summary" style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;">
+                <label for="ettic_otc_version_summary" style="font-weight:600;font-size:12px;display:block;margin-bottom:4px;">
                     <?php esc_html_e('What changed?', 'opentrust'); ?>
                 </label>
-                <input type="text" id="opentrust_version_summary" name="opentrust_version_summary" value="" style="width:100%;"
+                <input type="text" id="ettic_otc_version_summary" name="ettic_otc_version_summary" value="" style="width:100%;"
                     placeholder="<?php esc_attr_e('e.g., Updated data retention from 90 to 60 days', 'opentrust'); ?>">
                 <p class="description" style="margin-top:2px;font-size:11px;"><?php esc_html_e('Shown in the public version history.', 'opentrust'); ?></p>
             </div>
@@ -583,14 +583,14 @@ final class Ettic_OTC_CPT {
         <?php endif; ?>
 
         <div class="ot-meta-field">
-            <label for="opentrust_policy_ref_id"><?php esc_html_e('Policy ID', 'opentrust'); ?></label>
-            <input type="text" id="opentrust_policy_ref_id" name="opentrust_policy_ref_id" value="<?php echo esc_attr($ref_id); ?>" style="width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace" placeholder="<?php esc_attr_e('e.g., POL-012', 'opentrust'); ?>" maxlength="40">
+            <label for="ettic_otc_policy_ref_id"><?php esc_html_e('Policy ID', 'opentrust'); ?></label>
+            <input type="text" id="ettic_otc_policy_ref_id" name="ettic_otc_policy_ref_id" value="<?php echo esc_attr($ref_id); ?>" style="width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,monospace" placeholder="<?php esc_attr_e('e.g., POL-012', 'opentrust'); ?>" maxlength="40">
             <p class="description"><?php esc_html_e('Optional short reference (e.g., POL-012). Shown on the public listing and in security questionnaires.', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_policy_category"><?php esc_html_e('Category', 'opentrust'); ?></label>
-            <select id="opentrust_policy_category" name="opentrust_policy_category" style="width:100%">
+            <label for="ettic_otc_policy_category"><?php esc_html_e('Category', 'opentrust'); ?></label>
+            <select id="ettic_otc_policy_category" name="ettic_otc_policy_category" style="width:100%">
                 <?php foreach ($categories as $key => $label): ?>
                     <option value="<?php echo esc_attr($key); ?>" <?php selected($category, $key); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
@@ -598,24 +598,24 @@ final class Ettic_OTC_CPT {
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_policy_effective_date"><?php esc_html_e('Effective Date', 'opentrust'); ?></label>
-            <input type="date" id="opentrust_policy_effective_date" name="opentrust_policy_effective_date" value="<?php echo esc_attr($effective_date); ?>" style="width:100%">
+            <label for="ettic_otc_policy_effective_date"><?php esc_html_e('Effective Date', 'opentrust'); ?></label>
+            <input type="date" id="ettic_otc_policy_effective_date" name="ettic_otc_policy_effective_date" value="<?php echo esc_attr($effective_date); ?>" style="width:100%">
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_policy_review_date"><?php esc_html_e('Next Review Date', 'opentrust'); ?></label>
-            <input type="date" id="opentrust_policy_review_date" name="opentrust_policy_review_date" value="<?php echo esc_attr($review_date); ?>" style="width:100%">
+            <label for="ettic_otc_policy_review_date"><?php esc_html_e('Next Review Date', 'opentrust'); ?></label>
+            <input type="date" id="ettic_otc_policy_review_date" name="ettic_otc_policy_review_date" value="<?php echo esc_attr($review_date); ?>" style="width:100%">
         </div>
 
         <div class="ot-meta-field">
             <label><?php esc_html_e('Framework Citations', 'opentrust'); ?></label>
-            <div class="ot-tags" data-ot-tags="opentrust_policy_citations">
+            <div class="ot-tags" data-ot-tags="ettic_otc_policy_citations">
                 <?php foreach ($citations as $ot_i => $ot_citation):
                     $ot_citation_name = is_array($ot_citation) ? ($ot_citation['name'] ?? '') : (string) $ot_citation;
                 ?>
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($ot_citation_name); ?></span>
-                    <input type="hidden" name="opentrust_policy_citations[<?php echo (int) $ot_i; ?>][name]" value="<?php echo esc_attr($ot_citation_name); ?>">
+                    <input type="hidden" name="ettic_otc_policy_citations[<?php echo (int) $ot_i; ?>][name]" value="<?php echo esc_attr($ot_citation_name); ?>">
                     <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
@@ -630,15 +630,15 @@ final class Ettic_OTC_CPT {
                 <span class="ot-artifact-preview__icon" aria-hidden="true">📄</span>
                 <a class="ot-artifact-preview__link" href="<?php echo esc_url($attachment_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($attachment_name ?: __('View file', 'opentrust')); ?></a>
             </div>
-            <input type="hidden" class="ot-policy-attachment-input" name="opentrust_policy_attachment_id" value="<?php echo esc_attr((string) $attachment_id); ?>">
+            <input type="hidden" class="ot-policy-attachment-input" name="ettic_otc_policy_attachment_id" value="<?php echo esc_attr((string) $attachment_id); ?>">
             <button type="button" class="button ot-upload-policy-attachment"><?php echo $attachment_id ? esc_html__('Replace PDF', 'opentrust') : esc_html__('Upload PDF', 'opentrust'); ?></button>
             <button type="button" class="button ot-remove-policy-attachment<?php echo esc_attr($attachment_id ? '' : ' ot-hidden'); ?>"><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php esc_html_e('Upload the signed PDF. Visitors see a "Download PDF" button only when a file is attached.', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_policy_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
-            <input type="number" id="opentrust_policy_sort_order" name="opentrust_policy_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1" style="width:100%">
+            <label for="ettic_otc_policy_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
+            <input type="number" id="ettic_otc_policy_sort_order" name="ettic_otc_policy_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1" style="width:100%">
             <p class="description"><?php esc_html_e('Lower numbers appear first.', 'opentrust'); ?></p>
         </div>
         <?php
@@ -647,39 +647,39 @@ final class Ettic_OTC_CPT {
     // ── Subprocessor meta box ──
 
     public function render_sub_meta_box(\WP_Post $post): void {
-        wp_nonce_field('opentrust_save_sub', 'opentrust_sub_nonce');
+        wp_nonce_field('ettic_otc_save_sub', 'ettic_otc_sub_nonce');
 
-        $purpose        = get_post_meta($post->ID, '_opentrust_sub_purpose', true) ?: '';
-        $data_processed = get_post_meta($post->ID, '_opentrust_sub_data_processed', true) ?: '';
-        $country        = get_post_meta($post->ID, '_opentrust_sub_country', true) ?: '';
-        $website        = get_post_meta($post->ID, '_opentrust_sub_website', true) ?: '';
-        $dpa_signed     = (bool) get_post_meta($post->ID, '_opentrust_sub_dpa_signed', true);
+        $purpose        = get_post_meta($post->ID, '_ettic_otc_sub_purpose', true) ?: '';
+        $data_processed = get_post_meta($post->ID, '_ettic_otc_sub_data_processed', true) ?: '';
+        $country        = get_post_meta($post->ID, '_ettic_otc_sub_country', true) ?: '';
+        $website        = get_post_meta($post->ID, '_ettic_otc_sub_website', true) ?: '';
+        $dpa_signed     = (bool) get_post_meta($post->ID, '_ettic_otc_sub_dpa_signed', true);
         ?>
         <div class="ot-meta-field">
-            <label for="opentrust_sub_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
-            <textarea id="opentrust_sub_purpose" name="opentrust_sub_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
+            <label for="ettic_otc_sub_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
+            <textarea id="ettic_otc_sub_purpose" name="ettic_otc_sub_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
             <p class="description"><?php esc_html_e('What does this subprocessor do for your company?', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_sub_data_processed"><?php esc_html_e('Data Processed', 'opentrust'); ?></label>
-            <textarea id="opentrust_sub_data_processed" name="opentrust_sub_data_processed" rows="2"><?php echo esc_textarea($data_processed); ?></textarea>
+            <label for="ettic_otc_sub_data_processed"><?php esc_html_e('Data Processed', 'opentrust'); ?></label>
+            <textarea id="ettic_otc_sub_data_processed" name="ettic_otc_sub_data_processed" rows="2"><?php echo esc_textarea($data_processed); ?></textarea>
             <p class="description"><?php esc_html_e('What types of data does this subprocessor handle?', 'opentrust'); ?></p>
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_sub_country"><?php esc_html_e('Country / Location', 'opentrust'); ?></label>
-            <input type="text" id="opentrust_sub_country" name="opentrust_sub_country" value="<?php echo esc_attr($country); ?>" placeholder="<?php esc_attr_e('e.g., United States', 'opentrust'); ?>">
+            <label for="ettic_otc_sub_country"><?php esc_html_e('Country / Location', 'opentrust'); ?></label>
+            <input type="text" id="ettic_otc_sub_country" name="ettic_otc_sub_country" value="<?php echo esc_attr($country); ?>" placeholder="<?php esc_attr_e('e.g., United States', 'opentrust'); ?>">
         </div>
 
         <div class="ot-meta-field">
-            <label for="opentrust_sub_website"><?php esc_html_e('Website', 'opentrust'); ?></label>
-            <input type="url" id="opentrust_sub_website" name="opentrust_sub_website" value="<?php echo esc_attr($website); ?>" placeholder="https://">
+            <label for="ettic_otc_sub_website"><?php esc_html_e('Website', 'opentrust'); ?></label>
+            <input type="url" id="ettic_otc_sub_website" name="ettic_otc_sub_website" value="<?php echo esc_attr($website); ?>" placeholder="https://">
         </div>
 
         <div class="ot-meta-field">
             <label>
-                <input type="checkbox" name="opentrust_sub_dpa_signed" value="1" <?php checked($dpa_signed); ?>>
+                <input type="checkbox" name="ettic_otc_sub_dpa_signed" value="1" <?php checked($dpa_signed); ?>>
                 <?php esc_html_e('DPA Signed', 'opentrust'); ?>
             </label>
             <p class="description"><?php esc_html_e('A Data Processing Agreement (DPA) is a contract between you and the subprocessor covering how they handle personal data on your behalf. Check this box once your organization has signed one with this vendor.', 'opentrust'); ?></p>
@@ -690,22 +690,22 @@ final class Ettic_OTC_CPT {
     // ── Data Practice meta box ──
 
     public function render_dp_meta_box(\WP_Post $post): void {
-        wp_nonce_field('opentrust_save_dp', 'opentrust_dp_nonce');
+        wp_nonce_field('ettic_otc_save_dp', 'ettic_otc_dp_nonce');
 
-        $data_items       = get_post_meta($post->ID, '_opentrust_dp_data_items', true);
+        $data_items       = get_post_meta($post->ID, '_ettic_otc_dp_data_items', true);
         $data_items       = is_array($data_items) ? $data_items : [];
-        $purpose          = get_post_meta($post->ID, '_opentrust_dp_purpose', true) ?: '';
-        $legal_basis      = get_post_meta($post->ID, '_opentrust_dp_legal_basis', true) ?: '';
-        $retention_period = get_post_meta($post->ID, '_opentrust_dp_retention_period', true) ?: '';
-        $shared_with      = get_post_meta($post->ID, '_opentrust_dp_shared_with', true);
+        $purpose          = get_post_meta($post->ID, '_ettic_otc_dp_purpose', true) ?: '';
+        $legal_basis      = get_post_meta($post->ID, '_ettic_otc_dp_legal_basis', true) ?: '';
+        $retention_period = get_post_meta($post->ID, '_ettic_otc_dp_retention_period', true) ?: '';
+        $shared_with      = get_post_meta($post->ID, '_ettic_otc_dp_shared_with', true);
         $shared_with      = is_array($shared_with) ? $shared_with : [];
-        $sort_order       = (int) get_post_meta($post->ID, '_opentrust_dp_sort_order', true);
+        $sort_order       = (int) get_post_meta($post->ID, '_ettic_otc_dp_sort_order', true);
 
-        $prop_collected   = (bool) get_post_meta($post->ID, '_opentrust_dp_collected', true);
-        $prop_stored      = (bool) get_post_meta($post->ID, '_opentrust_dp_stored', true);
-        $prop_shared      = (bool) get_post_meta($post->ID, '_opentrust_dp_shared', true);
-        $prop_sold        = (bool) get_post_meta($post->ID, '_opentrust_dp_sold', true);
-        $prop_encrypted   = (bool) get_post_meta($post->ID, '_opentrust_dp_encrypted', true);
+        $prop_collected   = (bool) get_post_meta($post->ID, '_ettic_otc_dp_collected', true);
+        $prop_stored      = (bool) get_post_meta($post->ID, '_ettic_otc_dp_stored', true);
+        $prop_shared      = (bool) get_post_meta($post->ID, '_ettic_otc_dp_shared', true);
+        $prop_sold        = (bool) get_post_meta($post->ID, '_ettic_otc_dp_sold', true);
+        $prop_encrypted   = (bool) get_post_meta($post->ID, '_ettic_otc_dp_encrypted', true);
 
         $basis_options    = Ettic_OTC_Render::legal_basis_labels();
         ?>
@@ -713,11 +713,11 @@ final class Ettic_OTC_CPT {
         <!-- Data Items — tag input -->
         <div class="ot-meta-field">
             <label><?php esc_html_e('Data Items Collected', 'opentrust'); ?></label>
-            <div class="ot-tags" data-ot-tags="opentrust_dp_data_items">
+            <div class="ot-tags" data-ot-tags="ettic_otc_dp_data_items">
                 <?php foreach ($data_items as $i => $item): ?>
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($item['name'] ?? ''); ?></span>
-                    <input type="hidden" name="opentrust_dp_data_items[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($item['name'] ?? ''); ?>">
+                    <input type="hidden" name="ettic_otc_dp_data_items[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($item['name'] ?? ''); ?>">
                     <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
@@ -727,15 +727,15 @@ final class Ettic_OTC_CPT {
 
         <!-- Purpose -->
         <div class="ot-meta-field">
-            <label for="opentrust_dp_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
-            <textarea id="opentrust_dp_purpose" name="opentrust_dp_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
+            <label for="ettic_otc_dp_purpose"><?php esc_html_e('Purpose', 'opentrust'); ?></label>
+            <textarea id="ettic_otc_dp_purpose" name="ettic_otc_dp_purpose" rows="2"><?php echo esc_textarea($purpose); ?></textarea>
         </div>
 
         <!-- Legal Basis & Retention row -->
         <div class="ot-meta-row">
             <div class="ot-meta-field">
-                <label for="opentrust_dp_legal_basis"><?php esc_html_e('Legal Basis', 'opentrust'); ?></label>
-                <select id="opentrust_dp_legal_basis" name="opentrust_dp_legal_basis">
+                <label for="ettic_otc_dp_legal_basis"><?php esc_html_e('Legal Basis', 'opentrust'); ?></label>
+                <select id="ettic_otc_dp_legal_basis" name="ettic_otc_dp_legal_basis">
                     <option value=""><?php esc_html_e('— Select —', 'opentrust'); ?></option>
                     <?php foreach ($basis_options as $key => $label): ?>
                         <option value="<?php echo esc_attr($key); ?>" <?php selected($legal_basis, $key); ?>><?php echo esc_html($label); ?></option>
@@ -743,19 +743,19 @@ final class Ettic_OTC_CPT {
                 </select>
             </div>
             <div class="ot-meta-field">
-                <label for="opentrust_dp_retention_period"><?php esc_html_e('Retention Period', 'opentrust'); ?></label>
-                <input type="text" id="opentrust_dp_retention_period" name="opentrust_dp_retention_period" value="<?php echo esc_attr($retention_period); ?>" placeholder="<?php esc_attr_e('e.g., 30 days', 'opentrust'); ?>">
+                <label for="ettic_otc_dp_retention_period"><?php esc_html_e('Retention Period', 'opentrust'); ?></label>
+                <input type="text" id="ettic_otc_dp_retention_period" name="ettic_otc_dp_retention_period" value="<?php echo esc_attr($retention_period); ?>" placeholder="<?php esc_attr_e('e.g., 30 days', 'opentrust'); ?>">
             </div>
         </div>
 
         <!-- Shared With — tag input -->
         <div class="ot-meta-field">
             <label><?php esc_html_e('Shared With', 'opentrust'); ?></label>
-            <div class="ot-tags" data-ot-tags="opentrust_dp_shared_with">
+            <div class="ot-tags" data-ot-tags="ettic_otc_dp_shared_with">
                 <?php foreach ($shared_with as $i => $entry): ?>
                 <span class="ot-tag">
                     <span class="ot-tag__text"><?php echo esc_html($entry['name'] ?? ''); ?></span>
-                    <input type="hidden" name="opentrust_dp_shared_with[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($entry['name'] ?? ''); ?>">
+                    <input type="hidden" name="ettic_otc_dp_shared_with[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr($entry['name'] ?? ''); ?>">
                     <button type="button" class="ot-tag__remove" aria-label="<?php esc_attr_e('Remove', 'opentrust'); ?>">&times;</button>
                 </span>
                 <?php endforeach; ?>
@@ -768,23 +768,23 @@ final class Ettic_OTC_CPT {
             <label><?php esc_html_e('Properties', 'opentrust'); ?></label>
             <div class="ot-dp-props">
                 <label class="ot-dp-props__item">
-                    <input type="checkbox" name="opentrust_dp_collected" value="1" <?php checked($prop_collected); ?>>
+                    <input type="checkbox" name="ettic_otc_dp_collected" value="1" <?php checked($prop_collected); ?>>
                     <span><?php esc_html_e('Collected', 'opentrust'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
-                    <input type="checkbox" name="opentrust_dp_stored" value="1" <?php checked($prop_stored); ?>>
+                    <input type="checkbox" name="ettic_otc_dp_stored" value="1" <?php checked($prop_stored); ?>>
                     <span><?php esc_html_e('Stored', 'opentrust'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
-                    <input type="checkbox" name="opentrust_dp_shared" value="1" <?php checked($prop_shared); ?>>
+                    <input type="checkbox" name="ettic_otc_dp_shared" value="1" <?php checked($prop_shared); ?>>
                     <span><?php esc_html_e('Shared with third parties', 'opentrust'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
-                    <input type="checkbox" name="opentrust_dp_sold" value="1" <?php checked($prop_sold); ?>>
+                    <input type="checkbox" name="ettic_otc_dp_sold" value="1" <?php checked($prop_sold); ?>>
                     <span><?php esc_html_e('Sold to third parties', 'opentrust'); ?></span>
                 </label>
                 <label class="ot-dp-props__item">
-                    <input type="checkbox" name="opentrust_dp_encrypted" value="1" <?php checked($prop_encrypted); ?>>
+                    <input type="checkbox" name="ettic_otc_dp_encrypted" value="1" <?php checked($prop_encrypted); ?>>
                     <span><?php esc_html_e('Encrypted', 'opentrust'); ?></span>
                 </label>
             </div>
@@ -793,8 +793,8 @@ final class Ettic_OTC_CPT {
 
         <!-- Sort order -->
         <div class="ot-meta-field">
-            <label for="opentrust_dp_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
-            <input type="number" id="opentrust_dp_sort_order" name="opentrust_dp_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1">
+            <label for="ettic_otc_dp_sort_order"><?php esc_html_e('Sort Order', 'opentrust'); ?></label>
+            <input type="number" id="ettic_otc_dp_sort_order" name="ettic_otc_dp_sort_order" value="<?php echo esc_attr((string) $sort_order); ?>" min="0" step="1">
             <p class="description"><?php esc_html_e('Lower numbers appear first.', 'opentrust'); ?></p>
         </div>
         <?php
@@ -815,10 +815,10 @@ final class Ettic_OTC_CPT {
         if (!in_array($post->post_type, self::ALL, true)) {
             return;
         }
-        if (get_post_meta($post_id, '_opentrust_uuid', true)) {
+        if (get_post_meta($post_id, '_ettic_otc_uuid', true)) {
             return;
         }
-        update_post_meta($post_id, '_opentrust_uuid', wp_generate_uuid4());
+        update_post_meta($post_id, '_ettic_otc_uuid', wp_generate_uuid4());
     }
 
     // ──────────────────────────────────────────────
@@ -841,7 +841,7 @@ final class Ettic_OTC_CPT {
     }
 
     private function save_cert_meta(int $post_id): void {
-        if (!isset($_POST['opentrust_cert_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['opentrust_cert_nonce'] ) ), 'opentrust_save_cert')) {
+        if (!isset($_POST['ettic_otc_cert_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_nonce'] ) ), 'ettic_otc_save_cert')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
@@ -849,24 +849,24 @@ final class Ettic_OTC_CPT {
         }
 
         $valid_types = ['certified', 'compliant'];
-        $type = sanitize_text_field( wp_unslash( $_POST['opentrust_cert_type'] ?? 'compliant' ) );
-        update_post_meta($post_id, '_opentrust_cert_type', in_array($type, $valid_types, true) ? $type : 'compliant');
+        $type = sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_type'] ?? 'compliant' ) );
+        update_post_meta($post_id, '_ettic_otc_cert_type', in_array($type, $valid_types, true) ? $type : 'compliant');
 
-        update_post_meta($post_id, '_opentrust_cert_issuing_body', sanitize_text_field( wp_unslash( $_POST['opentrust_cert_issuing_body'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_issuing_body', sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_issuing_body'] ?? '' ) ));
 
         $valid_statuses = ['active', 'in_progress', 'expired'];
-        $status = sanitize_text_field( wp_unslash( $_POST['opentrust_cert_status'] ?? 'active' ) );
-        update_post_meta($post_id, '_opentrust_cert_status', in_array($status, $valid_statuses, true) ? $status : 'active');
+        $status = sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_status'] ?? 'active' ) );
+        update_post_meta($post_id, '_ettic_otc_cert_status', in_array($status, $valid_statuses, true) ? $status : 'active');
 
-        update_post_meta($post_id, '_opentrust_cert_issue_date', sanitize_text_field( wp_unslash( $_POST['opentrust_cert_issue_date'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_cert_expiry_date', sanitize_text_field( wp_unslash( $_POST['opentrust_cert_expiry_date'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_cert_badge_id', absint( wp_unslash( $_POST['opentrust_cert_badge_id'] ?? 0 ) ));
-        update_post_meta($post_id, '_opentrust_cert_artifact_id', absint( wp_unslash( $_POST['opentrust_cert_artifact_id'] ?? 0 ) ));
-        update_post_meta($post_id, '_opentrust_cert_description', sanitize_textarea_field( wp_unslash( $_POST['opentrust_cert_description'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_issue_date', sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_issue_date'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_expiry_date', sanitize_text_field( wp_unslash( $_POST['ettic_otc_cert_expiry_date'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_badge_id', absint( wp_unslash( $_POST['ettic_otc_cert_badge_id'] ?? 0 ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_artifact_id', absint( wp_unslash( $_POST['ettic_otc_cert_artifact_id'] ?? 0 ) ));
+        update_post_meta($post_id, '_ettic_otc_cert_description', sanitize_textarea_field( wp_unslash( $_POST['ettic_otc_cert_description'] ?? '' ) ));
     }
 
     private function save_policy_meta(int $post_id): void {
-        if (!isset($_POST['opentrust_policy_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['opentrust_policy_nonce'] ) ), 'opentrust_save_policy')) {
+        if (!isset($_POST['ettic_otc_policy_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ettic_otc_policy_nonce'] ) ), 'ettic_otc_save_policy')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
@@ -874,10 +874,10 @@ final class Ettic_OTC_CPT {
         }
 
         // Version bump — only when explicitly requested by the user.
-        if (!empty($_POST['opentrust_publish_new_version'])) {
+        if (!empty($_POST['ettic_otc_publish_new_version'])) {
             $post = get_post($post_id);
             if ($post && 'publish' === $post->post_status) {
-                $summary = sanitize_text_field( wp_unslash( $_POST['opentrust_version_summary'] ?? '' ) );
+                $summary = sanitize_text_field( wp_unslash( $_POST['ettic_otc_version_summary'] ?? '' ) );
                 Ettic_OTC_Version::bump_version($post_id, $summary);
             }
         }
@@ -885,26 +885,26 @@ final class Ettic_OTC_CPT {
         // Ensure first-publish posts get v1.
         Ettic_OTC_Version::ensure_initial_version($post_id);
 
-        $ref_id = sanitize_text_field( wp_unslash( $_POST['opentrust_policy_ref_id'] ?? '' ) );
+        $ref_id = sanitize_text_field( wp_unslash( $_POST['ettic_otc_policy_ref_id'] ?? '' ) );
         // Collapse internal whitespace runs so "POL  012" becomes "POL 012" on save.
         $ref_id = trim((string) preg_replace('/\s+/u', ' ', $ref_id));
         if ($ref_id !== '') {
-            update_post_meta($post_id, '_opentrust_policy_ref_id', $ref_id);
+            update_post_meta($post_id, '_ettic_otc_policy_ref_id', $ref_id);
         } else {
-            delete_post_meta($post_id, '_opentrust_policy_ref_id');
+            delete_post_meta($post_id, '_ettic_otc_policy_ref_id');
         }
 
         $valid_categories = ['security', 'privacy', 'compliance', 'operational', 'other'];
-        $category = sanitize_text_field( wp_unslash( $_POST['opentrust_policy_category'] ?? 'other' ) );
-        update_post_meta($post_id, '_opentrust_policy_category', in_array($category, $valid_categories, true) ? $category : 'other');
+        $category = sanitize_text_field( wp_unslash( $_POST['ettic_otc_policy_category'] ?? 'other' ) );
+        update_post_meta($post_id, '_ettic_otc_policy_category', in_array($category, $valid_categories, true) ? $category : 'other');
 
-        update_post_meta($post_id, '_opentrust_policy_effective_date', sanitize_text_field( wp_unslash( $_POST['opentrust_policy_effective_date'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_policy_review_date', sanitize_text_field( wp_unslash( $_POST['opentrust_policy_review_date'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_policy_sort_order', absint( wp_unslash( $_POST['opentrust_policy_sort_order'] ?? 0 ) ));
+        update_post_meta($post_id, '_ettic_otc_policy_effective_date', sanitize_text_field( wp_unslash( $_POST['ettic_otc_policy_effective_date'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_policy_review_date', sanitize_text_field( wp_unslash( $_POST['ettic_otc_policy_review_date'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_policy_sort_order', absint( wp_unslash( $_POST['ettic_otc_policy_sort_order'] ?? 0 ) ));
 
-        // Framework citations — repeater array, shape mirrors opentrust_dp_data_items.
+        // Framework citations — repeater array, shape mirrors ettic_otc_dp_data_items.
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each element is individually sanitized below.
-        $raw_citations = wp_unslash( $_POST['opentrust_policy_citations'] ?? [] );
+        $raw_citations = wp_unslash( $_POST['ettic_otc_policy_citations'] ?? [] );
         $citations = [];
         if (is_array($raw_citations)) {
             foreach ($raw_citations as $entry) {
@@ -916,37 +916,37 @@ final class Ettic_OTC_CPT {
             }
         }
         if (!empty($citations)) {
-            update_post_meta($post_id, '_opentrust_policy_citations', $citations);
+            update_post_meta($post_id, '_ettic_otc_policy_citations', $citations);
         } else {
-            delete_post_meta($post_id, '_opentrust_policy_citations');
+            delete_post_meta($post_id, '_ettic_otc_policy_citations');
         }
 
         // PDF attachment — only accept a real attachment the user can read.
-        $attachment_id = absint( wp_unslash( $_POST['opentrust_policy_attachment_id'] ?? 0 ) );
+        $attachment_id = absint( wp_unslash( $_POST['ettic_otc_policy_attachment_id'] ?? 0 ) );
         if ($attachment_id > 0 && get_post_type($attachment_id) === 'attachment') {
-            update_post_meta($post_id, '_opentrust_policy_attachment_id', $attachment_id);
+            update_post_meta($post_id, '_ettic_otc_policy_attachment_id', $attachment_id);
         } else {
-            delete_post_meta($post_id, '_opentrust_policy_attachment_id');
+            delete_post_meta($post_id, '_ettic_otc_policy_attachment_id');
         }
     }
 
     private function save_sub_meta(int $post_id): void {
-        if (!isset($_POST['opentrust_sub_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['opentrust_sub_nonce'] ) ), 'opentrust_save_sub')) {
+        if (!isset($_POST['ettic_otc_sub_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ettic_otc_sub_nonce'] ) ), 'ettic_otc_save_sub')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
 
-        update_post_meta($post_id, '_opentrust_sub_purpose', sanitize_textarea_field( wp_unslash( $_POST['opentrust_sub_purpose'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_sub_data_processed', sanitize_textarea_field( wp_unslash( $_POST['opentrust_sub_data_processed'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_sub_country', sanitize_text_field( wp_unslash( $_POST['opentrust_sub_country'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_sub_website', esc_url_raw( wp_unslash( $_POST['opentrust_sub_website'] ?? '' ) ));
-        update_post_meta($post_id, '_opentrust_sub_dpa_signed', !empty($_POST['opentrust_sub_dpa_signed']));
+        update_post_meta($post_id, '_ettic_otc_sub_purpose', sanitize_textarea_field( wp_unslash( $_POST['ettic_otc_sub_purpose'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_sub_data_processed', sanitize_textarea_field( wp_unslash( $_POST['ettic_otc_sub_data_processed'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_sub_country', sanitize_text_field( wp_unslash( $_POST['ettic_otc_sub_country'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_sub_website', esc_url_raw( wp_unslash( $_POST['ettic_otc_sub_website'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_sub_dpa_signed', !empty($_POST['ettic_otc_sub_dpa_signed']));
     }
 
     private function save_dp_meta(int $post_id): void {
-        if (!isset($_POST['opentrust_dp_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['opentrust_dp_nonce'] ) ), 'opentrust_save_dp')) {
+        if (!isset($_POST['ettic_otc_dp_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ettic_otc_dp_nonce'] ) ), 'ettic_otc_save_dp')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
@@ -955,7 +955,7 @@ final class Ettic_OTC_CPT {
 
         // Data Items (repeater array).
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each element is individually sanitized below.
-        $raw_items = wp_unslash( $_POST['opentrust_dp_data_items'] ?? [] );
+        $raw_items = wp_unslash( $_POST['ettic_otc_dp_data_items'] ?? [] );
         $data_items = [];
         if (is_array($raw_items)) {
             foreach ($raw_items as $item) {
@@ -965,22 +965,22 @@ final class Ettic_OTC_CPT {
                 }
             }
         }
-        update_post_meta($post_id, '_opentrust_dp_data_items', $data_items);
+        update_post_meta($post_id, '_ettic_otc_dp_data_items', $data_items);
 
         // Purpose.
-        update_post_meta($post_id, '_opentrust_dp_purpose', sanitize_textarea_field( wp_unslash( $_POST['opentrust_dp_purpose'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_dp_purpose', sanitize_textarea_field( wp_unslash( $_POST['ettic_otc_dp_purpose'] ?? '' ) ));
 
         // Legal Basis.
         $valid_bases = ['consent', 'contract', 'legitimate_interest', 'legal_obligation', 'vital_interest', 'public_interest'];
-        $basis = sanitize_text_field( wp_unslash( $_POST['opentrust_dp_legal_basis'] ?? '' ) );
-        update_post_meta($post_id, '_opentrust_dp_legal_basis', in_array($basis, $valid_bases, true) ? $basis : '');
+        $basis = sanitize_text_field( wp_unslash( $_POST['ettic_otc_dp_legal_basis'] ?? '' ) );
+        update_post_meta($post_id, '_ettic_otc_dp_legal_basis', in_array($basis, $valid_bases, true) ? $basis : '');
 
         // Retention Period.
-        update_post_meta($post_id, '_opentrust_dp_retention_period', sanitize_text_field( wp_unslash( $_POST['opentrust_dp_retention_period'] ?? '' ) ));
+        update_post_meta($post_id, '_ettic_otc_dp_retention_period', sanitize_text_field( wp_unslash( $_POST['ettic_otc_dp_retention_period'] ?? '' ) ));
 
         // Shared With (repeater array).
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each element is individually sanitized below.
-        $raw_shared = wp_unslash( $_POST['opentrust_dp_shared_with'] ?? [] );
+        $raw_shared = wp_unslash( $_POST['ettic_otc_dp_shared_with'] ?? [] );
         $shared_items = [];
         if (is_array($raw_shared)) {
             foreach ($raw_shared as $entry) {
@@ -990,23 +990,23 @@ final class Ettic_OTC_CPT {
                 }
             }
         }
-        update_post_meta($post_id, '_opentrust_dp_shared_with', $shared_items);
+        update_post_meta($post_id, '_ettic_otc_dp_shared_with', $shared_items);
 
         // Sort order.
-        update_post_meta($post_id, '_opentrust_dp_sort_order', absint( wp_unslash( $_POST['opentrust_dp_sort_order'] ?? 0 ) ));
+        update_post_meta($post_id, '_ettic_otc_dp_sort_order', absint( wp_unslash( $_POST['ettic_otc_dp_sort_order'] ?? 0 ) ));
 
         // Property flags — the AI assistant reports these verbatim. Unchecked
         // means explicit "No", not "unknown", so we always write the value.
-        update_post_meta($post_id, '_opentrust_dp_collected', !empty($_POST['opentrust_dp_collected']));
-        update_post_meta($post_id, '_opentrust_dp_stored',    !empty($_POST['opentrust_dp_stored']));
-        update_post_meta($post_id, '_opentrust_dp_shared',    !empty($_POST['opentrust_dp_shared']));
-        update_post_meta($post_id, '_opentrust_dp_sold',      !empty($_POST['opentrust_dp_sold']));
-        update_post_meta($post_id, '_opentrust_dp_encrypted', !empty($_POST['opentrust_dp_encrypted']));
+        update_post_meta($post_id, '_ettic_otc_dp_collected', !empty($_POST['ettic_otc_dp_collected']));
+        update_post_meta($post_id, '_ettic_otc_dp_stored',    !empty($_POST['ettic_otc_dp_stored']));
+        update_post_meta($post_id, '_ettic_otc_dp_shared',    !empty($_POST['ettic_otc_dp_shared']));
+        update_post_meta($post_id, '_ettic_otc_dp_sold',      !empty($_POST['ettic_otc_dp_sold']));
+        update_post_meta($post_id, '_ettic_otc_dp_encrypted', !empty($_POST['ettic_otc_dp_encrypted']));
 
         // Clean up legacy meta keys.
-        delete_post_meta($post_id, '_opentrust_dp_data_type');
-        delete_post_meta($post_id, '_opentrust_dp_collection_method');
-        delete_post_meta($post_id, '_opentrust_dp_is_sensitive');
+        delete_post_meta($post_id, '_ettic_otc_dp_data_type');
+        delete_post_meta($post_id, '_ettic_otc_dp_collection_method');
+        delete_post_meta($post_id, '_ettic_otc_dp_is_sensitive');
     }
 
     // ──────────────────────────────────────────────
@@ -1018,19 +1018,19 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['opentrust_issuing_body'] = __('Issuing Body', 'opentrust');
-        $new['opentrust_status']       = __('Status', 'opentrust');
-        $new['opentrust_expiry']       = __('Expiry Date', 'opentrust');
+        $new['ettic_otc_issuing_body'] = __('Issuing Body', 'opentrust');
+        $new['ettic_otc_status']       = __('Status', 'opentrust');
+        $new['ettic_otc_expiry']       = __('Expiry Date', 'opentrust');
         $new['date']  = $columns['date'];
         return $new;
     }
 
     public function cert_column_content(string $column, int $post_id): void {
         match ($column) {
-            'opentrust_issuing_body' => print(esc_html(get_post_meta($post_id, '_opentrust_cert_issuing_body', true) ?: '—')),
-            'opentrust_status'       => (function () use ($post_id): void {
-                $status = get_post_meta($post_id, '_opentrust_cert_status', true) ?: 'active';
-                $type   = get_post_meta($post_id, '_opentrust_cert_type', true) ?: 'compliant';
+            'ettic_otc_issuing_body' => print(esc_html(get_post_meta($post_id, '_ettic_otc_cert_issuing_body', true) ?: '—')),
+            'ettic_otc_status'       => (function () use ($post_id): void {
+                $status = get_post_meta($post_id, '_ettic_otc_cert_status', true) ?: 'active';
+                $type   = get_post_meta($post_id, '_ettic_otc_cert_type', true) ?: 'compliant';
                 $labels = $type === 'compliant'
                     ? Ettic_OTC_Render::cert_aligned_status_labels()
                     : Ettic_OTC_Render::cert_status_labels();
@@ -1047,7 +1047,7 @@ final class Ettic_OTC_CPT {
                     esc_html($labels[$status] ?? '')
                 );
             })(),
-            'opentrust_expiry'       => print(esc_html(get_post_meta($post_id, '_opentrust_cert_expiry_date', true) ?: '—')),
+            'ettic_otc_expiry'       => print(esc_html(get_post_meta($post_id, '_ettic_otc_cert_expiry_date', true) ?: '—')),
             default           => null,
         };
     }
@@ -1057,10 +1057,10 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['opentrust_ref_id']   = __('ID', 'opentrust');
-        $new['opentrust_category'] = __('Category', 'opentrust');
-        $new['opentrust_version']  = __('Version', 'opentrust');
-        $new['opentrust_pdf']      = __('PDF', 'opentrust');
+        $new['ettic_otc_ref_id']   = __('ID', 'opentrust');
+        $new['ettic_otc_category'] = __('Category', 'opentrust');
+        $new['ettic_otc_version']  = __('Version', 'opentrust');
+        $new['ettic_otc_pdf']      = __('PDF', 'opentrust');
         $new['date']  = $columns['date'];
         return $new;
     }
@@ -1068,17 +1068,17 @@ final class Ettic_OTC_CPT {
     public function policy_column_content(string $column, int $post_id): void {
         // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Match arms emit either hard-coded HTML or values already passed through esc_html(); PHPCS misreads the IIFE/match-expression syntax.
         match ($column) {
-            'opentrust_ref_id'   => (function () use ($post_id): void {
-                $ref = (string) get_post_meta($post_id, '_opentrust_policy_ref_id', true);
+            'ettic_otc_ref_id'   => (function () use ($post_id): void {
+                $ref = (string) get_post_meta($post_id, '_ettic_otc_policy_ref_id', true);
                 if ($ref === '') {
                     print '<span style="color:#9ca3af">—</span>';
                     return;
                 }
                 printf('<code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:3px">%s</code>', esc_html($ref));
             })(),
-            'opentrust_category' => print(esc_html(Ettic_OTC_Render::policy_category_labels()[get_post_meta($post_id, '_opentrust_policy_category', true) ?: 'other'] ?? '')),
-            'opentrust_version'  => printf('<span class="ot-version-badge">v%s</span>', esc_html((string) ((int) get_post_meta($post_id, '_opentrust_version', true) ?: 1))),
-            'opentrust_pdf'      => print(((int) get_post_meta($post_id, '_opentrust_policy_attachment_id', true)) > 0 ? '<span title="PDF attached" style="color:#16a34a">&#10003;</span>' : '<span style="color:#d1d5db">—</span>'),
+            'ettic_otc_category' => print(esc_html(Ettic_OTC_Render::policy_category_labels()[get_post_meta($post_id, '_ettic_otc_policy_category', true) ?: 'other'] ?? '')),
+            'ettic_otc_version'  => printf('<span class="ot-version-badge">v%s</span>', esc_html((string) ((int) get_post_meta($post_id, '_ettic_otc_version', true) ?: 1))),
+            'ettic_otc_pdf'      => print(((int) get_post_meta($post_id, '_ettic_otc_policy_attachment_id', true)) > 0 ? '<span title="PDF attached" style="color:#16a34a">&#10003;</span>' : '<span style="color:#d1d5db">—</span>'),
             default       => null,
         };
         // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1089,18 +1089,18 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']    = $columns['cb'];
         $new['title'] = $columns['title'];
-        $new['opentrust_purpose'] = __('Purpose', 'opentrust');
-        $new['opentrust_country'] = __('Location', 'opentrust');
-        $new['opentrust_dpa']     = __('DPA', 'opentrust');
+        $new['ettic_otc_purpose'] = __('Purpose', 'opentrust');
+        $new['ettic_otc_country'] = __('Location', 'opentrust');
+        $new['ettic_otc_dpa']     = __('DPA', 'opentrust');
         $new['date']  = $columns['date'];
         return $new;
     }
 
     public function sub_column_content(string $column, int $post_id): void {
         match ($column) {
-            'opentrust_purpose' => print(esc_html(wp_trim_words(get_post_meta($post_id, '_opentrust_sub_purpose', true) ?: '', 10))),
-            'opentrust_country' => print(esc_html(get_post_meta($post_id, '_opentrust_sub_country', true) ?: '—')),
-            'opentrust_dpa'     => print((bool) get_post_meta($post_id, '_opentrust_sub_dpa_signed', true) ? '<span style="color:#16a34a">&#10003;</span>' : '—'),
+            'ettic_otc_purpose' => print(esc_html(wp_trim_words(get_post_meta($post_id, '_ettic_otc_sub_purpose', true) ?: '', 10))),
+            'ettic_otc_country' => print(esc_html(get_post_meta($post_id, '_ettic_otc_sub_country', true) ?: '—')),
+            'ettic_otc_dpa'     => print((bool) get_post_meta($post_id, '_ettic_otc_sub_dpa_signed', true) ? '<span style="color:#16a34a">&#10003;</span>' : '—'),
             default      => null,
         };
     }
@@ -1110,16 +1110,16 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']          = $columns['cb'];
         $new['title']       = $columns['title'];
-        $new['opentrust_dp_items'] = __('Data Items', 'opentrust');
-        $new['opentrust_dp_sort']  = __('Order', 'opentrust');
+        $new['ettic_otc_dp_items'] = __('Data Items', 'opentrust');
+        $new['ettic_otc_dp_sort']  = __('Order', 'opentrust');
         $new['date']        = $columns['date'];
         return $new;
     }
 
     public function dp_column_content(string $column, int $post_id): void {
         match ($column) {
-            'opentrust_dp_items' => print(esc_html((string) count((array) (get_post_meta($post_id, '_opentrust_dp_data_items', true) ?: [])))),
-            'opentrust_dp_sort'  => print(esc_html((string) ((int) get_post_meta($post_id, '_opentrust_dp_sort_order', true)))),
+            'ettic_otc_dp_items' => print(esc_html((string) count((array) (get_post_meta($post_id, '_ettic_otc_dp_data_items', true) ?: [])))),
+            'ettic_otc_dp_sort'  => print(esc_html((string) ((int) get_post_meta($post_id, '_ettic_otc_dp_sort_order', true)))),
             default       => null,
         };
     }
@@ -1127,9 +1127,9 @@ final class Ettic_OTC_CPT {
     // ── FAQ meta box ──
 
     public function render_faq_meta_box(\WP_Post $post): void {
-        wp_nonce_field('opentrust_save_faq', 'opentrust_faq_nonce');
+        wp_nonce_field('ettic_otc_save_faq', 'ettic_otc_faq_nonce');
 
-        $policy_id = (int) get_post_meta($post->ID, '_opentrust_faq_related_policy', true);
+        $policy_id = (int) get_post_meta($post->ID, '_ettic_otc_faq_related_policy', true);
 
         $policies = get_posts([
             'post_type'      => self::POLICY,
@@ -1140,8 +1140,8 @@ final class Ettic_OTC_CPT {
         ]);
         ?>
         <div class="ot-meta-field">
-            <label for="opentrust_faq_related_policy"><?php esc_html_e('Related Policy', 'opentrust'); ?></label>
-            <select id="opentrust_faq_related_policy" name="opentrust_faq_related_policy" style="width:100%">
+            <label for="ettic_otc_faq_related_policy"><?php esc_html_e('Related Policy', 'opentrust'); ?></label>
+            <select id="ettic_otc_faq_related_policy" name="ettic_otc_faq_related_policy" style="width:100%">
                 <option value="0"><?php esc_html_e('— None —', 'opentrust'); ?></option>
                 <?php foreach ($policies as $policy): ?>
                     <option value="<?php echo esc_attr((string) $policy->ID); ?>" <?php selected($policy_id, $policy->ID); ?>><?php echo esc_html($policy->post_title); ?></option>
@@ -1160,18 +1160,18 @@ final class Ettic_OTC_CPT {
     }
 
     private function save_faq_meta(int $post_id): void {
-        if (!isset($_POST['opentrust_faq_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['opentrust_faq_nonce'] ) ), 'opentrust_save_faq')) {
+        if (!isset($_POST['ettic_otc_faq_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ettic_otc_faq_nonce'] ) ), 'ettic_otc_save_faq')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
 
-        $related = absint( wp_unslash( $_POST['opentrust_faq_related_policy'] ?? 0 ) );
+        $related = absint( wp_unslash( $_POST['ettic_otc_faq_related_policy'] ?? 0 ) );
         if ($related > 0 && get_post_type($related) === self::POLICY) {
-            update_post_meta($post_id, '_opentrust_faq_related_policy', $related);
+            update_post_meta($post_id, '_ettic_otc_faq_related_policy', $related);
         } else {
-            delete_post_meta($post_id, '_opentrust_faq_related_policy');
+            delete_post_meta($post_id, '_ettic_otc_faq_related_policy');
         }
     }
 
@@ -1180,14 +1180,14 @@ final class Ettic_OTC_CPT {
         $new = [];
         $new['cb']           = $columns['cb'];
         $new['title']        = $columns['title'];
-        $new['opentrust_faq_order'] = __('Order', 'opentrust');
+        $new['ettic_otc_faq_order'] = __('Order', 'opentrust');
         $new['date']         = $columns['date'];
         return $new;
     }
 
     public function faq_column_content(string $column, int $post_id): void {
         match ($column) {
-            'opentrust_faq_order' => print(esc_html((string) ((int) (get_post($post_id)->menu_order ?? 0)))),
+            'ettic_otc_faq_order' => print(esc_html((string) ((int) (get_post($post_id)->menu_order ?? 0)))),
             default        => null,
         };
     }

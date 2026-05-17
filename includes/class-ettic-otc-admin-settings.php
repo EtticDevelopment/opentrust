@@ -43,7 +43,7 @@ final class Ettic_OTC_Admin_Settings {
     // ──────────────────────────────────────────────
 
     public function register_settings(): void {
-        register_setting('opentrust_settings_group', 'opentrust_settings', [
+        register_setting('ettic_otc_settings_group', 'ettic_otc_settings', [
             'type'              => 'array',
             'sanitize_callback' => [$this, 'sanitize_settings'],
             'default'           => Ettic_OTC::defaults(),
@@ -51,101 +51,101 @@ final class Ettic_OTC_Admin_Settings {
 
         // ── General tab ──────────────────────────────────────────────
         add_settings_section(
-            'opentrust_general',
+            'ettic_otc_general',
             __('General Settings', 'opentrust'),
             fn() => null,
-            'opentrust-settings-general'
+            'ettic-otc-settings-general'
         );
 
-        $this->add_field('endpoint_slug', __('Endpoint Slug', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general', [
+        $this->add_field('endpoint_slug', __('Endpoint Slug', 'opentrust'), 'render_text_field', 'ettic_otc_general', 'ettic-otc-settings-general', [
             'description' => __('The URL path for your trust center (e.g., "trust-center" = yoursite.com/trust-center/).', 'opentrust'),
         ]);
 
-        $this->add_field('page_title', __('Page Title', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general');
+        $this->add_field('page_title', __('Page Title', 'opentrust'), 'render_text_field', 'ettic_otc_general', 'ettic-otc-settings-general');
 
-        $this->add_field('company_name', __('Company Name', 'opentrust'), 'render_text_field', 'opentrust_general', 'opentrust-settings-general');
+        $this->add_field('company_name', __('Company Name', 'opentrust'), 'render_text_field', 'ettic_otc_general', 'ettic-otc-settings-general');
 
-        $this->add_field('tagline', __('Tagline', 'opentrust'), 'render_textarea_field', 'opentrust_general', 'opentrust-settings-general', [
+        $this->add_field('tagline', __('Tagline', 'opentrust'), 'render_textarea_field', 'ettic_otc_general', 'ettic-otc-settings-general', [
             'description' => __('A short description displayed below the company name in the hero section.', 'opentrust'),
         ]);
 
         // Branding section (General tab).
         add_settings_section(
-            'opentrust_branding',
+            'ettic_otc_branding',
             __('Branding', 'opentrust'),
             fn() => null,
-            'opentrust-settings-general'
+            'ettic-otc-settings-general'
         );
 
-        $this->add_field('logo_id', __('Logo', 'opentrust'), 'render_logo_field', 'opentrust_branding', 'opentrust-settings-general');
-        $this->add_field('avatar_id', __('AI Avatar', 'opentrust'), 'render_avatar_field', 'opentrust_branding', 'opentrust-settings-general');
+        $this->add_field('logo_id', __('Logo', 'opentrust'), 'render_logo_field', 'ettic_otc_branding', 'ettic-otc-settings-general');
+        $this->add_field('avatar_id', __('AI Avatar', 'opentrust'), 'render_avatar_field', 'ettic_otc_branding', 'ettic-otc-settings-general');
 
-        $this->add_field('accent_color', __('Accent Color', 'opentrust'), 'render_color_field', 'opentrust_branding', 'opentrust-settings-general', [
+        $this->add_field('accent_color', __('Accent Color', 'opentrust'), 'render_color_field', 'ettic_otc_branding', 'ettic-otc-settings-general', [
             'description' => __('Used for buttons, links, and highlights. Choose a color that matches your brand.', 'opentrust'),
         ]);
 
-        $this->add_field('show_powered_by', __('Credit Link', 'opentrust'), 'render_show_powered_by_field', 'opentrust_branding', 'opentrust-settings-general');
+        $this->add_field('show_powered_by', __('Credit Link', 'opentrust'), 'render_show_powered_by_field', 'ettic_otc_branding', 'ettic-otc-settings-general');
 
         // Sections visibility (General tab).
         add_settings_section(
-            'opentrust_sections',
+            'ettic_otc_sections',
             __('Visible Sections', 'opentrust'),
             fn() => print('<p>' . esc_html__('Choose which sections to display on the trust center.', 'opentrust') . '</p>'),
-            'opentrust-settings-general'
+            'ettic-otc-settings-general'
         );
 
-        $this->add_field('sections_visible', __('Sections', 'opentrust'), 'render_sections_field', 'opentrust_sections', 'opentrust-settings-general');
+        $this->add_field('sections_visible', __('Sections', 'opentrust'), 'render_sections_field', 'ettic_otc_sections', 'ettic-otc-settings-general');
 
         // ── Contact tab ──────────────────────────────────────────────
         // Fields are optional — the frontend block renders only when at least one field below is populated.
         add_settings_section(
-            'opentrust_contact',
+            'ettic_otc_contact',
             __('Get in touch', 'opentrust'),
             fn() => print('<p>' . esc_html__('Publish a dark-accent "Get in touch" block on the trust center. Every field is optional — the block only appears if at least one is filled in.', 'opentrust') . '</p>'),
-            'opentrust-settings-contact'
+            'ettic-otc-settings-contact'
         );
 
-        $this->add_field('company_description', __('Company Description', 'opentrust'), 'render_textarea_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('company_description', __('Company Description', 'opentrust'), 'render_textarea_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Two or three sentences describing what the company does. Rendered under the "Get in touch" section title.', 'opentrust'),
         ]);
 
-        $this->add_field('dpo_name', __('DPO Name', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('dpo_name', __('DPO Name', 'opentrust'), 'render_text_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Data Protection Officer name. Required under GDPR for many organisations.', 'opentrust'),
         ]);
 
-        $this->add_field('dpo_email', __('DPO Email', 'opentrust'), 'render_email_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('dpo_email', __('DPO Email', 'opentrust'), 'render_email_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Dedicated DPO mailbox. Rendered as a mailto link.', 'opentrust'),
         ]);
 
-        $this->add_field('security_email', __('Security Contact Email', 'opentrust'), 'render_email_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('security_email', __('Security Contact Email', 'opentrust'), 'render_email_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('For vulnerability reports and security questions. Often separate from the DPO.', 'opentrust'),
         ]);
 
-        $this->add_field('contact_form_url', __('Contact Form URL', 'opentrust'), 'render_url_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('contact_form_url', __('Contact Form URL', 'opentrust'), 'render_url_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Optional link to a gated contact form.', 'opentrust'),
         ]);
 
-        $this->add_field('contact_address', __('Mailing Address', 'opentrust'), 'render_textarea_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('contact_address', __('Mailing Address', 'opentrust'), 'render_textarea_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Postal address for formal GDPR / legal notices.', 'opentrust'),
         ]);
 
-        $this->add_field('pgp_key_url', __('PGP Public Key URL', 'opentrust'), 'render_url_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('pgp_key_url', __('PGP Public Key URL', 'opentrust'), 'render_url_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('Optional link to your security team\'s PGP public key.', 'opentrust'),
         ]);
 
-        $this->add_field('company_registration', __('Company Registration Number', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('company_registration', __('Company Registration Number', 'opentrust'), 'render_text_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('KvK (NL), Companies House (UK), Handelsregister (DE), EIN (US), or equivalent business registration.', 'opentrust'),
         ]);
 
-        $this->add_field('vat_number', __('VAT / Tax ID', 'opentrust'), 'render_text_field', 'opentrust_contact', 'opentrust-settings-contact', [
+        $this->add_field('vat_number', __('VAT / Tax ID', 'opentrust'), 'render_text_field', 'ettic_otc_contact', 'ettic-otc-settings-contact', [
             'description' => __('VAT number, sales-tax ID, or equivalent international tax identifier.', 'opentrust'),
         ]);
 
     }
 
-    private function add_field(string $key, string $title, string $callback, string $section, string $page = 'opentrust-settings-general', array $extra = []): void {
+    private function add_field(string $key, string $title, string $callback, string $section, string $page = 'ettic-otc-settings-general', array $extra = []): void {
         add_settings_field(
-            'opentrust_' . $key,
+            'ettic_otc_' . $key,
             $title,
             [$this, $callback],
             $page,
@@ -189,9 +189,9 @@ final class Ettic_OTC_Admin_Settings {
         $value    = $settings[$key] ?? '';
 
         if ($type === 'textarea') {
-            echo '<textarea id="opentrust_' . esc_attr($key) . '" name="opentrust_settings[' . esc_attr($key) . ']" rows="3" class="large-text"';
+            echo '<textarea id="ettic_otc_' . esc_attr($key) . '" name="ettic_otc_settings[' . esc_attr($key) . ']" rows="3" class="large-text"';
         } else {
-            echo '<input type="' . esc_attr($type) . '" id="opentrust_' . esc_attr($key) . '" name="opentrust_settings[' . esc_attr($key) . ']" value="' . esc_attr($value) . '" class="regular-text"';
+            echo '<input type="' . esc_attr($type) . '" id="ettic_otc_' . esc_attr($key) . '" name="ettic_otc_settings[' . esc_attr($key) . ']" value="' . esc_attr($value) . '" class="regular-text"';
         }
         foreach ($extra_attrs as $attr_name => $attr_val) {
             echo ' ' . esc_attr($attr_name) . '="' . esc_attr($attr_val) . '"';
@@ -212,11 +212,11 @@ final class Ettic_OTC_Admin_Settings {
         $value        = $settings['accent_color'] ?? '#2563EB';
         $force_exact  = !empty($settings['accent_force_exact']);
         printf(
-            '<input type="text" id="opentrust_accent_color" name="opentrust_settings[accent_color]" value="%s" class="ot-color-picker" data-default-color="#2563EB">',
+            '<input type="text" id="ettic_otc_accent_color" name="ettic_otc_settings[accent_color]" value="%s" class="ot-color-picker" data-default-color="#2563EB">',
             esc_attr($value)
         );
         ?>
-        <div id="opentrust-accent-warning" class="ot-accent-warning<?php echo esc_attr($force_exact ? ' ot-accent-warning--override' : ''); ?>" hidden>
+        <div id="ettic-otc-accent-warning" class="ot-accent-warning<?php echo esc_attr($force_exact ? ' ot-accent-warning--override' : ''); ?>" hidden>
             <svg class="ot-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <div class="ot-accent-warning__body">
                 <strong class="ot-accent-warning__heading ot-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'opentrust'); ?></strong>
@@ -244,8 +244,8 @@ final class Ettic_OTC_Admin_Settings {
                 <label class="ot-accent-warning__override">
                     <input
                         type="checkbox"
-                        id="opentrust_accent_force_exact"
-                        name="opentrust_settings[accent_force_exact]"
+                        id="ettic_otc_accent_force_exact"
+                        name="ettic_otc_settings[accent_force_exact]"
                         value="1"
                         <?php checked($force_exact); ?>
                     >
@@ -284,7 +284,7 @@ final class Ettic_OTC_Admin_Settings {
             <div class="ot-logo-preview<?php echo esc_attr($media_url ? '' : ' ot-hidden'); ?>">
                 <img src="<?php echo esc_url($media_url); ?>" alt="" style="max-width:200px;max-height:80px">
             </div>
-            <input type="hidden" name="opentrust_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ot-media-input>
+            <input type="hidden" name="ettic_otc_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ot-media-input>
             <button type="button" class="button" data-ot-media-upload><?php echo esc_html($button_label); ?></button>
             <button type="button" class="button<?php echo esc_attr($media_id ? '' : ' ot-hidden'); ?>" data-ot-media-remove><?php esc_html_e('Remove', 'opentrust'); ?></button>
             <p class="description"><?php echo esc_html($description); ?></p>
@@ -296,7 +296,7 @@ final class Ettic_OTC_Admin_Settings {
         $settings = Ettic_OTC::get_settings();
         $checked  = !empty($settings['show_powered_by']);
         printf(
-            '<label><input type="checkbox" id="opentrust_show_powered_by" name="opentrust_settings[show_powered_by]" value="1" %s> %s</label>',
+            '<label><input type="checkbox" id="ettic_otc_show_powered_by" name="ettic_otc_settings[show_powered_by]" value="1" %s> %s</label>',
             checked($checked, true, false),
             esc_html__('Show a "Powered by Open Trust Center" credit in the trust center footer.', 'opentrust')
         );
@@ -322,7 +322,7 @@ final class Ettic_OTC_Admin_Settings {
         foreach ($sections as $key => $label) {
             $checked = !empty($visible[$key]);
             printf(
-                '<label style="display:block;margin-bottom:8px"><input type="checkbox" name="opentrust_settings[sections_visible][%1$s]" value="1" %2$s> %3$s</label>',
+                '<label style="display:block;margin-bottom:8px"><input type="checkbox" name="ettic_otc_settings[sections_visible][%1$s]" value="1" %2$s> %3$s</label>',
                 esc_attr($key),
                 checked($checked, true, false),
                 esc_html($label)
@@ -382,13 +382,13 @@ final class Ettic_OTC_Admin_Settings {
         // Carry forward byte-for-byte so saving settings doesn't force a
         // regeneration (which would invalidate all in-flight rate-limit
         // hashes and Turnstile bypass transients).
-        if (isset($old['opentrust_site_salt']) && is_string($old['opentrust_site_salt'])) {
-            $sanitized['opentrust_site_salt'] = $old['opentrust_site_salt'];
+        if (isset($old['ettic_otc_site_salt']) && is_string($old['ettic_otc_site_salt'])) {
+            $sanitized['ettic_otc_site_salt'] = $old['ettic_otc_site_salt'];
         }
 
         // Flag rewrite flush if slug changed.
         if ($sanitized['endpoint_slug'] !== ($old['endpoint_slug'] ?? '')) {
-            set_transient('opentrust_flush_rewrite', true);
+            set_transient('ettic_otc_flush_rewrite', true);
         }
 
         return $sanitized;
@@ -406,7 +406,7 @@ final class Ettic_OTC_Admin_Settings {
      * Three settings are deliberately excluded:
      *   - `ai_enabled`, `ai_provider`, `ai_model_list_cached_at` — server-
      *     controlled by the key-save handler.
-     *   - `opentrust_site_salt` — written out-of-band by Chat_Budget.
+     *   - `ettic_otc_site_salt` — written out-of-band by Chat_Budget.
      *
      * @return array<string, array{tab:string, default:mixed, sanitize:callable}>
      */
@@ -576,7 +576,7 @@ final class Ettic_OTC_Admin_Settings {
         if (!in_array($tab, ['general', 'contact', 'ai', 'io'], true)) {
             $tab = 'general';
         }
-        $base_url = admin_url('admin.php?page=opentrust');
+        $base_url = admin_url('admin.php?page=ettic-otc');
         ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
@@ -618,18 +618,18 @@ final class Ettic_OTC_Admin_Settings {
             <?php elseif ($tab === 'contact'): ?>
                 <form method="post" action="options.php">
                     <?php
-                    settings_fields('opentrust_settings_group');
-                    echo '<input type="hidden" name="opentrust_settings[__contact_tab_save]" value="1">';
-                    do_settings_sections('opentrust-settings-contact');
+                    settings_fields('ettic_otc_settings_group');
+                    echo '<input type="hidden" name="ettic_otc_settings[__contact_tab_save]" value="1">';
+                    do_settings_sections('ettic-otc-settings-contact');
                     submit_button();
                     ?>
                 </form>
             <?php else: ?>
                 <form method="post" action="options.php">
                     <?php
-                    settings_fields('opentrust_settings_group');
-                    echo '<input type="hidden" name="opentrust_settings[__general_tab_save]" value="1">';
-                    do_settings_sections('opentrust-settings-general');
+                    settings_fields('ettic_otc_settings_group');
+                    echo '<input type="hidden" name="ettic_otc_settings[__general_tab_save]" value="1">';
+                    do_settings_sections('ettic-otc-settings-general');
                     submit_button();
                     ?>
                 </form>
@@ -653,8 +653,8 @@ final class Ettic_OTC_Admin_Settings {
      * so it must write them without the callback clobbering the change.
      */
     public function save_settings_raw(array $settings): void {
-        remove_filter('sanitize_option_opentrust_settings', [$this, 'sanitize_settings']);
-        update_option('opentrust_settings', $settings, false);
-        add_filter('sanitize_option_opentrust_settings', [$this, 'sanitize_settings']);
+        remove_filter('sanitize_option_ettic_otc_settings', [$this, 'sanitize_settings']);
+        update_option('ettic_otc_settings', $settings, false);
+        add_filter('sanitize_option_ettic_otc_settings', [$this, 'sanitize_settings']);
     }
 }

@@ -37,7 +37,7 @@ final class Ettic_OTC_Version {
      * with the OLD version so it's preserved in history.
      */
     public static function bump_version(int $post_id, string $change_summary = ''): void {
-        $current_version = (int) get_post_meta($post_id, '_opentrust_version', true) ?: 1;
+        $current_version = (int) get_post_meta($post_id, '_ettic_otc_version', true) ?: 1;
         $new_version     = $current_version + 1;
 
         // Find an untagged revision that holds the OLD content (pre-update).
@@ -51,7 +51,7 @@ final class Ettic_OTC_Version {
 
         if ($revisions && $post) {
             foreach ($revisions as $rev) {
-                $existing = get_post_meta($rev->ID, '_opentrust_version', true);
+                $existing = get_post_meta($rev->ID, '_ettic_otc_version', true);
                 if (!empty($existing) && (int) $existing > 0) {
                     continue; // already tagged, skip
                 }
@@ -66,16 +66,16 @@ final class Ettic_OTC_Version {
                 // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.SlowDBQuery -- Admin-only postmeta operations on revisions
                 $wpdb->delete($wpdb->postmeta, [
                     'post_id'  => $rev->ID,
-                    'meta_key' => '_opentrust_version',
+                    'meta_key' => '_ettic_otc_version',
                 ]);
                 $wpdb->insert($wpdb->postmeta, [
                     'post_id'    => $rev->ID,
-                    'meta_key'   => '_opentrust_version',
+                    'meta_key'   => '_ettic_otc_version',
                     'meta_value' => (string) $current_version,
                 ]);
 
                 // Copy old version's summary and effective date to the revision.
-                foreach (['_opentrust_version_summary', '_opentrust_policy_effective_date'] as $meta_key) {
+                foreach (['_ettic_otc_version_summary', '_ettic_otc_policy_effective_date'] as $meta_key) {
                     $old_val = get_post_meta($post_id, $meta_key, true);
                     if ($old_val) {
                         $wpdb->delete($wpdb->postmeta, [
@@ -97,13 +97,13 @@ final class Ettic_OTC_Version {
         }
 
         // Bump the main post to the new version.
-        update_post_meta($post_id, '_opentrust_version', $new_version);
+        update_post_meta($post_id, '_ettic_otc_version', $new_version);
 
         // Store change summary for this version.
         if ($change_summary !== '') {
-            update_post_meta($post_id, '_opentrust_version_summary', $change_summary);
+            update_post_meta($post_id, '_ettic_otc_version_summary', $change_summary);
         } else {
-            delete_post_meta($post_id, '_opentrust_version_summary');
+            delete_post_meta($post_id, '_ettic_otc_version_summary');
         }
     }
 
@@ -111,9 +111,9 @@ final class Ettic_OTC_Version {
      * Ensure a first-publish post gets v1.
      */
     public static function ensure_initial_version(int $post_id): void {
-        $version = get_post_meta($post_id, '_opentrust_version', true);
+        $version = get_post_meta($post_id, '_ettic_otc_version', true);
         if (!$version) {
-            update_post_meta($post_id, '_opentrust_version', 1);
+            update_post_meta($post_id, '_ettic_otc_version', 1);
         }
     }
 
@@ -123,7 +123,7 @@ final class Ettic_OTC_Version {
 
     public function add_version_history_meta_box(): void {
         add_meta_box(
-            'opentrust_version_history',
+            'ettic_otc_version_history',
             __('Version History', 'opentrust'),
             [$this, 'render_version_history'],
             Ettic_OTC_CPT::POLICY,
@@ -133,7 +133,7 @@ final class Ettic_OTC_Version {
     }
 
     public function render_version_history(\WP_Post $post): void {
-        $current_version = (int) get_post_meta($post->ID, '_opentrust_version', true) ?: 1;
+        $current_version = (int) get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1;
         $revisions       = wp_get_post_revisions($post->ID, [
             'orderby' => 'ID',
             'order'   => 'DESC',
@@ -169,7 +169,7 @@ final class Ettic_OTC_Version {
                         <td><em><?php esc_html_e('Current', 'opentrust'); ?></em></td>
                     </tr>
                     <?php foreach ($revisions as $rev):
-                        $rev_version = (int) get_post_meta($rev->ID, '_opentrust_version', true);
+                        $rev_version = (int) get_post_meta($rev->ID, '_ettic_otc_version', true);
                         if (!$rev_version) continue;
                         if ($rev_version === $current_version) continue;
 

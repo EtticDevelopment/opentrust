@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Ettic_OTC_Chat_Corpus {
 
-    public const TRANSIENT_KEY     = 'opentrust_chat_corpus';
+    public const TRANSIENT_KEY     = 'ettic_otc_chat_corpus';
     public const TTL               = 12 * HOUR_IN_SECONDS;
 
     /**
@@ -63,7 +63,7 @@ final class Ettic_OTC_Chat_Corpus {
      * Read here; written by Ettic_OTC_Chat_Summarizer. Defined in the corpus
      * class so this file works whether the summarizer class is loaded or not.
      */
-    public const POLICY_SUMMARY_META = '_opentrust_policy_chat_summary';
+    public const POLICY_SUMMARY_META = '_ettic_otc_policy_chat_summary';
 
     // ──────────────────────────────────────────────
     // Cache
@@ -98,7 +98,7 @@ final class Ettic_OTC_Chat_Corpus {
 
     /**
      * Drop every cached locale variant. Wired to CPT save/delete/trash/status
-     * transitions and to update_option_opentrust_settings.
+     * transitions and to update_option_ettic_otc_settings.
      */
     public static function invalidate(): void {
         global $wpdb;
@@ -455,7 +455,7 @@ final class Ettic_OTC_Chat_Corpus {
 
     /**
      * Resolve the index summary for a policy. Fallback ladder:
-     *   1. _opentrust_policy_chat_summary postmeta if non-empty.
+     *   1. _ettic_otc_policy_chat_summary postmeta if non-empty.
      *   2. post_excerpt (stripped + collapsed) if non-empty.
      *   3. First 240 chars of the stripped post_content with ellipsis.
      */
@@ -497,10 +497,10 @@ final class Ettic_OTC_Chat_Corpus {
         $url      = home_url('/' . $endpoint . '/policy/' . $post->post_name . '/');
 
         $category_labels = Ettic_OTC_Render::policy_category_labels();
-        $category        = (string) (get_post_meta($post->ID, '_opentrust_policy_category', true) ?: 'other');
+        $category        = (string) (get_post_meta($post->ID, '_ettic_otc_policy_category', true) ?: 'other');
         $category_label  = $category_labels[$category] ?? $category;
-        $effective       = (string) get_post_meta($post->ID, '_opentrust_policy_effective_date', true);
-        $version         = (int) (get_post_meta($post->ID, '_opentrust_version', true) ?: 1);
+        $effective       = (string) get_post_meta($post->ID, '_ettic_otc_policy_effective_date', true);
+        $version         = (int) (get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1);
 
         // Strip block-editor markup down to plain text.
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core filter.

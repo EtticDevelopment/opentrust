@@ -28,9 +28,9 @@ final class Ettic_OTC_Admin_Questions {
     }
 
     private function __construct() {
-        add_action('admin_post_opentrust_ai_questions_export', [$this, 'handle_export']);
-        add_action('admin_post_opentrust_ai_questions_clear',  [$this, 'handle_clear']);
-        add_action('admin_post_opentrust_ai_toggle_logging',   [$this, 'handle_toggle_logging']);
+        add_action('admin_post_ettic_otc_ai_questions_export', [$this, 'handle_export']);
+        add_action('admin_post_ettic_otc_ai_questions_clear',  [$this, 'handle_clear']);
+        add_action('admin_post_ettic_otc_ai_toggle_logging',   [$this, 'handle_toggle_logging']);
     }
 
     // ──────────────────────────────────────────────
@@ -63,21 +63,21 @@ final class Ettic_OTC_Admin_Questions {
         $counts  = Ettic_OTC_Chat_Log::total_count();
 
         $export_url = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
-            'opentrust_ai_questions_export'
+            admin_url('admin-post.php?action=ettic_otc_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
+            'ettic_otc_ai_questions_export'
         );
         $clear_url  = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_questions_clear'),
-            'opentrust_ai_questions_clear'
+            admin_url('admin-post.php?action=ettic_otc_ai_questions_clear'),
+            'ettic_otc_ai_questions_clear'
         );
         $toggle_url = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_toggle_logging'),
-            'opentrust_ai_toggle_logging'
+            admin_url('admin-post.php?action=ettic_otc_ai_toggle_logging'),
+            'ettic_otc_ai_toggle_logging'
         );
 
-        $notice = get_transient('opentrust_ai_notice_' . get_current_user_id());
+        $notice = get_transient('ettic_otc_ai_notice_' . get_current_user_id());
         if (is_array($notice)) {
-            delete_transient('opentrust_ai_notice_' . get_current_user_id());
+            delete_transient('ettic_otc_ai_notice_' . get_current_user_id());
             $class = $notice['type'] === 'error' ? 'notice-error' : 'notice-success';
             printf('<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr($class), esc_html((string) $notice['message']));
         }
@@ -111,7 +111,7 @@ final class Ettic_OTC_Admin_Questions {
             </div>
 
             <form method="get" action="" style="margin:16px 0">
-                <input type="hidden" name="page" value="opentrust-questions">
+                <input type="hidden" name="page" value="ettic-otc-questions">
                 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
                     <div>
                         <label style="display:block;font-size:11px;font-weight:600;color:#50575e;text-transform:uppercase"><?php esc_html_e('Search', 'opentrust'); ?></label>
@@ -135,7 +135,7 @@ final class Ettic_OTC_Admin_Questions {
                         <input type="date" name="date_to" value="<?php echo esc_attr($filters['date_to']); ?>">
                     </div>
                     <button type="submit" class="button"><?php esc_html_e('Filter', 'opentrust'); ?></button>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=opentrust-questions')); ?>" class="button"><?php esc_html_e('Reset', 'opentrust'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=ettic-otc-questions')); ?>" class="button"><?php esc_html_e('Reset', 'opentrust'); ?></a>
                     <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'opentrust'); ?></a>
                 </div>
             </form>
@@ -181,7 +181,7 @@ final class Ettic_OTC_Admin_Questions {
             </table>
 
             <?php if ($pages > 1):
-                $base = add_query_arg($filters + ['page' => 'opentrust-questions'], admin_url('admin.php'));
+                $base = add_query_arg($filters + ['page' => 'ettic-otc-questions'], admin_url('admin.php'));
                 $base = remove_query_arg('paged', $base);
                 ?>
                 <div class="tablenav" style="margin-top:16px">
@@ -222,7 +222,7 @@ final class Ettic_OTC_Admin_Questions {
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_questions_export');
+        check_admin_referer('ettic_otc_ai_questions_export');
 
         $filters = [
             'search'    => isset($_GET['search'])    ? sanitize_text_field((string) wp_unslash($_GET['search']))    : '',
@@ -236,7 +236,7 @@ final class Ettic_OTC_Admin_Questions {
         $result = Ettic_OTC_Chat_Log::query($filters);
 
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=opentrust-questions-' . gmdate('Y-m-d') . '.csv');
+        header('Content-Disposition: attachment; filename=ettic-otc-questions-' . gmdate('Y-m-d') . '.csv');
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Writing to php://output, not filesystem
         $out = fopen('php://output', 'w');
@@ -263,16 +263,16 @@ final class Ettic_OTC_Admin_Questions {
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_questions_clear');
+        check_admin_referer('ettic_otc_ai_questions_clear');
 
         Ettic_OTC_Chat_Log::clear_all();
 
         set_transient(
-            'opentrust_ai_notice_' . get_current_user_id(),
+            'ettic_otc_ai_notice_' . get_current_user_id(),
             ['type' => 'success', 'message' => __('Question log cleared.', 'opentrust')],
             MINUTE_IN_SECONDS
         );
-        wp_safe_redirect(admin_url('admin.php?page=opentrust-questions'));
+        wp_safe_redirect(admin_url('admin.php?page=ettic-otc-questions'));
         exit;
     }
 
@@ -280,18 +280,18 @@ final class Ettic_OTC_Admin_Questions {
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_toggle_logging');
+        check_admin_referer('ettic_otc_ai_toggle_logging');
 
         $settings = Ettic_OTC::get_settings();
         $settings['ai_logging_enabled'] = empty($settings['ai_logging_enabled']);
         Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         set_transient(
-            'opentrust_ai_notice_' . get_current_user_id(),
+            'ettic_otc_ai_notice_' . get_current_user_id(),
             ['type' => 'success', 'message' => $settings['ai_logging_enabled'] ? __('Logging enabled.', 'opentrust') : __('Logging disabled.', 'opentrust')],
             MINUTE_IN_SECONDS
         );
-        wp_safe_redirect(admin_url('admin.php?page=opentrust-questions'));
+        wp_safe_redirect(admin_url('admin.php?page=ettic-otc-questions'));
         exit;
     }
 }

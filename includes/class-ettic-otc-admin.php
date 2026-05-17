@@ -56,18 +56,18 @@ final class Ettic_OTC_Admin {
             __('Open Trust Center', 'opentrust'),
             __('Open Trust Center', 'opentrust'),
             'manage_options',
-            'opentrust',
+            'ettic-otc',
             $settings_page,
             'dashicons-shield',
             30
         );
 
         add_submenu_page(
-            'opentrust',
+            'ettic-otc',
             __('Settings', 'opentrust'),
             __('Settings', 'opentrust'),
             'manage_options',
-            'opentrust',
+            'ettic-otc',
             $settings_page
         );
 
@@ -75,11 +75,11 @@ final class Ettic_OTC_Admin {
         $settings = Ettic_OTC::get_settings();
         if (!empty($settings['ai_enabled'])) {
             add_submenu_page(
-                'opentrust',
+                'ettic-otc',
                 __('Questions', 'opentrust'),
                 __('Questions', 'opentrust'),
                 'manage_options',
-                'opentrust-questions',
+                'ettic-otc-questions',
                 [Ettic_OTC_Admin_Questions::instance(), 'render_page']
             );
         }
@@ -90,11 +90,11 @@ final class Ettic_OTC_Admin {
      *
      * WP core's _add_post_type_submenus() and our register_menu() both hook
      * admin_menu at priority 10. Core runs first, calling add_submenu_page()
-     * before add_menu_page('opentrust') has populated $admin_page_hooks, so
+     * before add_menu_page('ettic-otc') has populated $admin_page_hooks, so
      * the CPT submenus end up in $_registered_pages under admin_page_* keys
-     * instead of opentrust_page_*. post-new.php looks for the opentrust_page_*
+     * instead of ettic-otc_page_*. post-new.php looks for the ettic-otc_page_*
      * key to fall back to highlighting edit.php?post_type=X; the lookup
-     * misses, $submenu_file collapses to the parent slug 'opentrust', and
+     * misses, $submenu_file collapses to the parent slug 'ettic-otc', and
      * the Settings submenu (which uses the same slug) steals the highlight.
      */
     public function fix_submenu_highlight(?string $submenu_file): ?string {
@@ -122,11 +122,11 @@ final class Ettic_OTC_Admin {
             return;
         }
 
-        $is_opentrust_screen = str_starts_with($screen->id, 'toplevel_page_opentrust')
-            || str_starts_with($screen->id, 'opentrust_page_')
+        $is_ettic_otc_screen = str_starts_with($screen->id, 'toplevel_page_ettic-otc')
+            || str_starts_with($screen->id, 'ettic-otc_page_')
             || in_array($screen->post_type, Ettic_OTC_CPT::CORPUS, true);
 
-        if (!$is_opentrust_screen) {
+        if (!$is_ettic_otc_screen) {
             return;
         }
 
@@ -134,14 +134,14 @@ final class Ettic_OTC_Admin {
         wp_enqueue_media();
 
         wp_enqueue_style(
-            'opentrust-admin',
+            'ettic-otc-admin',
             ETTIC_OTC_PLUGIN_URL . 'assets/css/admin.css',
             [],
             ETTIC_OTC_VERSION
         );
 
         wp_enqueue_script(
-            'opentrust-admin',
+            'ettic-otc-admin',
             ETTIC_OTC_PLUGIN_URL . 'assets/js/admin.js',
             ['wp-color-picker', 'jquery'],
             ETTIC_OTC_VERSION,
@@ -152,7 +152,7 @@ final class Ettic_OTC_Admin {
         // (e.g. wp.media modal titles). Catalog-screen strings are shipped
         // separately below via window.OpenTrustCatalog.
         wp_add_inline_script(
-            'opentrust-admin',
+            'ettic-otc-admin',
             'window.OpenTrustAdmin = ' . wp_json_encode([
                 'i18n' => [
                     'selectBadgeImage' => __('Select Badge Image', 'opentrust'),
@@ -183,7 +183,7 @@ final class Ettic_OTC_Admin {
                 ],
             ];
             wp_add_inline_script(
-                'opentrust-admin',
+                'ettic-otc-admin',
                 'window.OpenTrustCatalog = ' . wp_json_encode($payload) . ';',
                 'before'
             );
@@ -212,11 +212,11 @@ final class Ettic_OTC_Admin {
 
         // Limit the noise to Ettic_OTC-owned screens: top-level plugin pages,
         // subpages, and the four content CPTs. Bail on every other admin screen.
-        $is_opentrust_screen =
-            str_contains((string) $screen->id, 'opentrust') ||
+        $is_ettic_otc_screen =
+            str_contains((string) $screen->id, 'ettic-otc') ||
             in_array($screen->post_type, Ettic_OTC_CPT::CORPUS, true);
 
-        if (!$is_opentrust_screen) {
+        if (!$is_ettic_otc_screen) {
             return;
         }
 
@@ -246,9 +246,9 @@ final class Ettic_OTC_Admin {
                         <?php esc_html_e('You can preview the trust center via raw query-string URLs:', 'opentrust'); ?>
                     </p>
                     <ul style="margin:0 0 0 18px;list-style:disc">
-                        <li><code><?php echo esc_html($home_url); ?>?opentrust=main</code></li>
-                        <li><code><?php echo esc_html($home_url); ?>?opentrust=policy&amp;opentrust_policy_slug=YOUR-POLICY-SLUG</code></li>
-                        <li><code><?php echo esc_html($home_url); ?>?opentrust=ask</code></li>
+                        <li><code><?php echo esc_html($home_url); ?>?ettic_otc=main</code></li>
+                        <li><code><?php echo esc_html($home_url); ?>?ettic_otc=policy&amp;ettic_otc_policy_slug=YOUR-POLICY-SLUG</code></li>
+                        <li><code><?php echo esc_html($home_url); ?>?ettic_otc=ask</code></li>
                     </ul>
                     <p style="margin:6px 0 0">
                         <strong><?php esc_html_e('This is for testing only.', 'opentrust'); ?></strong>
