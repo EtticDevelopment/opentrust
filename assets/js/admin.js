@@ -428,7 +428,7 @@
  *   - `fields_review` → templates, amber highlight, "Verify" chip + notice
  *
  * All state is client-side. The bundle at window.EtticOTCCatalog is injected
- * only on post-new.php for opentr_subprocessor / opentr_data_practice screens.
+ * only on post-new.php for eotc_subprocessor / eotc_data_practice screens.
  */
 (function () {
     'use strict';
