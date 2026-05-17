@@ -249,15 +249,24 @@ final class Ettic_OTC_IO {
             );
         }
 
-        $their_major = (int) explode('.', (string) ($manifest['ettic_otc_version'] ?? '0.0.0'))[0];
-        $our_major   = (int) explode('.', ETTIC_OTC_VERSION)[0];
-        if ($their_major !== $our_major) {
-            $errors[] = sprintf(
-                /* translators: %1$s: their version, %2$s: our version */
-                __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'open-trust-center-by-ettic'),
-                (string) ($manifest['ettic_otc_version'] ?? '?'),
-                ETTIC_OTC_VERSION
-            );
+        // Accept either the new ettic_otc_version field or the legacy
+        // opentrust_version field (v1.0.x and v1.1.x exports). If only the
+        // legacy field is present, skip the major-version gate — legacy
+        // archives are always v1.x and the LEGACY_MAP / LEGACY_META_MAP
+        // remap handles the schema differences.
+        $their_version = (string) ($manifest['ettic_otc_version'] ?? $manifest['opentrust_version'] ?? '');
+        $is_legacy     = isset($manifest['opentrust_version']) && !isset($manifest['ettic_otc_version']);
+        if (!$is_legacy && $their_version !== '') {
+            $their_major = (int) explode('.', $their_version)[0];
+            $our_major   = (int) explode('.', ETTIC_OTC_VERSION)[0];
+            if ($their_major !== $our_major) {
+                $errors[] = sprintf(
+                    /* translators: %1$s: their version, %2$s: our version */
+                    __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'open-trust-center-by-ettic'),
+                    $their_version,
+                    ETTIC_OTC_VERSION
+                );
+            }
         }
 
         return [

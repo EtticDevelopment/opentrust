@@ -22,40 +22,33 @@ final class Ettic_OTC_CPT {
     public const FAQ           = 'eotc_faq';
 
     /**
-     * Legacy slugs from v1.0.x. Kept solely for the v3→v4 migration and the
-     * import/export back-compat remap. Do not introduce new references.
-     *
-     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer supported.
-     *             The major-version mismatch check in Ettic_OTC_IO::validate_manifest()
-     *             already hard-rejects 1.x archives on a 2.x destination, so the
-     *             import remap becomes redundant at the same cutoff.
+     * Legacy CPT slugs accepted by the import/export back-compat remap.
+     * Two generations: v1.0.x used `ot_*`, v1.1.x used `opentr_*`. Both
+     * translate to the current `eotc_*` slugs on import.
      */
-    public const LEGACY_POLICY        = 'ot_policy';
-    public const LEGACY_CERTIFICATION = 'ot_certification';
-    public const LEGACY_SUBPROCESSOR  = 'ot_subprocessor';
-    public const LEGACY_DATA_PRACTICE = 'ot_data_practice';
-    public const LEGACY_FAQ           = 'ot_faq';
-
-    /** @deprecated 1.1.0 Drop in 2.0.0 alongside the LEGACY_* constants above. */
     public const LEGACY_MAP = [
-        self::LEGACY_POLICY        => self::POLICY,
-        self::LEGACY_CERTIFICATION => self::CERTIFICATION,
-        self::LEGACY_SUBPROCESSOR  => self::SUBPROCESSOR,
-        self::LEGACY_DATA_PRACTICE => self::DATA_PRACTICE,
-        self::LEGACY_FAQ           => self::FAQ,
+        // v1.0.x
+        'ot_policy'           => self::POLICY,
+        'ot_certification'    => self::CERTIFICATION,
+        'ot_subprocessor'     => self::SUBPROCESSOR,
+        'ot_data_practice'    => self::DATA_PRACTICE,
+        'ot_faq'              => self::FAQ,
+        // v1.1.x
+        'opentr_policy'        => self::POLICY,
+        'opentr_certification' => self::CERTIFICATION,
+        'opentr_subprocessor'  => self::SUBPROCESSOR,
+        'opentr_data_practice' => self::DATA_PRACTICE,
+        'opentr_faq'           => self::FAQ,
     ];
 
     /**
-     * Legacy postmeta keys from v1.0–v1.1, mapped old `_ot_*` → new
-     * `_ettic_otc_*`. Retained for import back-compat: legacy archives
-     * (exported by v1.0.x/v1.1.x) still carry these keys, and the importer
-     * remaps them on read via Ettic_OTC_IO::remap_legacy_meta_keys().
-     * Phase 8 extends the chain through `_ettic_otc_*`.
+     * Legacy postmeta keys accepted by the import/export back-compat remap.
+     * Two generations: v1.0.x used `_ot_*`, v1.1.x used `_opentrust_*`.
+     * Both map to the current `_ettic_otc_*` keys on import.
      */
     public const LEGACY_META_MAP = [
-        // Shared identity.
+        // ── v1.0.x: _ot_* ────────────────────────────────────────────
         '_ot_uuid'                            => '_ettic_otc_uuid',
-        // Certifications.
         '_ot_cert_type'                       => '_ettic_otc_cert_type',
         '_ot_cert_issuing_body'               => '_ettic_otc_cert_issuing_body',
         '_ot_cert_status'                     => '_ettic_otc_cert_status',
@@ -64,7 +57,6 @@ final class Ettic_OTC_CPT {
         '_ot_cert_badge_id'                   => '_ettic_otc_cert_badge_id',
         '_ot_cert_artifact_id'                => '_ettic_otc_cert_artifact_id',
         '_ot_cert_description'                => '_ettic_otc_cert_description',
-        // Policies.
         '_ot_policy_ref_id'                   => '_ettic_otc_policy_ref_id',
         '_ot_policy_category'                 => '_ettic_otc_policy_category',
         '_ot_policy_effective_date'           => '_ettic_otc_policy_effective_date',
@@ -77,13 +69,11 @@ final class Ettic_OTC_CPT {
         '_ot_policy_chat_summary'             => '_ettic_otc_policy_chat_summary',
         '_ot_policy_chat_summary_updated_at'  => '_ettic_otc_policy_chat_summary_updated_at',
         '_ot_policy_chat_summary_origin'      => '_ettic_otc_policy_chat_summary_origin',
-        // Subprocessors.
         '_ot_sub_purpose'                     => '_ettic_otc_sub_purpose',
         '_ot_sub_data_processed'              => '_ettic_otc_sub_data_processed',
         '_ot_sub_country'                     => '_ettic_otc_sub_country',
         '_ot_sub_website'                     => '_ettic_otc_sub_website',
         '_ot_sub_dpa_signed'                  => '_ettic_otc_sub_dpa_signed',
-        // Data practices.
         '_ot_dp_data_items'                   => '_ettic_otc_dp_data_items',
         '_ot_dp_purpose'                      => '_ettic_otc_dp_purpose',
         '_ot_dp_legal_basis'                  => '_ettic_otc_dp_legal_basis',
@@ -98,12 +88,55 @@ final class Ettic_OTC_CPT {
         '_ot_dp_data_type'                    => '_ettic_otc_dp_data_type',
         '_ot_dp_collection_method'            => '_ettic_otc_dp_collection_method',
         '_ot_dp_is_sensitive'                 => '_ettic_otc_dp_is_sensitive',
-        // FAQs.
         '_ot_faq_related_policy'              => '_ettic_otc_faq_related_policy',
-        // Catalog seeding + import dedupe.
         '_ot_seed_slug'                       => '_ettic_otc_seed_slug',
         '_ot_seeded'                          => '_ettic_otc_seeded',
         '_ot_import_sha256'                   => '_ettic_otc_import_sha256',
+        // ── v1.1.x: _opentrust_* ─────────────────────────────────────
+        '_opentrust_uuid'                            => '_ettic_otc_uuid',
+        '_opentrust_cert_type'                       => '_ettic_otc_cert_type',
+        '_opentrust_cert_issuing_body'               => '_ettic_otc_cert_issuing_body',
+        '_opentrust_cert_status'                     => '_ettic_otc_cert_status',
+        '_opentrust_cert_issue_date'                 => '_ettic_otc_cert_issue_date',
+        '_opentrust_cert_expiry_date'                => '_ettic_otc_cert_expiry_date',
+        '_opentrust_cert_badge_id'                   => '_ettic_otc_cert_badge_id',
+        '_opentrust_cert_artifact_id'                => '_ettic_otc_cert_artifact_id',
+        '_opentrust_cert_description'                => '_ettic_otc_cert_description',
+        '_opentrust_policy_ref_id'                   => '_ettic_otc_policy_ref_id',
+        '_opentrust_policy_category'                 => '_ettic_otc_policy_category',
+        '_opentrust_policy_effective_date'           => '_ettic_otc_policy_effective_date',
+        '_opentrust_policy_review_date'              => '_ettic_otc_policy_review_date',
+        '_opentrust_policy_sort_order'               => '_ettic_otc_policy_sort_order',
+        '_opentrust_policy_citations'                => '_ettic_otc_policy_citations',
+        '_opentrust_policy_attachment_id'            => '_ettic_otc_policy_attachment_id',
+        '_opentrust_version'                         => '_ettic_otc_version',
+        '_opentrust_version_summary'                 => '_ettic_otc_version_summary',
+        '_opentrust_policy_chat_summary'             => '_ettic_otc_policy_chat_summary',
+        '_opentrust_policy_chat_summary_updated_at'  => '_ettic_otc_policy_chat_summary_updated_at',
+        '_opentrust_policy_chat_summary_origin'      => '_ettic_otc_policy_chat_summary_origin',
+        '_opentrust_sub_purpose'                     => '_ettic_otc_sub_purpose',
+        '_opentrust_sub_data_processed'              => '_ettic_otc_sub_data_processed',
+        '_opentrust_sub_country'                     => '_ettic_otc_sub_country',
+        '_opentrust_sub_website'                     => '_ettic_otc_sub_website',
+        '_opentrust_sub_dpa_signed'                  => '_ettic_otc_sub_dpa_signed',
+        '_opentrust_dp_data_items'                   => '_ettic_otc_dp_data_items',
+        '_opentrust_dp_purpose'                      => '_ettic_otc_dp_purpose',
+        '_opentrust_dp_legal_basis'                  => '_ettic_otc_dp_legal_basis',
+        '_opentrust_dp_retention_period'             => '_ettic_otc_dp_retention_period',
+        '_opentrust_dp_shared_with'                  => '_ettic_otc_dp_shared_with',
+        '_opentrust_dp_sort_order'                   => '_ettic_otc_dp_sort_order',
+        '_opentrust_dp_collected'                    => '_ettic_otc_dp_collected',
+        '_opentrust_dp_stored'                       => '_ettic_otc_dp_stored',
+        '_opentrust_dp_shared'                       => '_ettic_otc_dp_shared',
+        '_opentrust_dp_sold'                         => '_ettic_otc_dp_sold',
+        '_opentrust_dp_encrypted'                    => '_ettic_otc_dp_encrypted',
+        '_opentrust_dp_data_type'                    => '_ettic_otc_dp_data_type',
+        '_opentrust_dp_collection_method'            => '_ettic_otc_dp_collection_method',
+        '_opentrust_dp_is_sensitive'                 => '_ettic_otc_dp_is_sensitive',
+        '_opentrust_faq_related_policy'              => '_ettic_otc_faq_related_policy',
+        '_opentrust_seed_slug'                       => '_ettic_otc_seed_slug',
+        '_opentrust_seeded'                          => '_ettic_otc_seeded',
+        '_opentrust_import_sha256'                   => '_ettic_otc_import_sha256',
     ];
 
     /**
