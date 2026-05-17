@@ -1,6 +1,6 @@
 <div align="center">
 
-# OpenTrust
+# Open Trust Center
 
 **A self-hosted, open-source trust center plugin for WordPress.**
 
@@ -9,15 +9,15 @@ Publish security policies, subprocessors, certifications, and data practices on 
 [![License: GPL v2 or later](https://img.shields.io/badge/License-GPLv2%2B-blue.svg)](LICENSE)
 [![PHP 8.1+](https://img.shields.io/badge/PHP-8.1%2B-777BB4.svg)](https://www.php.net/)
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-21759B.svg)](https://wordpress.org/)
-[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/opentrust?style=flat-square)](https://wordpress.org/plugins/opentrust/)
-[![Tested WP Version](https://img.shields.io/wordpress/plugin/tested/opentrust?style=flat-square)](https://wordpress.org/plugins/opentrust/)
-[![Downloads](https://img.shields.io/wordpress/plugin/dt/opentrust?style=flat-square)](https://wordpress.org/plugins/opentrust/advanced/)
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/open-trust-center-by-ettic?style=flat-square)](https://wordpress.org/plugins/open-trust-center-by-ettic/)
+[![Tested WP Version](https://img.shields.io/wordpress/plugin/tested/open-trust-center-by-ettic?style=flat-square)](https://wordpress.org/plugins/open-trust-center-by-ettic/)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/open-trust-center-by-ettic?style=flat-square)](https://wordpress.org/plugins/open-trust-center-by-ettic/advanced/)
 
 </div>
 
 ---
 
-OpenTrust is a self-hosted, open-source trust center for WordPress. Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. OpenTrust gives you all three on a branded page that lives on your own WordPress site.
+Open Trust Center is a self-hosted, open-source trust center for WordPress. Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. Open Trust Center gives you all three on a branded page that lives on your own WordPress site.
 
 ## What's inside
 
@@ -31,14 +31,14 @@ OpenTrust is a self-hosted, open-source trust center for WordPress. Procurement 
 
 ## Install
 
-**From WordPress.org**: coming soon at https://wordpress.org/plugins/opentrust/ (currently in review).
+**From WordPress.org**: coming soon at https://wordpress.org/plugins/open-trust-center-by-ettic/ (currently in review).
 
 **Manually:**
 
 1. Download the latest release from [Releases](../../releases).
 2. WP Admin → Plugins → Add New → Upload Plugin → upload the zip → Activate.
-3. Visit OpenTrust in the admin sidebar to set your accent colour, logo, and company name.
-4. Add content under **OpenTrust → Policies / Certifications / Subprocessors / Data Practices**.
+3. Visit Open Trust Center in the admin sidebar to set your accent colour, logo, and company name.
+4. Add content under **Open Trust Center → Policies / Certifications / Subprocessors / Data Practices**.
 5. Visit `/trust-center/` on your site.
 
 ## AI chat
@@ -49,7 +49,7 @@ It only ever answers from what you've published — it can't retrieve a document
 
 To turn it on:
 
-1. **OpenTrust → Settings → AI Chat**
+1. **Open Trust Center → Settings → AI Chat**
 2. Pick a provider, paste an API key (encrypted at rest with libsodium before it touches the database), and pick a model.
 3. Set the daily/monthly token budgets you're comfortable with.
 4. Optional: enable Cloudflare Turnstile in the same tab for bot defence.
@@ -60,7 +60,7 @@ There's no SaaS subscription. You only pay your AI provider for tokens consumed 
 ## Privacy by design
 
 - **Zero telemetry, zero analytics, zero licence checks.** The only outbound HTTP calls the plugin can make are AI provider requests you configure, and they go through an SSRF host allowlist.
-- **No PII in logs.** The optional `wp_opentrust_chat_log` table stores only short hashed identifiers — never raw IPs, emails, sessions, user agents, or referers. The privacy posture is enforced by the schema itself.
+- **No PII in logs.** The optional `wp_ettic_otc_chat_log` table stores only short hashed identifiers — never raw IPs, emails, sessions, user agents, or referers. The privacy posture is enforced by the schema itself.
 - **Encrypted secrets.** API keys and the Cloudflare Turnstile secret are encrypted at rest with libsodium `secretbox`, salted from `wp_salt('auth')`. Rotating `AUTH_KEY` invalidates every stored secret atomically.
 - **Theme-isolated rendering.** The trust center intercepts at `template_redirect`, outputs a complete standalone HTML document with inlined CSS, and exits. Your theme's stylesheet, header, footer, and JavaScript never load.
 - **Capability-checked admin actions** with nonce verification on every save handler.
@@ -114,7 +114,7 @@ Ships with a `.pot` template and a starter Dutch (nl_NL) translation. WPML and P
 Translators can regenerate the template from source:
 
 ```bash
-wp i18n make-pot . languages/opentrust.pot --domain=opentrust
+wp i18n make-pot . languages/open-trust-center-by-ettic.pot --domain=open-trust-center-by-ettic
 ```
 
 Contribute a translation at [translate.wordpress.org](https://translate.wordpress.org/) once the plugin is live there.
