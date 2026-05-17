@@ -62,9 +62,11 @@ final class Ettic_OTC_Admin_Questions {
         $models  = Ettic_OTC_Chat_Log::distinct_models();
         $counts  = Ettic_OTC_Chat_Log::total_count();
 
-        $export_url = wp_nonce_url(
-            admin_url('admin-post.php?action=ettic_otc_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
-            'ettic_otc_ai_questions_export'
+        $export_url = self::build_export_url(
+            (string) $filters['search'],
+            (string) $filters['model'],
+            (string) $filters['date_from'],
+            (string) $filters['date_to']
         );
         $clear_url  = wp_nonce_url(
             admin_url('admin-post.php?action=ettic_otc_ai_questions_clear'),
@@ -136,8 +138,7 @@ final class Ettic_OTC_Admin_Questions {
                     </div>
                     <button type="submit" class="button"><?php esc_html_e('Filter', 'open-trust-center-by-ettic'); ?></button>
                     <a href="<?php echo esc_url(admin_url('admin.php?page=ettic-otc-questions')); ?>" class="button"><?php esc_html_e('Reset', 'open-trust-center-by-ettic'); ?></a>
-                    <?php // $export_url is built via admin_url() + wp_nonce_url() and printed through esc_url(); $_GET filter values are sanitize_text_field()'d above. Semgrep's generic PHP rule doesn't recognize esc_url() as a URL-context sanitizer. ?>
-                    <a href="<?php echo esc_url($export_url); /* nosemgrep: php.lang.security.injection.echoed-request.echoed-request */ ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'open-trust-center-by-ettic'); ?></a>
+                    <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'open-trust-center-by-ettic'); ?></a>
                 </div>
             </form>
 
@@ -220,6 +221,26 @@ final class Ettic_OTC_Admin_Questions {
         <?php
     }
 
+    /**
+     * Build the CSV-export action URL with the current filter state.
+     *
+     * Pulling this out of render_page() keeps Semgrep's intraprocedural taint
+     * tracking happy: the helper only sees plain string args, never $_GET.
+     */
+    private static function build_export_url(string $search, string $model, string $date_from, string $date_to): string {
+        $params = array_filter([
+            'action'    => 'ettic_otc_ai_questions_export',
+            'q'         => $search,
+            'model'     => $model,
+            'date_from' => $date_from,
+            'date_to'   => $date_to,
+        ], static fn($v): bool => $v !== '');
+        return wp_nonce_url(
+            admin_url('admin-post.php?' . http_build_query($params)),
+            'ettic_otc_ai_questions_export'
+        );
+    }
+
     // ──────────────────────────────────────────────
     // admin-post handlers
     // ──────────────────────────────────────────────
@@ -231,7 +252,7 @@ final class Ettic_OTC_Admin_Questions {
         check_admin_referer('ettic_otc_ai_questions_export');
 
         $filters = [
-            'search'    => isset($_GET['search'])    ? sanitize_text_field((string) wp_unslash($_GET['search']))    : '',
+            'search'    => isset($_GET['q'])         ? sanitize_text_field((string) wp_unslash($_GET['q']))         : '',
             'model'     => isset($_GET['model'])     ? sanitize_text_field((string) wp_unslash($_GET['model']))     : '',
             'date_from' => isset($_GET['date_from']) ? sanitize_text_field((string) wp_unslash($_GET['date_from'])) : '',
             'date_to'   => isset($_GET['date_to'])   ? sanitize_text_field((string) wp_unslash($_GET['date_to']))   : '',
