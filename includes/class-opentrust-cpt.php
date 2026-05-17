@@ -47,14 +47,10 @@ final class OpenTrust_CPT {
 
     /**
      * Legacy postmeta keys from v1.0–v1.1, mapped old `_ot_*` → new
-     * `_opentrust_*`. The 2-character `_ot_` prefix collided too easily in the
-     * shared wp_postmeta table; v5 of the schema renames every plugin-owned
-     * key. Single source of truth for the v4→v5 migration
-     * (OpenTrust::rename_postmeta_keys_v5()), the import back-compat remap
-     * (OpenTrust_IO::remap_legacy_meta_keys()), and uninstall cleanup.
-     *
-     * @deprecated 1.1.1 Drop in 2.0.0 once v1.x upgrades are no longer
-     *             supported, alongside the `if ($current < 5)` migration branch.
+     * `_opentrust_*`. Retained for import back-compat: legacy archives
+     * (exported by v1.0.x/v1.1.x) still carry these keys, and the importer
+     * remaps them on read via OpenTrust_IO::remap_legacy_meta_keys().
+     * Phase 8 extends the chain through `_ettic_otc_*`.
      */
     public const LEGACY_META_MAP = [
         // Shared identity.

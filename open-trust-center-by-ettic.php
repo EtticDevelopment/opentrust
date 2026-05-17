@@ -22,7 +22,7 @@ define('OPENTRUST_VERSION', '1.2.0');
 define('OPENTRUST_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OPENTRUST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('OPENTRUST_PLUGIN_FILE', __FILE__);
-define('OPENTRUST_DB_VERSION', 5);
+define('OPENTRUST_DB_VERSION', 1);
 
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust.php';
 require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin.php';
@@ -70,10 +70,8 @@ register_activation_hook(__FILE__, static function (): void {
     // Custom tables.
     OpenTrust_Chat_Log::create_table();
 
-    // Stamp the schema version on a true first install only. On reactivation
-    // after an in-place upgrade (deactivate → upload zip → activate) the
-    // option already exists with the prior version; leaving it untouched lets
-    // OpenTrust::maybe_upgrade() walk pending migrations on the next init.
+    // Stamp the schema version on a true first install only. Future schema
+    // changes (none today) would bump this constant and re-check here.
     if (false === get_option('opentrust_db_version', false)) {
         update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
     }
