@@ -489,7 +489,7 @@ final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
      * the citation object directly as `source` — no corpus lookup needed for
      * the URL. We do still reverse-look-up the doc id from the URL so the
      * front-end de-dup-by-id keeps subprocessors that share an anchor URL
-     * (`/trust-center/#ot-subprocessors`) as separate citations.
+     * (`/trust-center/#ettic-otc-subprocessors`) as separate citations.
      *
      * Error blocks (source = `about:none`) drop silently.
      */

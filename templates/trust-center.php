@@ -83,7 +83,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     <link rel="canonical" href="<?php echo esc_url($ot_base_url); ?>">
     <?php
     $ot_root_vars = sprintf(
-        ':root{--ot-accent-h:%d;--ot-accent-s:%d%%;--ot-accent-l:%d%%;--ot-accent-l-safe:%d%%;--ot-accent-contrast:%s;}',
+        ':root{--ettic-otc-accent-h:%d;--ettic-otc-accent-s:%d%%;--ettic-otc-accent-l:%d%%;--ettic-otc-accent-l-safe:%d%%;--ettic-otc-accent-contrast:%s;}',
         (int) $ot_hsl['h'],
         (int) $ot_hsl['s'],
         (int) $ot_hsl['l'],
@@ -96,9 +96,9 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     wp_print_styles(['ettic-otc-frontend']);
     ?>
 </head>
-<body class="ot-body">
+<body class="ettic-otc-body">
 
-    <a class="ot-skip-link" href="#ot-main"><?php esc_html_e('Skip to content', 'open-trust-center-by-ettic'); ?></a>
+    <a class="ettic-otc-skip-link" href="#ettic-otc-main"><?php esc_html_e('Skip to content', 'open-trust-center-by-ettic'); ?></a>
 
     <?php
     if ($ot_view === 'main') {
@@ -111,37 +111,37 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         if (!empty($ot_visible['contact']) && $ot_contact_has_content) $ot_nav_items['contact']        = __('Contact', 'open-trust-center-by-ettic');
         if (!empty($ot_visible['faqs']) && $ot_faq_count)              $ot_nav_items['faqs']           = __('FAQ', 'open-trust-center-by-ettic');
         ?>
-            <nav class="ot-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'open-trust-center-by-ettic'); ?>">
-                <div class="ot-container ot-nav__inner">
-                    <a href="<?php echo esc_url($ot_base_url); ?>" class="ot-nav__brand">
+            <nav class="ettic-otc-nav" aria-label="<?php esc_attr_e('Trust center navigation', 'open-trust-center-by-ettic'); ?>">
+                <div class="ettic-otc-container ettic-otc-nav__inner">
+                    <a href="<?php echo esc_url($ot_base_url); ?>" class="ettic-otc-nav__brand">
                         <?php if ($ot_logo_url): ?>
-                            <img class="ot-nav__brand-logo"
+                            <img class="ettic-otc-nav__brand-logo"
                                  src="<?php echo esc_url($ot_logo_url); ?>"
                                  alt="<?php echo esc_attr($ot_company_name); ?>">
                         <?php else: ?>
-                            <span class="ot-nav__brand-name"><?php echo esc_html($ot_company_name ?: get_bloginfo('name')); ?></span>
+                            <span class="ettic-otc-nav__brand-name"><?php echo esc_html($ot_company_name ?: get_bloginfo('name')); ?></span>
                         <?php endif; ?>
                     </a>
                     <?php if (count($ot_nav_items) > 1): ?>
-                        <div class="ot-nav__links">
+                        <div class="ettic-otc-nav__links">
                             <?php foreach ($ot_nav_items as $ot_id => $ot_label): ?>
-                                <a href="#ot-<?php echo esc_attr($ot_id); ?>" class="ot-nav__link" data-ot-nav>
+                                <a href="#ettic-otc-<?php echo esc_attr($ot_id); ?>" class="ettic-otc-nav__link" data-ettic-otc-nav>
                                     <?php echo esc_html($ot_label); ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($ot_ai_enabled): ?>
-                        <div class="ot-nav__cta">
-                            <a href="<?php echo esc_url(trailingslashit($ot_base_url) . 'ask/'); ?>" class="ot-nav__ask">
-                                <svg class="ot-nav__ask-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <div class="ettic-otc-nav__cta">
+                            <a href="<?php echo esc_url(trailingslashit($ot_base_url) . 'ask/'); ?>" class="ettic-otc-nav__ask">
+                                <svg class="ettic-otc-nav__ask-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
                                     <path d="M20 3v4"/>
                                     <path d="M22 5h-4"/>
                                     <path d="M4 17v2"/>
                                     <path d="M5 18H3"/>
                                 </svg>
-                                <span class="ot-nav__ask-label"><?php esc_html_e('Ask AI', 'open-trust-center-by-ettic'); ?></span>
+                                <span class="ettic-otc-nav__ask-label"><?php esc_html_e('Ask AI', 'open-trust-center-by-ettic'); ?></span>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -152,7 +152,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/hero.php';
         ?>
 
-        <main id="ot-main" class="ot-main">
+        <main id="ettic-otc-main" class="ettic-otc-main">
                 <?php
                 // ── Policies ──
                 if (!empty($ot_visible['policies']) && $ot_policy_count) {
@@ -187,13 +187,13 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                 // Show empty state if nothing is published yet.
                 if (!$ot_cert_count && !$ot_policy_count && !$ot_sub_count && empty($ot_data['data_practices']) && !$ot_faq_count && !$ot_contact_has_content):
                 ?>
-                    <div class="ot-empty">
-                        <div class="ot-empty__icon">
+                    <div class="ettic-otc-empty">
+                        <div class="ettic-otc-empty__icon">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
                             </svg>
                         </div>
-                        <p class="ot-empty__text"><?php esc_html_e('Trust center content is being prepared. Check back soon.', 'open-trust-center-by-ettic'); ?></p>
+                        <p class="ettic-otc-empty__text"><?php esc_html_e('Trust center content is being prepared. Check back soon.', 'open-trust-center-by-ettic'); ?></p>
                     </div>
                 <?php endif; ?>
         </main>
@@ -203,8 +203,8 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/policy-single.php';
     } ?>
 
-    <footer class="ot-footer">
-        <div class="ot-container">
+    <footer class="ettic-otc-footer">
+        <div class="ettic-otc-container">
             <p>
                 <?php
                 printf(

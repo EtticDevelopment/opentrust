@@ -20,16 +20,16 @@ $ot_policy_count = (int) ($ot_counts['policies']       ?? 0);
 $ot_sub_count    = (int) ($ot_counts['subprocessors']  ?? 0);
 $ot_dp_count     = (int) ($ot_counts['data_practices'] ?? 0);
 ?>
-<div class="ot-chat-shell" data-ot-chat-shell>
+<div class="ettic-otc-chat-shell" data-ettic-otc-chat-shell>
 
-    <section class="ot-chat-intro" data-ot-chat-intro>
-        <h1 class="ot-chat-intro__title">
+    <section class="ettic-otc-chat-intro" data-ettic-otc-chat-intro>
+        <h1 class="ettic-otc-chat-intro__title">
             <?php
             /* translators: %s: company name */
             printf(esc_html__('Ask about %s\'s security and compliance', 'open-trust-center-by-ettic'), esc_html($ot_company_name));
             ?>
         </h1>
-        <p class="ot-chat-intro__help">
+        <p class="ettic-otc-chat-intro__help">
             <?php if ($ot_show_attrib && $ot_model_id): ?>
                 <?php
                 printf(
@@ -57,8 +57,8 @@ $ot_dp_count     = (int) ($ot_counts['data_practices'] ?? 0);
         </p>
     </section>
 
-    <section class="ot-chat-thread" aria-label="<?php esc_attr_e('Conversation', 'open-trust-center-by-ettic'); ?>">
-        <div class="ot-chat-messages" data-ot-chat-messages aria-live="polite" aria-atomic="false"></div>
+    <section class="ettic-otc-chat-thread" aria-label="<?php esc_attr_e('Conversation', 'open-trust-center-by-ettic'); ?>">
+        <div class="ettic-otc-chat-messages" data-ettic-otc-chat-messages aria-live="polite" aria-atomic="false"></div>
     </section>
 
 </div>

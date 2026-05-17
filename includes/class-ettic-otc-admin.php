@@ -150,10 +150,10 @@ final class Ettic_OTC_Admin {
 
         // Localize the handful of admin strings that admin.js renders directly
         // (e.g. wp.media modal titles). Catalog-screen strings are shipped
-        // separately below via window.OpenTrustCatalog.
+        // separately below via window.EtticOTCCatalog.
         wp_add_inline_script(
             'ettic-otc-admin',
-            'window.OpenTrustAdmin = ' . wp_json_encode([
+            'window.EtticOTCAdmin = ' . wp_json_encode([
                 'i18n' => [
                     'selectBadgeImage' => __('Select Badge Image', 'open-trust-center-by-ettic'),
                     'useAsBadge'       => __('Use as Badge', 'open-trust-center-by-ettic'),
@@ -184,7 +184,7 @@ final class Ettic_OTC_Admin {
             ];
             wp_add_inline_script(
                 'ettic-otc-admin',
-                'window.OpenTrustCatalog = ' . wp_json_encode($payload) . ';',
+                'window.EtticOTCCatalog = ' . wp_json_encode($payload) . ';',
                 'before'
             );
         }

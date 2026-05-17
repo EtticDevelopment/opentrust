@@ -212,36 +212,36 @@ final class Ettic_OTC_Admin_Settings {
         $value        = $settings['accent_color'] ?? '#2563EB';
         $force_exact  = !empty($settings['accent_force_exact']);
         printf(
-            '<input type="text" id="ettic_otc_accent_color" name="ettic_otc_settings[accent_color]" value="%s" class="ot-color-picker" data-default-color="#2563EB">',
+            '<input type="text" id="ettic_otc_accent_color" name="ettic_otc_settings[accent_color]" value="%s" class="ettic-otc-color-picker" data-default-color="#2563EB">',
             esc_attr($value)
         );
         ?>
-        <div id="ettic-otc-accent-warning" class="ot-accent-warning<?php echo esc_attr($force_exact ? ' ot-accent-warning--override' : ''); ?>" hidden>
-            <svg class="ot-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <div class="ot-accent-warning__body">
-                <strong class="ot-accent-warning__heading ot-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'open-trust-center-by-ettic'); ?></strong>
-                <strong class="ot-accent-warning__heading ot-accent-warning__heading--override"><?php esc_html_e('Using your exact color on white backgrounds', 'open-trust-center-by-ettic'); ?></strong>
+        <div id="ettic-otc-accent-warning" class="ettic-otc-accent-warning<?php echo esc_attr($force_exact ? ' ettic-otc-accent-warning--override' : ''); ?>" hidden>
+            <svg class="ettic-otc-accent-warning__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="ettic-otc-accent-warning__body">
+                <strong class="ettic-otc-accent-warning__heading ettic-otc-accent-warning__heading--auto"><?php esc_html_e('Low contrast on white backgrounds', 'open-trust-center-by-ettic'); ?></strong>
+                <strong class="ettic-otc-accent-warning__heading ettic-otc-accent-warning__heading--override"><?php esc_html_e('Using your exact color on white backgrounds', 'open-trust-center-by-ettic'); ?></strong>
 
-                <p class="ot-accent-warning__copy ot-accent-warning__copy--auto">
+                <p class="ettic-otc-accent-warning__copy ettic-otc-accent-warning__copy--auto">
                     <?php esc_html_e('Your chosen color is too light for buttons, links, and borders on white sections. On those surfaces Ettic_OTC will use a darker, on-brand variant:', 'open-trust-center-by-ettic'); ?>
                 </p>
-                <p class="ot-accent-warning__copy ot-accent-warning__copy--override">
+                <p class="ettic-otc-accent-warning__copy ettic-otc-accent-warning__copy--override">
                     <?php esc_html_e("You've chosen to keep your exact color on white backgrounds. Buttons, links, and borders in those sections may be hard to read.", 'open-trust-center-by-ettic'); ?>
                 </p>
 
-                <div class="ot-accent-warning__preview">
-                    <span class="ot-accent-warning__swatch ot-accent-warning__swatch--chosen" aria-hidden="true"></span>
-                    <code class="ot-accent-warning__hex ot-accent-warning__hex--chosen"></code>
-                    <span class="ot-accent-warning__arrow" aria-hidden="true">→</span>
-                    <span class="ot-accent-warning__swatch ot-accent-warning__swatch--adjusted" aria-hidden="true"></span>
-                    <code class="ot-accent-warning__hex ot-accent-warning__hex--adjusted"></code>
+                <div class="ettic-otc-accent-warning__preview">
+                    <span class="ettic-otc-accent-warning__swatch ettic-otc-accent-warning__swatch--chosen" aria-hidden="true"></span>
+                    <code class="ettic-otc-accent-warning__hex ettic-otc-accent-warning__hex--chosen"></code>
+                    <span class="ettic-otc-accent-warning__arrow" aria-hidden="true">→</span>
+                    <span class="ettic-otc-accent-warning__swatch ettic-otc-accent-warning__swatch--adjusted" aria-hidden="true"></span>
+                    <code class="ettic-otc-accent-warning__hex ettic-otc-accent-warning__hex--adjusted"></code>
                 </div>
 
-                <p class="ot-accent-warning__note ot-accent-warning__note--auto">
+                <p class="ettic-otc-accent-warning__note ettic-otc-accent-warning__note--auto">
                     <?php esc_html_e('The hero and navigation still use your exact color.', 'open-trust-center-by-ettic'); ?>
                 </p>
 
-                <label class="ot-accent-warning__override">
+                <label class="ettic-otc-accent-warning__override">
                     <input
                         type="checkbox"
                         id="ettic_otc_accent_force_exact"
@@ -280,13 +280,13 @@ final class Ettic_OTC_Admin_Settings {
         $media_id  = (int) ($settings[$key] ?? 0);
         $media_url = $media_id ? wp_get_attachment_image_url($media_id, 'medium') : '';
         ?>
-        <div class="ot-logo-upload" data-ot-media-field>
-            <div class="ot-logo-preview<?php echo esc_attr($media_url ? '' : ' ot-hidden'); ?>">
+        <div class="ettic-otc-logo-upload" data-ettic-otc-media-field>
+            <div class="ettic-otc-logo-preview<?php echo esc_attr($media_url ? '' : ' ettic-otc-hidden'); ?>">
                 <img src="<?php echo esc_url($media_url); ?>" alt="" style="max-width:200px;max-height:80px">
             </div>
-            <input type="hidden" name="ettic_otc_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ot-media-input>
-            <button type="button" class="button" data-ot-media-upload><?php echo esc_html($button_label); ?></button>
-            <button type="button" class="button<?php echo esc_attr($media_id ? '' : ' ot-hidden'); ?>" data-ot-media-remove><?php esc_html_e('Remove', 'open-trust-center-by-ettic'); ?></button>
+            <input type="hidden" name="ettic_otc_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr((string) $media_id); ?>" data-ettic-otc-media-input>
+            <button type="button" class="button" data-ettic-otc-media-upload><?php echo esc_html($button_label); ?></button>
+            <button type="button" class="button<?php echo esc_attr($media_id ? '' : ' ettic-otc-hidden'); ?>" data-ettic-otc-media-remove><?php esc_html_e('Remove', 'open-trust-center-by-ettic'); ?></button>
             <p class="description"><?php echo esc_html($description); ?></p>
         </div>
         <?php
@@ -600,7 +600,7 @@ final class Ettic_OTC_Admin_Settings {
                    class="nav-tab <?php echo esc_attr($tab === 'ai' ? 'nav-tab-active' : ''); ?>">
                     <?php esc_html_e('AI Chat', 'open-trust-center-by-ettic'); ?>
                     <?php if (!empty($settings['ai_enabled'])): ?>
-                        <span class="ot-pill ot-pill--live" style="margin-left:6px;padding:2px 8px;background:#dcfce7;color:#166534;border-radius:10px;font-size:11px;font-weight:600;vertical-align:middle">
+                        <span class="ettic-otc-pill ettic-otc-pill--live" style="margin-left:6px;padding:2px 8px;background:#dcfce7;color:#166534;border-radius:10px;font-size:11px;font-weight:600;vertical-align:middle">
                             <?php esc_html_e('Live', 'open-trust-center-by-ettic'); ?>
                         </span>
                     <?php endif; ?>

@@ -25,48 +25,48 @@ if (empty($ot_practices)) {
 // How many items to show before "View N more".
 $ot_preview_limit = 5;
 ?>
-<section id="ot-data-practices" class="ot-section">
-    <div class="ot-container">
+<section id="ettic-otc-data-practices" class="ettic-otc-section">
+    <div class="ettic-otc-container">
 
         <!-- Section header -->
-        <div class="ot-section__header">
+        <div class="ettic-otc-section__header">
             <?php Ettic_OTC_Render::updated_pill('data_practices', $ot_data); ?>
-            <h2 class="ot-section__title"><?php esc_html_e('Data Practices', 'open-trust-center-by-ettic'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'open-trust-center-by-ettic'); ?></p>
+            <h2 class="ettic-otc-section__title"><?php esc_html_e('Data Practices', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ettic-otc-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
         <!-- Card grid -->
-        <div class="ot-dp-cards">
+        <div class="ettic-otc-dp-cards">
             <?php foreach ($ot_practices as $ot_dp):
                 $ot_items       = $ot_dp['data_items'] ?? [];
                 $ot_total_items = count($ot_items);
                 $ot_preview     = array_slice($ot_items, 0, $ot_preview_limit);
                 $ot_overflow    = $ot_total_items - $ot_preview_limit;
                 $ot_has_details = $ot_dp['purpose'] || $ot_dp['legal_basis'] || $ot_dp['retention_period'] || !empty($ot_dp['shared_with']);
-                $ot_card_id     = 'ot-dp-detail-' . $ot_dp['id'];
+                $ot_card_id     = 'ettic-otc-dp-detail-' . $ot_dp['id'];
             ?>
-            <div class="ot-dp-card" data-ot-dp-card>
+            <div class="ettic-otc-dp-card" data-ettic-otc-dp-card>
                 <!-- Card header -->
-                <div class="ot-dp-card__head"<?php if ($ot_has_details): ?> data-ot-dp-toggle="<?php echo esc_attr($ot_card_id); ?>" role="button" tabindex="0" aria-expanded="false"<?php endif; ?>>
-                    <h3 class="ot-dp-card__title"><?php echo esc_html($ot_dp['title']); ?></h3>
+                <div class="ettic-otc-dp-card__head"<?php if ($ot_has_details): ?> data-ettic-otc-dp-toggle="<?php echo esc_attr($ot_card_id); ?>" role="button" tabindex="0" aria-expanded="false"<?php endif; ?>>
+                    <h3 class="ettic-otc-dp-card__title"><?php echo esc_html($ot_dp['title']); ?></h3>
                     <?php if ($ot_has_details): ?>
-                    <svg class="ot-dp-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <svg class="ettic-otc-dp-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                     <?php endif; ?>
                 </div>
 
                 <!-- Checkmark list -->
                 <?php if ($ot_total_items > 0): ?>
-                <ul class="ot-dp-card__list">
+                <ul class="ettic-otc-dp-card__list">
                     <?php foreach ($ot_preview as $ot_item): ?>
-                    <li class="ot-dp-card__item">
-                        <svg class="ot-dp-card__check" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <li class="ettic-otc-dp-card__item">
+                        <svg class="ettic-otc-dp-card__check" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                         <span><?php echo esc_html($ot_item['name']); ?></span>
                     </li>
                     <?php endforeach; ?>
                 </ul>
 
                 <?php if ($ot_overflow > 0): ?>
-                <button class="ot-dp-card__more" data-ot-dp-more>
+                <button class="ettic-otc-dp-card__more" data-ettic-otc-dp-more>
                     <?php
                     printf(
                         /* translators: %1$d = number, %2$s = category name */
@@ -76,10 +76,10 @@ $ot_preview_limit = 5;
                     );
                     ?>
                 </button>
-                <ul class="ot-dp-card__list ot-dp-card__list--overflow" hidden>
+                <ul class="ettic-otc-dp-card__list ettic-otc-dp-card__list--overflow" hidden>
                     <?php foreach (array_slice($ot_items, $ot_preview_limit) as $ot_item): ?>
-                    <li class="ot-dp-card__item">
-                        <svg class="ot-dp-card__check" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <li class="ettic-otc-dp-card__item">
+                        <svg class="ettic-otc-dp-card__check" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                         <span><?php echo esc_html($ot_item['name']); ?></span>
                     </li>
                     <?php endforeach; ?>
@@ -89,31 +89,31 @@ $ot_preview_limit = 5;
 
                 <!-- Expandable details -->
                 <?php if ($ot_has_details): ?>
-                <div class="ot-dp-card__details" id="<?php echo esc_attr($ot_card_id); ?>" hidden>
-                    <div class="ot-dp-card__details-inner">
+                <div class="ettic-otc-dp-card__details" id="<?php echo esc_attr($ot_card_id); ?>" hidden>
+                    <div class="ettic-otc-dp-card__details-inner">
                         <?php if ($ot_dp['purpose']): ?>
-                        <div class="ot-dp-card__detail">
+                        <div class="ettic-otc-dp-card__detail">
                             <dt><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_dp['purpose']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if ($ot_dp['legal_basis']): ?>
-                        <div class="ot-dp-card__detail">
+                        <div class="ettic-otc-dp-card__detail">
                             <dt><?php esc_html_e('Legal Basis', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_basis_labels[$ot_dp['legal_basis']] ?? $ot_dp['legal_basis']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if ($ot_dp['retention_period']): ?>
-                        <div class="ot-dp-card__detail">
+                        <div class="ettic-otc-dp-card__detail">
                             <dt><?php esc_html_e('Retention', 'open-trust-center-by-ettic'); ?></dt>
                             <dd><?php echo esc_html($ot_dp['retention_period']); ?></dd>
                         </div>
                         <?php endif; ?>
 
                         <?php if (!empty($ot_dp['shared_with'])): ?>
-                        <div class="ot-dp-card__detail">
+                        <div class="ettic-otc-dp-card__detail">
                             <dt><?php esc_html_e('Shared With', 'open-trust-center-by-ettic'); ?></dt>
                             <dd>
                                 <?php

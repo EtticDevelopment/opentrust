@@ -20,16 +20,16 @@ foreach ($ot_policies as $ot_p) {
     if (!empty($ot_p['ref_id'])) { $ot_has_ref_col = true; break; }
 }
 ?>
-<section id="ot-policies" class="ot-section">
-    <div class="ot-container">
-        <div class="ot-section__header">
+<section id="ettic-otc-policies" class="ettic-otc-section">
+    <div class="ettic-otc-container">
+        <div class="ettic-otc-section__header">
             <?php Ettic_OTC_Render::updated_pill('policies', $ot_data); ?>
-            <h2 class="ot-section__title"><?php esc_html_e('Security Policies', 'open-trust-center-by-ettic'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('Our published security and compliance policies are regularly reviewed and updated.', 'open-trust-center-by-ettic'); ?></p>
+            <h2 class="ettic-otc-section__title"><?php esc_html_e('Security Policies', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ettic-otc-section__description"><?php esc_html_e('Our published security and compliance policies are regularly reviewed and updated.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
-        <div class="ot-table-wrapper">
-            <table class="ot-table" role="table">
+        <div class="ettic-otc-table-wrapper">
+            <table class="ettic-otc-table" role="table">
                 <colgroup>
                     <?php if ($ot_has_ref_col): ?>
                     <col style="width:10%">
@@ -49,12 +49,12 @@ foreach ($ot_policies as $ot_p) {
                 <thead>
                     <tr>
                         <?php if ($ot_has_ref_col): ?>
-                        <th data-ot-sort="ref" scope="col"><?php esc_html_e('ID', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="ref" scope="col"><?php esc_html_e('ID', 'open-trust-center-by-ettic'); ?></th>
                         <?php endif; ?>
-                        <th data-ot-sort="name" scope="col"><?php esc_html_e('Policy', 'open-trust-center-by-ettic'); ?></th>
-                        <th data-ot-sort="category" scope="col"><?php esc_html_e('Category', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="name" scope="col"><?php esc_html_e('Policy', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="category" scope="col"><?php esc_html_e('Category', 'open-trust-center-by-ettic'); ?></th>
                         <th scope="col"><?php esc_html_e('Version', 'open-trust-center-by-ettic'); ?></th>
-                        <th data-ot-sort="date" scope="col"><?php esc_html_e('Last Updated', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="date" scope="col"><?php esc_html_e('Last Updated', 'open-trust-center-by-ettic'); ?></th>
                         <th scope="col"><span class="screen-reader-text"><?php esc_html_e('Actions', 'open-trust-center-by-ettic'); ?></span></th>
                     </tr>
                 </thead>
@@ -74,21 +74,21 @@ foreach ($ot_policies as $ot_p) {
                         <?php if ($ot_has_ref_col): ?>
                         <td>
                             <?php if ($ot_ref_id !== ''): ?>
-                                <code class="ot-policy-ref"><?php echo esc_html($ot_ref_id); ?></code>
+                                <code class="ettic-otc-policy-ref"><?php echo esc_html($ot_ref_id); ?></code>
                             <?php else: ?>
-                                <span class="ot-policy-ref ot-policy-ref--empty" aria-hidden="true">—</span>
+                                <span class="ettic-otc-policy-ref ettic-otc-policy-ref--empty" aria-hidden="true">—</span>
                             <?php endif; ?>
                         </td>
                         <?php endif; ?>
                         <td>
-                            <a href="<?php echo esc_url($ot_policy_url); ?>" class="ot-policy-link">
-                                <svg class="ot-policy-link__icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM6 20V4h6v6h6v10H6z"/></svg>
+                            <a href="<?php echo esc_url($ot_policy_url); ?>" class="ettic-otc-policy-link">
+                                <svg class="ettic-otc-policy-link__icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM6 20V4h6v6h6v10H6z"/></svg>
                                 <strong><?php echo esc_html($ot_policy['title']); ?></strong>
                             </a>
                             <?php if (!empty($ot_citations)): ?>
-                            <ul class="ot-policy-citations" role="list" aria-label="<?php esc_attr_e('Framework citations', 'open-trust-center-by-ettic'); ?>">
+                            <ul class="ettic-otc-policy-citations" role="list" aria-label="<?php esc_attr_e('Framework citations', 'open-trust-center-by-ettic'); ?>">
                                 <?php foreach ($ot_citations as $ot_citation): ?>
-                                <li class="ot-policy-citation"><?php echo esc_html($ot_citation); ?></li>
+                                <li class="ettic-otc-policy-citation"><?php echo esc_html($ot_citation); ?></li>
                                 <?php endforeach; ?>
                             </ul>
                             <?php endif; ?>
@@ -98,9 +98,9 @@ foreach ($ot_policies as $ot_p) {
                         /* translators: %s: policy version number */
                         printf(esc_html__('v%s', 'open-trust-center-by-ettic'), esc_html((string) $ot_policy['version'])); ?></td>
                         <td><?php echo esc_html($ot_date_formatted); ?></td>
-                        <td class="ot-policy-actions">
+                        <td class="ettic-otc-policy-actions">
                             <?php if ($ot_attachment): ?>
-                                <a href="<?php echo esc_url($ot_attachment['url']); ?>" class="ot-policy-actions__pdf" title="<?php
+                                <a href="<?php echo esc_url($ot_attachment['url']); ?>" class="ettic-otc-policy-actions__pdf" title="<?php
                                 if (!empty($ot_attachment['size_human'])) {
                                     /* translators: %s: human-readable file size */
                                     echo esc_attr(sprintf(__('Download PDF (%s)', 'open-trust-center-by-ettic'), $ot_attachment['size_human']));
@@ -111,7 +111,7 @@ foreach ($ot_policies as $ot_p) {
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12zm-6 2h12v1.5H2V14z"/></svg>
                                 </a>
                             <?php endif; ?>
-                            <a href="<?php echo esc_url($ot_policy_url); ?>" class="ot-policy-actions__view" aria-label="<?php
+                            <a href="<?php echo esc_url($ot_policy_url); ?>" class="ettic-otc-policy-actions__view" aria-label="<?php
                             /* translators: %s: policy title */
                             echo esc_attr(sprintf(__('View %s', 'open-trust-center-by-ettic'), $ot_policy['title'])); ?>">&rarr;</a>
                         </td>

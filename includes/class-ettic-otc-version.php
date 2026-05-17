@@ -153,7 +153,7 @@ final class Ettic_OTC_Version {
             return;
         }
         ?>
-        <div class="ot-version-history">
+        <div class="ettic-otc-version-history">
             <table>
                 <thead>
                     <tr>
@@ -164,7 +164,7 @@ final class Ettic_OTC_Version {
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span class="ot-version-badge">v<?php echo esc_html((string) $current_version); ?></span></td>
+                        <td><span class="ettic-otc-version-badge">v<?php echo esc_html((string) $current_version); ?></span></td>
                         <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($post->post_modified))); ?></td>
                         <td><em><?php esc_html_e('Current', 'open-trust-center-by-ettic'); ?></em></td>
                     </tr>

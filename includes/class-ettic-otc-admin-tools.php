@@ -151,19 +151,19 @@ final class Ettic_OTC_Admin_Tools {
 
         $exportable = Ettic_OTC_IO::exportable_summary();
         ?>
-        <p class="ot-tools-intro">
+        <p class="ettic-otc-tools-intro">
             <?php esc_html_e('Move trust center content and settings between sites, or seed a fresh install from another. API keys and the Turnstile secret are never included — re-enter them on the destination.', 'open-trust-center-by-ettic'); ?>
         </p>
 
         <?php if ($preview && is_array($preview)): ?>
             <?php $this->render_preview_screen($preview); ?>
         <?php else: ?>
-            <div class="ot-tools-grid">
-                <div class="ot-tools-panel">
+            <div class="ettic-otc-tools-grid">
+                <div class="ettic-otc-tools-panel">
                     <h2><?php esc_html_e('Export', 'open-trust-center-by-ettic'); ?></h2>
                     <?php $this->render_export_panel($exportable); ?>
                 </div>
-                <div class="ot-tools-panel">
+                <div class="ettic-otc-tools-panel">
                     <h2><?php esc_html_e('Import', 'open-trust-center-by-ettic'); ?></h2>
                     <?php $this->render_import_panel(); ?>
                 </div>
@@ -179,29 +179,29 @@ final class Ettic_OTC_Admin_Tools {
             <input type="hidden" name="action" value="ettic_otc_export">
             <?php wp_nonce_field('ettic_otc_export'); ?>
 
-            <fieldset class="ot-tools-fieldset">
+            <fieldset class="ettic-otc-tools-fieldset">
                 <legend><?php esc_html_e('What to export', 'open-trust-center-by-ettic'); ?></legend>
-                <label class="ot-tools-radio">
+                <label class="ettic-otc-tools-radio">
                     <input type="radio" name="ettic_otc_export_kind" value="content" checked>
                     <?php esc_html_e('Content (CPTs + bundled media)', 'open-trust-center-by-ettic'); ?>
                 </label>
-                <label class="ot-tools-radio">
+                <label class="ettic-otc-tools-radio">
                     <input type="radio" name="ettic_otc_export_kind" value="settings">
                     <?php esc_html_e('Settings only', 'open-trust-center-by-ettic'); ?>
                 </label>
             </fieldset>
 
-            <fieldset class="ot-tools-fieldset" id="ot-export-content-options">
+            <fieldset class="ettic-otc-tools-fieldset" id="ettic-otc-export-content-options">
                 <legend><?php esc_html_e('Content selection', 'open-trust-center-by-ettic'); ?></legend>
                 <?php foreach ($exportable as $cpt => $items):
                     $label = $this->cpt_label($cpt);
                     $count = count($items);
                 ?>
-                    <details class="ot-tools-cpt-group">
+                    <details class="ettic-otc-tools-cpt-group">
                         <summary>
                             <input type="checkbox" name="ettic_otc_export_cpt[<?php echo esc_attr($cpt); ?>]" value="all" checked>
                             <?php echo esc_html($label); ?>
-                            <span class="ot-tools-count">(<?php echo (int) $count; ?>)</span>
+                            <span class="ettic-otc-tools-count">(<?php echo (int) $count; ?>)</span>
                         </summary>
                         <ul>
                             <?php foreach ($items as $item): ?>
@@ -210,7 +210,7 @@ final class Ettic_OTC_Admin_Tools {
                                         <input type="checkbox" name="ettic_otc_export_ids[<?php echo esc_attr($cpt); ?>][]" value="<?php echo (int) $item['id']; ?>" checked>
                                         <?php echo esc_html($item['title']); ?>
                                         <?php if ($item['status'] !== 'publish'): ?>
-                                            <em class="ot-tools-status">(<?php echo esc_html($item['status']); ?>)</em>
+                                            <em class="ettic-otc-tools-status">(<?php echo esc_html($item['status']); ?>)</em>
                                         <?php endif; ?>
                                     </label>
                                 </li>
@@ -220,7 +220,7 @@ final class Ettic_OTC_Admin_Tools {
                 <?php endforeach; ?>
             </fieldset>
 
-            <label class="ot-tools-radio">
+            <label class="ettic-otc-tools-radio">
                 <input type="checkbox" name="ettic_otc_include_media" value="1" checked>
                 <?php esc_html_e('Bundle attached PDFs and images', 'open-trust-center-by-ettic'); ?>
             </label>
@@ -239,7 +239,7 @@ final class Ettic_OTC_Admin_Tools {
             <input type="hidden" name="action" value="ettic_otc_import_preview">
             <?php wp_nonce_field('ettic_otc_import_preview'); ?>
 
-            <div class="ot-tools-warn" role="note">
+            <div class="ettic-otc-tools-warn" role="note">
                 <strong><?php esc_html_e('Only upload your own exports.', 'open-trust-center-by-ettic'); ?></strong>
                 <?php esc_html_e('Export files contain your trust-center content and may include sensitive material. Never import a file you received from someone else.', 'open-trust-center-by-ettic'); ?>
             </div>
@@ -247,7 +247,7 @@ final class Ettic_OTC_Admin_Tools {
             <p>
                 <label for="ettic_otc_import_file"><strong><?php esc_html_e('Upload export file', 'open-trust-center-by-ettic'); ?></strong></label><br>
                 <input type="file" id="ettic_otc_import_file" name="ettic_otc_import_file" accept=".zip" required>
-                <span class="ot-tools-hint">
+                <span class="ettic-otc-tools-hint">
                     <?php
                     /* translators: %d: max upload size in MB */
                     printf(esc_html__('Max %d MB', 'open-trust-center-by-ettic'), (int) self::UPLOAD_MAX_MB);
@@ -255,17 +255,17 @@ final class Ettic_OTC_Admin_Tools {
                 </span>
             </p>
 
-            <fieldset class="ot-tools-fieldset">
+            <fieldset class="ettic-otc-tools-fieldset">
                 <legend><?php esc_html_e('On conflict', 'open-trust-center-by-ettic'); ?></legend>
-                <label class="ot-tools-radio">
+                <label class="ettic-otc-tools-radio">
                     <input type="radio" name="ettic_otc_strategy" value="skip" checked>
                     <?php esc_html_e('Skip — keep existing records untouched', 'open-trust-center-by-ettic'); ?>
                 </label>
-                <label class="ot-tools-radio">
+                <label class="ettic-otc-tools-radio">
                     <input type="radio" name="ettic_otc_strategy" value="overwrite">
                     <?php esc_html_e('Overwrite — replace existing records', 'open-trust-center-by-ettic'); ?>
                 </label>
-                <label class="ot-tools-radio">
+                <label class="ettic-otc-tools-radio">
                     <input type="radio" name="ettic_otc_strategy" value="create_new">
                     <?php esc_html_e('Create new — duplicate with a -import suffix', 'open-trust-center-by-ettic'); ?>
                 </label>
@@ -332,7 +332,7 @@ final class Ettic_OTC_Admin_Tools {
             <?php foreach ($preview['records'] ?? [] as $cpt => $rows): ?>
                 <?php if (empty($rows)) continue; ?>
                 <h3><?php echo esc_html($this->cpt_label($cpt)); ?></h3>
-                <table class="wp-list-table widefat fixed striped ot-tools-preview-table">
+                <table class="wp-list-table widefat fixed striped ettic-otc-tools-preview-table">
                     <thead>
                         <tr>
                             <th><?php esc_html_e('Title', 'open-trust-center-by-ettic'); ?></th>
@@ -344,8 +344,8 @@ final class Ettic_OTC_Admin_Tools {
                         <?php foreach ($rows as $r): ?>
                             <tr>
                                 <td><?php echo esc_html((string) $r['title']); ?></td>
-                                <td><span class="ot-tools-action--<?php echo esc_attr((string) $r['action']); ?>"><?php echo esc_html(ucfirst((string) $r['action'])); ?></span></td>
-                                <td class="ot-tools-uuid"><?php echo esc_html((string) ($r['uuid'] ?? '—')); ?></td>
+                                <td><span class="ettic-otc-tools-action--<?php echo esc_attr((string) $r['action']); ?>"><?php echo esc_html(ucfirst((string) $r['action'])); ?></span></td>
+                                <td class="ettic-otc-tools-uuid"><?php echo esc_html((string) ($r['uuid'] ?? '—')); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -187,7 +187,7 @@ final class Ettic_OTC_Chat_Corpus {
         }
         $base = home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/');
         $urls[] = $base;
-        foreach (['ot-certifications', 'ot-policies', 'ot-subprocessors', 'ot-data-practices', 'ot-contact'] as $anchor) {
+        foreach (['ettic-otc-certifications', 'ettic-otc-policies', 'ettic-otc-subprocessors', 'ettic-otc-data-practices', 'ettic-otc-contact'] as $anchor) {
             $urls[] = $base . '#' . $anchor;
         }
         $urls = array_values(array_unique($urls));
@@ -541,7 +541,7 @@ final class Ettic_OTC_Chat_Corpus {
 
     private static function format_certification(array $cert, array $settings): array {
         $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-certifications');
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-certifications');
 
         $status_labels = ($cert['type'] ?? 'certified') === 'compliant'
             ? Ettic_OTC_Render::cert_aligned_status_labels()
@@ -592,7 +592,7 @@ final class Ettic_OTC_Chat_Corpus {
 
     private static function format_subprocessor(array $sub, array $settings): array {
         $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-subprocessors');
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-subprocessors');
 
         $lines = ['Name: ' . ($sub['name'] ?? '')];
         if (!empty($sub['purpose']))        { $lines[] = 'Purpose: '         . $sub['purpose']; }
@@ -628,7 +628,7 @@ final class Ettic_OTC_Chat_Corpus {
 
     private static function format_data_practice(array $dp, array $settings): array {
         $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-data-practices');
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-data-practices');
 
         $legal_labels = Ettic_OTC_Render::legal_basis_labels();
 
@@ -754,7 +754,7 @@ final class Ettic_OTC_Chat_Corpus {
         }
 
         $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-contact');
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-contact');
 
         return [
             'id'       => 'contact',

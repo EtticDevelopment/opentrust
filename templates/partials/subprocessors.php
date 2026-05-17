@@ -13,16 +13,16 @@ defined('ABSPATH') || exit;
 
 $ot_subprocessors = $ot_data['subprocessors'] ?? [];
 ?>
-<section id="ot-subprocessors" class="ot-section">
-    <div class="ot-container">
-        <div class="ot-section__header">
+<section id="ettic-otc-subprocessors" class="ettic-otc-section">
+    <div class="ettic-otc-container">
+        <div class="ettic-otc-section__header">
             <?php Ettic_OTC_Render::updated_pill('subprocessors', $ot_data); ?>
-            <h2 class="ot-section__title"><?php esc_html_e('Subprocessors', 'open-trust-center-by-ettic'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('Third-party services that process data on our behalf, along with their purposes and data handling agreements.', 'open-trust-center-by-ettic'); ?></p>
+            <h2 class="ettic-otc-section__title"><?php esc_html_e('Subprocessors', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ettic-otc-section__description"><?php esc_html_e('Third-party services that process data on our behalf, along with their purposes and data handling agreements.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
-        <div class="ot-table-wrapper">
-            <table class="ot-table" role="table">
+        <div class="ettic-otc-table-wrapper">
+            <table class="ettic-otc-table" role="table">
                 <colgroup>
                     <col style="width:14%">
                     <col style="width:25%">
@@ -33,10 +33,10 @@ $ot_subprocessors = $ot_data['subprocessors'] ?? [];
                 </colgroup>
                 <thead>
                     <tr>
-                        <th data-ot-sort="name" scope="col"><?php esc_html_e('Name', 'open-trust-center-by-ettic'); ?></th>
-                        <th data-ot-sort="purpose" scope="col"><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></th>
-                        <th data-ot-sort="data" scope="col"><?php esc_html_e('Data Processed', 'open-trust-center-by-ettic'); ?></th>
-                        <th data-ot-sort="location" scope="col"><?php esc_html_e('Location', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="name" scope="col"><?php esc_html_e('Name', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="purpose" scope="col"><?php esc_html_e('Purpose', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="data" scope="col"><?php esc_html_e('Data Processed', 'open-trust-center-by-ettic'); ?></th>
+                        <th data-ettic-otc-sort="location" scope="col"><?php esc_html_e('Location', 'open-trust-center-by-ettic'); ?></th>
                         <th scope="col"><?php esc_html_e('DPA', 'open-trust-center-by-ettic'); ?></th>
                         <th scope="col"><?php esc_html_e('Website', 'open-trust-center-by-ettic'); ?></th>
                     </tr>
@@ -48,23 +48,23 @@ $ot_subprocessors = $ot_data['subprocessors'] ?? [];
                     ?>
                     <tr>
                         <td><strong><?php echo esc_html($ot_sub['name']); ?></strong></td>
-                        <td class="ot-table__clamp">
-                            <span class="ot-table__clamp-text"><?php echo esc_html($ot_sub['purpose']); ?></span>
-                            <button class="ot-table__more" data-ot-clamp-toggle><?php esc_html_e('more', 'open-trust-center-by-ettic'); ?></button>
+                        <td class="ettic-otc-table__clamp">
+                            <span class="ettic-otc-table__clamp-text"><?php echo esc_html($ot_sub['purpose']); ?></span>
+                            <button class="ettic-otc-table__more" data-ettic-otc-clamp-toggle><?php esc_html_e('more', 'open-trust-center-by-ettic'); ?></button>
                         </td>
-                        <td class="ot-table__clamp">
-                            <span class="ot-table__clamp-text"><?php echo esc_html($ot_sub['data_processed']); ?></span>
-                            <button class="ot-table__more" data-ot-clamp-toggle><?php esc_html_e('more', 'open-trust-center-by-ettic'); ?></button>
+                        <td class="ettic-otc-table__clamp">
+                            <span class="ettic-otc-table__clamp-text"><?php echo esc_html($ot_sub['data_processed']); ?></span>
+                            <button class="ettic-otc-table__more" data-ettic-otc-clamp-toggle><?php esc_html_e('more', 'open-trust-center-by-ettic'); ?></button>
                         </td>
                         <td><?php echo esc_html($ot_sub['country']); ?></td>
                         <td>
                             <?php if ($ot_sub['dpa_signed']): ?>
-                                <span class="ot-dpa-badge ot-dpa-badge--signed">
+                                <span class="ettic-otc-dpa-badge ettic-otc-dpa-badge--signed">
                                     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.78 5.97l-4.5 5a.75.75 0 0 1-1.06.04l-2.5-2.25a.75.75 0 1 1 1.06-1.06l1.94 1.75 3.97-4.43a.75.75 0 1 1 1.1 1.02l-.01-.07z"/></svg>
                                     <?php esc_html_e('Signed', 'open-trust-center-by-ettic'); ?>
                                 </span>
                             <?php else: ?>
-                                <span class="ot-dpa-badge ot-dpa-badge--pending">&mdash;</span>
+                                <span class="ettic-otc-dpa-badge ettic-otc-dpa-badge--pending">&mdash;</span>
                             <?php endif; ?>
                         </td>
                         <td>

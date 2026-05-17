@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    var configEl = document.getElementById('ot-chat-config');
+    var configEl = document.getElementById('ettic-otc-chat-config');
     if (!configEl) {
         return;
     }
@@ -34,12 +34,12 @@
 
     // ── DOM refs ──────────────────────────────
 
-    var shellEl    = document.querySelector('[data-ot-chat-shell]');
-    var messagesEl = document.querySelector('[data-ot-chat-messages]');
-    var form       = document.querySelector('[data-ot-chat-form]');
-    var input      = document.querySelector('[data-ot-chat-input]');
-    var sendBtn    = document.querySelector('[data-ot-chat-send]');
-    var resetBtn   = document.querySelector('[data-ot-chat-reset]');
+    var shellEl    = document.querySelector('[data-ettic-otc-chat-shell]');
+    var messagesEl = document.querySelector('[data-ettic-otc-chat-messages]');
+    var form       = document.querySelector('[data-ettic-otc-chat-form]');
+    var input      = document.querySelector('[data-ettic-otc-chat-input]');
+    var sendBtn    = document.querySelector('[data-ettic-otc-chat-send]');
+    var resetBtn   = document.querySelector('[data-ettic-otc-chat-reset]');
 
     if (!form || !input || !messagesEl || !shellEl) {
         return;
@@ -130,9 +130,9 @@
         // Suggested question chips. Submit directly — do NOT populate the
         // input field, or the text would linger there after the submit (the
         // input-clear only happens inside the form submit handler).
-        document.querySelectorAll('[data-ot-chat-chip]').forEach(function (btn) {
+        document.querySelectorAll('[data-ettic-otc-chat-chip]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var q = btn.getAttribute('data-ot-chat-chip') || '';
+                var q = btn.getAttribute('data-ettic-otc-chat-chip') || '';
                 if (!q) return;
                 submitUserMessage(q);
             });
@@ -440,7 +440,7 @@
                 // the aggregated tool_call event below carries the real
                 // count and will morph this pill's label via the reuse path.
                 if (evt.data && typeof evt.data.summary === 'string' && evt.data.summary !== '') {
-                    var thinkingEl = bubble.bodyEl.querySelector('.ot-chat-thinking');
+                    var thinkingEl = bubble.bodyEl.querySelector('.ettic-otc-chat-thinking');
                     if (thinkingEl) thinkingEl.remove();
                     showToolStatus(bubble, evt.data.summary);
                 }
@@ -454,7 +454,7 @@
                 // "Searching for X" → "Searched for X") instead of leaving
                 // the active-tense label up forever.
                 if (evt.data && typeof evt.data.summary === 'string' && evt.data.summary !== '') {
-                    var thinking = bubble.bodyEl.querySelector('.ot-chat-thinking');
+                    var thinking = bubble.bodyEl.querySelector('.ettic-otc-chat-thinking');
                     if (thinking) thinking.remove();
                     bubble.totalToolCount      = (bubble.totalToolCount || 0) + (parseInt(evt.data.count, 10) || 1);
                     bubble.toolCallEventCount  = (bubble.toolCallEventCount || 0) + 1;
@@ -520,10 +520,10 @@
 
     function buildThinkingIndicator() {
         var wrap = document.createElement('span');
-        wrap.className = 'ot-chat-thinking';
+        wrap.className = 'ettic-otc-chat-thinking';
         for (var i = 0; i < 3; i++) {
             var dot = document.createElement('span');
-            dot.className = 'ot-chat-thinking-dot';
+            dot.className = 'ettic-otc-chat-thinking-dot';
             wrap.appendChild(dot);
         }
         return wrap;
@@ -539,53 +539,53 @@
      */
     function buildMessageScaffold(role, name) {
         var msg = document.createElement('div');
-        msg.className = 'ot-chat-msg ot-chat-msg--' + role;
+        msg.className = 'ettic-otc-chat-msg ettic-otc-chat-msg--' + role;
 
         var avatar = document.createElement('div');
-        avatar.className = 'ot-chat-msg__avatar';
+        avatar.className = 'ettic-otc-chat-msg__avatar';
         avatar.setAttribute('aria-hidden', 'true');
 
         if (role === 'assistant' && config.avatar_url) {
             var avatarImg = document.createElement('img');
-            avatarImg.className = 'ot-chat-msg__avatar-img';
+            avatarImg.className = 'ettic-otc-chat-msg__avatar-img';
             avatarImg.src = config.avatar_url;
             avatarImg.alt = '';
             avatar.appendChild(avatarImg);
         } else {
             var iconEl = svgIcon(role === 'user' ? USER_SVG : ASSISTANT_SVG);
             if (iconEl && iconEl.nodeType === 1) {
-                iconEl.classList.add('ot-chat-msg__avatar-icon');
+                iconEl.classList.add('ettic-otc-chat-msg__avatar-icon');
             }
             avatar.appendChild(iconEl);
         }
 
         // Pre-render a warning icon kept hidden by default; CSS reveals it
-        // when the parent row gains `.ot-chat-msg--refused`.
+        // when the parent row gains `.ettic-otc-chat-msg--refused`.
         if (role === 'assistant') {
             var warning = svgIcon(WARNING_SVG);
             if (warning && warning.nodeType === 1) {
-                warning.classList.add('ot-chat-msg__avatar-warning');
+                warning.classList.add('ettic-otc-chat-msg__avatar-warning');
                 warning.setAttribute('style', 'display:none');
             }
             avatar.appendChild(warning);
         }
 
         var content = document.createElement('div');
-        content.className = 'ot-chat-msg__content';
+        content.className = 'ettic-otc-chat-msg__content';
 
         var header = document.createElement('header');
-        header.className = 'ot-chat-msg__header';
+        header.className = 'ettic-otc-chat-msg__header';
 
         var nameEl = document.createElement('strong');
-        nameEl.className = 'ot-chat-msg__name';
+        nameEl.className = 'ettic-otc-chat-msg__name';
         nameEl.textContent = name;
 
         var sep = document.createElement('span');
-        sep.className = 'ot-chat-msg__separator';
+        sep.className = 'ettic-otc-chat-msg__separator';
         sep.textContent = '·';
 
         var time = document.createElement('time');
-        time.className = 'ot-chat-msg__time';
+        time.className = 'ettic-otc-chat-msg__time';
         time.textContent = nowLabel();
 
         header.appendChild(nameEl);
@@ -593,7 +593,7 @@
         header.appendChild(time);
 
         var body = document.createElement('div');
-        body.className = 'ot-chat-msg__body';
+        body.className = 'ettic-otc-chat-msg__body';
 
         content.appendChild(header);
         content.appendChild(body);
@@ -614,7 +614,7 @@
     function appendAssistantBubble(text, citations, refused, finalized) {
         var scaffold = buildMessageScaffold('assistant', config.assistant_name || config.company_name || 'Assistant');
         if (refused) {
-            scaffold.msgEl.classList.add('ot-chat-msg--refused');
+            scaffold.msgEl.classList.add('ettic-otc-chat-msg--refused');
         }
 
         // During streaming we hold a single text node in the body that receives
@@ -750,7 +750,7 @@
 
             if (pill.el) {
                 pill.el.classList.remove('is-static');
-                var labelEl = pill.el.querySelector('.ot-chat-thinking__label');
+                var labelEl = pill.el.querySelector('.ettic-otc-chat-thinking__label');
                 if (labelEl) labelEl.textContent = summary;
             }
             if (bubble.toolPillTimer) clearTimeout(bubble.toolPillTimer);
@@ -798,7 +798,7 @@
         // Hide the "Thinking…" indicator now that the pill is on screen —
         // both serve the same "something is happening" purpose.
         bubble.streamThinkingHidden = true;
-        var thinkingEl = bubble.bodyEl.querySelector('.ot-chat-thinking');
+        var thinkingEl = bubble.bodyEl.querySelector('.ettic-otc-chat-thinking');
         if (thinkingEl) thinkingEl.remove();
 
         bubble.toolPillTimer = setTimeout(function () { settlePillTimer(bubble, newPill); }, TOOL_STATUS_MIN_MS);
@@ -813,7 +813,7 @@
     function ensureLiveTail(bubble) {
         if (!bubble.liveTailEl) {
             bubble.liveTailEl = document.createElement('span');
-            bubble.liveTailEl.className = 'ot-chat-msg__live-tail';
+            bubble.liveTailEl.className = 'ettic-otc-chat-msg__live-tail';
             bubble.bodyEl.appendChild(bubble.liveTailEl);
         }
     }
@@ -831,7 +831,7 @@
             var el  = null;
             if (seg.kind === 'text') {
                 el = document.createElement('div');
-                el.className = 'ot-chat-msg__seg-text';
+                el.className = 'ettic-otc-chat-msg__seg-text';
                 el.appendChild(renderMarkdown(seg.text));
             } else if (seg.kind === 'pill') {
                 el = buildPillElement(seg.summary, seg.locked);
@@ -903,7 +903,7 @@
             if (settled) {
                 pill.summary = settled;
                 if (pill.el) {
-                    var labelEl = pill.el.querySelector('.ot-chat-thinking__label');
+                    var labelEl = pill.el.querySelector('.ettic-otc-chat-thinking__label');
                     if (labelEl) labelEl.textContent = settled;
                 }
             }
@@ -923,14 +923,14 @@
      */
     function buildPillElement(summary, locked) {
         var pill = document.createElement('div');
-        pill.className = 'ot-chat-tool-status' + (locked ? ' is-static' : '');
+        pill.className = 'ettic-otc-chat-tool-status' + (locked ? ' is-static' : '');
         for (var i = 0; i < 3; i++) {
             var dot = document.createElement('span');
-            dot.className = 'ot-chat-thinking-dot';
+            dot.className = 'ettic-otc-chat-thinking-dot';
             pill.appendChild(dot);
         }
         var label = document.createElement('span');
-        label.className = 'ot-chat-thinking__label';
+        label.className = 'ettic-otc-chat-thinking__label';
         label.textContent = summary;
         pill.appendChild(label);
         return pill;
@@ -1040,7 +1040,7 @@
         var hasPriorContent = (bubble.priorSegments && bubble.priorSegments.length > 0);
         if (!bubble.streamThinkingHidden && (visible.length > 0 || hasPriorContent)) {
             bubble.streamThinkingHidden = true;
-            var thinking = bubble.bodyEl.querySelector('.ot-chat-thinking');
+            var thinking = bubble.bodyEl.querySelector('.ettic-otc-chat-thinking');
             if (thinking) thinking.remove();
         }
 
@@ -1229,16 +1229,16 @@
         // render fully-formed messages — animating them on every reload
         // would be visual noise.
         var animateReveal = bubble.usedStreaming && !REDUCED_MOTION;
-        var revealClass = animateReveal ? ' ot-chat-msg__reveal' : '';
+        var revealClass = animateReveal ? ' ettic-otc-chat-msg__reveal' : '';
 
         // Refusal copy + contact CTA.
         if (bubble.refused && bubble.citations.length === 0) {
-            bubble.msgEl.classList.add('ot-chat-msg--refused');
+            bubble.msgEl.classList.add('ettic-otc-chat-msg--refused');
 
             // Reveal the pre-rendered warning icon inside the avatar so the
             // refusal signal lives on the avatar (yellow + orange warning),
             // not the body.
-            var warningEl = bubble.msgEl.querySelector('.ot-chat-msg__avatar-warning');
+            var warningEl = bubble.msgEl.querySelector('.ettic-otc-chat-msg__avatar-warning');
             if (warningEl) {
                 warningEl.removeAttribute('style');
             }
@@ -1250,7 +1250,7 @@
             }
             if (config.contact_url) {
                 var cta = document.createElement('a');
-                cta.className = 'ot-chat-contact-btn' + revealClass;
+                cta.className = 'ettic-otc-chat-contact-btn' + revealClass;
                 if (animateReveal) cta.style.animationDelay = '40ms';
                 cta.href = config.contact_url;
                 cta.textContent = strings.refused_contact || 'Contact security team →';
@@ -1261,7 +1261,7 @@
         // Sources block (after the body, inside content column).
         if (bubble.citations.length > 0) {
             var sources = document.createElement('div');
-            sources.className = 'ot-chat-msg__sources' + revealClass;
+            sources.className = 'ettic-otc-chat-msg__sources' + revealClass;
             if (animateReveal) sources.style.animationDelay = '40ms';
 
             var h4 = document.createElement('h4');
@@ -1287,7 +1287,7 @@
         // the sources above" to "I don't have enough info" is nonsensical.
         if (!(bubble.refused && bubble.citations.length === 0)) {
             var disclaimer = document.createElement('p');
-            disclaimer.className = 'ot-chat-msg__disclaimer' + revealClass;
+            disclaimer.className = 'ettic-otc-chat-msg__disclaimer' + revealClass;
             if (animateReveal) disclaimer.style.animationDelay = '140ms';
             disclaimer.textContent = strings.disclaimer || 'AI-generated answer. Not legal, security, or compliance advice. Verify against the sources above.';
             bubble.bodyEl.parentNode.appendChild(disclaimer);
@@ -1295,7 +1295,7 @@
 
         // Action bar — Copy / Share / Print with icons.
         var actions = document.createElement('div');
-        actions.className = 'ot-chat-msg__actions' + revealClass;
+        actions.className = 'ettic-otc-chat-msg__actions' + revealClass;
         if (animateReveal) actions.style.animationDelay = '220ms';
         actions.appendChild(buildActionButton(COPY_SVG, strings.copy || 'Copy', function (btn) { copyBubble(bubble, btn); }));
         actions.appendChild(buildActionButton(PRINT_SVG, strings.print || 'Print', function () { window.print(); }));
@@ -1535,14 +1535,14 @@
 
     function appendBanner(kind, text) {
         var b = document.createElement('div');
-        b.className = 'ot-chat-banner ot-chat-banner--' + kind;
+        b.className = 'ettic-otc-chat-banner ettic-otc-chat-banner--' + kind;
         b.appendChild(document.createTextNode(text));
         messagesEl.appendChild(b);
     }
 
     function appendRetryBanner(userText) {
         var b = document.createElement('div');
-        b.className = 'ot-chat-banner ot-chat-banner--error';
+        b.className = 'ettic-otc-chat-banner ettic-otc-chat-banner--error';
         b.appendChild(document.createTextNode(strings.retry || 'Connection lost. Retry?'));
 
         var btn = document.createElement('button');
@@ -1557,7 +1557,7 @@
             }
             var responseBubble = appendAssistantBubble('', [], false, false);
             var thinkingEl = document.createElement('span');
-            thinkingEl.className = 'ot-chat-thinking';
+            thinkingEl.className = 'ettic-otc-chat-thinking';
             thinkingEl.textContent = strings.thinking || 'Thinking…';
             responseBubble.bodyEl.insertBefore(thinkingEl, responseBubble.textNode);
             streamResponse(responseBubble, thinkingEl, userText);
@@ -1567,9 +1567,9 @@
     }
 
     function appendLongHint() {
-        if (document.querySelector('.ot-chat-long-hint')) return;
+        if (document.querySelector('.ettic-otc-chat-long-hint')) return;
         var hint = document.createElement('div');
-        hint.className = 'ot-chat-long-hint';
+        hint.className = 'ettic-otc-chat-long-hint';
         hint.appendChild(document.createTextNode(strings.long_hint || 'This conversation is getting long.'));
         messagesEl.appendChild(hint);
     }
@@ -1577,16 +1577,16 @@
     function setSendButtonMode(mode) {
         [sendBtn].forEach(function (btn) {
             if (!btn) return;
-            var labelEl = btn.querySelector('.ot-chat-send__label');
+            var labelEl = btn.querySelector('.ettic-otc-chat-send__label');
             if (mode === 'stop') {
-                btn.classList.add('ot-chat-send--stop');
+                btn.classList.add('ettic-otc-chat-send--stop');
                 btn.type = 'button';
                 btn.onclick = function () {
                     if (currentAbort) currentAbort.abort();
                 };
                 if (labelEl) labelEl.textContent = strings.stop || 'Stop';
             } else {
-                btn.classList.remove('ot-chat-send--stop');
+                btn.classList.remove('ettic-otc-chat-send--stop');
                 btn.type = 'submit';
                 btn.onclick = null;
                 if (labelEl) labelEl.textContent = strings.send || 'Send';
@@ -1712,7 +1712,7 @@
 
     function renderTurnstileWidget(onSuccess) {
         var holder = document.createElement('div');
-        holder.className = 'ot-chat-turnstile';
+        holder.className = 'ettic-otc-chat-turnstile';
         holder.style.margin = '12px 0';
 
         var note = document.createElement('p');
@@ -1747,7 +1747,7 @@
     function renderBudgetExhaustedState(resetAt) {
         setChattingState(true);
         var banner = document.createElement('div');
-        banner.className = 'ot-chat-banner ot-chat-banner--warn';
+        banner.className = 'ettic-otc-chat-banner ettic-otc-chat-banner--warn';
         var msg = strings.unavailable || 'AI chat is temporarily unavailable.';
         if (resetAt) {
             var when = new Date(resetAt);

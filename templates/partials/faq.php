@@ -36,24 +36,24 @@ foreach ($ot_faqs as $ot_faq_item) {
     ];
 }
 ?>
-<section id="ot-faqs" class="ot-section ot-section--faqs">
-    <div class="ot-container">
-        <div class="ot-section__header">
-            <h2 class="ot-section__title"><?php esc_html_e('Frequently Asked Questions', 'open-trust-center-by-ettic'); ?></h2>
-            <p class="ot-section__description"><?php esc_html_e('Quick answers to the questions we hear most.', 'open-trust-center-by-ettic'); ?></p>
+<section id="ettic-otc-faqs" class="ettic-otc-section ettic-otc-section--faqs">
+    <div class="ettic-otc-container">
+        <div class="ettic-otc-section__header">
+            <h2 class="ettic-otc-section__title"><?php esc_html_e('Frequently Asked Questions', 'open-trust-center-by-ettic'); ?></h2>
+            <p class="ettic-otc-section__description"><?php esc_html_e('Quick answers to the questions we hear most.', 'open-trust-center-by-ettic'); ?></p>
         </div>
 
-        <div class="ot-faq-list">
+        <div class="ettic-otc-faq-list">
             <?php foreach ($ot_faqs as $ot_faq_item): ?>
-                <details class="ot-faq-item" id="faq-<?php echo esc_attr($ot_faq_item['slug']); ?>" data-ot-card>
-                    <summary class="ot-faq-item__question">
-                        <span class="ot-faq-item__question-text"><?php echo esc_html($ot_faq_item['title']); ?></span>
-                        <svg class="ot-faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <details class="ettic-otc-faq-item" id="faq-<?php echo esc_attr($ot_faq_item['slug']); ?>" data-ettic-otc-card>
+                    <summary class="ettic-otc-faq-item__question">
+                        <span class="ettic-otc-faq-item__question-text"><?php echo esc_html($ot_faq_item['title']); ?></span>
+                        <svg class="ettic-otc-faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                     </summary>
-                    <div class="ot-faq-item__answer">
+                    <div class="ettic-otc-faq-item__answer">
                         <?php echo wp_kses_post($ot_faq_item['answer_html']); ?>
                         <?php if (!empty($ot_faq_item['related_url']) && !empty($ot_faq_item['related_title'])): ?>
-                            <p class="ot-faq-item__related">
+                            <p class="ettic-otc-faq-item__related">
                                 <?php esc_html_e('Related:', 'open-trust-center-by-ettic'); ?>
                                 <a href="<?php echo esc_url($ot_faq_item['related_url']); ?>"><?php echo esc_html($ot_faq_item['related_title']); ?></a>
                             </p>

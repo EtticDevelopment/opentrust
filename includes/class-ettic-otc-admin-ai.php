@@ -74,7 +74,7 @@ final class Ettic_OTC_Admin_AI {
 
         ?>
         <?php if ($is_non_anthropic_active): ?>
-            <div class="ot-ai-active-warning">
+            <div class="ettic-otc-ai-active-warning">
                 <strong><?php esc_html_e('Heads up: citation fidelity is not guaranteed on your active provider.', 'open-trust-center-by-ettic'); ?></strong>
                 <p>
                     <?php
@@ -88,7 +88,7 @@ final class Ettic_OTC_Admin_AI {
             </div>
         <?php endif; ?>
 
-        <p class="ot-ai-intro">
+        <p class="ettic-otc-ai-intro">
             <?php
             echo wp_kses(
                 __('Ettic_OTC uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'open-trust-center-by-ettic'),
@@ -97,9 +97,9 @@ final class Ettic_OTC_Admin_AI {
             ?>
         </p>
 
-        <details class="ot-ai-rationale">
+        <details class="ettic-otc-ai-rationale">
             <summary><?php esc_html_e('Why Anthropic, and not OpenAI or any other provider?', 'open-trust-center-by-ettic'); ?></summary>
-            <div class="ot-ai-rationale__body">
+            <div class="ettic-otc-ai-rationale__body">
                 <p>
                     <?php
                     echo wp_kses(
@@ -196,8 +196,8 @@ final class Ettic_OTC_Admin_AI {
         // Defensive fallback: if Anthropic is somehow not registered, render
         // everything flat so the tab never breaks.
         if ($primary === null) {
-            echo '<h3 class="ot-ai-section-heading">' . esc_html__('Choose a provider and add your key', 'open-trust-center-by-ettic') . '</h3>';
-            echo '<div class="ot-ai-advanced__grid">';
+            echo '<h3 class="ettic-otc-ai-section-heading">' . esc_html__('Choose a provider and add your key', 'open-trust-center-by-ettic') . '</h3>';
+            echo '<div class="ettic-otc-ai-advanced__grid">';
             foreach ($providers as $provider) {
                 $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced');
             }
@@ -208,15 +208,15 @@ final class Ettic_OTC_Admin_AI {
         $is_anthropic_active = $active_provider === 'anthropic' && isset($stored_keys['anthropic']);
         $advanced_open       = $active_provider !== '' && $active_provider !== 'anthropic';
         ?>
-        <h3 class="ot-ai-section-heading"><?php esc_html_e('Step 1 — Connect Anthropic', 'open-trust-center-by-ettic'); ?></h3>
+        <h3 class="ettic-otc-ai-section-heading"><?php esc_html_e('Step 1 — Connect Anthropic', 'open-trust-center-by-ettic'); ?></h3>
 
         <?php $this->render_provider_card($primary, $stored_keys, $active_provider, 'primary'); ?>
 
         <?php if (!empty($advanced)): ?>
-            <details class="ot-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
+            <details class="ettic-otc-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
                 <summary><?php esc_html_e('Advanced: use a different provider (not recommended)', 'open-trust-center-by-ettic'); ?></summary>
 
-                <div class="ot-ai-advanced__warning">
+                <div class="ettic-otc-ai-advanced__warning">
                     <strong><?php esc_html_e('These providers cannot guarantee citation fidelity.', 'open-trust-center-by-ettic'); ?></strong>
                     <p>
                         <?php esc_html_e('OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens.', 'open-trust-center-by-ettic'); ?>
@@ -227,7 +227,7 @@ final class Ettic_OTC_Admin_AI {
                     </p>
                 </div>
 
-                <div class="ot-ai-advanced__grid">
+                <div class="ettic-otc-ai-advanced__grid">
                     <?php foreach ($advanced as $provider): ?>
                         <?php $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced'); ?>
                     <?php endforeach; ?>
@@ -253,26 +253,26 @@ final class Ettic_OTC_Admin_AI {
         $has_key   = isset($stored_keys[$slug]);
         $masked    = $has_key ? Ettic_OTC_Chat_Secrets::mask($stored_keys[$slug]) : '';
 
-        $card_classes = ['ot-ai-card', 'ot-ai-card--' . $variant];
+        $card_classes = ['ettic-otc-ai-card', 'ettic-otc-ai-card--' . $variant];
         if ($is_active) {
             $card_classes[] = 'is-active';
         }
         ?>
         <div class="<?php echo esc_attr(implode(' ', $card_classes)); ?>">
-            <div class="ot-ai-card__header">
-                <h4 class="ot-ai-card__title"><?php echo esc_html($label); ?></h4>
+            <div class="ettic-otc-ai-card__header">
+                <h4 class="ettic-otc-ai-card__title"><?php echo esc_html($label); ?></h4>
                 <?php if ($variant === 'primary'): ?>
-                    <span class="ot-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'open-trust-center-by-ettic'); ?></span>
+                    <span class="ettic-otc-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'open-trust-center-by-ettic'); ?></span>
                 <?php endif; ?>
             </div>
 
             <?php if ($variant === 'primary'): ?>
-                <p class="ot-ai-card__description">
+                <p class="ettic-otc-ai-card__description">
                     <?php esc_html_e('Uses Claude with the native Citations API. Every quote the assistant attributes to one of your documents is structurally guaranteed to come from that document.', 'open-trust-center-by-ettic'); ?>
                 </p>
             <?php endif; ?>
 
-            <p class="ot-ai-card__keylink">
+            <p class="ettic-otc-ai-card__keylink">
                 <a href="<?php echo esc_url($key_url); ?>" target="_blank" rel="noopener">
                     <?php
                     /* translators: %s: provider name (e.g. Anthropic) */
@@ -282,14 +282,14 @@ final class Ettic_OTC_Admin_AI {
             </p>
 
             <?php if ($has_key && $is_active): ?>
-                <div class="ot-ai-card__saved">
+                <div class="ettic-otc-ai-card__saved">
                     ✓ <?php echo esc_html($masked); ?>
                 </div>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline">
                     <?php wp_nonce_field('ettic_otc_ai_forget_key'); ?>
                     <input type="hidden" name="action" value="ettic_otc_ai_forget_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <button type="submit" class="button-link ot-ai-card__forget" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'open-trust-center-by-ettic')); ?>')">
+                    <button type="submit" class="button-link ettic-otc-ai-card__forget" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'open-trust-center-by-ettic')); ?>')">
                         <?php esc_html_e('Replace key', 'open-trust-center-by-ettic'); ?>
                     </button>
                 </form>
@@ -298,12 +298,12 @@ final class Ettic_OTC_Admin_AI {
                     <?php wp_nonce_field('ettic_otc_ai_save_key'); ?>
                     <input type="hidden" name="action" value="ettic_otc_ai_save_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <input type="password" name="api_key" class="ot-ai-card__input" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
+                    <input type="password" name="api_key" class="ettic-otc-ai-card__input" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
                         /* translators: %s: provider name (e.g. Anthropic) */
                         __('Paste your %s API key…', 'open-trust-center-by-ettic'),
                         $label
                     )); ?>" required>
-                    <button type="submit" class="button button-primary ot-ai-card__submit">
+                    <button type="submit" class="button button-primary ettic-otc-ai-card__submit">
                         <?php esc_html_e('Validate & save', 'open-trust-center-by-ettic'); ?>
                     </button>
                 </form>
