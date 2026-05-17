@@ -3,7 +3,7 @@
  * Read-side data layer for the trust center.
  *
  * Single source of truth for "what published trust-center items exist." Owns
- * all DB fetching for the five OpenTrust CPTs and the per-CPT projection
+ * all DB fetching for the five Ettic_OTC CPTs and the per-CPT projection
  * shape consumed by Render (templates) and Chat_Corpus (AI corpus index).
  *
  * Returns ALL published items unconditionally — no visibility filtering, no
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Repository {
+final class Ettic_OTC_Repository {
 
     private static ?self $instance = null;
 
@@ -44,7 +44,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'certifications',
             [
-                'post_type'      => OpenTrust_CPT::CERTIFICATION,
+                'post_type'      => Ettic_OTC_CPT::CERTIFICATION,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'menu_order title',
@@ -76,7 +76,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'policies',
             [
-                'post_type'      => OpenTrust_CPT::POLICY,
+                'post_type'      => Ettic_OTC_CPT::POLICY,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
@@ -112,7 +112,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'subprocessors',
             [
-                'post_type'      => OpenTrust_CPT::SUBPROCESSOR,
+                'post_type'      => Ettic_OTC_CPT::SUBPROCESSOR,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'title',
@@ -137,7 +137,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'data_practices',
             [
-                'post_type'      => OpenTrust_CPT::DATA_PRACTICE,
+                'post_type'      => Ettic_OTC_CPT::DATA_PRACTICE,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
@@ -169,12 +169,12 @@ final class OpenTrust_Repository {
      * @return array<int, array<string, mixed>>
      */
     public function fetch_faqs(): array {
-        $endpoint = OpenTrust::get_settings()['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $endpoint = Ettic_OTC::get_settings()['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
 
         return $this->cached_query(
             'faqs',
             [
-                'post_type'      => OpenTrust_CPT::FAQ,
+                'post_type'      => Ettic_OTC_CPT::FAQ,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => ['menu_order' => 'ASC', 'title' => 'ASC'],
@@ -214,7 +214,7 @@ final class OpenTrust_Repository {
      */
     public function fetch_policy_posts(): array {
         return get_posts([
-            'post_type'      => OpenTrust_CPT::POLICY,
+            'post_type'      => Ettic_OTC_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'orderby'        => 'title',
@@ -252,7 +252,7 @@ final class OpenTrust_Repository {
     /**
      * Build a locale-and-version-scoped transient key. The locale suffix keeps
      * WPML/Polylang variants in separate buckets; the version counter
-     * (opentrust_cache_version, bumped by OpenTrust::invalidate_cache) lets a
+     * (opentrust_cache_version, bumped by Ettic_OTC::invalidate_cache) lets a
      * single option flip bust every cached locale at once.
      */
     private function cache_key(string $bucket): string {

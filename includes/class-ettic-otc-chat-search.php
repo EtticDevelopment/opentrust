@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Search {
+final class Ettic_OTC_Chat_Search {
 
     /**
      * English stop-words. Trust-center content is overwhelmingly English even

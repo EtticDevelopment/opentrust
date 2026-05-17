@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust_Render {
+final class Ettic_OTC_Render {
 
     private static ?self $instance = null;
 
@@ -39,7 +39,7 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     private function render_chat_page(): void {
-        $ot_settings = OpenTrust::get_settings();
+        $ot_settings = Ettic_OTC::get_settings();
         $ot_data     = $this->gather_data($ot_settings);
         $ot_data['view']        = 'chat';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only prefill of search box on public chat page.
@@ -63,14 +63,14 @@ final class OpenTrust_Render {
 
         // Never cache the chat page (fresh nonce required every load).
         // Set session cookie BEFORE any header() / body output.
-        if (class_exists('OpenTrust_Chat_Budget')) {
-            OpenTrust_Chat_Budget::ensure_session_cookie();
+        if (class_exists('Ettic_OTC_Chat_Budget')) {
+            Ettic_OTC_Chat_Budget::ensure_session_cookie();
         }
         header('Content-Type: text/html; charset=utf-8');
         header('Cache-Control: no-store, no-cache, must-revalidate, private');
         header('Pragma: no-cache');
 
-        include OPENTRUST_PLUGIN_DIR . 'templates/chat.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/chat.php';
     }
 
     /**
@@ -84,7 +84,7 @@ final class OpenTrust_Render {
         }
 
         $question = isset($_POST['question']) ? sanitize_textarea_field((string) wp_unslash($_POST['question'])) : '';
-        $max_len  = (int) ($settings['ai_max_message_length'] ?? OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH);
+        $max_len  = (int) ($settings['ai_max_message_length'] ?? Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH);
         if ($question === '') {
             return ['error' => __('Please enter a question.', 'opentrust')];
         }
@@ -92,30 +92,30 @@ final class OpenTrust_Render {
             $question = substr($question, 0, $max_len);
         }
 
-        $adapter = OpenTrust_Chat_Provider::for((string) $settings['ai_provider']);
-        $api_key = OpenTrust_Chat_Secrets::get((string) $settings['ai_provider']);
+        $adapter = Ettic_OTC_Chat_Provider::for((string) $settings['ai_provider']);
+        $api_key = Ettic_OTC_Chat_Secrets::get((string) $settings['ai_provider']);
         if (!$adapter || $api_key === null) {
             return ['error' => __('AI chat is not configured.', 'opentrust')];
         }
 
         $locale = (string) determine_locale();
-        $corpus = OpenTrust_Chat_Corpus::get_or_build($locale);
+        $corpus = Ettic_OTC_Chat_Corpus::get_or_build($locale);
 
         // Build a chat request identical to the REST handler's blocking path.
         // The system prompt + index + tool surface come from the same shared
         // builder so the noscript path is byte-equivalent to the streaming
         // one — we just don't get to stream the response.
         $args = [
-            'system'   => OpenTrust_Chat::build_system_prompt($settings, $corpus),
+            'system'   => Ettic_OTC_Chat::build_system_prompt($settings, $corpus),
             'corpus'   => $corpus,
             'messages' => [['role' => 'user', 'content' => $question]],
-            'tools'    => OpenTrust_Chat::tool_definitions(),
+            'tools'    => Ettic_OTC_Chat::tool_definitions(),
             'model'    => (string) $settings['ai_model'],
             'api_key'  => $api_key,
             'settings' => $settings,
         ];
 
-        $collector = new OpenTrust_Chat_Stream_Collector($corpus['urls'] ?? []);
+        $collector = new Ettic_OTC_Chat_Stream_Collector($corpus['urls'] ?? []);
 
         $on_chunk = static function (array $event) use ($collector): void {
             $collector->ingest($event); // noscript path is blocking; never forwards
@@ -124,7 +124,7 @@ final class OpenTrust_Render {
         // Per-request loop detection map — same contract as the REST path.
         $seen_calls = [];
         $tool_resolver = static function (string $name, array $args) use ($corpus, &$seen_calls): array {
-            return OpenTrust_Chat::resolve_tool($name, $args, $corpus, $seen_calls);
+            return Ettic_OTC_Chat::resolve_tool($name, $args, $corpus, $seen_calls);
         };
 
         try {
@@ -155,7 +155,7 @@ final class OpenTrust_Render {
         if (empty($settings['ai_enabled']) || empty($settings['ai_provider']) || empty($settings['ai_model'])) {
             return 'unconfigured';
         }
-        if (OpenTrust_Chat_Secrets::get((string) $settings['ai_provider']) === null) {
+        if (Ettic_OTC_Chat_Secrets::get((string) $settings['ai_provider']) === null) {
             return 'unconfigured';
         }
         return 'ready';
@@ -166,11 +166,11 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     private function render_trust_center(): void {
-        $ot_settings = OpenTrust::get_settings();
+        $ot_settings = Ettic_OTC::get_settings();
         $ot_data     = $this->gather_data($ot_settings);
 
         header('Content-Type: text/html; charset=utf-8');
-        include OPENTRUST_PLUGIN_DIR . 'templates/trust-center.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/trust-center.php';
     }
 
     // ──────────────────────────────────────────────
@@ -186,7 +186,7 @@ final class OpenTrust_Render {
             return;
         }
 
-        $ot_settings = OpenTrust::get_settings();
+        $ot_settings = Ettic_OTC::get_settings();
         $ot_data     = $this->gather_data($ot_settings);
         $ot_data['current_policy']   = $policy;
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress filter
@@ -198,7 +198,7 @@ final class OpenTrust_Render {
         $ot_data['view']             = 'policy_single';
 
         header('Content-Type: text/html; charset=utf-8');
-        include OPENTRUST_PLUGIN_DIR . 'templates/trust-center.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/trust-center.php';
     }
 
     // ──────────────────────────────────────────────
@@ -218,7 +218,7 @@ final class OpenTrust_Render {
         // Current version — redirect to canonical.
         $current_version = (int) get_post_meta($policy->ID, '_opentrust_version', true) ?: 1;
         if ($version === $current_version) {
-            $settings = OpenTrust::get_settings();
+            $settings = Ettic_OTC::get_settings();
             $base     = home_url('/' . $settings['endpoint_slug'] . '/policy/' . $policy->post_name . '/');
             wp_safe_redirect($base, 301);
             exit;
@@ -239,7 +239,7 @@ final class OpenTrust_Render {
             return;
         }
 
-        $ot_settings = OpenTrust::get_settings();
+        $ot_settings = Ettic_OTC::get_settings();
         $ot_data     = $this->gather_data($ot_settings);
         $ot_data['current_policy']   = $policy;
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress filter
@@ -251,7 +251,7 @@ final class OpenTrust_Render {
         $ot_data['view']             = 'policy_single';
 
         header('Content-Type: text/html; charset=utf-8');
-        include OPENTRUST_PLUGIN_DIR . 'templates/trust-center.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/trust-center.php';
     }
 
     // ──────────────────────────────────────────────
@@ -260,15 +260,15 @@ final class OpenTrust_Render {
 
     private function render_404(): void {
         status_header(404);
-        $settings = OpenTrust::get_settings();
-        $hsl      = OpenTrust::hex_to_hsl($settings['accent_color'] ?? '#2563EB');
+        $settings = Ettic_OTC::get_settings();
+        $hsl      = Ettic_OTC::hex_to_hsl($settings['accent_color'] ?? '#2563EB');
 
         header('Content-Type: text/html; charset=utf-8');
         echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not Found</title></head>';
         echo '<body style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Inter,Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f9fa;color:#374151">';
         echo '<div style="text-align:center"><h1 style="font-size:4rem;margin:0;color:#d1d5db">404</h1>';
         echo '<p style="font-size:1.125rem;margin:1rem 0">' . esc_html__('Page not found.', 'opentrust') . '</p>';
-        echo '<a href="' . esc_url(home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/')) . '" style="color:hsl(' . (int) $hsl['h'] . ',' . (int) $hsl['s'] . '%,' . (int) $hsl['l'] . '%);text-decoration:none">' . esc_html__('Back to Trust Center', 'opentrust') . '</a>';
+        echo '<a href="' . esc_url(home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/')) . '" style="color:hsl(' . (int) $hsl['h'] . ',' . (int) $hsl['s'] . '%,' . (int) $hsl['l'] . '%);text-decoration:none">' . esc_html__('Back to Trust Center', 'opentrust') . '</a>';
         echo '</div></body></html>';
     }
 
@@ -277,15 +277,15 @@ final class OpenTrust_Render {
     // ──────────────────────────────────────────────
 
     public function gather_data(array $settings): array {
-        $hsl  = OpenTrust::hex_to_hsl($settings['accent_color'] ?? '#2563EB');
-        $repo = OpenTrust_Repository::instance();
+        $hsl  = Ettic_OTC::hex_to_hsl($settings['accent_color'] ?? '#2563EB');
+        $repo = Ettic_OTC_Repository::instance();
 
         $data = [
             'settings'        => $settings,
             'hsl'             => $hsl,
             'logo_url'        => '',
             'avatar_url'      => '',
-            'base_url'        => home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/'),
+            'base_url'        => home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/'),
             'view'            => 'main',
             'certifications'  => [],
             'policies'        => [],
@@ -313,11 +313,11 @@ final class OpenTrust_Render {
         // gate is consumer-layer concern.
         $visible = $settings['sections_visible'] ?? [];
         $section_cpt_map = [
-            'certifications' => OpenTrust_CPT::CERTIFICATION,
-            'policies'       => OpenTrust_CPT::POLICY,
-            'subprocessors'  => OpenTrust_CPT::SUBPROCESSOR,
-            'data_practices' => OpenTrust_CPT::DATA_PRACTICE,
-            'faqs'           => OpenTrust_CPT::FAQ,
+            'certifications' => Ettic_OTC_CPT::CERTIFICATION,
+            'policies'       => Ettic_OTC_CPT::POLICY,
+            'subprocessors'  => Ettic_OTC_CPT::SUBPROCESSOR,
+            'data_practices' => Ettic_OTC_CPT::DATA_PRACTICE,
+            'faqs'           => Ettic_OTC_CPT::FAQ,
         ];
 
         if (!empty($visible['certifications'])) {
@@ -370,8 +370,8 @@ final class OpenTrust_Render {
      * Returns an array of ['version' => int, 'date' => string, 'url' => string, 'current' => bool].
      */
     private function get_policy_versions(\WP_Post $policy): array {
-        $settings        = OpenTrust::get_settings();
-        $endpoint        = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $settings        = Ettic_OTC::get_settings();
+        $endpoint        = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
         $current_version = (int) get_post_meta($policy->ID, '_opentrust_version', true) ?: 1;
         $current_url     = home_url('/' . $endpoint . '/policy/' . $policy->post_name . '/');
 
@@ -482,7 +482,7 @@ final class OpenTrust_Render {
         }
 
         $posts = get_posts([
-            'post_type'      => OpenTrust_CPT::POLICY,
+            'post_type'      => Ettic_OTC_CPT::POLICY,
             'name'           => $slug,
             'posts_per_page' => 1,
             'post_status'    => 'publish',
@@ -492,7 +492,7 @@ final class OpenTrust_Render {
     }
 
     private function get_policy_meta(int $post_id): array {
-        $repo = OpenTrust_Repository::instance();
+        $repo = Ettic_OTC_Repository::instance();
         return [
             'ref_id'         => (string) (get_post_meta($post_id, '_opentrust_policy_ref_id', true) ?: ''),
             'category'       => get_post_meta($post_id, '_opentrust_policy_category', true) ?: 'other',

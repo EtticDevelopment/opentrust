@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Secrets {
+final class Ettic_OTC_Chat_Secrets {
 
     private const SENTINEL = 'ot_enc_v1:';
 

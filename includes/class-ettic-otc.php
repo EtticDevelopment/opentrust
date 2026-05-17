@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust {
+final class Ettic_OTC {
 
     /**
      * Default URL path the trust center mounts at when the operator hasn't
@@ -33,17 +33,17 @@ final class OpenTrust {
         // Flush rewrite rules when settings change (transient flag).
         add_action('init', [$this, 'maybe_flush_rewrites'], 99);
 
-        // Bump the render-cache version on any OpenTrust CPT change. Catches
+        // Bump the render-cache version on any Ettic_OTC CPT change. Catches
         // saves, deletes, trash/untrash, and publish transitions in one wire-up.
-        OpenTrust_CPT::register_invalidator(OpenTrust_CPT::ALL, [$this, 'invalidate_cache']);
+        Ettic_OTC_CPT::register_invalidator(Ettic_OTC_CPT::ALL, [$this, 'invalidate_cache']);
 
         // Boot sub-systems.
-        OpenTrust_CPT::instance();
-        OpenTrust_Version::instance();
-        OpenTrust_Chat::instance();
+        Ettic_OTC_CPT::instance();
+        Ettic_OTC_Version::instance();
+        Ettic_OTC_Chat::instance();
 
         if (is_admin()) {
-            OpenTrust_Admin::instance();
+            Ettic_OTC_Admin::instance();
         }
     }
 
@@ -86,7 +86,7 @@ final class OpenTrust {
             'company_registration' => '',
             'vat_number'           => '',
 
-            // Per-site salt — written out-of-band by OpenTrust_Chat_Budget::site_salt()
+            // Per-site salt — written out-of-band by Ettic_OTC_Chat_Budget::site_salt()
             // on first access. Empty here so a fresh install starts in the
             // "needs lazy generation" state; once written, sanitize_settings
             // carries it forward byte-for-byte.
@@ -102,11 +102,11 @@ final class OpenTrust {
             // expired or the provider has deprecated the model id.
             'ai_model_display_name'     => '',
             'ai_model_recommended'      => false,
-            'ai_daily_token_budget'     => OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
-            'ai_monthly_token_budget'   => OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
-            'ai_rate_limit_per_ip'      => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
-            'ai_rate_limit_per_session' => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
-            'ai_max_message_length'     => OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
+            'ai_daily_token_budget'     => Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
+            'ai_monthly_token_budget'   => Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
+            'ai_rate_limit_per_ip'      => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
+            'ai_rate_limit_per_session' => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
+            'ai_max_message_length'     => Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
             'ai_contact_url'            => '',
             'ai_show_model_attribution' => true,
             'ai_logging_enabled'        => true,
@@ -184,7 +184,7 @@ final class OpenTrust {
             return;
         }
 
-        OpenTrust_Render::instance()->dispatch($page);
+        Ettic_OTC_Render::instance()->dispatch($page);
         exit;
     }
 
@@ -194,7 +194,7 @@ final class OpenTrust {
 
     public function invalidate_cache(): void {
         // Bump a single version counter instead of deleting locale-specific
-        // transient keys one by one. OpenTrust_Render::cache_key() includes
+        // transient keys one by one. Ettic_OTC_Render::cache_key() includes
         // this version in every key, so every cached locale variant is
         // instantly stale after the bump. Stale transients expire naturally
         // on their existing TTL and are garbage-collected by WordPress.
@@ -216,7 +216,7 @@ final class OpenTrust {
     public static function debug_log(string $message): void {
         if (defined('WP_DEBUG') && WP_DEBUG) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debug-gated diagnostic, only fires under WP_DEBUG
-            error_log('[OpenTrust] ' . $message);
+            error_log('[Ettic_OTC] ' . $message);
         }
     }
 

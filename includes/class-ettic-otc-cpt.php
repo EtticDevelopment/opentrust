@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust_CPT {
+final class Ettic_OTC_CPT {
 
     /**
      * CPT slug constants. Use these everywhere instead of bare strings so a
@@ -26,7 +26,7 @@ final class OpenTrust_CPT {
      * import/export back-compat remap. Do not introduce new references.
      *
      * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer supported.
-     *             The major-version mismatch check in OpenTrust_IO::validate_manifest()
+     *             The major-version mismatch check in Ettic_OTC_IO::validate_manifest()
      *             already hard-rejects 1.x archives on a 2.x destination, so the
      *             import remap becomes redundant at the same cutoff.
      */
@@ -49,7 +49,7 @@ final class OpenTrust_CPT {
      * Legacy postmeta keys from v1.0–v1.1, mapped old `_ot_*` → new
      * `_opentrust_*`. Retained for import back-compat: legacy archives
      * (exported by v1.0.x/v1.1.x) still carry these keys, and the importer
-     * remaps them on read via OpenTrust_IO::remap_legacy_meta_keys().
+     * remaps them on read via Ettic_OTC_IO::remap_legacy_meta_keys().
      * Phase 8 extends the chain through `_ettic_otc_*`.
      */
     public const LEGACY_META_MAP = [
@@ -107,7 +107,7 @@ final class OpenTrust_CPT {
     ];
 
     /**
-     * Every OpenTrust CPT slug, in the order they appear in the trust center
+     * Every Ettic_OTC CPT slug, in the order they appear in the trust center
      * page. Drives the render cache invalidator and the admin submenu fixer.
      */
     public const ALL = [
@@ -541,7 +541,7 @@ final class OpenTrust_CPT {
         $attachment_url  = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
         $attachment_name = $attachment_id ? get_the_title($attachment_id) : '';
 
-        $categories = OpenTrust_Render::policy_category_labels();
+        $categories = Ettic_OTC_Render::policy_category_labels();
         ?>
         <div class="ot-meta-field" style="background:#f0f4ff;padding:12px;border-radius:6px;margin-bottom:16px;">
             <p style="font-size:20px;font-weight:700;margin:0 0 4px;color:#2563eb;">
@@ -707,7 +707,7 @@ final class OpenTrust_CPT {
         $prop_sold        = (bool) get_post_meta($post->ID, '_opentrust_dp_sold', true);
         $prop_encrypted   = (bool) get_post_meta($post->ID, '_opentrust_dp_encrypted', true);
 
-        $basis_options    = OpenTrust_Render::legal_basis_labels();
+        $basis_options    = Ettic_OTC_Render::legal_basis_labels();
         ?>
 
         <!-- Data Items — tag input -->
@@ -878,12 +878,12 @@ final class OpenTrust_CPT {
             $post = get_post($post_id);
             if ($post && 'publish' === $post->post_status) {
                 $summary = sanitize_text_field( wp_unslash( $_POST['opentrust_version_summary'] ?? '' ) );
-                OpenTrust_Version::bump_version($post_id, $summary);
+                Ettic_OTC_Version::bump_version($post_id, $summary);
             }
         }
 
         // Ensure first-publish posts get v1.
-        OpenTrust_Version::ensure_initial_version($post_id);
+        Ettic_OTC_Version::ensure_initial_version($post_id);
 
         $ref_id = sanitize_text_field( wp_unslash( $_POST['opentrust_policy_ref_id'] ?? '' ) );
         // Collapse internal whitespace runs so "POL  012" becomes "POL 012" on save.
@@ -1032,8 +1032,8 @@ final class OpenTrust_CPT {
                 $status = get_post_meta($post_id, '_opentrust_cert_status', true) ?: 'active';
                 $type   = get_post_meta($post_id, '_opentrust_cert_type', true) ?: 'compliant';
                 $labels = $type === 'compliant'
-                    ? OpenTrust_Render::cert_aligned_status_labels()
-                    : OpenTrust_Render::cert_status_labels();
+                    ? Ettic_OTC_Render::cert_aligned_status_labels()
+                    : Ettic_OTC_Render::cert_status_labels();
                 $swatch = match ($status) {
                     'active'      => 'background:#dcfce7;color:#166534',
                     'in_progress' => 'background:#fef9c3;color:#854d0e',
@@ -1076,7 +1076,7 @@ final class OpenTrust_CPT {
                 }
                 printf('<code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:3px">%s</code>', esc_html($ref));
             })(),
-            'opentrust_category' => print(esc_html(OpenTrust_Render::policy_category_labels()[get_post_meta($post_id, '_opentrust_policy_category', true) ?: 'other'] ?? '')),
+            'opentrust_category' => print(esc_html(Ettic_OTC_Render::policy_category_labels()[get_post_meta($post_id, '_opentrust_policy_category', true) ?: 'other'] ?? '')),
             'opentrust_version'  => printf('<span class="ot-version-badge">v%s</span>', esc_html((string) ((int) get_post_meta($post_id, '_opentrust_version', true) ?: 1))),
             'opentrust_pdf'      => print(((int) get_post_meta($post_id, '_opentrust_policy_attachment_id', true)) > 0 ? '<span title="PDF attached" style="color:#16a34a">&#10003;</span>' : '<span style="color:#d1d5db">—</span>'),
             default       => null,

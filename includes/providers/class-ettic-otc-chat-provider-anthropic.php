@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Provider_Anthropic extends OpenTrust_Chat_Provider {
+final class Ettic_OTC_Chat_Provider_Anthropic extends Ettic_OTC_Chat_Provider {
 
     private const MODELS_ENDPOINT = 'https://api.anthropic.com/v1/models';
     private const MESSAGES_ENDPOINT = 'https://api.anthropic.com/v1/messages';
@@ -482,7 +482,7 @@ final class OpenTrust_Chat_Provider_Anthropic extends OpenTrust_Chat_Provider {
     }
 
     /**
-     * Transform a citation delta into a normalized OpenTrust citation event.
+     * Transform a citation delta into a normalized Ettic_OTC citation event.
      *
      * Anthropic emits `search_result_location` citations for content returned
      * by tools that produced search_result blocks. The canonical URL lives on

@@ -19,7 +19,7 @@ $ot_is_old_version  = $ot_data['is_old_version'] ?? false;
 $ot_is_pending      = $ot_data['is_pending'] ?? false;
 
 $ot_versions        = $ot_data['policy_versions'] ?? [];
-$ot_category_labels = OpenTrust_Render::policy_category_labels();
+$ot_category_labels = Ettic_OTC_Render::policy_category_labels();
 $ot_category_label  = $ot_category_labels[$ot_meta['category']] ?? $ot_meta['category'];
 $ot_ref_id          = (string) ($ot_meta['ref_id'] ?? '');
 $ot_citations       = $ot_meta['citations'] ?? [];

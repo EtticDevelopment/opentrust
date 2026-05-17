@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Budget {
+final class Ettic_OTC_Chat_Budget {
 
     /**
      * Default per-day token cap when the operator hasn't set one.
@@ -69,7 +69,7 @@ final class OpenTrust_Chat_Budget {
             $tokens = 1;
         }
 
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $daily_cap   = (int) ($settings['ai_daily_token_budget']   ?? self::DEFAULT_DAILY_TOKEN_BUDGET);
         $monthly_cap = (int) ($settings['ai_monthly_token_budget'] ?? self::DEFAULT_MONTHLY_TOKEN_BUDGET);
 
@@ -159,7 +159,7 @@ final class OpenTrust_Chat_Budget {
      * Returns ['ok' => true] or ['ok' => false, 'retry_after' => seconds].
      */
     public static function check_ip_rate_limit(string $ip_hash): array {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $limit    = (int) ($settings['ai_rate_limit_per_ip'] ?? self::DEFAULT_RATE_LIMIT_PER_IP);
         return self::check_sliding_window(
             'opentrust_chat_rl_ip_' . $ip_hash,
@@ -172,7 +172,7 @@ final class OpenTrust_Chat_Budget {
      * Check + record a rate-limit hit for the given session hash.
      */
     public static function check_session_rate_limit(string $session_hash): array {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $limit    = (int) ($settings['ai_rate_limit_per_session'] ?? self::DEFAULT_RATE_LIMIT_PER_SESSION);
         return self::check_sliding_window(
             'opentrust_chat_rl_session_' . $session_hash,
@@ -276,7 +276,7 @@ final class OpenTrust_Chat_Budget {
      * and persisted in opentrust_settings on first use.
      */
     public static function site_salt(): string {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $salt     = (string) ($settings['opentrust_site_salt'] ?? '');
         if ($salt === '') {
             $salt = wp_generate_password(64, true, true);

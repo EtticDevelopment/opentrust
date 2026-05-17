@@ -1,6 +1,6 @@
 <?php
 /**
- * OpenTrust uninstall routine.
+ * Ettic_OTC uninstall routine.
  *
  * Removes all plugin data from the database when the plugin is deleted
  * through the WordPress admin.
@@ -14,10 +14,10 @@ defined('WP_UNINSTALL_PLUGIN') || exit;
 
 global $wpdb;
 
-// Delete all OpenTrust post types and their meta.
+// Delete all Ettic_OTC post types and their meta.
 //
 // uninstall.php is intentionally self-contained — WordPress invokes it without
-// loading the rest of the plugin, so we cannot reference OpenTrust_CPT::ALL
+// loading the rest of the plugin, so we cannot reference Ettic_OTC_CPT::ALL
 // here. The list below MUST stay in sync with that constant; if a CPT is
 // added or renamed there, mirror the change here.
 $ot_post_types = [
@@ -55,12 +55,12 @@ if ($ot_timestamp) {
 wp_clear_scheduled_hook('opentrust_ai_models_refresh');
 
 // Clear any pending policy-summary single-events. Pending events would otherwise
-// fire post-uninstall and fatal because the OpenTrust_Chat_Summarizer class is
+// fire post-uninstall and fatal because the Ettic_OTC_Chat_Summarizer class is
 // gone — wp_clear_scheduled_hook() removes every scheduled occurrence.
 wp_clear_scheduled_hook('opentrust_generate_policy_summary');
 
 // Clear any pending import-preview cleanup single-events. The handler lives on
-// OpenTrust_Admin_Tools, which won't load post-uninstall.
+// Ettic_OTC_Admin_Tools, which won't load post-uninstall.
 wp_clear_scheduled_hook('opentrust_io_preview_cleanup');
 
 // Delete plugin options.
@@ -72,7 +72,7 @@ delete_option('opentrust_faqs_seeded');
 
 // Delete orphaned post and user meta the CPT-post deletion above does not
 // reach. The import dedupe marker lives on attachment posts (never an
-// OpenTrust CPT), and the review-notice dismissal lives in user meta. Both
+// Ettic_OTC CPT), and the review-notice dismissal lives in user meta. Both
 // the current `_opentrust_*` keys and the legacy `_ot_*` key are cleared —
 // the latter covers an install removed before the v4→v5 key migration ran.
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- One-shot uninstall cleanup, fixed key list, no user input.

@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are local scope via include()
 
 $ot_policies        = $ot_data['policies'] ?? [];
-$ot_category_labels = OpenTrust_Render::policy_category_labels();
+$ot_category_labels = Ettic_OTC_Render::policy_category_labels();
 
 // Show the ID column only when at least one policy has a Policy ID set.
 $ot_has_ref_col = false;
@@ -23,7 +23,7 @@ foreach ($ot_policies as $ot_p) {
 <section id="ot-policies" class="ot-section">
     <div class="ot-container">
         <div class="ot-section__header">
-            <?php OpenTrust_Render::updated_pill('policies', $ot_data); ?>
+            <?php Ettic_OTC_Render::updated_pill('policies', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Security Policies', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('Our published security and compliance policies are regularly reviewed and updated.', 'opentrust'); ?></p>
         </div>

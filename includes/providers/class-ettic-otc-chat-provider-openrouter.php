@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Provider_OpenRouter extends OpenTrust_Chat_Provider_OpenAI {
+final class Ettic_OTC_Chat_Provider_OpenRouter extends Ettic_OTC_Chat_Provider_OpenAI {
 
     protected const API_BASE             = 'https://openrouter.ai';
     protected const MODELS_ENDPOINT      = 'https://openrouter.ai/api/v1/models';
@@ -106,9 +106,9 @@ final class OpenTrust_Chat_Provider_OpenRouter extends OpenTrust_Chat_Provider_O
     protected function extra_stream_headers(): array {
         return [
             'HTTP-Referer' => home_url('/'),
-            'X-Title'      => (string) (OpenTrust::get_settings()['company_name'] ?? 'OpenTrust'),
+            'X-Title'      => (string) (Ettic_OTC::get_settings()['company_name'] ?? 'Open Trust Center by Ettic'),
         ];
     }
 
-    // stream_chat() is inherited from OpenTrust_Chat_Provider_OpenAI.
+    // stream_chat() is inherited from Ettic_OTC_Chat_Provider_OpenAI.
 }

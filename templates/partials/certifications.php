@@ -12,13 +12,13 @@ defined('ABSPATH') || exit;
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are local scope via include()
 
 $ot_certifications = $ot_data['certifications'] ?? [];
-$ot_audited_labels = OpenTrust_Render::cert_status_labels();
-$ot_aligned_labels = OpenTrust_Render::cert_aligned_status_labels();
+$ot_audited_labels = Ettic_OTC_Render::cert_status_labels();
+$ot_aligned_labels = Ettic_OTC_Render::cert_aligned_status_labels();
 ?>
 <section id="ot-certifications" class="ot-section">
     <div class="ot-container">
         <div class="ot-section__header">
-            <?php OpenTrust_Render::updated_pill('certifications', $ot_data); ?>
+            <?php Ettic_OTC_Render::updated_pill('certifications', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Certifications & Compliance', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('Our active certifications and compliance frameworks demonstrate our commitment to protecting your data.', 'opentrust'); ?></p>
         </div>

@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Catalog {
+final class Ettic_OTC_Catalog {
 
     /**
      * Return the normalized subprocessor catalog.
@@ -72,7 +72,7 @@ final class OpenTrust_Catalog {
             return $cache[ $file_basename ];
         }
 
-        $raw = require OPENTRUST_PLUGIN_DIR . 'includes/data/' . $file_basename;
+        $raw = require ETTIC_OTC_PLUGIN_DIR . 'includes/data/' . $file_basename;
         $raw = is_array( $raw ) ? $raw : [];
 
         /** @var array $raw */
@@ -98,7 +98,7 @@ final class OpenTrust_Catalog {
             return $cache;
         }
 
-        $raw = require OPENTRUST_PLUGIN_DIR . 'includes/data/faq-catalog.php';
+        $raw = require ETTIC_OTC_PLUGIN_DIR . 'includes/data/faq-catalog.php';
         $raw = is_array( $raw ) ? $raw : [];
 
         /**
@@ -154,7 +154,7 @@ final class OpenTrust_Catalog {
 
             $post_id = wp_insert_post(
                 [
-                    'post_type'    => OpenTrust_CPT::FAQ,
+                    'post_type'    => Ettic_OTC_CPT::FAQ,
                     'post_status'  => 'publish',
                     'post_title'   => $entry['question'],
                     'post_content' => $content,
@@ -181,9 +181,9 @@ final class OpenTrust_Catalog {
      */
     public static function for_js( string $post_type ): array {
         $catalog = match ( $post_type ) {
-            OpenTrust_CPT::SUBPROCESSOR  => self::subprocessors(),
-            OpenTrust_CPT::DATA_PRACTICE => self::data_practices(),
-            OpenTrust_CPT::CERTIFICATION => self::certifications(),
+            Ettic_OTC_CPT::SUBPROCESSOR  => self::subprocessors(),
+            Ettic_OTC_CPT::DATA_PRACTICE => self::data_practices(),
+            Ettic_OTC_CPT::CERTIFICATION => self::certifications(),
             default                      => [],
         };
 

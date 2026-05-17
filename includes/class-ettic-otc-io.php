@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_IO {
+final class Ettic_OTC_IO {
 
     public const SCHEMA_VERSION  = 1;
     public const FORMAT_SETTINGS = 'opentrust-settings';
@@ -35,9 +35,9 @@ final class OpenTrust_IO {
         'ai_model_recommended',
     ];
 
-    // Keep in sync with class-opentrust-cpt.php save handlers.
+    // Keep in sync with class-ettic-otc-cpt.php save handlers.
     private const META_KEYS = [
-        OpenTrust_CPT::POLICY => [
+        Ettic_OTC_CPT::POLICY => [
             '_opentrust_uuid',
             '_opentrust_policy_ref_id',
             '_opentrust_policy_category',
@@ -52,7 +52,7 @@ final class OpenTrust_IO {
             '_opentrust_policy_chat_summary_updated_at',
             '_opentrust_policy_chat_summary_origin',
         ],
-        OpenTrust_CPT::CERTIFICATION => [
+        Ettic_OTC_CPT::CERTIFICATION => [
             '_opentrust_uuid',
             '_opentrust_cert_type',
             '_opentrust_cert_status',
@@ -63,7 +63,7 @@ final class OpenTrust_IO {
             '_opentrust_cert_artifact_id',
             '_opentrust_cert_description',
         ],
-        OpenTrust_CPT::SUBPROCESSOR => [
+        Ettic_OTC_CPT::SUBPROCESSOR => [
             '_opentrust_uuid',
             '_opentrust_sub_purpose',
             '_opentrust_sub_data_processed',
@@ -71,7 +71,7 @@ final class OpenTrust_IO {
             '_opentrust_sub_website',
             '_opentrust_sub_dpa_signed',
         ],
-        OpenTrust_CPT::DATA_PRACTICE => [
+        Ettic_OTC_CPT::DATA_PRACTICE => [
             '_opentrust_uuid',
             '_opentrust_dp_data_items',
             '_opentrust_dp_purpose',
@@ -85,7 +85,7 @@ final class OpenTrust_IO {
             '_opentrust_dp_sold',
             '_opentrust_dp_encrypted',
         ],
-        OpenTrust_CPT::FAQ => [
+        Ettic_OTC_CPT::FAQ => [
             '_opentrust_uuid',
             '_opentrust_faq_related_policy',
         ],
@@ -93,17 +93,17 @@ final class OpenTrust_IO {
 
     // Meta keys whose value is an attachment ID; serialized as __media_ref.
     private const ATTACHMENT_META_KEYS = [
-        OpenTrust_CPT::POLICY        => ['_opentrust_policy_attachment_id'],
-        OpenTrust_CPT::CERTIFICATION => ['_opentrust_cert_badge_id', '_opentrust_cert_artifact_id'],
-        OpenTrust_CPT::SUBPROCESSOR  => [],
-        OpenTrust_CPT::DATA_PRACTICE => [],
-        OpenTrust_CPT::FAQ           => [],
+        Ettic_OTC_CPT::POLICY        => ['_opentrust_policy_attachment_id'],
+        Ettic_OTC_CPT::CERTIFICATION => ['_opentrust_cert_badge_id', '_opentrust_cert_artifact_id'],
+        Ettic_OTC_CPT::SUBPROCESSOR  => [],
+        Ettic_OTC_CPT::DATA_PRACTICE => [],
+        Ettic_OTC_CPT::FAQ           => [],
     ];
 
     // meta_key => target_cpt_slug. Cross-CPT refs serialized as __post_ref.
     private const POST_REF_META_KEYS = [
-        OpenTrust_CPT::FAQ => [
-            '_opentrust_faq_related_policy' => OpenTrust_CPT::POLICY,
+        Ettic_OTC_CPT::FAQ => [
+            '_opentrust_faq_related_policy' => Ettic_OTC_CPT::POLICY,
         ],
     ];
 
@@ -114,7 +114,7 @@ final class OpenTrust_IO {
     // ──────────────────────────────────────────────
 
     public static function build_settings_manifest(bool $include_media = true): array {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         foreach (self::SETTINGS_EXCLUDE as $k) {
             unset($settings[$k]);
         }
@@ -133,8 +133,8 @@ final class OpenTrust_IO {
         return [
             'format'            => self::FORMAT_SETTINGS,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => OPENTRUST_VERSION,
-            'db_version'        => OPENTRUST_DB_VERSION,
+            'opentrust_version' => ETTIC_OTC_VERSION,
+            'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
             'site_locale'       => get_locale(),
@@ -177,8 +177,8 @@ final class OpenTrust_IO {
         return [
             'format'            => self::FORMAT_CONTENT,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => OPENTRUST_VERSION,
-            'db_version'        => OPENTRUST_DB_VERSION,
+            'opentrust_version' => ETTIC_OTC_VERSION,
+            'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
             'site_locale'       => get_locale(),
@@ -250,13 +250,13 @@ final class OpenTrust_IO {
         }
 
         $their_major = (int) explode('.', (string) ($manifest['opentrust_version'] ?? '0.0.0'))[0];
-        $our_major   = (int) explode('.', OPENTRUST_VERSION)[0];
+        $our_major   = (int) explode('.', ETTIC_OTC_VERSION)[0];
         if ($their_major !== $our_major) {
             $errors[] = sprintf(
                 /* translators: %1$s: their version, %2$s: our version */
                 __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'opentrust'),
                 (string) ($manifest['opentrust_version'] ?? '?'),
-                OPENTRUST_VERSION
+                ETTIC_OTC_VERSION
             );
         }
 
@@ -313,12 +313,12 @@ final class OpenTrust_IO {
 
         // Suppress the chat summarizer for the duration of the import, otherwise
         // every imported policy queues a fresh summary generation (real cost).
-        $had_summarizer = remove_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20);
+        $had_summarizer = remove_action('save_post_' . Ettic_OTC_CPT::POLICY, ['Ettic_OTC_Chat_Summarizer', 'on_save_post'], 20);
 
         $media_map = self::sideload_bundled_media($manifest['media'] ?? [], $zip_path, $errors);
 
         // Policies first so FAQs can resolve their policy refs in one pass.
-        $cpt_order = [OpenTrust_CPT::POLICY, OpenTrust_CPT::CERTIFICATION, OpenTrust_CPT::SUBPROCESSOR, OpenTrust_CPT::DATA_PRACTICE, OpenTrust_CPT::FAQ];
+        $cpt_order = [Ettic_OTC_CPT::POLICY, Ettic_OTC_CPT::CERTIFICATION, Ettic_OTC_CPT::SUBPROCESSOR, Ettic_OTC_CPT::DATA_PRACTICE, Ettic_OTC_CPT::FAQ];
         $uuid_to_new_id = [];
 
         foreach ($cpt_order as $cpt) {
@@ -343,10 +343,10 @@ final class OpenTrust_IO {
         self::remap_post_references($manifest['records'] ?? [], $uuid_to_new_id);
 
         if ($had_summarizer) {
-            add_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20, 3);
+            add_action('save_post_' . Ettic_OTC_CPT::POLICY, ['Ettic_OTC_Chat_Summarizer', 'on_save_post'], 20, 3);
         }
 
-        OpenTrust::instance()->invalidate_cache();
+        Ettic_OTC::instance()->invalidate_cache();
 
         return compact('created', 'updated', 'skipped', 'errors');
     }
@@ -368,7 +368,7 @@ final class OpenTrust_IO {
             }
         }
 
-        $current = OpenTrust::get_settings();
+        $current = Ettic_OTC::get_settings();
         $merged  = array_merge($current, $imported);
 
         foreach (self::SETTINGS_EXCLUDE as $k) {
@@ -382,7 +382,7 @@ final class OpenTrust_IO {
             set_transient('opentrust_flush_rewrite', true);
         }
 
-        OpenTrust::instance()->invalidate_cache();
+        Ettic_OTC::instance()->invalidate_cache();
 
         return ['updated' => count($imported), 'errors' => $errors];
     }
@@ -433,7 +433,7 @@ final class OpenTrust_IO {
         }
         $out = [];
         foreach ($manifest['records'] as $cpt => $recs) {
-            $out[OpenTrust_CPT::LEGACY_MAP[$cpt] ?? $cpt] = $recs;
+            $out[Ettic_OTC_CPT::LEGACY_MAP[$cpt] ?? $cpt] = $recs;
         }
         $manifest['records'] = $out;
         return $manifest;
@@ -446,13 +446,13 @@ final class OpenTrust_IO {
      * old key names and read back as empty.
      *
      * @deprecated 1.1.1 Drop in 2.0.0 alongside remap_legacy_cpt_keys() and
-     *             OpenTrust_CPT::LEGACY_META_MAP.
+     *             Ettic_OTC_CPT::LEGACY_META_MAP.
      */
     private static function remap_legacy_meta_keys(array $manifest): array {
         if (empty($manifest['records']) || !is_array($manifest['records'])) {
             return $manifest;
         }
-        $map = OpenTrust_CPT::LEGACY_META_MAP;
+        $map = Ettic_OTC_CPT::LEGACY_META_MAP;
         foreach ($manifest['records'] as $cpt => $recs) {
             if (!is_array($recs)) {
                 continue;

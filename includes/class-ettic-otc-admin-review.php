@@ -4,7 +4,7 @@
  *
  * A small, opt-out-able nudge asking long-time admins to leave a rating on
  * the WordPress.org plugin directory. Two surfaces, both scoped strictly to
- * OpenTrust admin screens (never the dashboard, plugin list, or other
+ * Ettic_OTC admin screens (never the dashboard, plugin list, or other
  * plugins' pages):
  *
  *   1. Footer text — replaces the default "Thank you for creating with
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_Review {
+final class Ettic_OTC_Admin_Review {
 
     private const DISMISS_META_KEY  = '_opentrust_review_dismissed_v1';
     private const FIRST_SEEN_OPTION = 'opentrust_first_activated_at';
@@ -86,7 +86,7 @@ final class OpenTrust_Admin_Review {
         // the result — same risk model as core's admin_footer_text usage.
         return sprintf(
             /* translators: %s: link to the WordPress.org reviews page */
-            __('OpenTrust is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'opentrust'),
+            __('Ettic_OTC is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'opentrust'),
             $link
         );
     }
@@ -113,7 +113,7 @@ final class OpenTrust_Admin_Review {
         <div class="notice notice-info opentrust-review-notice">
             <p>
                 <strong><?php esc_html_e('Your trust center is up and running.', 'opentrust'); ?></strong>
-                <?php esc_html_e('OpenTrust is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'opentrust'); ?>
+                <?php esc_html_e('Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'opentrust'); ?>
             </p>
             <p>
                 <a href="<?php echo esc_url($review_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary">
@@ -152,7 +152,7 @@ final class OpenTrust_Admin_Review {
             return false;
         }
 
-        $counts = wp_count_posts(OpenTrust_CPT::POLICY);
+        $counts = wp_count_posts(Ettic_OTC_CPT::POLICY);
         $published = (int) ($counts->publish ?? 0);
 
         return $published >= self::POLICY_THRESHOLD;
@@ -191,7 +191,7 @@ final class OpenTrust_Admin_Review {
 
     /**
      * Match the scoping rule used by render_plain_permalinks_notice in
-     * OpenTrust_Admin: any screen whose id contains "opentrust" plus the
+     * Ettic_OTC_Admin: any screen whose id contains "opentrust" plus the
      * five content CPTs. Identical pattern keeps both notices in lockstep.
      */
     private static function is_opentrust_screen(): bool {
@@ -204,7 +204,7 @@ final class OpenTrust_Admin_Review {
         }
 
         return str_contains((string) $screen->id, 'opentrust')
-            || in_array($screen->post_type, OpenTrust_CPT::CORPUS, true);
+            || in_array($screen->post_type, Ettic_OTC_CPT::CORPUS, true);
     }
 
     private static function review_url(): string {

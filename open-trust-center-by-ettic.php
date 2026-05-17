@@ -18,79 +18,79 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-define('OPENTRUST_VERSION', '1.2.0');
-define('OPENTRUST_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('OPENTRUST_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('OPENTRUST_PLUGIN_FILE', __FILE__);
-define('OPENTRUST_DB_VERSION', 1);
+define('ETTIC_OTC_VERSION', '1.2.0');
+define('ETTIC_OTC_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('ETTIC_OTC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('ETTIC_OTC_PLUGIN_FILE', __FILE__);
+define('ETTIC_OTC_DB_VERSION', 1);
 
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-settings.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-questions.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-ai.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-review.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-cpt.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-catalog.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-repository.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-render.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-version.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-io.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-admin-tools.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-settings.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-questions.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-ai.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-review.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-cpt.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-catalog.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-repository.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-render.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-version.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-io.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-tools.php';
 
 // Chat (OTC) — policy chat feature.
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-secrets.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/providers/class-opentrust-chat-provider.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/providers/class-opentrust-chat-provider-anthropic.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/providers/class-opentrust-chat-provider-openai.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/providers/class-opentrust-chat-provider-openrouter.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-search.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-corpus.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-budget.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-log.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-summarizer.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat-stream-collector.php';
-require_once OPENTRUST_PLUGIN_DIR . 'includes/class-opentrust-chat.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-secrets.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-anthropic.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-openai.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-openrouter.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-search.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-corpus.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-budget.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-log.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-summarizer.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-stream-collector.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat.php';
 
 add_action('plugins_loaded', static function (): void {
-    OpenTrust::instance();
+    Ettic_OTC::instance();
 });
 
 register_activation_hook(__FILE__, static function (): void {
     // Register CPTs before flushing so rewrite rules include them.
-    OpenTrust_CPT::register_post_types();
+    Ettic_OTC_CPT::register_post_types();
 
     // First-install defaults. Autoload=no — the option is a sizeable array
     // carrying encrypted Turnstile secret + per-site salt, and we'd rather
-    // not load it on every front-end request that never touches OpenTrust.
+    // not load it on every front-end request that never touches Ettic_OTC.
     if (false === get_option('opentrust_settings')) {
-        add_option('opentrust_settings', OpenTrust::defaults(), '', false);
+        add_option('opentrust_settings', Ettic_OTC::defaults(), '', false);
     }
 
     // Custom tables.
-    OpenTrust_Chat_Log::create_table();
+    Ettic_OTC_Chat_Log::create_table();
 
     // Stamp the schema version on a true first install only. Future schema
     // changes (none today) would bump this constant and re-check here.
     if (false === get_option('opentrust_db_version', false)) {
-        update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
+        update_option('opentrust_db_version', ETTIC_OTC_DB_VERSION, false);
     }
 
     // Seed default FAQs on first activation. Gated internally so deletions
     // stick and re-activation will not recreate them.
-    OpenTrust_Catalog::seed_default_faqs();
+    Ettic_OTC_Catalog::seed_default_faqs();
 
     // Schedule crons.
-    OpenTrust_Chat_Log::schedule_cron();
-    OpenTrust_Admin_AI::schedule_cron();
+    Ettic_OTC_Chat_Log::schedule_cron();
+    Ettic_OTC_Admin_AI::schedule_cron();
 
     // Add rewrite rules and flush.
-    OpenTrust::add_rewrite_rules();
+    Ettic_OTC::add_rewrite_rules();
     flush_rewrite_rules();
 });
 
 register_deactivation_hook(__FILE__, static function (): void {
-    OpenTrust_Chat_Log::unschedule_cron();
-    OpenTrust_Admin_AI::unschedule_cron();
+    Ettic_OTC_Chat_Log::unschedule_cron();
+    Ettic_OTC_Admin_AI::unschedule_cron();
     flush_rewrite_rules();
 });

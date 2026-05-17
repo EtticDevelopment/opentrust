@@ -3,15 +3,15 @@
  * Settings API registration, field rendering, sanitization, and the
  * settings-page wrapper that hosts the General / Contact / AI tabs.
  *
- * Owns the entire WordPress Settings API surface for OpenTrust:
+ * Owns the entire WordPress Settings API surface for Ettic_OTC:
  * register_setting() with a sanitize_callback, every add_settings_section
  * and add_settings_field call, the eight per-type field renderers, and
  * the schema-driven sanitize cascade that keeps cross-tab saves shape-
  * stable.
  *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
+ * Bootstrapped by Ettic_OTC_Admin's constructor; subscribes its own
  * admin_init hook for register_settings(). The settings menu page in
- * OpenTrust_Admin::register_menu() points its callback directly at this
+ * Ettic_OTC_Admin::register_menu() points its callback directly at this
  * class's render_settings_page().
  *
  * Also owns save_settings_raw() — the skip-sanitize writer used by the
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_Settings {
+final class Ettic_OTC_Admin_Settings {
 
     private static ?self $instance = null;
 
@@ -46,7 +46,7 @@ final class OpenTrust_Admin_Settings {
         register_setting('opentrust_settings_group', 'opentrust_settings', [
             'type'              => 'array',
             'sanitize_callback' => [$this, 'sanitize_settings'],
-            'default'           => OpenTrust::defaults(),
+            'default'           => Ettic_OTC::defaults(),
         ]);
 
         // ── General tab ──────────────────────────────────────────────
@@ -184,7 +184,7 @@ final class OpenTrust_Admin_Settings {
      * @param array<string,string> $extra_attrs
      */
     private function render_input_field(string $type, array $args, array $extra_attrs = []): void {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $key      = $args['key'];
         $value    = $settings[$key] ?? '';
 
@@ -208,7 +208,7 @@ final class OpenTrust_Admin_Settings {
     }
 
     public function render_color_field(array $args): void {
-        $settings     = OpenTrust::get_settings();
+        $settings     = Ettic_OTC::get_settings();
         $value        = $settings['accent_color'] ?? '#2563EB';
         $force_exact  = !empty($settings['accent_force_exact']);
         printf(
@@ -223,7 +223,7 @@ final class OpenTrust_Admin_Settings {
                 <strong class="ot-accent-warning__heading ot-accent-warning__heading--override"><?php esc_html_e('Using your exact color on white backgrounds', 'opentrust'); ?></strong>
 
                 <p class="ot-accent-warning__copy ot-accent-warning__copy--auto">
-                    <?php esc_html_e('Your chosen color is too light for buttons, links, and borders on white sections. On those surfaces OpenTrust will use a darker, on-brand variant:', 'opentrust'); ?>
+                    <?php esc_html_e('Your chosen color is too light for buttons, links, and borders on white sections. On those surfaces Ettic_OTC will use a darker, on-brand variant:', 'opentrust'); ?>
                 </p>
                 <p class="ot-accent-warning__copy ot-accent-warning__copy--override">
                     <?php esc_html_e("You've chosen to keep your exact color on white backgrounds. Buttons, links, and borders in those sections may be hard to read.", 'opentrust'); ?>
@@ -276,7 +276,7 @@ final class OpenTrust_Admin_Settings {
     }
 
     private function render_media_field(string $key, string $button_label, string $description): void {
-        $settings  = OpenTrust::get_settings();
+        $settings  = Ettic_OTC::get_settings();
         $media_id  = (int) ($settings[$key] ?? 0);
         $media_url = $media_id ? wp_get_attachment_image_url($media_id, 'medium') : '';
         ?>
@@ -293,12 +293,12 @@ final class OpenTrust_Admin_Settings {
     }
 
     public function render_show_powered_by_field(array $args): void {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $checked  = !empty($settings['show_powered_by']);
         printf(
             '<label><input type="checkbox" id="opentrust_show_powered_by" name="opentrust_settings[show_powered_by]" value="1" %s> %s</label>',
             checked($checked, true, false),
-            esc_html__('Show a "Powered by OpenTrust" credit in the trust center footer.', 'opentrust')
+            esc_html__('Show a "Powered by Open Trust Center" credit in the trust center footer.', 'opentrust')
         );
         printf(
             '<p class="description">%s</p>',
@@ -307,7 +307,7 @@ final class OpenTrust_Admin_Settings {
     }
 
     public function render_sections_field(array $args): void {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $visible  = $settings['sections_visible'] ?? [];
 
         $sections = [
@@ -336,10 +336,10 @@ final class OpenTrust_Admin_Settings {
 
     public function sanitize_settings(mixed $input): array {
         if (!is_array($input)) {
-            return OpenTrust::defaults();
+            return Ettic_OTC::defaults();
         }
 
-        $old = OpenTrust::get_settings();
+        $old = Ettic_OTC::get_settings();
         $sanitized = [];
 
         // Schema-driven dispatch. Each tab's form carries a save sentinel
@@ -368,7 +368,7 @@ final class OpenTrust_Admin_Settings {
         $sanitized['ai_model_display_name'] = (string) ($old['ai_model_display_name'] ?? '');
         $sanitized['ai_model_recommended']  = !empty($old['ai_model_recommended']);
         if (($sanitized['ai_model'] ?? '') !== ($old['ai_model'] ?? '')) {
-            $snap = OpenTrust_Admin_AI::instance()->snapshot_for_provider(
+            $snap = Ettic_OTC_Admin_AI::instance()->snapshot_for_provider(
                 $sanitized['ai_provider'],
                 (string) ($sanitized['ai_model'] ?? '')
             );
@@ -378,7 +378,7 @@ final class OpenTrust_Admin_Settings {
             }
         }
 
-        // Per-site salt — written out-of-band by OpenTrust_Chat_Budget::site_salt().
+        // Per-site salt — written out-of-band by Ettic_OTC_Chat_Budget::site_salt().
         // Carry forward byte-for-byte so saving settings doesn't force a
         // regeneration (which would invalidate all in-flight rate-limit
         // hashes and Turnstile bypass transients).
@@ -442,8 +442,8 @@ final class OpenTrust_Admin_Settings {
             // ── General tab ──
             'endpoint_slug' => [
                 'tab' => 'general',
-                'default' => OpenTrust::DEFAULT_ENDPOINT_SLUG,
-                'sanitize' => static fn($v) => sanitize_title((string) ($v ?? '')) ?: OpenTrust::DEFAULT_ENDPOINT_SLUG,
+                'default' => Ettic_OTC::DEFAULT_ENDPOINT_SLUG,
+                'sanitize' => static fn($v) => sanitize_title((string) ($v ?? '')) ?: Ettic_OTC::DEFAULT_ENDPOINT_SLUG,
             ],
             'page_title'         => ['tab' => 'general', 'default' => '',        'sanitize' => $string],
             'company_name'       => ['tab' => 'general', 'default' => '',        'sanitize' => $string],
@@ -485,28 +485,28 @@ final class OpenTrust_Admin_Settings {
             'ai_model' => ['tab' => 'ai', 'default' => '', 'sanitize' => $string],
             'ai_daily_token_budget' => [
                 'tab' => 'ai',
-                'default' => OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
-                'sanitize' => static fn($v): int => max(0, absint($v ?? OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)),
+                'default' => Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
+                'sanitize' => static fn($v): int => max(0, absint($v ?? Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)),
             ],
             'ai_monthly_token_budget' => [
                 'tab' => 'ai',
-                'default' => OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
-                'sanitize' => static fn($v): int => max(0, absint($v ?? OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)),
+                'default' => Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
+                'sanitize' => static fn($v): int => max(0, absint($v ?? Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)),
             ],
             'ai_rate_limit_per_ip' => [
                 'tab' => 'ai',
-                'default' => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
-                'sanitize' => $bounded_int(0, 1000, OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP),
+                'default' => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
+                'sanitize' => $bounded_int(0, 1000, Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP),
             ],
             'ai_rate_limit_per_session' => [
                 'tab' => 'ai',
-                'default' => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
-                'sanitize' => $bounded_int(0, 10000, OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION),
+                'default' => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
+                'sanitize' => $bounded_int(0, 10000, Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION),
             ],
             'ai_max_message_length' => [
                 'tab' => 'ai',
-                'default' => OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
-                'sanitize' => $bounded_int(100, 4000, OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH),
+                'default' => Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
+                'sanitize' => $bounded_int(100, 4000, Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH),
             ],
             'ai_contact_url'            => ['tab' => 'ai', 'default' => '',    'sanitize' => $url],
             'ai_show_model_attribution' => ['tab' => 'ai', 'default' => false, 'sanitize' => $bool],
@@ -538,11 +538,11 @@ final class OpenTrust_Admin_Settings {
      *    ciphertext) → return as-is.
      *
      * Anything else is text-sanitized and then encrypted via
-     * OpenTrust_Chat_Secrets, so the option never carries the plaintext.
+     * Ettic_OTC_Chat_Secrets, so the option never carries the plaintext.
      */
     private static function sanitize_secret_field(string $new_value, string $old_value): string {
         // Idempotency: already-encrypted ciphertext passes through. Stored
-        // values created by OpenTrust_Chat_Secrets::encrypt() always carry
+        // values created by Ettic_OTC_Chat_Secrets::encrypt() always carry
         // this prefix, so trusting it here costs nothing real-world.
         if (str_starts_with($new_value, 'ot_enc_v1:')) {
             return $new_value;
@@ -557,7 +557,7 @@ final class OpenTrust_Admin_Settings {
         if ($clean === '') {
             return $old_value;
         }
-        return OpenTrust_Chat_Secrets::encrypt($clean);
+        return Ettic_OTC_Chat_Secrets::encrypt($clean);
     }
 
     // ──────────────────────────────────────────────
@@ -569,8 +569,8 @@ final class OpenTrust_Admin_Settings {
             return;
         }
 
-        $settings = OpenTrust::get_settings();
-        $tc_url   = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
+        $settings = Ettic_OTC::get_settings();
+        $tc_url   = home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/');
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switch on admin settings page.
         $tab      = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'general';
         if (!in_array($tab, ['general', 'contact', 'ai', 'io'], true)) {
@@ -612,9 +612,9 @@ final class OpenTrust_Admin_Settings {
             </h2>
 
             <?php if ($tab === 'io'): ?>
-                <?php OpenTrust_Admin_Tools::instance()->render_tab(); ?>
+                <?php Ettic_OTC_Admin_Tools::instance()->render_tab(); ?>
             <?php elseif ($tab === 'ai'): ?>
-                <?php OpenTrust_Admin_AI::instance()->render_ai_tab($settings); ?>
+                <?php Ettic_OTC_Admin_AI::instance()->render_ai_tab($settings); ?>
             <?php elseif ($tab === 'contact'): ?>
                 <form method="post" action="options.php">
                     <?php

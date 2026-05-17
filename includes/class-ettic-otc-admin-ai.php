@@ -2,21 +2,21 @@
 /**
  * AI Chat settings tab and its admin-post handlers.
  *
- * Owns the entire "AI Chat" surface inside the OpenTrust settings page:
+ * Owns the entire "AI Chat" surface inside the Ettic_OTC settings page:
  * the provider picker (Anthropic primary, others behind an "advanced"
  * disclosure), the per-provider key card with validate-and-save flow,
  * the post-key model picker + budget/limit form, and the four
  * admin-post.php endpoints that drive key save/forget/refresh and the
  * summary-backfill sweep.
  *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
+ * Bootstrapped by Ettic_OTC_Admin's constructor; subscribes its own
  * admin_post_* hooks. The settings page (which still lives on
- * OpenTrust_Admin as the menu callback) calls render_ai_tab() when the
+ * Ettic_OTC_Admin as the menu callback) calls render_ai_tab() when the
  * "ai" tab is active.
  *
  * Settings writes that bypass the sanitize_settings filter (key
  * validation flips ai_enabled / ai_provider / ai_model_list_cached_at)
- * route through OpenTrust_Admin_Settings::save_settings_raw().
+ * route through Ettic_OTC_Admin_Settings::save_settings_raw().
  */
 
 declare(strict_types=1);
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_AI {
+final class Ettic_OTC_Admin_AI {
 
     public const CRON_HOOK    = 'opentrust_ai_models_refresh';
     public const CACHE_TTL    = 25 * HOUR_IN_SECONDS; // Slightly > daily cron cadence so the cache never expires between ticks.
@@ -53,7 +53,7 @@ final class OpenTrust_Admin_AI {
     // ──────────────────────────────────────────────
 
     public function render_ai_tab(array $settings): void {
-        $stored_keys     = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys     = Ettic_OTC_Chat_Secrets::get_all();
         $active_provider = $settings['ai_provider'] ?? '';
         $has_active_key  = $active_provider !== '' && isset($stored_keys[$active_provider]);
         $is_non_anthropic_active = $has_active_key && $active_provider !== 'anthropic';
@@ -91,7 +91,7 @@ final class OpenTrust_Admin_AI {
         <p class="ot-ai-intro">
             <?php
             echo wp_kses(
-                __('OpenTrust uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'opentrust'),
+                __('Ettic_OTC uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'opentrust'),
                 ['strong' => []]
             );
             ?>
@@ -141,10 +141,10 @@ final class OpenTrust_Admin_AI {
      * up-to-date summary.
      */
     private function render_summary_backfill_banner(array $settings, bool $has_active_key): void {
-        if (!$has_active_key || empty($settings['ai_auto_summarize']) || !class_exists('OpenTrust_Chat_Summarizer')) {
+        if (!$has_active_key || empty($settings['ai_auto_summarize']) || !class_exists('Ettic_OTC_Chat_Summarizer')) {
             return;
         }
-        $missing = OpenTrust_Chat_Summarizer::missing_summary_count();
+        $missing = Ettic_OTC_Chat_Summarizer::missing_summary_count();
         if ($missing < 1) {
             return;
         }
@@ -179,7 +179,7 @@ final class OpenTrust_Admin_AI {
     }
 
     private function render_ai_provider_picker(array $settings, array $stored_keys): void {
-        $providers       = OpenTrust_Chat_Provider::available();
+        $providers       = Ettic_OTC_Chat_Provider::available();
         $active_provider = $settings['ai_provider'] ?? '';
 
         // Partition: Anthropic is the primary, everything else is "advanced".
@@ -251,7 +251,7 @@ final class OpenTrust_Admin_AI {
         $key_url   = (string) $provider['key_url'];
         $is_active = $slug === $active_provider;
         $has_key   = isset($stored_keys[$slug]);
-        $masked    = $has_key ? OpenTrust_Chat_Secrets::mask($stored_keys[$slug]) : '';
+        $masked    = $has_key ? Ettic_OTC_Chat_Secrets::mask($stored_keys[$slug]) : '';
 
         $card_classes = ['ot-ai-card', 'ot-ai-card--' . $variant];
         if ($is_active) {
@@ -409,14 +409,14 @@ final class OpenTrust_Admin_AI {
                 <tr>
                     <th scope="row"><label for="opentrust_ai_daily_token_budget"><?php esc_html_e('Daily token budget', 'opentrust'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_daily_token_budget" name="opentrust_settings[ai_daily_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_daily_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)); ?>" min="0" step="10000" class="regular-text">
+                        <input type="number" id="opentrust_ai_daily_token_budget" name="opentrust_settings[ai_daily_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_daily_token_budget'] ?? Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)); ?>" min="0" step="10000" class="regular-text">
                         <p class="description"><?php esc_html_e('Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 rates).', 'opentrust'); ?></p>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="opentrust_ai_monthly_token_budget"><?php esc_html_e('Monthly token budget', 'opentrust'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_monthly_token_budget" name="opentrust_settings[ai_monthly_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_monthly_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)); ?>" min="0" step="100000" class="regular-text">
+                        <input type="number" id="opentrust_ai_monthly_token_budget" name="opentrust_settings[ai_monthly_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_monthly_token_budget'] ?? Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)); ?>" min="0" step="100000" class="regular-text">
                         <p class="description"><?php esc_html_e('Hard cap per site per month. Default 10,000,000 tokens.', 'opentrust'); ?></p>
                     </td>
                 </tr>
@@ -435,7 +435,7 @@ final class OpenTrust_Admin_AI {
                 <tr>
                     <th scope="row"><label for="opentrust_ai_max_message_length"><?php esc_html_e('Max message length', 'opentrust'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_max_message_length" name="opentrust_settings[ai_max_message_length]" value="<?php echo esc_attr((string) ($settings['ai_max_message_length'] ?? OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH)); ?>" min="100" max="4000" step="100" class="small-text"> <span class="description"><?php esc_html_e('characters', 'opentrust'); ?></span>
+                        <input type="number" id="opentrust_ai_max_message_length" name="opentrust_settings[ai_max_message_length]" value="<?php echo esc_attr((string) ($settings['ai_max_message_length'] ?? Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH)); ?>" min="100" max="4000" step="100" class="small-text"> <span class="description"><?php esc_html_e('characters', 'opentrust'); ?></span>
                     </td>
                 </tr>
 
@@ -480,8 +480,8 @@ final class OpenTrust_Admin_AI {
                     </td>
                 </tr>
 
-                <?php if (class_exists('OpenTrust_Chat_Corpus')): ?>
-                    <?php $ot_oversized = OpenTrust_Chat_Corpus::oversized_policies(); ?>
+                <?php if (class_exists('Ettic_OTC_Chat_Corpus')): ?>
+                    <?php $ot_oversized = Ettic_OTC_Chat_Corpus::oversized_policies(); ?>
                     <?php if (!empty($ot_oversized)): ?>
                         <tr>
                             <th scope="row"><?php esc_html_e('Oversized policies', 'opentrust'); ?></th>
@@ -555,7 +555,7 @@ final class OpenTrust_Admin_AI {
         if ($provider === '') {
             return [];
         }
-        $stored_keys = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys = Ettic_OTC_Chat_Secrets::get_all();
         if (!isset($stored_keys[$provider])) {
             return [];
         }
@@ -566,7 +566,7 @@ final class OpenTrust_Admin_AI {
     }
 
     private function cache_key_for(string $provider, string $api_key): string {
-        return 'opentrust_models_' . $provider . '_' . OpenTrust_Chat_Secrets::fingerprint($api_key);
+        return 'opentrust_models_' . $provider . '_' . Ettic_OTC_Chat_Secrets::fingerprint($api_key);
     }
 
     /**
@@ -633,7 +633,7 @@ final class OpenTrust_Admin_AI {
      * @return array{ok: bool, models?: array<int, array{id: string, display_name: string, recommended: bool}>, error?: string}
      */
     private function refresh_provider_cache(string $slug, string $api_key): array {
-        $adapter = OpenTrust_Chat_Provider::for($slug);
+        $adapter = Ettic_OTC_Chat_Provider::for($slug);
         if (!$adapter) {
             return ['ok' => false, 'error' => 'Unknown provider'];
         }
@@ -661,7 +661,7 @@ final class OpenTrust_Admin_AI {
         $provider = isset($_POST['provider']) ? sanitize_key((string) wp_unslash($_POST['provider'])) : '';
         $api_key  = isset($_POST['api_key'])  ? trim(sanitize_text_field((string) wp_unslash($_POST['api_key']))) : '';
 
-        $adapter = OpenTrust_Chat_Provider::for($provider);
+        $adapter = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
             $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
             $this->redirect_to_ai_tab();
@@ -681,11 +681,11 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        OpenTrust_Chat_Secrets::put($provider, $api_key);
+        Ettic_OTC_Chat_Secrets::put($provider, $api_key);
 
         // Update settings: mark AI enabled, record provider + cache timestamp,
         // and if no model is selected yet, pre-pick the first recommended model.
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $settings['ai_enabled']              = true;
         $settings['ai_provider']             = $provider;
         $settings['ai_model_list_cached_at'] = time();
@@ -701,7 +701,7 @@ final class OpenTrust_Admin_AI {
             }
         }
         $this->snapshot_active_model($settings, $result['models']);
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: 1: provider label, 2: number of models */
         $count_msg = sprintf(__('%1$s key validated. Found %2$d model(s).', 'opentrust'), $adapter->label(), count($result['models']));
@@ -717,29 +717,29 @@ final class OpenTrust_Admin_AI {
 
         $provider = isset($_POST['provider']) ? sanitize_key((string) wp_unslash($_POST['provider'])) : '';
 
-        $adapter = OpenTrust_Chat_Provider::for($provider);
+        $adapter = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
             $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
             $this->redirect_to_ai_tab();
         }
 
         // Clear cached model list for this key before forgetting.
-        $existing = OpenTrust_Chat_Secrets::get($provider);
+        $existing = Ettic_OTC_Chat_Secrets::get($provider);
         if ($existing !== null) {
-            $fingerprint = OpenTrust_Chat_Secrets::fingerprint($existing);
+            $fingerprint = Ettic_OTC_Chat_Secrets::fingerprint($existing);
             delete_transient('opentrust_models_' . $provider . '_' . $fingerprint);
         }
 
-        OpenTrust_Chat_Secrets::forget($provider);
+        Ettic_OTC_Chat_Secrets::forget($provider);
 
         // If the forgotten provider was the active one, disable chat and clear the model.
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         if (($settings['ai_provider'] ?? '') === $provider) {
             $settings['ai_enabled']  = false;
             $settings['ai_provider'] = '';
             $settings['ai_model']    = '';
             $settings['ai_model_list_cached_at'] = 0;
-            OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+            Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
         }
 
         $this->ai_notice('success', __('Key removed.', 'opentrust'));
@@ -753,13 +753,13 @@ final class OpenTrust_Admin_AI {
         check_admin_referer('opentrust_ai_refresh_models');
 
         $provider = isset($_GET['provider']) ? sanitize_key((string) wp_unslash($_GET['provider'])) : '';
-        $adapter  = OpenTrust_Chat_Provider::for($provider);
+        $adapter  = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
             $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
             $this->redirect_to_ai_tab();
         }
 
-        $api_key = OpenTrust_Chat_Secrets::get($provider);
+        $api_key = Ettic_OTC_Chat_Secrets::get($provider);
         if ($api_key === null) {
             $this->ai_notice('error', __('No key on file for this provider.', 'opentrust'));
             $this->redirect_to_ai_tab();
@@ -773,10 +773,10 @@ final class OpenTrust_Admin_AI {
             $this->redirect_to_ai_tab();
         }
 
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $settings['ai_model_list_cached_at'] = time();
         $this->snapshot_active_model($settings, $result['models']);
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: %d: number of models */
         $this->ai_notice('success', sprintf(__('Model list refreshed. Found %d model(s).', 'opentrust'), count($result['models'])));
@@ -798,8 +798,8 @@ final class OpenTrust_Admin_AI {
         check_admin_referer('opentrust_ai_summarize_sweep');
 
         $count = 0;
-        if (class_exists('OpenTrust_Chat_Summarizer')) {
-            $count = OpenTrust_Chat_Summarizer::sweep_all();
+        if (class_exists('Ettic_OTC_Chat_Summarizer')) {
+            $count = Ettic_OTC_Chat_Summarizer::sweep_all();
         }
 
         set_transient(
@@ -862,15 +862,15 @@ final class OpenTrust_Admin_AI {
      * others.
      */
     public static function cron_refresh_all_providers(): void {
-        $stored_keys = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys = Ettic_OTC_Chat_Secrets::get_all();
         if (empty($stored_keys)) {
             return;
         }
 
         $self     = self::instance();
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $active   = (string) ($settings['ai_provider'] ?? '');
-        $log      = static fn(string $slug, string $why) => OpenTrust::debug_log("AI model refresh failed for {$slug}: {$why}");
+        $log      = static fn(string $slug, string $why) => Ettic_OTC::debug_log("AI model refresh failed for {$slug}: {$why}");
         $dirty    = false;
 
         foreach ($stored_keys as $slug => $api_key) {
@@ -892,10 +892,10 @@ final class OpenTrust_Admin_AI {
         }
 
         if ($dirty) {
-            OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+            Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
         }
     }
 }
 
 // Wire the cron hook at file load so it fires regardless of admin context.
-add_action(OpenTrust_Admin_AI::CRON_HOOK, [OpenTrust_Admin_AI::class, 'cron_refresh_all_providers']);
+add_action(Ettic_OTC_Admin_AI::CRON_HOOK, [Ettic_OTC_Admin_AI::class, 'cron_refresh_all_providers']);

@@ -17,15 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Log {
+final class Ettic_OTC_Chat_Log {
 
     public const CRON_HOOK      = 'opentrust_chat_log_purge';
     /**
-     * Daily purge cutoff. Three i18n strings in OpenTrust_Admin
+     * Daily purge cutoff. Three i18n strings in Ettic_OTC_Admin
      * (the AI-tab logging-toggle label, the Questions-page intro, and the
      * "%d questions logged in the last 90 days" plural) hardcode "90" in
      * their copy — if you change this value, grep for "90 days" and
-     * "90-day" under includes/class-opentrust-admin.php and update those
+     * "90-day" under includes/class-ettic-otc-admin.php and update those
      * strings together (the translation .po files will need a re-run too).
      */
     public const RETENTION_DAYS = 90;
@@ -73,7 +73,7 @@ final class OpenTrust_Chat_Log {
      * Insert a log row. No-op if logging is disabled in settings.
      */
     public static function record(array $args): void {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         if (empty($settings['ai_logging_enabled'])) {
             return;
         }
@@ -239,4 +239,4 @@ final class OpenTrust_Chat_Log {
 }
 
 // Wire the cron hook.
-add_action(OpenTrust_Chat_Log::CRON_HOOK, [OpenTrust_Chat_Log::class, 'purge_old']);
+add_action(Ettic_OTC_Chat_Log::CRON_HOOK, [Ettic_OTC_Chat_Log::class, 'purge_old']);

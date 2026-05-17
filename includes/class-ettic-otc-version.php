@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust_Version {
+final class Ettic_OTC_Version {
 
     private static ?self $instance = null;
 
@@ -126,7 +126,7 @@ final class OpenTrust_Version {
             'opentrust_version_history',
             __('Version History', 'opentrust'),
             [$this, 'render_version_history'],
-            OpenTrust_CPT::POLICY,
+            Ettic_OTC_CPT::POLICY,
             'side',
             'default'
         );
@@ -139,8 +139,8 @@ final class OpenTrust_Version {
             'order'   => 'DESC',
         ]);
 
-        $settings  = OpenTrust::get_settings();
-        $slug      = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $settings  = Ettic_OTC::get_settings();
+        $slug      = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
         $post_slug = $post->post_name ?: sanitize_title($post->post_title);
 
         if (empty($revisions)) {

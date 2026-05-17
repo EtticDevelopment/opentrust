@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat {
+final class Ettic_OTC_Chat {
 
     public const REST_NAMESPACE = 'opentrust/v1';
     public const REST_ROUTE     = '/chat';
@@ -35,7 +35,7 @@ final class OpenTrust_Chat {
     /**
      * Default character cap on a single visitor message. Operators can override
      * via the ai_max_message_length setting (clamped to 100..4000 in
-     * OpenTrust_Admin::sanitize_settings).
+     * Ettic_OTC_Admin::sanitize_settings).
      */
     public const DEFAULT_MAX_MESSAGE_LENGTH = 1000;
 
@@ -63,17 +63,17 @@ final class OpenTrust_Chat {
         // saves, deletes, trash/untrash, and publish transitions all flush
         // through a single canonical CPT list (CORPUS = the four indexed CPTs;
         // FAQs are deliberately not in the chat corpus).
-        OpenTrust_CPT::register_invalidator(
-            OpenTrust_CPT::CORPUS,
-            [OpenTrust_Chat_Corpus::class, 'invalidate']
+        Ettic_OTC_CPT::register_invalidator(
+            Ettic_OTC_CPT::CORPUS,
+            [Ettic_OTC_Chat_Corpus::class, 'invalidate']
         );
-        add_action('update_option_opentrust_settings', [OpenTrust_Chat_Corpus::class, 'invalidate']);
+        add_action('update_option_opentrust_settings', [Ettic_OTC_Chat_Corpus::class, 'invalidate']);
 
         // Auto-summarize hooks. Independent of corpus invalidation — the
         // summarizer schedules a debounced cron call rather than running
         // inline on save_post, so it doesn't block the editor.
-        if (class_exists('OpenTrust_Chat_Summarizer')) {
-            OpenTrust_Chat_Summarizer::bootstrap();
+        if (class_exists('Ettic_OTC_Chat_Summarizer')) {
+            Ettic_OTC_Chat_Summarizer::bootstrap();
         }
     }
 
@@ -114,21 +114,21 @@ final class OpenTrust_Chat {
             );
         }
 
-        $settings     = OpenTrust::get_settings();
-        $ip_hash      = OpenTrust_Chat_Budget::hash_ip(OpenTrust_Chat_Budget::visitor_ip());
-        $session_tok  = OpenTrust_Chat_Budget::session_token();
-        $session_hash = OpenTrust_Chat_Budget::hash_session($session_tok);
+        $settings     = Ettic_OTC::get_settings();
+        $ip_hash      = Ettic_OTC_Chat_Budget::hash_ip(Ettic_OTC_Chat_Budget::visitor_ip());
+        $session_tok  = Ettic_OTC_Chat_Budget::session_token();
+        $session_hash = Ettic_OTC_Chat_Budget::hash_session($session_tok);
 
         // Gate 2: Turnstile (if enabled and session not yet verified).
-        if (OpenTrust_Chat_Budget::turnstile_required($settings)) {
-            if (!OpenTrust_Chat_Budget::turnstile_session_verified($session_hash)) {
+        if (Ettic_OTC_Chat_Budget::turnstile_required($settings)) {
+            if (!Ettic_OTC_Chat_Budget::turnstile_session_verified($session_hash)) {
                 // The secret is stored as a libsodium ciphertext blob in
                 // opentrust_settings; decrypt at the edge — if decryption
                 // fails we fail closed and surface the challenge error.
                 $stored_secret = (string) ($settings['turnstile_secret_key'] ?? '');
-                $secret        = OpenTrust_Chat_Secrets::decrypt($stored_secret) ?? '';
+                $secret        = Ettic_OTC_Chat_Secrets::decrypt($stored_secret) ?? '';
                 $token         = (string) $request->get_param('turnstile_token');
-                $ok = $secret !== '' && OpenTrust_Chat_Budget::verify_turnstile_token(
+                $ok = $secret !== '' && Ettic_OTC_Chat_Budget::verify_turnstile_token(
                     $token,
                     $secret,
                     $session_hash,
@@ -145,7 +145,7 @@ final class OpenTrust_Chat {
         }
 
         // Gate 3a: per-IP rate limit.
-        $ip_check = OpenTrust_Chat_Budget::check_ip_rate_limit($ip_hash);
+        $ip_check = Ettic_OTC_Chat_Budget::check_ip_rate_limit($ip_hash);
         if (empty($ip_check['ok'])) {
             return new WP_Error(
                 'ai_rate_limited_ip',
@@ -156,7 +156,7 @@ final class OpenTrust_Chat {
 
         // Gate 3b: per-session rate limit.
         if ($session_hash !== '') {
-            $sess_check = OpenTrust_Chat_Budget::check_session_rate_limit($session_hash);
+            $sess_check = Ettic_OTC_Chat_Budget::check_session_rate_limit($session_hash);
             if (empty($sess_check['ok'])) {
                 return new WP_Error(
                     'ai_rate_limited_session',
@@ -174,7 +174,7 @@ final class OpenTrust_Chat {
     // ──────────────────────────────────────────────
 
     public function handle_chat(WP_REST_Request $request) {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
 
         // Gate 1: feature configured?
         if (empty($settings['ai_enabled']) || empty($settings['ai_provider']) || empty($settings['ai_model'])) {
@@ -185,7 +185,7 @@ final class OpenTrust_Chat {
             );
         }
 
-        $adapter = OpenTrust_Chat_Provider::for((string) $settings['ai_provider']);
+        $adapter = Ettic_OTC_Chat_Provider::for((string) $settings['ai_provider']);
         if (!$adapter) {
             return new WP_Error(
                 'ai_bad_provider',
@@ -194,7 +194,7 @@ final class OpenTrust_Chat {
             );
         }
 
-        $api_key = OpenTrust_Chat_Secrets::get((string) $settings['ai_provider']);
+        $api_key = Ettic_OTC_Chat_Secrets::get((string) $settings['ai_provider']);
         if ($api_key === null) {
             return new WP_Error(
                 'ai_no_key',
@@ -222,17 +222,17 @@ final class OpenTrust_Chat {
         // prompt and whatever it pulls in via tool calls. Per-document
         // truncation lives inside the corpus formatter.
         $locale = (string) determine_locale();
-        $corpus = OpenTrust_Chat_Corpus::get_or_build($locale);
+        $corpus = Ettic_OTC_Chat_Corpus::get_or_build($locale);
 
         // Reserve against the token budget BEFORE the upstream call.
         $estimated = $this->estimate_request_tokens($messages, $corpus);
-        if (!OpenTrust_Chat_Budget::check_and_reserve($estimated)) {
+        if (!Ettic_OTC_Chat_Budget::check_and_reserve($estimated)) {
             return new WP_Error(
                 'budget_exhausted',
                 __('The daily chat budget for this site has been reached. Please try again later.', 'opentrust'),
                 [
                     'status'   => 503,
-                    'reset_at' => gmdate('c', OpenTrust_Chat_Budget::daily_reset_at()),
+                    'reset_at' => gmdate('c', Ettic_OTC_Chat_Budget::daily_reset_at()),
                 ]
             );
         }
@@ -259,8 +259,8 @@ final class OpenTrust_Chat {
                 break;
             }
         }
-        $ip_hash      = OpenTrust_Chat_Budget::hash_ip(OpenTrust_Chat_Budget::visitor_ip());
-        $session_hash = OpenTrust_Chat_Budget::hash_session(OpenTrust_Chat_Budget::session_token());
+        $ip_hash      = Ettic_OTC_Chat_Budget::hash_ip(Ettic_OTC_Chat_Budget::visitor_ip());
+        $session_hash = Ettic_OTC_Chat_Budget::hash_session(Ettic_OTC_Chat_Budget::session_token());
         $start_ms     = (int) (microtime(true) * 1000);
 
         $log_row = [
@@ -277,8 +277,8 @@ final class OpenTrust_Chat {
             if ($wants_sse) {
                 $this->setup_sse_response();
                 $result = $this->drive_stream($adapter, $args);
-                OpenTrust_Chat_Budget::commit($estimated, $result['actual_tokens']);
-                OpenTrust_Chat_Log::record(array_merge($log_row, [
+                Ettic_OTC_Chat_Budget::commit($estimated, $result['actual_tokens']);
+                Ettic_OTC_Chat_Log::record(array_merge($log_row, [
                     'tokens_in'      => $result['tokens_in'],
                     'tokens_out'     => $result['tokens_out'],
                     'citation_count' => $result['citation_count'],
@@ -291,8 +291,8 @@ final class OpenTrust_Chat {
             }
 
             $response = $this->drive_blocking($adapter, $args, $blocking_stats);
-            OpenTrust_Chat_Budget::commit($estimated, (int) ($blocking_stats['actual_tokens'] ?? 0));
-            OpenTrust_Chat_Log::record(array_merge($log_row, [
+            Ettic_OTC_Chat_Budget::commit($estimated, (int) ($blocking_stats['actual_tokens'] ?? 0));
+            Ettic_OTC_Chat_Log::record(array_merge($log_row, [
                 'tokens_in'      => (int) ($blocking_stats['tokens_in']      ?? 0),
                 'tokens_out'     => (int) ($blocking_stats['tokens_out']     ?? 0),
                 'citation_count' => (int) ($blocking_stats['citation_count'] ?? 0),
@@ -303,7 +303,7 @@ final class OpenTrust_Chat {
             ]));
             return $response;
         } catch (\Throwable $e) {
-            OpenTrust_Chat_Budget::release($estimated);
+            Ettic_OTC_Chat_Budget::release($estimated);
             throw $e;
         }
     }
@@ -368,7 +368,7 @@ final class OpenTrust_Chat {
      * Run the provider in streaming mode. Emits SSE events directly to the
      * client. Returns usage stats for budget commit + log row. The collector
      * owns the citation allowlist, doc-id de-dup, usage accounting, refusal
-     * detection, and tool-name capture — see OpenTrust_Chat_Stream_Collector.
+     * detection, and tool-name capture — see Ettic_OTC_Chat_Stream_Collector.
      *
      * @return array{
      *     actual_tokens:int, tokens_in:int, tokens_out:int,
@@ -376,7 +376,7 @@ final class OpenTrust_Chat {
      *     refused:bool, tool_turns:int, tool_names:string
      * }
      */
-    private function drive_stream(OpenTrust_Chat_Provider $adapter, array $args): array {
+    private function drive_stream(Ettic_OTC_Chat_Provider $adapter, array $args): array {
         $collector = $this->build_collector($args);
 
         $on_chunk = static function (array $event) use ($collector): void {
@@ -421,7 +421,7 @@ final class OpenTrust_Chat {
      * Used when the client cannot accept SSE (JS disabled). Same collector
      * as drive_stream — only the post-loop wrap-up differs.
      */
-    private function drive_blocking(OpenTrust_Chat_Provider $adapter, array $args, ?array &$stats = null): WP_REST_Response|WP_Error {
+    private function drive_blocking(Ettic_OTC_Chat_Provider $adapter, array $args, ?array &$stats = null): WP_REST_Response|WP_Error {
         $collector = $this->build_collector($args);
 
         $on_chunk = static function (array $event) use ($collector): void {
@@ -452,10 +452,10 @@ final class OpenTrust_Chat {
      * Build a fresh collector seeded with the corpus URL allowlist. Pulled
      * out so both drive_* paths can't drift on which URLs they accept.
      */
-    private function build_collector(array $args): OpenTrust_Chat_Stream_Collector {
+    private function build_collector(array $args): Ettic_OTC_Chat_Stream_Collector {
         $corpus = is_array($args['corpus'] ?? null) ? $args['corpus'] : [];
         $urls   = is_array($corpus['urls'] ?? null) ? $corpus['urls'] : [];
-        return new OpenTrust_Chat_Stream_Collector($urls);
+        return new Ettic_OTC_Chat_Stream_Collector($urls);
     }
 
     /**
@@ -466,7 +466,7 @@ final class OpenTrust_Chat {
      * is engaged is the same in both paths.
      */
     private function run_chat(
-        OpenTrust_Chat_Provider $adapter,
+        Ettic_OTC_Chat_Provider $adapter,
         array $args,
         callable $on_chunk
     ): ?\Throwable {
@@ -578,14 +578,14 @@ final class OpenTrust_Chat {
      * baseline role + behavior rules, the corpus index (table of contents),
      * and the retrieval-grounding rules specific to the agentic engine.
      *
-     * Public + static so the noscript chat path in OpenTrust_Render can use
+     * Public + static so the noscript chat path in Ettic_OTC_Render can use
      * the same prompt as the streaming path — they're functionally identical.
      */
     public static function build_system_prompt(array $settings, array $corpus): string {
         $company = (string) ($settings['company_name'] ?? get_bloginfo('name'));
         $contact = (string) ($settings['ai_contact_url'] ?? '');
         if ($contact === '') {
-            $contact = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
+            $contact = home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/');
         }
 
         $lines = [];
@@ -616,7 +616,7 @@ final class OpenTrust_Chat {
         $index = is_array($corpus['index'] ?? null) ? $corpus['index'] : [];
         if (!empty($index)) {
             $lines[] = '';
-            $lines[] = OpenTrust_Chat_Corpus::format_index_for_prompt($index, $company);
+            $lines[] = Ettic_OTC_Chat_Corpus::format_index_for_prompt($index, $company);
         }
 
         return implode("\n", $lines);
@@ -751,7 +751,7 @@ final class OpenTrust_Chat {
                 if ($bm25 === null) {
                     return [self::error_search_result(__('Search index unavailable.', 'opentrust'))];
                 }
-                $hits = OpenTrust_Chat_Search::search($bm25, $query, $limit);
+                $hits = Ettic_OTC_Chat_Search::search($bm25, $query, $limit);
                 if (empty($hits)) {
                     return [self::error_search_result(sprintf(
                         /* translators: %s is the search query. */

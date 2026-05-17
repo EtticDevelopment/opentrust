@@ -1,6 +1,6 @@
 <?php
 /**
- * Import & Export — rendered as a tab inside the OpenTrust settings page.
+ * Import & Export — rendered as a tab inside the Ettic_OTC settings page.
  */
 
 declare(strict_types=1);
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_Tools {
+final class Ettic_OTC_Admin_Tools {
 
     public const TAB_SLUG       = 'io';
     public const UPLOAD_MAX_MB  = 50;
@@ -131,7 +131,7 @@ final class OpenTrust_Admin_Tools {
     }
 
     // ──────────────────────────────────────────────
-    // Tab render — called from OpenTrust_Admin_Settings::render_settings_page
+    // Tab render — called from Ettic_OTC_Admin_Settings::render_settings_page
     // ──────────────────────────────────────────────
 
     public function render_tab(): void {
@@ -149,7 +149,7 @@ final class OpenTrust_Admin_Tools {
             printf('<div class="notice %s is-dismissible"><p>%s</p></div>', esc_attr($class), wp_kses_post((string) $notice['message']));
         }
 
-        $exportable = OpenTrust_IO::exportable_summary();
+        $exportable = Ettic_OTC_IO::exportable_summary();
         ?>
         <p class="ot-tools-intro">
             <?php esc_html_e('Move trust center content and settings between sites, or seed a fresh install from another. API keys and the Turnstile secret are never included — re-enter them on the destination.', 'opentrust'); ?>
@@ -281,7 +281,7 @@ final class OpenTrust_Admin_Tools {
     private function render_preview_screen(array $preview): void {
         $action_url = admin_url('admin-post.php');
         $manifest_format = (string) ($preview['manifest']['format'] ?? '');
-        $is_settings = $manifest_format === OpenTrust_IO::FORMAT_SETTINGS;
+        $is_settings = $manifest_format === Ettic_OTC_IO::FORMAT_SETTINGS;
         $totals = ['create' => 0, 'update' => 0, 'skip' => 0];
         foreach ($preview['summary'] ?? [] as $row) {
             foreach ($totals as $k => $_) {
@@ -377,7 +377,7 @@ final class OpenTrust_Admin_Tools {
 
         try {
             if ($kind === 'settings') {
-                $manifest = OpenTrust_IO::build_settings_manifest($include_media);
+                $manifest = Ettic_OTC_IO::build_settings_manifest($include_media);
                 $prefix = 'opentrust-settings';
             } else {
                 $selection = $this->parse_selection($_POST);
@@ -385,11 +385,11 @@ final class OpenTrust_Admin_Tools {
                     $this->bounce_error(__('Pick at least one record to export.', 'opentrust'));
                     return;
                 }
-                $manifest = OpenTrust_IO::build_content_manifest($selection, $include_media);
+                $manifest = Ettic_OTC_IO::build_content_manifest($selection, $include_media);
                 $prefix = 'opentrust-content';
             }
 
-            $zip_path = OpenTrust_IO::write_zip($manifest, $prefix);
+            $zip_path = Ettic_OTC_IO::write_zip($manifest, $prefix);
         } catch (\Throwable $e) {
             $this->bounce_error($e->getMessage());
             return;
@@ -457,11 +457,11 @@ final class OpenTrust_Admin_Tools {
         $stash_path = (string) $upload['file'];
 
         try {
-            $read = OpenTrust_IO::read_zip($stash_path);
+            $read = Ettic_OTC_IO::read_zip($stash_path);
             $manifest = $read['manifest'];
-            $check = OpenTrust_IO::validate_manifest($manifest);
+            $check = Ettic_OTC_IO::validate_manifest($manifest);
 
-            $strategy = isset($_POST['opentrust_strategy']) ? sanitize_key((string) wp_unslash($_POST['opentrust_strategy'])) : OpenTrust_IO::STRATEGY_SKIP;
+            $strategy = isset($_POST['opentrust_strategy']) ? sanitize_key((string) wp_unslash($_POST['opentrust_strategy'])) : Ettic_OTC_IO::STRATEGY_SKIP;
 
             $preview = [
                 'manifest' => $manifest,
@@ -473,8 +473,8 @@ final class OpenTrust_Admin_Tools {
                 'records'  => [],
             ];
 
-            if (($manifest['format'] ?? '') === OpenTrust_IO::FORMAT_CONTENT && empty($check['errors'])) {
-                $diff = OpenTrust_IO::preview_import($manifest, $strategy);
+            if (($manifest['format'] ?? '') === Ettic_OTC_IO::FORMAT_CONTENT && empty($check['errors'])) {
+                $diff = Ettic_OTC_IO::preview_import($manifest, $strategy);
                 $preview['summary'] = $diff['summary'];
                 $preview['records'] = $diff['records'];
             }
@@ -522,18 +522,18 @@ final class OpenTrust_Admin_Tools {
 
         $zip_path = (string) ($preview['zip_path'] ?? '');
         $manifest = (array) ($preview['manifest'] ?? []);
-        $strategy = (string) ($preview['strategy'] ?? OpenTrust_IO::STRATEGY_SKIP);
+        $strategy = (string) ($preview['strategy'] ?? Ettic_OTC_IO::STRATEGY_SKIP);
 
         try {
-            if (($manifest['format'] ?? '') === OpenTrust_IO::FORMAT_SETTINGS) {
-                $result = OpenTrust_IO::apply_settings_import($manifest, $zip_path);
+            if (($manifest['format'] ?? '') === Ettic_OTC_IO::FORMAT_SETTINGS) {
+                $result = Ettic_OTC_IO::apply_settings_import($manifest, $zip_path);
                 $msg = sprintf(
                     /* translators: %d: count */
                     _n('%d setting imported.', '%d settings imported.', (int) ($result['updated'] ?? 0), 'opentrust'),
                     (int) ($result['updated'] ?? 0)
                 );
             } else {
-                $result = OpenTrust_IO::apply_content_import($manifest, $zip_path, $strategy);
+                $result = Ettic_OTC_IO::apply_content_import($manifest, $zip_path, $strategy);
                 $msg = sprintf(
                     /* translators: %1$d: created, %2$d: updated, %3$d: skipped */
                     __('Imported: %1$d created, %2$d updated, %3$d skipped.', 'opentrust'),
@@ -574,7 +574,7 @@ final class OpenTrust_Admin_Tools {
         $out = [];
         foreach ($cpts as $cpt => $_) {
             $cpt = sanitize_key((string) $cpt);
-            if (!in_array($cpt, OpenTrust_CPT::ALL, true)) continue;
+            if (!in_array($cpt, Ettic_OTC_CPT::ALL, true)) continue;
 
             $picked = isset($ids[$cpt]) && is_array($ids[$cpt])
                 ? array_values(array_filter(array_map('intval', $ids[$cpt])))
@@ -589,11 +589,11 @@ final class OpenTrust_Admin_Tools {
 
     private function cpt_label(string $cpt): string {
         return match ($cpt) {
-            OpenTrust_CPT::POLICY        => __('Policies', 'opentrust'),
-            OpenTrust_CPT::CERTIFICATION => __('Certifications', 'opentrust'),
-            OpenTrust_CPT::SUBPROCESSOR  => __('Subprocessors', 'opentrust'),
-            OpenTrust_CPT::DATA_PRACTICE => __('Data Practices', 'opentrust'),
-            OpenTrust_CPT::FAQ           => __('FAQs', 'opentrust'),
+            Ettic_OTC_CPT::POLICY        => __('Policies', 'opentrust'),
+            Ettic_OTC_CPT::CERTIFICATION => __('Certifications', 'opentrust'),
+            Ettic_OTC_CPT::SUBPROCESSOR  => __('Subprocessors', 'opentrust'),
+            Ettic_OTC_CPT::DATA_PRACTICE => __('Data Practices', 'opentrust'),
+            Ettic_OTC_CPT::FAQ           => __('FAQs', 'opentrust'),
             default                      => $cpt,
         };
     }

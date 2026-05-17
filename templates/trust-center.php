@@ -48,8 +48,8 @@ $ot_contact_has_content = (bool) (
 $ot_ai_enabled = !empty($ot_settings['ai_enabled'])
     && !empty($ot_settings['ai_provider'])
     && !empty($ot_settings['ai_model'])
-    && class_exists('OpenTrust_Chat_Secrets')
-    && OpenTrust_Chat_Secrets::get((string) $ot_settings['ai_provider']) !== null;
+    && class_exists('Ettic_OTC_Chat_Secrets')
+    && Ettic_OTC_Chat_Secrets::get((string) $ot_settings['ai_provider']) !== null;
 
 $ot_accent_contrast = ((int) $ot_hsl['l'] < 55) ? '#ffffff' : '#111827';
 
@@ -62,7 +62,7 @@ $ot_accent_contrast = ((int) $ot_hsl['l'] < 55) ? '#ffffff' : '#111827';
 // WCAG adjustment — keep their exact colour everywhere, contrast be damned.
 $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     ? (int) $ot_hsl['l']
-    : OpenTrust::accent_safe_lightness((string) ($ot_settings['accent_color'] ?? '#2563EB'));
+    : Ettic_OTC::accent_safe_lightness((string) ($ot_settings['accent_color'] ?? '#2563EB'));
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -90,7 +90,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
         (int) $ot_accent_l_safe,
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', OPENTRUST_PLUGIN_FILE), [], OPENTRUST_VERSION);
+    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
     wp_enqueue_style('opentrust-frontend');
     wp_add_inline_style('opentrust-frontend', $ot_root_vars);
     wp_print_styles(['opentrust-frontend']);
@@ -149,39 +149,39 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
             </nav>
         <?php
         // ── Hero ──
-        include OPENTRUST_PLUGIN_DIR . 'templates/partials/hero.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/hero.php';
         ?>
 
         <main id="ot-main" class="ot-main">
                 <?php
                 // ── Policies ──
                 if (!empty($ot_visible['policies']) && $ot_policy_count) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/policies.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/policies.php';
                 }
 
                 // ── Certifications ──
                 if (!empty($ot_visible['certifications']) && $ot_cert_count) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/certifications.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/certifications.php';
                 }
 
                 // ── Subprocessors ──
                 if (!empty($ot_visible['subprocessors']) && $ot_sub_count) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/subprocessors.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/subprocessors.php';
                 }
 
                 // ── Data Practices ──
                 if (!empty($ot_visible['data_practices']) && count($ot_data['data_practices'] ?? [])) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/data-practices.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/data-practices.php';
                 }
 
                 // ── Get in touch ──
                 if (!empty($ot_visible['contact']) && $ot_contact_has_content) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/contact.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/contact.php';
                 }
 
                 // ── FAQ ──
                 if (!empty($ot_visible['faqs']) && $ot_faq_count) {
-                    include OPENTRUST_PLUGIN_DIR . 'templates/partials/faq.php';
+                    include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/faq.php';
                 }
 
                 // Show empty state if nothing is published yet.
@@ -200,7 +200,7 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
 
     <?php } elseif ($ot_view === 'policy_single') {
         // ── Single Policy View ──
-        include OPENTRUST_PLUGIN_DIR . 'templates/partials/policy-single.php';
+        include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/policy-single.php';
     } ?>
 
     <footer class="ot-footer">
@@ -216,8 +216,8 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
                 ?>
                 <?php if (!empty($ot_settings['show_powered_by'])): ?>
                     &nbsp;·&nbsp;
-                    <a href="https://plugins.ettic.nl/opentrust" target="_blank" rel="noopener">
-                        <?php esc_html_e('Powered by OpenTrust', 'opentrust'); ?>
+                    <a href="https://plugins.ettic.nl/open-trust-center-by-ettic" target="_blank" rel="noopener">
+                        <?php esc_html_e('Powered by Open Trust Center', 'opentrust'); ?>
                     </a>
                 <?php endif; ?>
             </p>
@@ -227,9 +227,9 @@ $ot_accent_l_safe = !empty($ot_settings['accent_force_exact'])
     <?php
     wp_register_script(
         'opentrust-frontend',
-        plugins_url('assets/js/frontend.js', OPENTRUST_PLUGIN_FILE),
+        plugins_url('assets/js/frontend.js', ETTIC_OTC_PLUGIN_FILE),
         [],
-        OPENTRUST_VERSION,
+        ETTIC_OTC_VERSION,
         ['in_footer' => true, 'strategy' => 'defer']
     );
     wp_enqueue_script('opentrust-frontend');

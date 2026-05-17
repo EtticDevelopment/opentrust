@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are local scope via include()
 
 $ot_practices    = $ot_data['data_practices'] ?? [];
-$ot_basis_labels = OpenTrust_Render::legal_basis_labels();
+$ot_basis_labels = Ettic_OTC_Render::legal_basis_labels();
 
 if (empty($ot_practices)) {
     return;
@@ -30,7 +30,7 @@ $ot_preview_limit = 5;
 
         <!-- Section header -->
         <div class="ot-section__header">
-            <?php OpenTrust_Render::updated_pill('data_practices', $ot_data); ?>
+            <?php Ettic_OTC_Render::updated_pill('data_practices', $ot_data); ?>
             <h2 class="ot-section__title"><?php esc_html_e('Data Practices', 'opentrust'); ?></h2>
             <p class="ot-section__description"><?php esc_html_e('What we collect and how we handle your data.', 'opentrust'); ?></p>
         </div>

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class OpenTrust_Chat_Provider_OpenAI extends OpenTrust_Chat_Provider {
+class Ettic_OTC_Chat_Provider_OpenAI extends Ettic_OTC_Chat_Provider {
 
     protected const API_BASE               = 'https://api.openai.com';
     protected const MODELS_ENDPOINT        = 'https://api.openai.com/v1/models';
@@ -168,7 +168,7 @@ class OpenTrust_Chat_Provider_OpenAI extends OpenTrust_Chat_Provider {
         }
 
         // The system prompt arrives pre-built with the corpus index already
-        // appended (see OpenTrust_Chat::build_system_prompt). Tack on a tail
+        // appended (see Ettic_OTC_Chat::build_system_prompt). Tack on a tail
         // that sets up the inline-citation contract — Anthropic uses native
         // search_result_location citations and doesn't need this block.
         $system_full = $this->append_citation_instructions($system);
@@ -358,7 +358,7 @@ class OpenTrust_Chat_Provider_OpenAI extends OpenTrust_Chat_Provider {
     /**
      * Append the OpenAI/OpenRouter-specific citation contract to the base
      * system prompt. The base prompt already contains the corpus index and
-     * the role rules — see OpenTrust_Chat::build_system_prompt(). All we
+     * the role rules — see Ettic_OTC_Chat::build_system_prompt(). All we
      * add is how this provider should mark citations inline so the server
      * can convert them into structured citation events.
      *
@@ -508,7 +508,7 @@ class OpenTrust_Chat_Provider_OpenAI extends OpenTrust_Chat_Provider {
     /**
      * Scan the full answer for [[cite:doc-id]] tags and emit citation events
      * with URLs resolved from the corpus. Unknown IDs are ignored here;
-     * URL whitelist enforcement happens upstream in OpenTrust_Chat.
+     * URL whitelist enforcement happens upstream in Ettic_OTC_Chat.
      */
     private function extract_and_emit_citations(string $answer, array $documents, callable $on_chunk): void {
         if ($answer === '' || empty($documents)) {

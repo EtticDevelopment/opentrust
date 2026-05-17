@@ -4,13 +4,13 @@
  * admin-post handlers that drive its toolbar (CSV export, full clear,
  * logging toggle).
  *
- * Lives on its own submenu under the OpenTrust top-level menu. Visibility
- * of that submenu is gated in OpenTrust_Admin::register_menu() on the
+ * Lives on its own submenu under the Ettic_OTC top-level menu. Visibility
+ * of that submenu is gated in Ettic_OTC_Admin::register_menu() on the
  * `ai_enabled` setting. Once the submenu is registered, this class owns
  * the page render and all handler endpoints.
  *
  * Identifiers in the underlying log table are pre-hashed by
- * OpenTrust_Chat_Log; nothing in this screen surfaces raw IPs/sessions.
+ * Ettic_OTC_Chat_Log; nothing in this screen surfaces raw IPs/sessions.
  */
 
 declare(strict_types=1);
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_Questions {
+final class Ettic_OTC_Admin_Questions {
 
     private static ?self $instance = null;
 
@@ -42,7 +42,7 @@ final class OpenTrust_Admin_Questions {
             return;
         }
 
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only filter params on admin display page.
         $filters = [
@@ -55,12 +55,12 @@ final class OpenTrust_Admin_Questions {
         ];
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        $result  = OpenTrust_Chat_Log::query($filters);
+        $result  = Ettic_OTC_Chat_Log::query($filters);
         $total   = $result['total'];
         $rows    = $result['rows'];
         $pages   = max(1, (int) ceil($total / $filters['per_page']));
-        $models  = OpenTrust_Chat_Log::distinct_models();
-        $counts  = OpenTrust_Chat_Log::total_count();
+        $models  = Ettic_OTC_Chat_Log::distinct_models();
+        $counts  = Ettic_OTC_Chat_Log::total_count();
 
         $export_url = wp_nonce_url(
             admin_url('admin-post.php?action=opentrust_ai_questions_export&' . http_build_query(array_filter($filters + ['paged' => 0]))),
@@ -233,7 +233,7 @@ final class OpenTrust_Admin_Questions {
             'per_page'  => 10000, // hard cap — nobody exports >10k rows per page
         ];
 
-        $result = OpenTrust_Chat_Log::query($filters);
+        $result = Ettic_OTC_Chat_Log::query($filters);
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=opentrust-questions-' . gmdate('Y-m-d') . '.csv');
@@ -265,7 +265,7 @@ final class OpenTrust_Admin_Questions {
         }
         check_admin_referer('opentrust_ai_questions_clear');
 
-        OpenTrust_Chat_Log::clear_all();
+        Ettic_OTC_Chat_Log::clear_all();
 
         set_transient(
             'opentrust_ai_notice_' . get_current_user_id(),
@@ -282,9 +282,9 @@ final class OpenTrust_Admin_Questions {
         }
         check_admin_referer('opentrust_ai_toggle_logging');
 
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $settings['ai_logging_enabled'] = empty($settings['ai_logging_enabled']);
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         set_transient(
             'opentrust_ai_notice_' . get_current_user_id(),

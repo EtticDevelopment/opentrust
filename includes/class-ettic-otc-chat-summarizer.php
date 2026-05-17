@@ -32,10 +32,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Summarizer {
+final class Ettic_OTC_Chat_Summarizer {
 
     /**
-     * Postmeta key. Mirror of OpenTrust_Chat_Corpus::POLICY_SUMMARY_META —
+     * Postmeta key. Mirror of Ettic_OTC_Chat_Corpus::POLICY_SUMMARY_META —
      * declared in both classes so neither file requires the other to load.
      */
     public const META_KEY            = '_opentrust_policy_chat_summary';
@@ -55,14 +55,14 @@ final class OpenTrust_Chat_Summarizer {
     private const POLICY_INPUT_MAX_CHARS = 12_000;
 
     public static function bootstrap(): void {
-        add_action('save_post_' . OpenTrust_CPT::POLICY, [self::class, 'on_save_post'], 20, 3);
+        add_action('save_post_' . Ettic_OTC_CPT::POLICY, [self::class, 'on_save_post'], 20, 3);
         add_action(self::CRON_HOOK,                 [self::class, 'generate']);
     }
 
     /**
      * Hook handler. Decides whether a summary regeneration is warranted and
      * schedules a debounced cron call when it is. Skip conditions mirror the
-     * fallback ladder in OpenTrust_Chat_Corpus::policy_summary().
+     * fallback ladder in Ettic_OTC_Chat_Corpus::policy_summary().
      */
     public static function on_save_post(int $post_id, \WP_Post $post, bool $update): void {
         if ($post->post_status !== 'publish') {
@@ -71,7 +71,7 @@ final class OpenTrust_Chat_Summarizer {
         if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
             return;
         }
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         if (empty($settings['ai_auto_summarize'])) {
             return;
         }
@@ -105,13 +105,13 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function generate(int $post_id): void {
         $post = get_post($post_id);
-        if (!$post instanceof \WP_Post || $post->post_type !== OpenTrust_CPT::POLICY || $post->post_status !== 'publish') {
+        if (!$post instanceof \WP_Post || $post->post_type !== Ettic_OTC_CPT::POLICY || $post->post_status !== 'publish') {
             return;
         }
 
         // Re-check skip conditions at run-time. Settings may have changed
         // between scheduling and execution.
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         if (empty($settings['ai_auto_summarize'])) {
             return;
         }
@@ -125,12 +125,12 @@ final class OpenTrust_Chat_Summarizer {
             return;
         }
 
-        $adapter = OpenTrust_Chat_Provider::for($provider_slug);
+        $adapter = Ettic_OTC_Chat_Provider::for($provider_slug);
         if (!$adapter) {
             self::log_failure($post_id, 'unknown provider: ' . $provider_slug);
             return;
         }
-        $api_key = OpenTrust_Chat_Secrets::get($provider_slug);
+        $api_key = Ettic_OTC_Chat_Secrets::get($provider_slug);
         if ($api_key === null || $api_key === '') {
             self::log_failure($post_id, 'no API key on file for ' . $provider_slug);
             return;
@@ -201,8 +201,8 @@ final class OpenTrust_Chat_Summarizer {
 
         // Force the next chat request to rebuild the corpus index with the
         // fresh summary.
-        if (class_exists('OpenTrust_Chat_Corpus')) {
-            OpenTrust_Chat_Corpus::invalidate();
+        if (class_exists('Ettic_OTC_Chat_Corpus')) {
+            Ettic_OTC_Chat_Corpus::invalidate();
         }
     }
 
@@ -212,7 +212,7 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function sweep_all(): int {
         $posts = get_posts([
-            'post_type'      => OpenTrust_CPT::POLICY,
+            'post_type'      => Ettic_OTC_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'fields'         => 'ids',
@@ -252,7 +252,7 @@ final class OpenTrust_Chat_Summarizer {
      */
     public static function missing_summary_count(): int {
         $posts = get_posts([
-            'post_type'      => OpenTrust_CPT::POLICY,
+            'post_type'      => Ettic_OTC_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'fields'         => 'ids',
@@ -317,6 +317,6 @@ final class OpenTrust_Chat_Summarizer {
     }
 
     private static function log_failure(int $post_id, string $reason): void {
-        OpenTrust::debug_log(sprintf('policy summary generation failed for post %d: %s', $post_id, $reason));
+        Ettic_OTC::debug_log(sprintf('policy summary generation failed for post %d: %s', $post_id, $reason));
     }
 }

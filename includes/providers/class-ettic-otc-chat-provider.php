@@ -3,9 +3,9 @@
  * Abstract base class for chat providers.
  *
  * Concrete implementations:
- *  - OpenTrust_Chat_Provider_Anthropic
- *  - OpenTrust_Chat_Provider_OpenAI
- *  - OpenTrust_Chat_Provider_OpenRouter
+ *  - Ettic_OTC_Chat_Provider_Anthropic
+ *  - Ettic_OTC_Chat_Provider_OpenAI
+ *  - Ettic_OTC_Chat_Provider_OpenRouter
  *
  * The base class provides the factory, shared HTTP helpers, and a
  * host allowlist for SSRF prevention. Subclasses implement the
@@ -20,16 +20,16 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-abstract class OpenTrust_Chat_Provider {
+abstract class Ettic_OTC_Chat_Provider {
 
     /**
      * Factory: return a provider instance for a settings slug.
      */
     public static function for(string $provider_slug): ?self {
         return match ($provider_slug) {
-            'anthropic'  => new OpenTrust_Chat_Provider_Anthropic(),
-            'openai'     => new OpenTrust_Chat_Provider_OpenAI(),
-            'openrouter' => new OpenTrust_Chat_Provider_OpenRouter(),
+            'anthropic'  => new Ettic_OTC_Chat_Provider_Anthropic(),
+            'openai'     => new Ettic_OTC_Chat_Provider_OpenAI(),
+            'openrouter' => new Ettic_OTC_Chat_Provider_OpenRouter(),
             default      => null,
         };
     }
@@ -160,7 +160,7 @@ abstract class OpenTrust_Chat_Provider {
         // and answer from training data. After any tool call we relax to auto.
         $has_called_tool = false;
 
-        for ($turn = 1; $turn <= OpenTrust_Chat::MAX_TOOL_TURNS; $turn++) {
+        for ($turn = 1; $turn <= Ettic_OTC_Chat::MAX_TOOL_TURNS; $turn++) {
             $stream_state = $this->stream_one_turn($turn_loop_state, $has_called_tool, $on_chunk);
             if ($stream_state === null) {
                 return; // stream_one_turn already emitted an error event
@@ -654,7 +654,7 @@ abstract class OpenTrust_Chat_Provider {
                 $state->error_body = $state->buffer;
             }
             $detail = $this->describe_streaming_error($state->error_body, $state->response_headers, $http_code);
-            OpenTrust::debug_log($detail);
+            Ettic_OTC::debug_log($detail);
             return ['ok' => false, 'code' => $http_code, 'error' => $detail];
         }
 

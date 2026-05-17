@@ -81,8 +81,8 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
         (int) $ot_hsl['l'],
         $ot_accent_contrast === '#ffffff' ? '#ffffff' : '#111827'
     );
-    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', OPENTRUST_PLUGIN_FILE), [], OPENTRUST_VERSION);
-    wp_register_style('opentrust-chat', plugins_url('assets/css/chat.css', OPENTRUST_PLUGIN_FILE), ['opentrust-frontend'], OPENTRUST_VERSION);
+    wp_register_style('opentrust-frontend', plugins_url('assets/css/frontend.css', ETTIC_OTC_PLUGIN_FILE), [], ETTIC_OTC_VERSION);
+    wp_register_style('opentrust-chat', plugins_url('assets/css/chat.css', ETTIC_OTC_PLUGIN_FILE), ['opentrust-frontend'], ETTIC_OTC_VERSION);
     wp_enqueue_style('opentrust-chat');
     wp_add_inline_style('opentrust-chat', $ot_root_vars);
     wp_print_styles(['opentrust-frontend', 'opentrust-chat']);
@@ -150,10 +150,10 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
                 </section>
 
             <?php elseif ($ot_state === 'unavailable'): ?>
-                <?php include OPENTRUST_PLUGIN_DIR . 'templates/partials/chat-budget-exhausted.php'; ?>
+                <?php include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/chat-budget-exhausted.php'; ?>
 
             <?php else: /* ready */ ?>
-                <?php include OPENTRUST_PLUGIN_DIR . 'templates/partials/chat-empty-state.php'; ?>
+                <?php include ETTIC_OTC_PLUGIN_DIR . 'templates/partials/chat-empty-state.php'; ?>
             <?php endif; ?>
 
             <?php if ($ot_state === 'ready'):
@@ -363,9 +363,9 @@ if (!empty($ot_visible['faqs']) && !empty($ot_data['faqs']))                    
 
         wp_register_script(
             'opentrust-chat',
-            plugins_url('assets/js/chat.js', OPENTRUST_PLUGIN_FILE),
+            plugins_url('assets/js/chat.js', ETTIC_OTC_PLUGIN_FILE),
             [],
-            OPENTRUST_VERSION,
+            ETTIC_OTC_VERSION,
             ['in_footer' => true, 'strategy' => 'defer']
         );
         wp_enqueue_script('opentrust-chat');

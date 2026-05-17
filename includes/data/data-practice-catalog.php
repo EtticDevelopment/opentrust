@@ -10,7 +10,7 @@
  *
  * Extend without forking via the `opentrust_data_practice_catalog` filter.
  *
- * Legal basis values must match keys in OpenTrust_Render::legal_basis_labels().
+ * Legal basis values must match keys in Ettic_OTC_Render::legal_basis_labels().
  */
 
 declare(strict_types=1);
