@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-17T12:29:04+00:00\n"
+"POT-Creation-Date: 2026-05-17T12:55:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: open-trust-center-by-ettic\n"
@@ -317,9 +317,9 @@ msgstr ""
 #: includes/class-ettic-otc-admin-ai.php:714
 #: includes/class-ettic-otc-admin-ai.php:751
 #: includes/class-ettic-otc-admin-ai.php:796
-#: includes/class-ettic-otc-admin-questions.php:223
-#: includes/class-ettic-otc-admin-questions.php:264
-#: includes/class-ettic-otc-admin-questions.php:281
+#: includes/class-ettic-otc-admin-questions.php:224
+#: includes/class-ettic-otc-admin-questions.php:265
+#: includes/class-ettic-otc-admin-questions.php:282
 #: includes/class-ettic-otc-admin-tools.php:565
 msgid "You do not have permission to perform this action."
 msgstr ""
@@ -431,7 +431,7 @@ msgid "Search questions…"
 msgstr ""
 
 #: includes/class-ettic-otc-admin-questions.php:121
-#: includes/class-ettic-otc-admin-questions.php:148
+#: includes/class-ettic-otc-admin-questions.php:149
 msgid "Model"
 msgstr ""
 
@@ -455,60 +455,60 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:139
+#: includes/class-ettic-otc-admin-questions.php:140
 msgid "Download CSV"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:146
+#: includes/class-ettic-otc-admin-questions.php:147
 #: includes/class-ettic-otc-version.php:161
 msgid "Date"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:147
+#: includes/class-ettic-otc-admin-questions.php:148
 msgid "Question"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:149
+#: includes/class-ettic-otc-admin-questions.php:150
 msgid "Cites"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:150
+#: includes/class-ettic-otc-admin-questions.php:151
 msgid "Tokens"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:151
+#: includes/class-ettic-otc-admin-questions.php:152
 msgid "Latency"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:156
+#: includes/class-ettic-otc-admin-questions.php:157
 msgid "No questions logged yet."
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:165
+#: includes/class-ettic-otc-admin-questions.php:166
 msgid "REFUSED"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:209
+#: includes/class-ettic-otc-admin-questions.php:210
 msgid "Danger zone"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:210
+#: includes/class-ettic-otc-admin-questions.php:211
 msgid "Permanently delete all logged questions? This cannot be undone."
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:211
+#: includes/class-ettic-otc-admin-questions.php:212
 msgid "Clear entire question log"
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:272
+#: includes/class-ettic-otc-admin-questions.php:273
 msgid "Question log cleared."
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:291
+#: includes/class-ettic-otc-admin-questions.php:292
 msgid "Logging enabled."
 msgstr ""
 
-#: includes/class-ettic-otc-admin-questions.php:291
+#: includes/class-ettic-otc-admin-questions.php:292
 msgid "Logging disabled."
 msgstr ""
 
@@ -718,7 +718,7 @@ msgid "Use my exact color anyway — skip the contrast adjustment."
 msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:265
-#: includes/class-ettic-otc-cpt.php:475
+#: includes/class-ettic-otc-cpt.php:508
 msgid "Select Logo"
 msgstr ""
 
@@ -735,12 +735,12 @@ msgid "Square image used as the avatar on AI chat responses. Use a colored backg
 msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:289
-#: includes/class-ettic-otc-cpt.php:476
-#: includes/class-ettic-otc-cpt.php:488
-#: includes/class-ettic-otc-cpt.php:619
-#: includes/class-ettic-otc-cpt.php:635
-#: includes/class-ettic-otc-cpt.php:721
-#: includes/class-ettic-otc-cpt.php:759
+#: includes/class-ettic-otc-cpt.php:509
+#: includes/class-ettic-otc-cpt.php:521
+#: includes/class-ettic-otc-cpt.php:652
+#: includes/class-ettic-otc-cpt.php:668
+#: includes/class-ettic-otc-cpt.php:754
+#: includes/class-ettic-otc-cpt.php:792
 msgid "Remove"
 msgstr ""
 
@@ -759,8 +759,8 @@ msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:315
 #: includes/class-ettic-otc-admin-tools.php:592
-#: includes/class-ettic-otc-cpt.php:236
-#: includes/class-ettic-otc-cpt.php:246
+#: includes/class-ettic-otc-cpt.php:269
+#: includes/class-ettic-otc-cpt.php:279
 #: templates/chat.php:45
 #: templates/partials/hero.php:55
 #: templates/trust-center.php:107
@@ -769,8 +769,8 @@ msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:316
 #: includes/class-ettic-otc-admin-tools.php:594
-#: includes/class-ettic-otc-cpt.php:303
-#: includes/class-ettic-otc-cpt.php:312
+#: includes/class-ettic-otc-cpt.php:336
+#: includes/class-ettic-otc-cpt.php:345
 #: templates/chat.php:47
 #: templates/partials/hero.php:61
 #: templates/partials/subprocessors.php:20
@@ -780,8 +780,8 @@ msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:317
 #: includes/class-ettic-otc-admin-tools.php:595
-#: includes/class-ettic-otc-cpt.php:336
-#: includes/class-ettic-otc-cpt.php:345
+#: includes/class-ettic-otc-cpt.php:369
+#: includes/class-ettic-otc-cpt.php:378
 #: templates/chat.php:48
 #: templates/partials/data-practices.php:34
 #: templates/trust-center.php:110
@@ -790,8 +790,8 @@ msgstr ""
 
 #: includes/class-ettic-otc-admin-settings.php:318
 #: includes/class-ettic-otc-admin-tools.php:596
-#: includes/class-ettic-otc-cpt.php:369
-#: includes/class-ettic-otc-cpt.php:379
+#: includes/class-ettic-otc-cpt.php:402
+#: includes/class-ettic-otc-cpt.php:412
 msgid "FAQs"
 msgstr ""
 
@@ -969,8 +969,8 @@ msgid "Errors:"
 msgstr ""
 
 #: includes/class-ettic-otc-admin-tools.php:593
-#: includes/class-ettic-otc-cpt.php:270
-#: includes/class-ettic-otc-cpt.php:279
+#: includes/class-ettic-otc-cpt.php:303
+#: includes/class-ettic-otc-cpt.php:312
 #: templates/chat.php:46
 #: templates/partials/hero.php:49
 #: templates/trust-center.php:108
@@ -1009,12 +1009,12 @@ msgid "Use This File"
 msgstr ""
 
 #: includes/class-ettic-otc-admin.php:162
-#: includes/class-ettic-otc-cpt.php:487
+#: includes/class-ettic-otc-cpt.php:520
 msgid "Upload File"
 msgstr ""
 
 #: includes/class-ettic-otc-admin.php:163
-#: includes/class-ettic-otc-cpt.php:487
+#: includes/class-ettic-otc-cpt.php:520
 msgid "Replace File"
 msgstr ""
 
@@ -1152,545 +1152,545 @@ msgstr ""
 msgid "Unknown tool: %s"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:217
+#: includes/class-ettic-otc-cpt.php:250
 msgid "Pick from the catalog or type your own subprocessor name"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:220
+#: includes/class-ettic-otc-cpt.php:253
 msgid "Pick from the catalog or type your own, e.g. Analytics or Transactional Email"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:223
+#: includes/class-ettic-otc-cpt.php:256
 msgid "Pick from the catalog or type your own, e.g. SOC 2 Type II or ISO 27001"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:237
+#: includes/class-ettic-otc-cpt.php:270
 #: templates/partials/policies.php:54
 msgid "Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:238
+#: includes/class-ettic-otc-cpt.php:271
 msgid "Add Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:239
+#: includes/class-ettic-otc-cpt.php:272
 msgid "Add New Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:240
+#: includes/class-ettic-otc-cpt.php:273
 msgid "Edit Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:241
+#: includes/class-ettic-otc-cpt.php:274
 msgid "New Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:242
+#: includes/class-ettic-otc-cpt.php:275
 msgid "View Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:243
+#: includes/class-ettic-otc-cpt.php:276
 msgid "Search Policies"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:244
+#: includes/class-ettic-otc-cpt.php:277
 msgid "No policies found."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:245
+#: includes/class-ettic-otc-cpt.php:278
 msgid "No policies in trash."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:271
+#: includes/class-ettic-otc-cpt.php:304
 msgid "Certification"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:272
+#: includes/class-ettic-otc-cpt.php:305
 msgid "Add Certification"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:273
+#: includes/class-ettic-otc-cpt.php:306
 msgid "Add New Certification"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:274
+#: includes/class-ettic-otc-cpt.php:307
 msgid "Edit Certification"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:275
+#: includes/class-ettic-otc-cpt.php:308
 msgid "New Certification"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:276
+#: includes/class-ettic-otc-cpt.php:309
 msgid "Search Certifications"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:277
+#: includes/class-ettic-otc-cpt.php:310
 msgid "No certifications found."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:278
+#: includes/class-ettic-otc-cpt.php:311
 msgid "No certifications in trash."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:304
+#: includes/class-ettic-otc-cpt.php:337
 msgid "Subprocessor"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:305
+#: includes/class-ettic-otc-cpt.php:338
 msgid "Add Subprocessor"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:306
+#: includes/class-ettic-otc-cpt.php:339
 msgid "Add New Subprocessor"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:307
+#: includes/class-ettic-otc-cpt.php:340
 msgid "Edit Subprocessor"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:308
+#: includes/class-ettic-otc-cpt.php:341
 msgid "New Subprocessor"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:309
+#: includes/class-ettic-otc-cpt.php:342
 msgid "Search Subprocessors"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:310
+#: includes/class-ettic-otc-cpt.php:343
 msgid "No subprocessors found."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:311
+#: includes/class-ettic-otc-cpt.php:344
 msgid "No subprocessors in trash."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:337
+#: includes/class-ettic-otc-cpt.php:370
 msgid "Data Practice"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:338
+#: includes/class-ettic-otc-cpt.php:371
 msgid "Add Data Practice"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:339
+#: includes/class-ettic-otc-cpt.php:372
 msgid "Add New Data Practice"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:340
+#: includes/class-ettic-otc-cpt.php:373
 msgid "Edit Data Practice"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:341
+#: includes/class-ettic-otc-cpt.php:374
 msgid "New Data Practice"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:342
+#: includes/class-ettic-otc-cpt.php:375
 msgid "Search Data Practices"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:343
+#: includes/class-ettic-otc-cpt.php:376
 msgid "No data practices found."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:344
+#: includes/class-ettic-otc-cpt.php:377
 msgid "No data practices in trash."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:370
+#: includes/class-ettic-otc-cpt.php:403
 #: templates/chat.php:61
 #: templates/trust-center.php:112
 msgid "FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:371
+#: includes/class-ettic-otc-cpt.php:404
 msgid "Add FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:372
+#: includes/class-ettic-otc-cpt.php:405
 msgid "Add New FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:373
+#: includes/class-ettic-otc-cpt.php:406
 msgid "Edit FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:374
+#: includes/class-ettic-otc-cpt.php:407
 msgid "New FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:375
+#: includes/class-ettic-otc-cpt.php:408
 msgid "View FAQ"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:376
+#: includes/class-ettic-otc-cpt.php:409
 msgid "Search FAQs"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:377
+#: includes/class-ettic-otc-cpt.php:410
 msgid "No FAQs found."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:378
+#: includes/class-ettic-otc-cpt.php:411
 msgid "No FAQs in trash."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:401
+#: includes/class-ettic-otc-cpt.php:434
 msgid "Certification Details"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:402
+#: includes/class-ettic-otc-cpt.php:435
 msgid "Policy Details"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:403
+#: includes/class-ettic-otc-cpt.php:436
 msgid "Subprocessor Details"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:404
+#: includes/class-ettic-otc-cpt.php:437
 msgid "Data Practice Details"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:405
+#: includes/class-ettic-otc-cpt.php:438
 msgid "FAQ Details"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:426
+#: includes/class-ettic-otc-cpt.php:459
 msgid "Audited certification (issued by a third party)"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:427
+#: includes/class-ettic-otc-cpt.php:460
 msgid "Self-attested alignment (no external audit)"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:431
+#: includes/class-ettic-otc-cpt.php:464
 msgid "Active / currently met"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:432
+#: includes/class-ettic-otc-cpt.php:465
 msgid "In progress"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:433
+#: includes/class-ettic-otc-cpt.php:466
 msgid "Expired / lapsed"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:437
+#: includes/class-ettic-otc-cpt.php:470
 msgid "Certification Type"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:443
+#: includes/class-ettic-otc-cpt.php:476
 msgid "Audited means a third-party issued a formal certificate with dates (SOC 2, ISO 27001, PCI DSS). Self-attested means you adhere to the framework without an external audit — the honest framing for GDPR, CCPA, and most HIPAA posture claims."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:447
-#: includes/class-ettic-otc-cpt.php:1022
+#: includes/class-ettic-otc-cpt.php:480
+#: includes/class-ettic-otc-cpt.php:1055
 msgid "Status"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:453
+#: includes/class-ettic-otc-cpt.php:486
 msgid "\"Active\" for audited means you hold a current certificate. \"Active\" for self-attested means you currently meet the framework. Use \"In progress\" while working toward either."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:457
-#: includes/class-ettic-otc-cpt.php:1021
+#: includes/class-ettic-otc-cpt.php:490
+#: includes/class-ettic-otc-cpt.php:1054
 msgid "Issuing Body"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:458
+#: includes/class-ettic-otc-cpt.php:491
 msgid "e.g., AICPA, BSI Group, Schellman"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:462
+#: includes/class-ettic-otc-cpt.php:495
 msgid "Issue Date"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:467
-#: includes/class-ettic-otc-cpt.php:1023
+#: includes/class-ettic-otc-cpt.php:500
+#: includes/class-ettic-otc-cpt.php:1056
 msgid "Expiry Date"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:472
+#: includes/class-ettic-otc-cpt.php:505
 msgid "Framework Logo"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:477
+#: includes/class-ettic-otc-cpt.php:510
 msgid "Use the official framework mark where licensing allows (SOC 2, ISO, GDPR shield). Square images work best at 44×44."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:481
+#: includes/class-ettic-otc-cpt.php:514
 msgid "Proof Artifact"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:484
-#: includes/class-ettic-otc-cpt.php:631
+#: includes/class-ettic-otc-cpt.php:517
+#: includes/class-ettic-otc-cpt.php:664
 msgid "View file"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:489
+#: includes/class-ettic-otc-cpt.php:522
 msgid "Optional PDF the trust center can link to — e.g. the audit report, certificate, or policy mapping document. Shown as a download button on the card."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:493
+#: includes/class-ettic-otc-cpt.php:526
 msgid "Scope & Notes"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:494
+#: includes/class-ettic-otc-cpt.php:527
 msgid "e.g., We process EU personal data under GDPR. Our DPA covers customer data, and we support DSARs within 30 days."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:495
+#: includes/class-ettic-otc-cpt.php:528
 msgid "Required for self-attested frameworks so the card has meaningful content. One or two sentences on scope, how you meet the framework, or what prospects should know."
 msgstr ""
 
 #. translators: %s: policy version number
-#: includes/class-ettic-otc-cpt.php:550
+#: includes/class-ettic-otc-cpt.php:583
 #, php-format
 msgid "Version %s"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:553
+#: includes/class-ettic-otc-cpt.php:586
 msgid "Regular saves update the current version. Use the checkbox below to formally publish a new version."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:562
+#: includes/class-ettic-otc-cpt.php:595
 msgid "Publish as new version"
 msgstr ""
 
 #. translators: %1$d: current version number, %2$d: next version number
-#: includes/class-ettic-otc-cpt.php:567
+#: includes/class-ettic-otc-cpt.php:600
 #, php-format
 msgid "This will save the current content as v%1$d and create v%2$d. Only check this for formal, published changes — not minor edits."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:576
+#: includes/class-ettic-otc-cpt.php:609
 msgid "What changed?"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:579
+#: includes/class-ettic-otc-cpt.php:612
 msgid "e.g., Updated data retention from 90 to 60 days"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:580
+#: includes/class-ettic-otc-cpt.php:613
 msgid "Shown in the public version history."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:586
+#: includes/class-ettic-otc-cpt.php:619
 msgid "Policy ID"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:587
+#: includes/class-ettic-otc-cpt.php:620
 msgid "e.g., POL-012"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:588
+#: includes/class-ettic-otc-cpt.php:621
 msgid "Optional short reference (e.g., POL-012). Shown on the public listing and in security questionnaires."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:592
-#: includes/class-ettic-otc-cpt.php:1061
+#: includes/class-ettic-otc-cpt.php:625
+#: includes/class-ettic-otc-cpt.php:1094
 #: templates/partials/policies.php:55
 msgid "Category"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:601
+#: includes/class-ettic-otc-cpt.php:634
 msgid "Effective Date"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:606
+#: includes/class-ettic-otc-cpt.php:639
 msgid "Next Review Date"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:611
+#: includes/class-ettic-otc-cpt.php:644
 msgid "Framework Citations"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:622
+#: includes/class-ettic-otc-cpt.php:655
 msgid "e.g., SOC 2 CC6.1, ISO 27001 A.9.2…"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:624
+#: includes/class-ettic-otc-cpt.php:657
 msgid "Framework or control references this policy satisfies. Appears as pill badges on the public page."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:628
+#: includes/class-ettic-otc-cpt.php:661
 msgid "PDF Attachment"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:634
+#: includes/class-ettic-otc-cpt.php:667
 msgid "Replace PDF"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:634
+#: includes/class-ettic-otc-cpt.php:667
 msgid "Upload PDF"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:636
+#: includes/class-ettic-otc-cpt.php:669
 msgid "Upload the signed PDF. Visitors see a \"Download PDF\" button only when a file is attached."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:640
-#: includes/class-ettic-otc-cpt.php:796
+#: includes/class-ettic-otc-cpt.php:673
+#: includes/class-ettic-otc-cpt.php:829
 msgid "Sort Order"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:642
-#: includes/class-ettic-otc-cpt.php:798
+#: includes/class-ettic-otc-cpt.php:675
+#: includes/class-ettic-otc-cpt.php:831
 msgid "Lower numbers appear first."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:659
-#: includes/class-ettic-otc-cpt.php:730
-#: includes/class-ettic-otc-cpt.php:1092
+#: includes/class-ettic-otc-cpt.php:692
+#: includes/class-ettic-otc-cpt.php:763
+#: includes/class-ettic-otc-cpt.php:1125
 #: templates/partials/data-practices.php:96
 #: templates/partials/subprocessors.php:37
 msgid "Purpose"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:661
+#: includes/class-ettic-otc-cpt.php:694
 msgid "What does this subprocessor do for your company?"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:665
+#: includes/class-ettic-otc-cpt.php:698
 #: templates/partials/subprocessors.php:38
 msgid "Data Processed"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:667
+#: includes/class-ettic-otc-cpt.php:700
 msgid "What types of data does this subprocessor handle?"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:671
+#: includes/class-ettic-otc-cpt.php:704
 msgid "Country / Location"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:672
+#: includes/class-ettic-otc-cpt.php:705
 msgid "e.g., United States"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:676
+#: includes/class-ettic-otc-cpt.php:709
 #: templates/partials/subprocessors.php:41
 msgid "Website"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:683
+#: includes/class-ettic-otc-cpt.php:716
 msgid "DPA Signed"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:685
+#: includes/class-ettic-otc-cpt.php:718
 msgid "A Data Processing Agreement (DPA) is a contract between you and the subprocessor covering how they handle personal data on your behalf. Check this box once your organization has signed one with this vendor."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:715
+#: includes/class-ettic-otc-cpt.php:748
 msgid "Data Items Collected"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:724
-#: includes/class-ettic-otc-cpt.php:762
+#: includes/class-ettic-otc-cpt.php:757
+#: includes/class-ettic-otc-cpt.php:795
 msgid "Type and press Enter..."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:737
+#: includes/class-ettic-otc-cpt.php:770
 #: templates/partials/data-practices.php:103
 msgid "Legal Basis"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:739
+#: includes/class-ettic-otc-cpt.php:772
 msgid "— Select —"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:746
+#: includes/class-ettic-otc-cpt.php:779
 msgid "Retention Period"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:747
+#: includes/class-ettic-otc-cpt.php:780
 msgid "e.g., 30 days"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:753
+#: includes/class-ettic-otc-cpt.php:786
 #: templates/partials/data-practices.php:117
 msgid "Shared With"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:768
+#: includes/class-ettic-otc-cpt.php:801
 msgid "Properties"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:772
+#: includes/class-ettic-otc-cpt.php:805
 msgid "Collected"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:776
+#: includes/class-ettic-otc-cpt.php:809
 msgid "Stored"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:780
+#: includes/class-ettic-otc-cpt.php:813
 msgid "Shared with third parties"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:784
+#: includes/class-ettic-otc-cpt.php:817
 msgid "Sold to third parties"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:788
+#: includes/class-ettic-otc-cpt.php:821
 msgid "Encrypted"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:791
+#: includes/class-ettic-otc-cpt.php:824
 msgid "Unchecked means an explicit \"No\". The AI assistant reports these values verbatim to visitors asking questions like \"Do you sell customer data?\"."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1060
+#: includes/class-ettic-otc-cpt.php:1093
 #: templates/partials/policies.php:52
 msgid "ID"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1062
+#: includes/class-ettic-otc-cpt.php:1095
 #: includes/class-ettic-otc-version.php:160
 #: templates/partials/policies.php:56
 msgid "Version"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1063
+#: includes/class-ettic-otc-cpt.php:1096
 msgid "PDF"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1093
+#: includes/class-ettic-otc-cpt.php:1126
 #: templates/partials/subprocessors.php:39
 msgid "Location"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1094
+#: includes/class-ettic-otc-cpt.php:1127
 #: templates/partials/subprocessors.php:40
 msgid "DPA"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1113
+#: includes/class-ettic-otc-cpt.php:1146
 msgid "Data Items"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1114
-#: includes/class-ettic-otc-cpt.php:1183
+#: includes/class-ettic-otc-cpt.php:1147
+#: includes/class-ettic-otc-cpt.php:1216
 msgid "Order"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1143
+#: includes/class-ettic-otc-cpt.php:1176
 msgid "Related Policy"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1145
+#: includes/class-ettic-otc-cpt.php:1178
 msgid "— None —"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1150
+#: includes/class-ettic-otc-cpt.php:1183
 msgid "Optional — link this answer to a published policy for deeper context."
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1155
+#: includes/class-ettic-otc-cpt.php:1188
 msgid "Sort order:"
 msgstr ""
 
-#: includes/class-ettic-otc-cpt.php:1156
+#: includes/class-ettic-otc-cpt.php:1189
 msgid "Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first."
 msgstr ""
 
@@ -1717,44 +1717,44 @@ msgid "Schema version mismatch (found %1$d, expected %2$d)."
 msgstr ""
 
 #. translators: %1$s: their version, %2$s: our version
-#: includes/class-ettic-otc-io.php:257
+#: includes/class-ettic-otc-io.php:265
 #, php-format
 msgid "Plugin major version mismatch (export: %1$s, this site: %2$s)."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:396
+#: includes/class-ettic-otc-io.php:405
 msgid "PHP ZipArchive extension is required."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:400
+#: includes/class-ettic-otc-io.php:409
 msgid "Could not open uploaded archive."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:405
+#: includes/class-ettic-otc-io.php:414
 msgid "Archive is missing manifest.json."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:409
+#: includes/class-ettic-otc-io.php:418
 msgid "manifest.json could not be parsed."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:692
+#: includes/class-ettic-otc-io.php:701
 msgid "Could not reopen archive for media import."
 msgstr ""
 
 #. translators: %s: media path
-#: includes/class-ettic-otc-io.php:707
+#: includes/class-ettic-otc-io.php:716
 #, php-format
 msgid "Bundled media missing during import: %s"
 msgstr ""
 
 #. translators: %s: filename
-#: includes/class-ettic-otc-io.php:727
+#: includes/class-ettic-otc-io.php:736
 #, php-format
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:745
+#: includes/class-ettic-otc-io.php:754
 msgid "Could not create attachment."
 msgstr ""
 
