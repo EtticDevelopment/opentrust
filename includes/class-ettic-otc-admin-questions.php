@@ -136,7 +136,7 @@ final class Ettic_OTC_Admin_Questions {
                     </div>
                     <button type="submit" class="button"><?php esc_html_e('Filter', 'open-trust-center-by-ettic'); ?></button>
                     <a href="<?php echo esc_url(admin_url('admin.php?page=ettic-otc-questions')); ?>" class="button"><?php esc_html_e('Reset', 'open-trust-center-by-ettic'); ?></a>
-                    <a href="<?php echo esc_url($export_url); ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'open-trust-center-by-ettic'); ?></a>
+                    <a href="<?php echo esc_url($export_url); // nosemgrep: php.lang.security.injection.echoed-request.echoed-request -- $export_url is built via admin_url() + wp_nonce_url() and printed through esc_url(); $_GET filter values are pre-sanitized via sanitize_text_field() at the top of this method. ?>" class="button" style="margin-left:auto"><?php esc_html_e('Download CSV', 'open-trust-center-by-ettic'); ?></a>
                 </div>
             </form>
 

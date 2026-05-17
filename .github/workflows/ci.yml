@@ -42,6 +42,7 @@ jobs:
       - name: Run Plugin Check
         uses: wordpress/plugin-check-action@v1
         with:
+          slug: open-trust-center-by-ettic
           ignore-warnings: true
           exclude-directories: 'dist'
           exclude-files: '.phpstan-bootstrap.php'
@@ -95,16 +96,16 @@ jobs:
 
       - name: Regenerate POT
         run: |
-          wp i18n make-pot . languages/opentrust.pot \
-            --slug=opentrust \
-            --domain=opentrust \
+          wp i18n make-pot . languages/open-trust-center-by-ettic.pot \
+            --slug=open-trust-center-by-ettic \
+            --domain=open-trust-center-by-ettic \
             --exclude=dist,vendor,node_modules,languages \
             --allow-root
 
       - name: Verify POT is up to date
         run: |
-          if ! git diff --exit-code -I 'POT-Creation-Date' -- languages/opentrust.pot; then
-            echo "::error::languages/opentrust.pot is stale. Run \`wp i18n make-pot . languages/opentrust.pot --slug=opentrust --domain=opentrust --exclude=dist,vendor,node_modules,languages\` locally and commit the result."
+          if ! git diff --exit-code -I 'POT-Creation-Date' -- languages/open-trust-center-by-ettic.pot; then
+            echo "::error::languages/open-trust-center-by-ettic.pot is stale. Run \`wp i18n make-pot . languages/open-trust-center-by-ettic.pot --slug=open-trust-center-by-ettic --domain=open-trust-center-by-ettic --exclude=dist,vendor,node_modules,languages\` locally and commit the result."
             exit 1
           fi
           echo "OK: POT is in sync with source."
@@ -120,12 +121,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          header_version=$(grep -E '^\s*\*\s*Version:' opentrust.php | head -1 | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
-          constant_version=$(grep -E "define\('OPENTRUST_VERSION'" opentrust.php | sed -E "s/.*'OPENTRUST_VERSION',[[:space:]]*'([^']+)'.*/\1/")
+          plugin_file=open-trust-center-by-ettic.php
+          header_version=$(grep -E '^\s*\*\s*Version:' "$plugin_file" | head -1 | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
+          constant_version=$(grep -E "define\('ETTIC_OTC_VERSION'" "$plugin_file" | sed -E "s/.*'ETTIC_OTC_VERSION',[[:space:]]*'([^']+)'.*/\1/")
           readme_version=$(grep -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
 
-          echo "opentrust.php header: $header_version"
-          echo "OPENTRUST_VERSION:    $constant_version"
+          echo "$plugin_file header: $header_version"
+          echo "ETTIC_OTC_VERSION:    $constant_version"
           echo "readme.txt Stable tag: $readme_version"
 
           if [[ -z "$header_version" || -z "$constant_version" || -z "$readme_version" ]]; then

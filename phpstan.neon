@@ -6,7 +6,7 @@ parameters:
     bootstrapFiles:
         - .phpstan-bootstrap.php
     paths:
-        - opentrust.php
+        - open-trust-center-by-ettic.php
         - uninstall.php
         - includes/
     excludePaths:
