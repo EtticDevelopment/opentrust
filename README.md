@@ -1,6 +1,6 @@
 <div align="center">
 
-# Open Trust Center
+# Open Trust Center by Ettic
 
 **A self-hosted, open-source trust center plugin for WordPress.**
 
@@ -17,7 +17,7 @@ Publish security policies, subprocessors, certifications, and data practices on 
 
 ---
 
-Open Trust Center is a self-hosted, open-source trust center for WordPress. Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. Open Trust Center gives you all three on a branded page that lives on your own WordPress site.
+Open Trust Center by Ettic is a self-hosted, open-source trust center for WordPress. Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. Open Trust Center by Ettic gives you all three on a branded page that lives on your own WordPress site.
 
 ## What's inside
 
@@ -60,7 +60,7 @@ There's no SaaS subscription. You only pay your AI provider for tokens consumed 
 ## Privacy by design
 
 - **Zero telemetry, zero analytics, zero licence checks.** The only outbound HTTP calls the plugin can make are AI provider requests you configure, and they go through an SSRF host allowlist.
-- **No PII in logs.** The optional `wp_ettic_otc_chat_log` table stores only short hashed identifiers — never raw IPs, emails, sessions, user agents, or referers. The privacy posture is enforced by the schema itself.
+- **No PII in logs.** The optional `wp_ettic_otc_chat_log` table stores only short hashed identifiers — never raw IPs, emails, sessions, user agents, or referrers. The privacy posture is enforced by the schema itself.
 - **Encrypted secrets.** API keys and the Cloudflare Turnstile secret are encrypted at rest with libsodium `secretbox`, salted from `wp_salt('auth')`. Rotating `AUTH_KEY` invalidates every stored secret atomically.
 - **Theme-isolated rendering.** The trust center intercepts at `template_redirect`, outputs a complete standalone HTML document with inlined CSS, and exits. Your theme's stylesheet, header, footer, and JavaScript never load.
 - **Capability-checked admin actions** with nonce verification on every save handler.

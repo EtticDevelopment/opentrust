@@ -222,9 +222,11 @@ final class Ettic_OTC_CPT {
                 $callback($post_id);
             }
         };
-        add_action('deleted_post',   $on_post_event);
-        add_action('trashed_post',   $on_post_event);
-        add_action('untrashed_post', $on_post_event);
+        // before_delete_post fires while the row is still in the DB, so
+        // get_post_type() can resolve it. deleted_post fires after removal.
+        add_action('before_delete_post', $on_post_event);
+        add_action('trashed_post',       $on_post_event);
+        add_action('untrashed_post',     $on_post_event);
 
         add_action(
             'transition_post_status',

@@ -86,7 +86,7 @@ final class Ettic_OTC_Admin_Review {
         // the result — same risk model as core's admin_footer_text usage.
         return sprintf(
             /* translators: %s: link to the WordPress.org reviews page */
-            __('Ettic_OTC is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'open-trust-center-by-ettic'),
+            __('Open Trust Center by Ettic is built and maintained in the open. If it is helping your team, a %s keeps the project moving.', 'open-trust-center-by-ettic'),
             $link
         );
     }
@@ -113,7 +113,7 @@ final class Ettic_OTC_Admin_Review {
         <div class="notice notice-info ettic-otc-review-notice">
             <p>
                 <strong><?php esc_html_e('Your trust center is up and running.', 'open-trust-center-by-ettic'); ?></strong>
-                <?php esc_html_e('Ettic_OTC is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'open-trust-center-by-ettic'); ?>
+                <?php esc_html_e('Open Trust Center by Ettic is fully open-source with no paid tier — reviews on WordPress.org are how the project gets seen. If it has earned a kind word, we would be grateful.', 'open-trust-center-by-ettic'); ?>
             </p>
             <p>
                 <a href="<?php echo esc_url($review_url); ?>" target="_blank" rel="noopener noreferrer" class="button button-primary">

@@ -153,7 +153,6 @@ final class Ettic_OTC_Chat_Secrets {
         }
 
         unset($stored[$provider]);
-        update_option('ettic_otc_provider_keys', $stored, false);
-        return true;
+        return update_option('ettic_otc_provider_keys', $stored, false);
     }
 }

@@ -182,8 +182,13 @@ final class Ettic_OTC_Admin_Questions {
             </table>
 
             <?php if ($pages > 1):
-                $base = add_query_arg($filters + ['page' => 'ettic-otc-questions'], admin_url('admin.php'));
-                $base = remove_query_arg('paged', $base);
+                $base = add_query_arg([
+                    'page'      => 'ettic-otc-questions',
+                    'q'         => $filters['search'],
+                    'model'     => $filters['model'],
+                    'date_from' => $filters['date_from'],
+                    'date_to'   => $filters['date_to'],
+                ], admin_url('admin.php'));
                 ?>
                 <div class="tablenav" style="margin-top:16px">
                     <div class="tablenav-pages">

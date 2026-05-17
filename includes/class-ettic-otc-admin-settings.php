@@ -298,7 +298,7 @@ final class Ettic_OTC_Admin_Settings {
         printf(
             '<label><input type="checkbox" id="ettic_otc_show_powered_by" name="ettic_otc_settings[show_powered_by]" value="1" %s> %s</label>',
             checked($checked, true, false),
-            esc_html__('Show a "Powered by Open Trust Center" credit in the trust center footer.', 'open-trust-center-by-ettic')
+            esc_html__('Show a "Powered by Open Trust Center by Ettic" credit in the trust center footer.', 'open-trust-center-by-ettic')
         );
         printf(
             '<p class="description">%s</p>',

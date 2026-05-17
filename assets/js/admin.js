@@ -604,7 +604,7 @@
         // Force a reflow so the next class add re-starts the animation.
         void wrap.offsetWidth;
         wrap.classList.add('ettic-otc-typeahead-filled', tier === 'review' ? 'is-review' : 'is-fact');
-        fieldEl.dataset.otPrefilled = tier;
+        fieldEl.dataset.etticOtcPrefilled = tier;
 
         var help = document.createElement('p');
         help.className = 'ettic-otc-typeahead-help' + (tier === 'review' ? ' is-review' : '');
@@ -630,7 +630,7 @@
                 var tags = el.querySelectorAll('.ettic-otc-tag');
                 for (var t = 0; t < tags.length; t++) tags[t].remove();
             }
-            delete el.dataset.otPrefilled;
+            delete el.dataset.etticOtcPrefilled;
             var wrap = el.closest('.ettic-otc-meta-field');
             if (wrap) {
                 wrap.classList.remove('ettic-otc-typeahead-filled', 'is-fact', 'is-review');
