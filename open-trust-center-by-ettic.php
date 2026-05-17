@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: OpenTrust
- * Plugin URI:  https://plugins.ettic.nl/opentrust
+ * Plugin Name: Open Trust Center by Ettic
+ * Plugin URI:  https://plugins.ettic.nl/open-trust-center-by-ettic
  * Description: A self-hosted, open-source trust center for publishing security policies, subprocessors, certifications, and data practices.
- * Version:     1.1.1
+ * Version:     1.2.0
  * Requires PHP: 8.1
  * Requires at least: 6.0
  * Author:      Ettic
  * Author URI:  https://plugins.ettic.nl
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: opentrust
+ * Text Domain: open-trust-center-by-ettic
  * Domain Path: /languages
  */
 
@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-define('OPENTRUST_VERSION', '1.1.1');
+define('OPENTRUST_VERSION', '1.2.0');
 define('OPENTRUST_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OPENTRUST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('OPENTRUST_PLUGIN_FILE', __FILE__);
