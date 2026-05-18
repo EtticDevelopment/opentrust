@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-17T13:01:18+00:00\n"
+"POT-Creation-Date: 2026-05-18T22:14:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: open-trust-center-by-ettic\n"
@@ -1694,67 +1694,67 @@ msgstr ""
 msgid "Use the Page Attributes box below (Order field) to control FAQ order. Lower numbers appear first."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:193
+#: includes/class-ettic-otc-io.php:206
 msgid "PHP ZipArchive extension is required for export."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:198
+#: includes/class-ettic-otc-io.php:211
 msgid "Could not create temp file for export."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:212
+#: includes/class-ettic-otc-io.php:225
 msgid "Could not open ZIP for writing."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:240
+#: includes/class-ettic-otc-io.php:257
 msgid "Unrecognised export format."
 msgstr ""
 
 #. translators: %1$d: schema version found, %2$d: schema version expected
-#: includes/class-ettic-otc-io.php:246
+#: includes/class-ettic-otc-io.php:263
 #, php-format
 msgid "Schema version mismatch (found %1$d, expected %2$d)."
 msgstr ""
 
 #. translators: %1$s: their version, %2$s: our version
-#: includes/class-ettic-otc-io.php:265
+#: includes/class-ettic-otc-io.php:282
 #, php-format
 msgid "Plugin major version mismatch (export: %1$s, this site: %2$s)."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:405
+#: includes/class-ettic-otc-io.php:422
 msgid "PHP ZipArchive extension is required."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:409
+#: includes/class-ettic-otc-io.php:426
 msgid "Could not open uploaded archive."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:414
+#: includes/class-ettic-otc-io.php:431
 msgid "Archive is missing manifest.json."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:418
+#: includes/class-ettic-otc-io.php:435
 msgid "manifest.json could not be parsed."
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:701
+#: includes/class-ettic-otc-io.php:726
 msgid "Could not reopen archive for media import."
 msgstr ""
 
 #. translators: %s: media path
-#: includes/class-ettic-otc-io.php:716
+#: includes/class-ettic-otc-io.php:741
 #, php-format
 msgid "Bundled media missing during import: %s"
 msgstr ""
 
 #. translators: %s: filename
-#: includes/class-ettic-otc-io.php:736
+#: includes/class-ettic-otc-io.php:761
 #, php-format
 msgid "Could not write attachment file: %s"
 msgstr ""
 
-#: includes/class-ettic-otc-io.php:754
+#: includes/class-ettic-otc-io.php:779
 msgid "Could not create attachment."
 msgstr ""
 
