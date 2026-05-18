@@ -53,8 +53,8 @@ final class Ettic_OTC_Admin {
         $settings_page = [Ettic_OTC_Admin_Settings::instance(), 'render_settings_page'];
 
         add_menu_page(
-            __('Open Trust Center', 'open-trust-center-by-ettic'),
-            __('Open Trust Center', 'open-trust-center-by-ettic'),
+            __('Open Trust Center by Ettic', 'open-trust-center-by-ettic'),
+            __('Trust Center', 'open-trust-center-by-ettic'),
             'manage_options',
             'ettic-otc',
             $settings_page,

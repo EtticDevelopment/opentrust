@@ -9,13 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-18T22:14:54+00:00\n"
+"POT-Creation-Date: 2026-05-18T22:21:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: open-trust-center-by-ettic\n"
 
 #. Plugin Name of the plugin
 #: open-trust-center-by-ettic.php
+#: includes/class-ettic-otc-admin.php:56
 msgid "Open Trust Center by Ettic"
 msgstr ""
 
@@ -977,9 +978,10 @@ msgstr ""
 msgid "Certifications"
 msgstr ""
 
-#: includes/class-ettic-otc-admin.php:56
 #: includes/class-ettic-otc-admin.php:57
-msgid "Open Trust Center"
+#: templates/partials/hero.php:38
+#: templates/trust-center.php:19
+msgid "Trust Center"
 msgstr ""
 
 #: includes/class-ettic-otc-admin.php:67
@@ -2466,11 +2468,6 @@ msgid "%d Active Certification"
 msgid_plural "%d Active Certifications"
 msgstr[0] ""
 msgstr[1] ""
-
-#: templates/partials/hero.php:38
-#: templates/trust-center.php:19
-msgid "Trust Center"
-msgstr ""
 
 #: templates/partials/policies.php:27
 msgid "Security Policies"
