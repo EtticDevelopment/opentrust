@@ -15,6 +15,19 @@ final class Ettic_OTC_IO {
     public const FORMAT_SETTINGS = 'ettic-otc-settings';
     public const FORMAT_CONTENT  = 'ettic-otc-content';
 
+    /**
+     * Legacy format header values produced by the original OpenTrust plugin
+     * (v1.0.x and v1.1.x). Normalised on read so downstream === comparisons
+     * against the FORMAT_* constants keep working without per-site changes.
+     *
+     * @deprecated 1.2.0 Drop in 2.0.0 alongside remap_legacy_cpt_keys(),
+     *             remap_legacy_meta_keys() and Ettic_OTC_CPT::LEGACY_*MAP.
+     */
+    private const LEGACY_FORMAT_ALIASES = [
+        'opentrust-settings' => self::FORMAT_SETTINGS,
+        'opentrust-content'  => self::FORMAT_CONTENT,
+    ];
+
     public const STRATEGY_SKIP       = 'skip';
     public const STRATEGY_OVERWRITE  = 'overwrite';
     public const STRATEGY_CREATE_NEW = 'create_new';
@@ -236,6 +249,10 @@ final class Ettic_OTC_IO {
         $errors = [];
 
         $format = (string) ($manifest['format'] ?? '');
+        // Belt-and-suspenders normalisation for callers that bypass read_zip()
+        // and hand a raw manifest array directly (e.g. fixtures, future tests).
+        // @deprecated 1.2.0 Drop in 2.0.0 with LEGACY_FORMAT_ALIASES.
+        $format = self::LEGACY_FORMAT_ALIASES[$format] ?? $format;
         if (!in_array($format, [self::FORMAT_SETTINGS, self::FORMAT_CONTENT], true)) {
             $errors[] = __('Unrecognised export format.', 'open-trust-center-by-ettic');
         }
@@ -416,6 +433,14 @@ final class Ettic_OTC_IO {
         $manifest = json_decode($raw, true);
         if (!is_array($manifest)) {
             throw new \RuntimeException(esc_html__('manifest.json could not be parsed.', 'open-trust-center-by-ettic'));
+        }
+        // Rewrite legacy "opentrust-*" format header to its renamed equivalent
+        // so the admin handler's strict === comparisons against FORMAT_*
+        // continue to dispatch correctly. Mutates the in-memory copy only.
+        // @deprecated 1.2.0 Drop in 2.0.0 with LEGACY_FORMAT_ALIASES.
+        $fmt = (string) ($manifest['format'] ?? '');
+        if (isset(self::LEGACY_FORMAT_ALIASES[$fmt])) {
+            $manifest['format'] = self::LEGACY_FORMAT_ALIASES[$fmt];
         }
         return ['manifest' => $manifest, 'zip_path' => $zip_path];
     }
