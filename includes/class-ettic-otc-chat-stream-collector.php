@@ -4,8 +4,8 @@
  *
  * Before this class existed, the citation URL-allowlist gate, doc-id de-dup,
  * usage accumulator, and tool-name capture lived as a hand-rolled `$on_chunk`
- * closure repeated three times: in OpenTrust_Chat::drive_stream, ::drive_blocking,
- * and OpenTrust_Render::handle_chat_noscript_post. The audit flagged this as
+ * closure repeated three times: in Ettic_OTC_Chat::drive_stream, ::drive_blocking,
+ * and Ettic_OTC_Render::handle_chat_noscript_post. The audit flagged this as
  * the highest-leverage drift hazard in the codebase: each closure was the
  * security boundary for which citations make it back to the visitor, and the
  * doc-id de-dup comment was already copy-pasted verbatim three times — exactly
@@ -15,7 +15,7 @@
  * to the allowlist, the de-dup key, or the refusal detector lands in one place.
  *
  * Usage:
- *   $collector = new OpenTrust_Chat_Stream_Collector($corpus['urls'] ?? []);
+ *   $collector = new Ettic_OTC_Chat_Stream_Collector($corpus['urls'] ?? []);
  *   $on_chunk  = static function (array $event) use ($collector, $sse_emit) {
  *       if ($collector->ingest($event)) {
  *           $sse_emit($event);   // forward to the client
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Stream_Collector {
+final class Ettic_OTC_Chat_Stream_Collector {
 
     /** @var array<int, string> */
     private array $whitelist;
@@ -84,7 +84,7 @@ final class OpenTrust_Chat_Stream_Collector {
 
             case 'citation':
                 $url = (string) ($data['url'] ?? '');
-                if (!OpenTrust_Chat::url_allowed($url, $this->whitelist)) {
+                if (!Ettic_OTC_Chat::url_allowed($url, $this->whitelist)) {
                     return false; // dropped by allowlist
                 }
                 // De-dup by DOCUMENT ID (each corpus doc has a unique id like
@@ -133,7 +133,7 @@ final class OpenTrust_Chat_Stream_Collector {
      * Two-signal refusal heuristic: canonical phrase + zero citations.
      */
     public function detect_refusal(): bool {
-        return OpenTrust_Chat::detect_refusal($this->answer, $this->citations);
+        return Ettic_OTC_Chat::detect_refusal($this->answer, $this->citations);
     }
 
     /**
@@ -155,7 +155,7 @@ final class OpenTrust_Chat_Stream_Collector {
             'citation_count' => count($this->citations),
             'refused'        => $this->detect_refusal(),
             'tool_turns'     => count($this->tool_names),
-            'tool_names'     => OpenTrust_Chat::format_tool_names_for_log($this->tool_names),
+            'tool_names'     => Ettic_OTC_Chat::format_tool_names_for_log($this->tool_names),
         ];
     }
 }

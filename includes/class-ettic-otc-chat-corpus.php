@@ -2,7 +2,7 @@
 /**
  * Corpus builder for the agentic chat engine.
  *
- * Turns published OpenTrust CPT content into two parallel projections:
+ * Turns published Ettic_OTC CPT content into two parallel projections:
  *
  *   - `documents` — full per-document records the AI fetches via the
  *     `get_document(id)` tool. Long-form policies are truncated to a 30K-token
@@ -19,7 +19,7 @@
  * inverted BM25 index used by `search_documents(query)` is built once at
  * cache-build time and persisted alongside the corpus.
  *
- * Reads only published posts via OpenTrust_Repository — the same read-side
+ * Reads only published posts via Ettic_OTC_Repository — the same read-side
  * surface Render uses, so any cached fetch hit there is shared here.
  */
 
@@ -29,9 +29,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Corpus {
+final class Ettic_OTC_Chat_Corpus {
 
-    public const TRANSIENT_KEY     = 'opentrust_chat_corpus';
+    public const TRANSIENT_KEY     = 'ettic_otc_chat_corpus';
     public const TTL               = 12 * HOUR_IN_SECONDS;
 
     /**
@@ -60,10 +60,10 @@ final class OpenTrust_Chat_Corpus {
 
     /**
      * Postmeta key that stores the AI-generated 2–3 sentence policy summary.
-     * Read here; written by OpenTrust_Chat_Summarizer. Defined in the corpus
+     * Read here; written by Ettic_OTC_Chat_Summarizer. Defined in the corpus
      * class so this file works whether the summarizer class is loaded or not.
      */
-    public const POLICY_SUMMARY_META = '_opentrust_policy_chat_summary';
+    public const POLICY_SUMMARY_META = '_ettic_otc_policy_chat_summary';
 
     // ──────────────────────────────────────────────
     // Cache
@@ -98,7 +98,7 @@ final class OpenTrust_Chat_Corpus {
 
     /**
      * Drop every cached locale variant. Wired to CPT save/delete/trash/status
-     * transitions and to update_option_opentrust_settings.
+     * transitions and to update_option_ettic_otc_settings.
      */
     public static function invalidate(): void {
         global $wpdb;
@@ -136,8 +136,8 @@ final class OpenTrust_Chat_Corpus {
      */
     public static function build(?string $locale = null): array {
         $locale   = self::normalize_locale($locale);
-        $settings = OpenTrust::get_settings();
-        $repo     = OpenTrust_Repository::instance();
+        $settings = Ettic_OTC::get_settings();
+        $repo     = Ettic_OTC_Repository::instance();
         $visible  = $settings['sections_visible'] ?? [];
 
         $documents = [];
@@ -185,9 +185,9 @@ final class OpenTrust_Chat_Corpus {
                 $urls[] = $doc['url'];
             }
         }
-        $base = home_url('/' . ($settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG) . '/');
+        $base = home_url('/' . ($settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG) . '/');
         $urls[] = $base;
-        foreach (['ot-certifications', 'ot-policies', 'ot-subprocessors', 'ot-data-practices', 'ot-contact'] as $anchor) {
+        foreach (['ettic-otc-certifications', 'ettic-otc-policies', 'ettic-otc-subprocessors', 'ettic-otc-data-practices', 'ettic-otc-contact'] as $anchor) {
             $urls[] = $base . '#' . $anchor;
         }
         $urls = array_values(array_unique($urls));
@@ -200,7 +200,7 @@ final class OpenTrust_Chat_Corpus {
         $index = self::project_index($documents);
 
         // Inverted index for `search_documents`.
-        $bm25 = OpenTrust_Chat_Search::build($documents);
+        $bm25 = Ettic_OTC_Chat_Search::build($documents);
 
         // Token estimate for the rendered index — fed into the budget reserver.
         $company       = (string) ($settings['company_name'] ?? get_bloginfo('name'));
@@ -455,7 +455,7 @@ final class OpenTrust_Chat_Corpus {
 
     /**
      * Resolve the index summary for a policy. Fallback ladder:
-     *   1. _opentrust_policy_chat_summary postmeta if non-empty.
+     *   1. _ettic_otc_policy_chat_summary postmeta if non-empty.
      *   2. post_excerpt (stripped + collapsed) if non-empty.
      *   3. First 240 chars of the stripped post_content with ellipsis.
      */
@@ -493,14 +493,14 @@ final class OpenTrust_Chat_Corpus {
     // ──────────────────────────────────────────────
 
     private static function format_policy(\WP_Post $post, array $settings): array {
-        $endpoint = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
         $url      = home_url('/' . $endpoint . '/policy/' . $post->post_name . '/');
 
-        $category_labels = OpenTrust_Render::policy_category_labels();
-        $category        = (string) (get_post_meta($post->ID, '_opentrust_policy_category', true) ?: 'other');
+        $category_labels = Ettic_OTC_Render::policy_category_labels();
+        $category        = (string) (get_post_meta($post->ID, '_ettic_otc_policy_category', true) ?: 'other');
         $category_label  = $category_labels[$category] ?? $category;
-        $effective       = (string) get_post_meta($post->ID, '_opentrust_policy_effective_date', true);
-        $version         = (int) (get_post_meta($post->ID, '_opentrust_version', true) ?: 1);
+        $effective       = (string) get_post_meta($post->ID, '_ettic_otc_policy_effective_date', true);
+        $version         = (int) (get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1);
 
         // Strip block-editor markup down to plain text.
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core filter.
@@ -540,12 +540,12 @@ final class OpenTrust_Chat_Corpus {
     }
 
     private static function format_certification(array $cert, array $settings): array {
-        $endpoint = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-certifications');
+        $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-certifications');
 
         $status_labels = ($cert['type'] ?? 'certified') === 'compliant'
-            ? OpenTrust_Render::cert_aligned_status_labels()
-            : OpenTrust_Render::cert_status_labels();
+            ? Ettic_OTC_Render::cert_aligned_status_labels()
+            : Ettic_OTC_Render::cert_status_labels();
         $status_label  = $status_labels[$cert['status']] ?? $cert['status'];
 
         $lines = [
@@ -591,8 +591,8 @@ final class OpenTrust_Chat_Corpus {
     }
 
     private static function format_subprocessor(array $sub, array $settings): array {
-        $endpoint = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-subprocessors');
+        $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-subprocessors');
 
         $lines = ['Name: ' . ($sub['name'] ?? '')];
         if (!empty($sub['purpose']))        { $lines[] = 'Purpose: '         . $sub['purpose']; }
@@ -627,10 +627,10 @@ final class OpenTrust_Chat_Corpus {
     }
 
     private static function format_data_practice(array $dp, array $settings): array {
-        $endpoint = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-data-practices');
+        $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-data-practices');
 
-        $legal_labels = OpenTrust_Render::legal_basis_labels();
+        $legal_labels = Ettic_OTC_Render::legal_basis_labels();
 
         $lines = ['Category: ' . (string) ($dp['title'] ?? '')];
         if (!empty($dp['data_items']) && is_array($dp['data_items'])) {
@@ -753,8 +753,8 @@ final class OpenTrust_Chat_Corpus {
             return null;
         }
 
-        $endpoint = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
-        $url      = home_url('/' . $endpoint . '/#ot-contact');
+        $endpoint = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
+        $url      = home_url('/' . $endpoint . '/#ettic-otc-contact');
 
         return [
             'id'       => 'contact',

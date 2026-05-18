@@ -2,21 +2,21 @@
 /**
  * AI Chat settings tab and its admin-post handlers.
  *
- * Owns the entire "AI Chat" surface inside the OpenTrust settings page:
+ * Owns the entire "AI Chat" surface inside the Ettic_OTC settings page:
  * the provider picker (Anthropic primary, others behind an "advanced"
  * disclosure), the per-provider key card with validate-and-save flow,
  * the post-key model picker + budget/limit form, and the four
  * admin-post.php endpoints that drive key save/forget/refresh and the
  * summary-backfill sweep.
  *
- * Bootstrapped by OpenTrust_Admin's constructor; subscribes its own
+ * Bootstrapped by Ettic_OTC_Admin's constructor; subscribes its own
  * admin_post_* hooks. The settings page (which still lives on
- * OpenTrust_Admin as the menu callback) calls render_ai_tab() when the
+ * Ettic_OTC_Admin as the menu callback) calls render_ai_tab() when the
  * "ai" tab is active.
  *
  * Settings writes that bypass the sanitize_settings filter (key
  * validation flips ai_enabled / ai_provider / ai_model_list_cached_at)
- * route through OpenTrust_Admin_Settings::save_settings_raw().
+ * route through Ettic_OTC_Admin_Settings::save_settings_raw().
  */
 
 declare(strict_types=1);
@@ -25,9 +25,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Admin_AI {
+final class Ettic_OTC_Admin_AI {
 
-    public const CRON_HOOK    = 'opentrust_ai_models_refresh';
+    public const CRON_HOOK    = 'ettic_otc_ai_models_refresh';
     public const CACHE_TTL    = 25 * HOUR_IN_SECONDS; // Slightly > daily cron cadence so the cache never expires between ticks.
 
     private static ?self $instance = null;
@@ -37,10 +37,10 @@ final class OpenTrust_Admin_AI {
     }
 
     private function __construct() {
-        add_action('admin_post_opentrust_ai_save_key',        [$this, 'handle_ai_save_key']);
-        add_action('admin_post_opentrust_ai_forget_key',      [$this, 'handle_ai_forget_key']);
-        add_action('admin_post_opentrust_ai_refresh_models',  [$this, 'handle_ai_refresh_models']);
-        add_action('admin_post_opentrust_ai_summarize_sweep', [$this, 'handle_ai_summarize_sweep']);
+        add_action('admin_post_ettic_otc_ai_save_key',        [$this, 'handle_ai_save_key']);
+        add_action('admin_post_ettic_otc_ai_forget_key',      [$this, 'handle_ai_forget_key']);
+        add_action('admin_post_ettic_otc_ai_refresh_models',  [$this, 'handle_ai_refresh_models']);
+        add_action('admin_post_ettic_otc_ai_summarize_sweep', [$this, 'handle_ai_summarize_sweep']);
 
         // Idempotent re-schedule on admin page loads — defends against the
         // daily cron getting cleared externally without forcing a deactivate/
@@ -53,15 +53,15 @@ final class OpenTrust_Admin_AI {
     // ──────────────────────────────────────────────
 
     public function render_ai_tab(array $settings): void {
-        $stored_keys     = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys     = Ettic_OTC_Chat_Secrets::get_all();
         $active_provider = $settings['ai_provider'] ?? '';
         $has_active_key  = $active_provider !== '' && isset($stored_keys[$active_provider]);
         $is_non_anthropic_active = $has_active_key && $active_provider !== 'anthropic';
 
         // Surface any transient notice from the admin-post handlers.
-        $notice = get_transient('opentrust_ai_notice_' . get_current_user_id());
+        $notice = get_transient('ettic_otc_ai_notice_' . get_current_user_id());
         if (is_array($notice)) {
-            delete_transient('opentrust_ai_notice_' . get_current_user_id());
+            delete_transient('ettic_otc_ai_notice_' . get_current_user_id());
             $class = $notice['type'] === 'error' ? 'notice-error' : 'notice-success';
             printf(
                 '<div class="notice %s is-dismissible"><p>%s</p></div>',
@@ -74,13 +74,13 @@ final class OpenTrust_Admin_AI {
 
         ?>
         <?php if ($is_non_anthropic_active): ?>
-            <div class="ot-ai-active-warning">
-                <strong><?php esc_html_e('Heads up: citation fidelity is not guaranteed on your active provider.', 'opentrust'); ?></strong>
+            <div class="ettic-otc-ai-active-warning">
+                <strong><?php esc_html_e('Heads up: citation fidelity is not guaranteed on your active provider.', 'open-trust-center-by-ettic'); ?></strong>
                 <p>
                     <?php
                     printf(
                         /* translators: %s: provider label, e.g. OpenAI */
-                        wp_kses(__('You are currently using <strong>%s</strong>. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'opentrust'), ['strong' => []]),
+                        wp_kses(__('You are currently using <strong>%s</strong>. Only Anthropic uses a structural Citations API — every other provider relies on prompted citation tags the model can ignore or fabricate. For a published trust center, switch to Anthropic below.', 'open-trust-center-by-ettic'), ['strong' => []]),
                         esc_html(ucfirst($active_provider))
                     );
                     ?>
@@ -88,22 +88,22 @@ final class OpenTrust_Admin_AI {
             </div>
         <?php endif; ?>
 
-        <p class="ot-ai-intro">
+        <p class="ettic-otc-ai-intro">
             <?php
             echo wp_kses(
-                __('OpenTrust uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'opentrust'),
+                __('Ettic_OTC uses <strong>Anthropic Claude with the native Citations API</strong> to answer visitor questions about your trust center. Every claim the assistant makes is tied to an exact quote from one of your published documents — so no policy text is invented and nothing is paraphrased into something you did not actually publish.', 'open-trust-center-by-ettic'),
                 ['strong' => []]
             );
             ?>
         </p>
 
-        <details class="ot-ai-rationale">
-            <summary><?php esc_html_e('Why Anthropic, and not OpenAI or any other provider?', 'opentrust'); ?></summary>
-            <div class="ot-ai-rationale__body">
+        <details class="ettic-otc-ai-rationale">
+            <summary><?php esc_html_e('Why Anthropic, and not OpenAI or any other provider?', 'open-trust-center-by-ettic'); ?></summary>
+            <div class="ettic-otc-ai-rationale__body">
                 <p>
                     <?php
                     echo wp_kses(
-                        __('A trust center is a <strong>compliance surface</strong>. If the assistant invents a security commitment you never made, that is not a UX papercut — it is a misrepresentation of your security posture, and your customers and auditors will hold you to it.', 'opentrust'),
+                        __('A trust center is a <strong>compliance surface</strong>. If the assistant invents a security commitment you never made, that is not a UX papercut — it is a misrepresentation of your security posture, and your customers and auditors will hold you to it.', 'open-trust-center-by-ettic'),
                         ['strong' => []]
                     );
                     ?>
@@ -111,13 +111,13 @@ final class OpenTrust_Admin_AI {
                 <p>
                     <?php
                     echo wp_kses(
-                        __('Anthropic is the <strong>only major provider</strong> that exposes a structural Citations API. Documents are sent as typed blocks and the model emits citations as first-class events containing the exact source document and the exact quoted text. The model literally cannot return a citation for text that is not in your source documents.', 'opentrust'),
+                        __('Anthropic is the <strong>only major provider</strong> that exposes a structural Citations API. Documents are sent as typed blocks and the model emits citations as first-class events containing the exact source document and the exact quoted text. The model literally cannot return a citation for text that is not in your source documents.', 'open-trust-center-by-ettic'),
                         ['strong' => []]
                     );
                     ?>
                 </p>
                 <p>
-                    <?php esc_html_e('Every other provider (including OpenAI and any model accessed via OpenRouter) relies on prompted citation tags that we parse out of the answer after the fact. That works most of the time, but the model can ignore the instructions, make up document IDs, or attach a citation to a sentence it actually hallucinated. We support these providers as an escape hatch for organizations that genuinely cannot use Anthropic for procurement or data-residency reasons — but we very, very strongly recommend you do not run a public trust center on them.', 'opentrust'); ?>
+                    <?php esc_html_e('Every other provider (including OpenAI and any model accessed via OpenRouter) relies on prompted citation tags that we parse out of the answer after the fact. That works most of the time, but the model can ignore the instructions, make up document IDs, or attach a citation to a sentence it actually hallucinated. We support these providers as an escape hatch for organizations that genuinely cannot use Anthropic for procurement or data-residency reasons — but we very, very strongly recommend you do not run a public trust center on them.', 'open-trust-center-by-ettic'); ?>
                 </p>
             </div>
         </details>
@@ -141,10 +141,10 @@ final class OpenTrust_Admin_AI {
      * up-to-date summary.
      */
     private function render_summary_backfill_banner(array $settings, bool $has_active_key): void {
-        if (!$has_active_key || empty($settings['ai_auto_summarize']) || !class_exists('OpenTrust_Chat_Summarizer')) {
+        if (!$has_active_key || empty($settings['ai_auto_summarize']) || !class_exists('Ettic_OTC_Chat_Summarizer')) {
             return;
         }
-        $missing = OpenTrust_Chat_Summarizer::missing_summary_count();
+        $missing = Ettic_OTC_Chat_Summarizer::missing_summary_count();
         if ($missing < 1) {
             return;
         }
@@ -160,26 +160,26 @@ final class OpenTrust_Admin_AI {
                                 '%d policy is missing an AI summary.',
                                 '%d policies are missing AI summaries.',
                                 $missing,
-                                'opentrust'
+                                'open-trust-center-by-ettic'
                             )
                         ),
                         (int) $missing
                     );
                     ?>
                 </strong>
-                <?php esc_html_e('Generate them now so the assistant can route questions accurately.', 'opentrust'); ?>
+                <?php esc_html_e('Generate them now so the assistant can route questions accurately.', 'open-trust-center-by-ettic'); ?>
             </p>
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin:0">
-                <?php wp_nonce_field('opentrust_ai_summarize_sweep'); ?>
-                <input type="hidden" name="action" value="opentrust_ai_summarize_sweep">
-                <button type="submit" class="button button-primary"><?php esc_html_e('Generate now', 'opentrust'); ?></button>
+                <?php wp_nonce_field('ettic_otc_ai_summarize_sweep'); ?>
+                <input type="hidden" name="action" value="ettic_otc_ai_summarize_sweep">
+                <button type="submit" class="button button-primary"><?php esc_html_e('Generate now', 'open-trust-center-by-ettic'); ?></button>
             </form>
         </div>
         <?php
     }
 
     private function render_ai_provider_picker(array $settings, array $stored_keys): void {
-        $providers       = OpenTrust_Chat_Provider::available();
+        $providers       = Ettic_OTC_Chat_Provider::available();
         $active_provider = $settings['ai_provider'] ?? '';
 
         // Partition: Anthropic is the primary, everything else is "advanced".
@@ -196,8 +196,8 @@ final class OpenTrust_Admin_AI {
         // Defensive fallback: if Anthropic is somehow not registered, render
         // everything flat so the tab never breaks.
         if ($primary === null) {
-            echo '<h3 class="ot-ai-section-heading">' . esc_html__('Choose a provider and add your key', 'opentrust') . '</h3>';
-            echo '<div class="ot-ai-advanced__grid">';
+            echo '<h3 class="ettic-otc-ai-section-heading">' . esc_html__('Choose a provider and add your key', 'open-trust-center-by-ettic') . '</h3>';
+            echo '<div class="ettic-otc-ai-advanced__grid">';
             foreach ($providers as $provider) {
                 $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced');
             }
@@ -208,26 +208,26 @@ final class OpenTrust_Admin_AI {
         $is_anthropic_active = $active_provider === 'anthropic' && isset($stored_keys['anthropic']);
         $advanced_open       = $active_provider !== '' && $active_provider !== 'anthropic';
         ?>
-        <h3 class="ot-ai-section-heading"><?php esc_html_e('Step 1 — Connect Anthropic', 'opentrust'); ?></h3>
+        <h3 class="ettic-otc-ai-section-heading"><?php esc_html_e('Step 1 — Connect Anthropic', 'open-trust-center-by-ettic'); ?></h3>
 
         <?php $this->render_provider_card($primary, $stored_keys, $active_provider, 'primary'); ?>
 
         <?php if (!empty($advanced)): ?>
-            <details class="ot-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
-                <summary><?php esc_html_e('Advanced: use a different provider (not recommended)', 'opentrust'); ?></summary>
+            <details class="ettic-otc-ai-advanced"<?php echo $advanced_open ? ' open' : ''; ?>>
+                <summary><?php esc_html_e('Advanced: use a different provider (not recommended)', 'open-trust-center-by-ettic'); ?></summary>
 
-                <div class="ot-ai-advanced__warning">
-                    <strong><?php esc_html_e('These providers cannot guarantee citation fidelity.', 'opentrust'); ?></strong>
+                <div class="ettic-otc-ai-advanced__warning">
+                    <strong><?php esc_html_e('These providers cannot guarantee citation fidelity.', 'open-trust-center-by-ettic'); ?></strong>
                     <p>
-                        <?php esc_html_e('OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens.', 'opentrust'); ?>
+                        <?php esc_html_e('OpenAI and OpenRouter rely on prompted [[cite:document-id]] tags that we parse out of the answer after generation. The model can ignore the instruction, invent document IDs, or attach a citation to a sentence it actually hallucinated. We cannot detect when this happens.', 'open-trust-center-by-ettic'); ?>
                     </p>
                     <p>
-                        <strong><?php esc_html_e('Do not use these providers for a published trust center', 'opentrust'); ?></strong>
-                        <?php esc_html_e('unless your organization genuinely cannot use Anthropic for procurement, contractual, or data-residency reasons. Inaccurate claims about your security posture are a real compliance risk.', 'opentrust'); ?>
+                        <strong><?php esc_html_e('Do not use these providers for a published trust center', 'open-trust-center-by-ettic'); ?></strong>
+                        <?php esc_html_e('unless your organization genuinely cannot use Anthropic for procurement, contractual, or data-residency reasons. Inaccurate claims about your security posture are a real compliance risk.', 'open-trust-center-by-ettic'); ?>
                     </p>
                 </div>
 
-                <div class="ot-ai-advanced__grid">
+                <div class="ettic-otc-ai-advanced__grid">
                     <?php foreach ($advanced as $provider): ?>
                         <?php $this->render_provider_card($provider, $stored_keys, $active_provider, 'advanced'); ?>
                     <?php endforeach; ?>
@@ -251,60 +251,60 @@ final class OpenTrust_Admin_AI {
         $key_url   = (string) $provider['key_url'];
         $is_active = $slug === $active_provider;
         $has_key   = isset($stored_keys[$slug]);
-        $masked    = $has_key ? OpenTrust_Chat_Secrets::mask($stored_keys[$slug]) : '';
+        $masked    = $has_key ? Ettic_OTC_Chat_Secrets::mask($stored_keys[$slug]) : '';
 
-        $card_classes = ['ot-ai-card', 'ot-ai-card--' . $variant];
+        $card_classes = ['ettic-otc-ai-card', 'ettic-otc-ai-card--' . $variant];
         if ($is_active) {
             $card_classes[] = 'is-active';
         }
         ?>
         <div class="<?php echo esc_attr(implode(' ', $card_classes)); ?>">
-            <div class="ot-ai-card__header">
-                <h4 class="ot-ai-card__title"><?php echo esc_html($label); ?></h4>
+            <div class="ettic-otc-ai-card__header">
+                <h4 class="ettic-otc-ai-card__title"><?php echo esc_html($label); ?></h4>
                 <?php if ($variant === 'primary'): ?>
-                    <span class="ot-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'opentrust'); ?></span>
+                    <span class="ettic-otc-ai-card__badge"><?php esc_html_e('Required for citation fidelity', 'open-trust-center-by-ettic'); ?></span>
                 <?php endif; ?>
             </div>
 
             <?php if ($variant === 'primary'): ?>
-                <p class="ot-ai-card__description">
-                    <?php esc_html_e('Uses Claude with the native Citations API. Every quote the assistant attributes to one of your documents is structurally guaranteed to come from that document.', 'opentrust'); ?>
+                <p class="ettic-otc-ai-card__description">
+                    <?php esc_html_e('Uses Claude with the native Citations API. Every quote the assistant attributes to one of your documents is structurally guaranteed to come from that document.', 'open-trust-center-by-ettic'); ?>
                 </p>
             <?php endif; ?>
 
-            <p class="ot-ai-card__keylink">
+            <p class="ettic-otc-ai-card__keylink">
                 <a href="<?php echo esc_url($key_url); ?>" target="_blank" rel="noopener">
                     <?php
                     /* translators: %s: provider name (e.g. Anthropic) */
-                    printf(esc_html__('Get a %s API key', 'opentrust'), esc_html($label));
+                    printf(esc_html__('Get a %s API key', 'open-trust-center-by-ettic'), esc_html($label));
                     ?> ↗
                 </a>
             </p>
 
             <?php if ($has_key && $is_active): ?>
-                <div class="ot-ai-card__saved">
+                <div class="ettic-otc-ai-card__saved">
                     ✓ <?php echo esc_html($masked); ?>
                 </div>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline">
-                    <?php wp_nonce_field('opentrust_ai_forget_key'); ?>
-                    <input type="hidden" name="action" value="opentrust_ai_forget_key">
+                    <?php wp_nonce_field('ettic_otc_ai_forget_key'); ?>
+                    <input type="hidden" name="action" value="ettic_otc_ai_forget_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <button type="submit" class="button-link ot-ai-card__forget" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'opentrust')); ?>')">
-                        <?php esc_html_e('Replace key', 'opentrust'); ?>
+                    <button type="submit" class="button-link ettic-otc-ai-card__forget" onclick="return confirm('<?php echo esc_js(__('Remove the saved key for this provider?', 'open-trust-center-by-ettic')); ?>')">
+                        <?php esc_html_e('Replace key', 'open-trust-center-by-ettic'); ?>
                     </button>
                 </form>
             <?php else: ?>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <?php wp_nonce_field('opentrust_ai_save_key'); ?>
-                    <input type="hidden" name="action" value="opentrust_ai_save_key">
+                    <?php wp_nonce_field('ettic_otc_ai_save_key'); ?>
+                    <input type="hidden" name="action" value="ettic_otc_ai_save_key">
                     <input type="hidden" name="provider" value="<?php echo esc_attr($slug); ?>">
-                    <input type="password" name="api_key" class="ot-ai-card__input" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
+                    <input type="password" name="api_key" class="ettic-otc-ai-card__input" autocomplete="off" placeholder="<?php echo esc_attr(sprintf(
                         /* translators: %s: provider name (e.g. Anthropic) */
-                        __('Paste your %s API key…', 'opentrust'),
+                        __('Paste your %s API key…', 'open-trust-center-by-ettic'),
                         $label
                     )); ?>" required>
-                    <button type="submit" class="button button-primary ot-ai-card__submit">
-                        <?php esc_html_e('Validate & save', 'opentrust'); ?>
+                    <button type="submit" class="button button-primary ettic-otc-ai-card__submit">
+                        <?php esc_html_e('Validate & save', 'open-trust-center-by-ettic'); ?>
                     </button>
                 </form>
             <?php endif; ?>
@@ -317,8 +317,8 @@ final class OpenTrust_Admin_AI {
         $models          = $this->cached_models_for($active_provider);
         $current_model   = (string) ($settings['ai_model'] ?? '');
         $refresh_url     = wp_nonce_url(
-            admin_url('admin-post.php?action=opentrust_ai_refresh_models&provider=' . rawurlencode($active_provider)),
-            'opentrust_ai_refresh_models'
+            admin_url('admin-post.php?action=ettic_otc_ai_refresh_models&provider=' . rawurlencode($active_provider)),
+            'ettic_otc_ai_refresh_models'
         );
 
         // Cache may have expired (empty list) or the provider may have
@@ -343,53 +343,53 @@ final class OpenTrust_Admin_AI {
             array_unshift($models, $snapshot);
         }
         ?>
-        <h3 style="margin-top:32px"><?php esc_html_e('Step 2 — Pick a model and tune defaults', 'opentrust'); ?></h3>
+        <h3 style="margin-top:32px"><?php esc_html_e('Step 2 — Pick a model and tune defaults', 'open-trust-center-by-ettic'); ?></h3>
 
         <form method="post" action="options.php">
-            <?php settings_fields('opentrust_settings_group'); ?>
+            <?php settings_fields('ettic_otc_settings_group'); ?>
 
             <?php // Sentinel so sanitize_settings knows the AI tab is submitting. The
                   // sanitize callback's else-branches (admin.php:446-465, 478-488) carry
                   // every non-AI key forward from $old_settings byte-for-byte, so we do
                   // NOT need to re-POST those values via hidden inputs. ?>
-            <input type="hidden" name="opentrust_settings[__ai_tab_save]" value="1">
+            <input type="hidden" name="ettic_otc_settings[__ai_tab_save]" value="1">
 
             <table class="form-table" role="presentation">
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_model"><?php esc_html_e('Active model', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_model"><?php esc_html_e('Active model', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
                         <?php if (empty($models)): ?>
                             <p class="description" style="color:#b91c1c">
-                                <?php esc_html_e('No cached models found. Use Refresh to re-fetch the model list.', 'opentrust'); ?>
+                                <?php esc_html_e('No cached models found. Use Refresh to re-fetch the model list.', 'open-trust-center-by-ettic'); ?>
                             </p>
                         <?php else: ?>
-                            <select id="opentrust_ai_model" name="opentrust_settings[ai_model]" style="min-width:360px">
+                            <select id="ettic_otc_ai_model" name="ettic_otc_settings[ai_model]" style="min-width:360px">
                                 <?php foreach ($models as $model): ?>
                                     <option value="<?php echo esc_attr($model['id']); ?>" <?php selected($current_model, $model['id']); ?>>
                                         <?php
                                         echo esc_html($model['display_name']);
                                         if (!empty($model['unavailable'])) {
-                                            echo ' ' . esc_html__('(unavailable)', 'opentrust');
+                                            echo ' ' . esc_html__('(unavailable)', 'open-trust-center-by-ettic');
                                         }
                                         ?>
                                         <?php if (!empty($model['recommended'])): ?>
-                                            — ★ <?php esc_html_e('Recommended', 'opentrust'); ?>
+                                            — ★ <?php esc_html_e('Recommended', 'open-trust-center-by-ettic'); ?>
                                         <?php endif; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                             <?php if ($is_unavailable): ?>
-                                <span class="opentrust-ai-model-unavailable" aria-hidden="false">
+                                <span class="ettic-otc-ai-model-unavailable" aria-hidden="false">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
                                         <line x1="3" y1="3" x2="13" y2="13"/>
                                         <line x1="13" y1="3" x2="3" y2="13"/>
                                     </svg>
-                                    <span class="description"><?php esc_html_e('Model unavailable', 'opentrust'); ?></span>
+                                    <span class="description"><?php esc_html_e('Model unavailable', 'open-trust-center-by-ettic'); ?></span>
                                 </span>
                             <?php endif; ?>
                         <?php endif; ?>
                         <a href="<?php echo esc_url($refresh_url); ?>" class="button" style="margin-left:8px">
-                            <?php esc_html_e('Refresh models', 'opentrust'); ?>
+                            <?php esc_html_e('Refresh models', 'open-trust-center-by-ettic'); ?>
                         </a>
                         <?php
                         $cached_at = (int) ($settings['ai_model_list_cached_at'] ?? 0);
@@ -399,7 +399,7 @@ final class OpenTrust_Admin_AI {
                             <p class="description">
                                 <?php
                                 /* translators: %s: human-readable time difference (e.g. "5 minutes") */
-                                printf(esc_html__('Model list cached %s ago.', 'opentrust'), esc_html($diff));
+                                printf(esc_html__('Model list cached %s ago.', 'open-trust-center-by-ettic'), esc_html($diff));
                                 ?>
                             </p>
                         <?php endif; ?>
@@ -407,95 +407,95 @@ final class OpenTrust_Admin_AI {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_daily_token_budget"><?php esc_html_e('Daily token budget', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_daily_token_budget"><?php esc_html_e('Daily token budget', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_daily_token_budget" name="opentrust_settings[ai_daily_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_daily_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)); ?>" min="0" step="10000" class="regular-text">
-                        <p class="description"><?php esc_html_e('Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 rates).', 'opentrust'); ?></p>
+                        <input type="number" id="ettic_otc_ai_daily_token_budget" name="ettic_otc_settings[ai_daily_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_daily_token_budget'] ?? Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET)); ?>" min="0" step="10000" class="regular-text">
+                        <p class="description"><?php esc_html_e('Hard cap per site per day. Default 500,000 tokens (~$12/day at Sonnet 4.5 rates).', 'open-trust-center-by-ettic'); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_monthly_token_budget"><?php esc_html_e('Monthly token budget', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_monthly_token_budget"><?php esc_html_e('Monthly token budget', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_monthly_token_budget" name="opentrust_settings[ai_monthly_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_monthly_token_budget'] ?? OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)); ?>" min="0" step="100000" class="regular-text">
-                        <p class="description"><?php esc_html_e('Hard cap per site per month. Default 10,000,000 tokens.', 'opentrust'); ?></p>
+                        <input type="number" id="ettic_otc_ai_monthly_token_budget" name="ettic_otc_settings[ai_monthly_token_budget]" value="<?php echo esc_attr((string) ($settings['ai_monthly_token_budget'] ?? Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET)); ?>" min="0" step="100000" class="regular-text">
+                        <p class="description"><?php esc_html_e('Hard cap per site per month. Default 10,000,000 tokens.', 'open-trust-center-by-ettic'); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_rate_limit_per_ip"><?php esc_html_e('Rate limit — per IP', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_rate_limit_per_ip"><?php esc_html_e('Rate limit — per IP', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_rate_limit_per_ip" name="opentrust_settings[ai_rate_limit_per_ip]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_ip'] ?? 10)); ?>" min="0" max="1000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per minute', 'opentrust'); ?></span>
+                        <input type="number" id="ettic_otc_ai_rate_limit_per_ip" name="ettic_otc_settings[ai_rate_limit_per_ip]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_ip'] ?? 10)); ?>" min="0" max="1000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per minute', 'open-trust-center-by-ettic'); ?></span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_rate_limit_per_session"><?php esc_html_e('Rate limit — per session', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_rate_limit_per_session"><?php esc_html_e('Rate limit — per session', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_rate_limit_per_session" name="opentrust_settings[ai_rate_limit_per_session]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_session'] ?? 50)); ?>" min="0" max="10000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per hour', 'opentrust'); ?></span>
+                        <input type="number" id="ettic_otc_ai_rate_limit_per_session" name="ettic_otc_settings[ai_rate_limit_per_session]" value="<?php echo esc_attr((string) ($settings['ai_rate_limit_per_session'] ?? 50)); ?>" min="0" max="10000" step="1" class="small-text"> <span class="description"><?php esc_html_e('messages per hour', 'open-trust-center-by-ettic'); ?></span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_ai_max_message_length"><?php esc_html_e('Max message length', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_ai_max_message_length"><?php esc_html_e('Max message length', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="number" id="opentrust_ai_max_message_length" name="opentrust_settings[ai_max_message_length]" value="<?php echo esc_attr((string) ($settings['ai_max_message_length'] ?? OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH)); ?>" min="100" max="4000" step="100" class="small-text"> <span class="description"><?php esc_html_e('characters', 'opentrust'); ?></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="opentrust_ai_contact_url"><?php esc_html_e('Refuse-to-answer contact URL', 'opentrust'); ?></label></th>
-                    <td>
-                        <input type="url" id="opentrust_ai_contact_url" name="opentrust_settings[ai_contact_url]" value="<?php echo esc_attr((string) ($settings['ai_contact_url'] ?? '')); ?>" class="regular-text" placeholder="https://example.com/contact">
-                        <p class="description"><?php esc_html_e('When the AI cannot confidently answer a question, it links here. Leave blank to use the trust center home.', 'opentrust'); ?></p>
+                        <input type="number" id="ettic_otc_ai_max_message_length" name="ettic_otc_settings[ai_max_message_length]" value="<?php echo esc_attr((string) ($settings['ai_max_message_length'] ?? Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH)); ?>" min="100" max="4000" step="100" class="small-text"> <span class="description"><?php esc_html_e('characters', 'open-trust-center-by-ettic'); ?></span>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php esc_html_e('Visitor display', 'opentrust'); ?></th>
+                    <th scope="row"><label for="ettic_otc_ai_contact_url"><?php esc_html_e('Refuse-to-answer contact URL', 'open-trust-center-by-ettic'); ?></label></th>
+                    <td>
+                        <input type="url" id="ettic_otc_ai_contact_url" name="ettic_otc_settings[ai_contact_url]" value="<?php echo esc_attr((string) ($settings['ai_contact_url'] ?? '')); ?>" class="regular-text" placeholder="https://example.com/contact">
+                        <p class="description"><?php esc_html_e('When the AI cannot confidently answer a question, it links here. Leave blank to use the trust center home.', 'open-trust-center-by-ettic'); ?></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php esc_html_e('Visitor display', 'open-trust-center-by-ettic'); ?></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="opentrust_settings[ai_show_model_attribution]" value="1" <?php checked(!empty($settings['ai_show_model_attribution'])); ?>>
-                            <?php esc_html_e('Show the active model name under the chat input', 'opentrust'); ?>
+                            <input type="checkbox" name="ettic_otc_settings[ai_show_model_attribution]" value="1" <?php checked(!empty($settings['ai_show_model_attribution'])); ?>>
+                            <?php esc_html_e('Show the active model name under the chat input', 'open-trust-center-by-ettic'); ?>
                         </label>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php esc_html_e('Analytics logging', 'opentrust'); ?></th>
+                    <th scope="row"><?php esc_html_e('Analytics logging', 'open-trust-center-by-ettic'); ?></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="opentrust_settings[ai_logging_enabled]" value="1" <?php checked(!empty($settings['ai_logging_enabled'])); ?>>
-                            <?php esc_html_e('Log anonymized visitor questions for admin review (90-day auto-purge, no PII)', 'opentrust'); ?>
+                            <input type="checkbox" name="ettic_otc_settings[ai_logging_enabled]" value="1" <?php checked(!empty($settings['ai_logging_enabled'])); ?>>
+                            <?php esc_html_e('Log anonymized visitor questions for admin review (90-day auto-purge, no PII)', 'open-trust-center-by-ettic'); ?>
                         </label>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php esc_html_e('Improve answer quality', 'opentrust'); ?></th>
+                    <th scope="row"><?php esc_html_e('Improve answer quality', 'open-trust-center-by-ettic'); ?></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="opentrust_settings[ai_auto_summarize]" value="1" <?php checked(!empty($settings['ai_auto_summarize'])); ?>>
-                            <?php esc_html_e('Generate AI summaries of each policy', 'opentrust'); ?>
+                            <input type="checkbox" name="ettic_otc_settings[ai_auto_summarize]" value="1" <?php checked(!empty($settings['ai_auto_summarize'])); ?>>
+                            <?php esc_html_e('Generate AI summaries of each policy', 'open-trust-center-by-ettic'); ?>
                         </label>
                         <p class="description" style="max-width:680px">
-                            <?php esc_html_e('When on, the AI generates a 2–3 sentence summary of each published policy and stores it for routing decisions. Improves answers on questions like "What\'s your data deletion policy?" that don\'t match a title literally. Cost is roughly $0.05–$0.10 per 50 policies, lifetime — pennies per edit afterward. Uses your configured AI key.', 'opentrust'); ?>
+                            <?php esc_html_e('When on, the AI generates a 2–3 sentence summary of each published policy and stores it for routing decisions. Improves answers on questions like "What\'s your data deletion policy?" that don\'t match a title literally. Cost is roughly $0.05–$0.10 per 50 policies, lifetime — pennies per edit afterward. Uses your configured AI key.', 'open-trust-center-by-ettic'); ?>
                         </p>
                     </td>
                 </tr>
 
-                <?php if (class_exists('OpenTrust_Chat_Corpus')): ?>
-                    <?php $ot_oversized = OpenTrust_Chat_Corpus::oversized_policies(); ?>
+                <?php if (class_exists('Ettic_OTC_Chat_Corpus')): ?>
+                    <?php $ot_oversized = Ettic_OTC_Chat_Corpus::oversized_policies(); ?>
                     <?php if (!empty($ot_oversized)): ?>
                         <tr>
-                            <th scope="row"><?php esc_html_e('Oversized policies', 'opentrust'); ?></th>
+                            <th scope="row"><?php esc_html_e('Oversized policies', 'open-trust-center-by-ettic'); ?></th>
                             <td>
                                 <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #ef4444;border-radius:4px;max-width:680px">
                                     <p style="margin:0 0 6px">
-                                        <?php esc_html_e('The following policies are large enough that the AI will receive only a truncated version when retrieving them. Consider splitting them into shorter documents:', 'opentrust'); ?>
+                                        <?php esc_html_e('The following policies are large enough that the AI will receive only a truncated version when retrieving them. Consider splitting them into shorter documents:', 'open-trust-center-by-ettic'); ?>
                                     </p>
                                     <ul style="margin:6px 0 0 18px">
                                         <?php foreach ($ot_oversized as $row): ?>
                                             <li><?php
                                                 printf(
                                                     /* translators: 1: policy title, 2: token count. */
-                                                    esc_html__('%1$s (~%2$s tokens)', 'opentrust'),
+                                                    esc_html__('%1$s (~%2$s tokens)', 'open-trust-center-by-ettic'),
                                                     esc_html((string) $row['title']),
                                                     esc_html(number_format_i18n((int) $row['tokens']))
                                                 );
@@ -509,41 +509,41 @@ final class OpenTrust_Admin_AI {
                 <?php endif; ?>
             </table>
 
-            <h3 style="margin-top:24px"><?php esc_html_e('Advanced — Turnstile anti-abuse', 'opentrust'); ?></h3>
+            <h3 style="margin-top:24px"><?php esc_html_e('Advanced — Turnstile anti-abuse', 'open-trust-center-by-ettic'); ?></h3>
             <p class="description" style="max-width:720px">
-                <?php esc_html_e('Cloudflare Turnstile is optional but recommended for public sites. It challenges suspicious visitors on the first message of each session. You need a free Cloudflare account to get site/secret keys.', 'opentrust'); ?>
+                <?php esc_html_e('Cloudflare Turnstile is optional but recommended for public sites. It challenges suspicious visitors on the first message of each session. You need a free Cloudflare account to get site/secret keys.', 'open-trust-center-by-ettic'); ?>
             </p>
             <table class="form-table" role="presentation">
                 <tr>
-                    <th scope="row"><?php esc_html_e('Enable Turnstile for chat', 'opentrust'); ?></th>
+                    <th scope="row"><?php esc_html_e('Enable Turnstile for chat', 'open-trust-center-by-ettic'); ?></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="opentrust_settings[ai_turnstile_enabled]" value="1" <?php checked(!empty($settings['ai_turnstile_enabled'])); ?>>
-                            <?php esc_html_e('Require Turnstile verification on first chat message', 'opentrust'); ?>
+                            <input type="checkbox" name="ettic_otc_settings[ai_turnstile_enabled]" value="1" <?php checked(!empty($settings['ai_turnstile_enabled'])); ?>>
+                            <?php esc_html_e('Require Turnstile verification on first chat message', 'open-trust-center-by-ettic'); ?>
                         </label>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_turnstile_site_key"><?php esc_html_e('Turnstile Site Key', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_turnstile_site_key"><?php esc_html_e('Turnstile Site Key', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
-                        <input type="text" id="opentrust_turnstile_site_key" name="opentrust_settings[turnstile_site_key]" value="<?php echo esc_attr((string) ($settings['turnstile_site_key'] ?? '')); ?>" class="regular-text">
-                        <p class="description"><?php esc_html_e('Public site key from your Cloudflare Turnstile widget.', 'opentrust'); ?></p>
+                        <input type="text" id="ettic_otc_turnstile_site_key" name="ettic_otc_settings[turnstile_site_key]" value="<?php echo esc_attr((string) ($settings['turnstile_site_key'] ?? '')); ?>" class="regular-text">
+                        <p class="description"><?php esc_html_e('Public site key from your Cloudflare Turnstile widget.', 'open-trust-center-by-ettic'); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="opentrust_turnstile_secret_key"><?php esc_html_e('Turnstile Secret Key', 'opentrust'); ?></label></th>
+                    <th scope="row"><label for="ettic_otc_turnstile_secret_key"><?php esc_html_e('Turnstile Secret Key', 'open-trust-center-by-ettic'); ?></label></th>
                     <td>
                         <?php $ot_secret_saved = !empty($settings['turnstile_secret_key']); ?>
-                        <input type="password" id="opentrust_turnstile_secret_key" name="opentrust_settings[turnstile_secret_key]" value="<?php echo esc_attr($ot_secret_saved ? '••••••••••••••••••••' : ''); ?>" class="regular-text" autocomplete="off" placeholder="<?php esc_attr_e('Enter secret key…', 'opentrust'); ?>">
+                        <input type="password" id="ettic_otc_turnstile_secret_key" name="ettic_otc_settings[turnstile_secret_key]" value="<?php echo esc_attr($ot_secret_saved ? '••••••••••••••••••••' : ''); ?>" class="regular-text" autocomplete="off" placeholder="<?php esc_attr_e('Enter secret key…', 'open-trust-center-by-ettic'); ?>">
                         <?php if ($ot_secret_saved): ?>
-                            <span class="description" style="color:#16a34a">&#10003; <?php esc_html_e('Key saved', 'opentrust'); ?></span>
+                            <span class="description" style="color:#16a34a">&#10003; <?php esc_html_e('Key saved', 'open-trust-center-by-ettic'); ?></span>
                         <?php endif; ?>
-                        <p class="description"><?php esc_html_e('Secret key from Cloudflare Turnstile. Stored server-side — never exposed to the frontend.', 'opentrust'); ?></p>
+                        <p class="description"><?php esc_html_e('Secret key from Cloudflare Turnstile. Stored server-side — never exposed to the frontend.', 'open-trust-center-by-ettic'); ?></p>
                     </td>
                 </tr>
             </table>
 
-            <?php submit_button(__('Save AI settings', 'opentrust')); ?>
+            <?php submit_button(__('Save AI settings', 'open-trust-center-by-ettic')); ?>
         </form>
         <?php
     }
@@ -555,7 +555,7 @@ final class OpenTrust_Admin_AI {
         if ($provider === '') {
             return [];
         }
-        $stored_keys = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys = Ettic_OTC_Chat_Secrets::get_all();
         if (!isset($stored_keys[$provider])) {
             return [];
         }
@@ -566,7 +566,7 @@ final class OpenTrust_Admin_AI {
     }
 
     private function cache_key_for(string $provider, string $api_key): string {
-        return 'opentrust_models_' . $provider . '_' . OpenTrust_Chat_Secrets::fingerprint($api_key);
+        return 'ettic_otc_models_' . $provider . '_' . Ettic_OTC_Chat_Secrets::fingerprint($api_key);
     }
 
     /**
@@ -633,7 +633,7 @@ final class OpenTrust_Admin_AI {
      * @return array{ok: bool, models?: array<int, array{id: string, display_name: string, recommended: bool}>, error?: string}
      */
     private function refresh_provider_cache(string $slug, string $api_key): array {
-        $adapter = OpenTrust_Chat_Provider::for($slug);
+        $adapter = Ettic_OTC_Chat_Provider::for($slug);
         if (!$adapter) {
             return ['ok' => false, 'error' => 'Unknown provider'];
         }
@@ -654,38 +654,38 @@ final class OpenTrust_Admin_AI {
 
     public function handle_ai_save_key(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_save_key');
+        check_admin_referer('ettic_otc_ai_save_key');
 
         $provider = isset($_POST['provider']) ? sanitize_key((string) wp_unslash($_POST['provider'])) : '';
         $api_key  = isset($_POST['api_key'])  ? trim(sanitize_text_field((string) wp_unslash($_POST['api_key']))) : '';
 
-        $adapter = OpenTrust_Chat_Provider::for($provider);
+        $adapter = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
-            $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
+            $this->ai_notice('error', __('Unknown provider.', 'open-trust-center-by-ettic'));
             $this->redirect_to_ai_tab();
         }
         if ($api_key === '') {
-            $this->ai_notice('error', __('API key cannot be empty.', 'opentrust'));
+            $this->ai_notice('error', __('API key cannot be empty.', 'open-trust-center-by-ettic'));
             $this->redirect_to_ai_tab();
         }
 
         $result = $this->refresh_provider_cache($provider, $api_key);
 
         if (empty($result['ok'])) {
-            $error = $result['error'] ?? __('Validation failed.', 'opentrust');
+            $error = $result['error'] ?? __('Validation failed.', 'open-trust-center-by-ettic');
             /* translators: 1: provider label, 2: provider error message */
-            $msg = sprintf(__('%1$s rejected the key: %2$s', 'opentrust'), $adapter->label(), $error);
+            $msg = sprintf(__('%1$s rejected the key: %2$s', 'open-trust-center-by-ettic'), $adapter->label(), $error);
             $this->ai_notice('error', $msg);
             $this->redirect_to_ai_tab();
         }
 
-        OpenTrust_Chat_Secrets::put($provider, $api_key);
+        Ettic_OTC_Chat_Secrets::put($provider, $api_key);
 
         // Update settings: mark AI enabled, record provider + cache timestamp,
         // and if no model is selected yet, pre-pick the first recommended model.
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $settings['ai_enabled']              = true;
         $settings['ai_provider']             = $provider;
         $settings['ai_model_list_cached_at'] = time();
@@ -701,85 +701,85 @@ final class OpenTrust_Admin_AI {
             }
         }
         $this->snapshot_active_model($settings, $result['models']);
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: 1: provider label, 2: number of models */
-        $count_msg = sprintf(__('%1$s key validated. Found %2$d model(s).', 'opentrust'), $adapter->label(), count($result['models']));
+        $count_msg = sprintf(__('%1$s key validated. Found %2$d model(s).', 'open-trust-center-by-ettic'), $adapter->label(), count($result['models']));
         $this->ai_notice('success', $count_msg);
         $this->redirect_to_ai_tab();
     }
 
     public function handle_ai_forget_key(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_forget_key');
+        check_admin_referer('ettic_otc_ai_forget_key');
 
         $provider = isset($_POST['provider']) ? sanitize_key((string) wp_unslash($_POST['provider'])) : '';
 
-        $adapter = OpenTrust_Chat_Provider::for($provider);
+        $adapter = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
-            $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
+            $this->ai_notice('error', __('Unknown provider.', 'open-trust-center-by-ettic'));
             $this->redirect_to_ai_tab();
         }
 
         // Clear cached model list for this key before forgetting.
-        $existing = OpenTrust_Chat_Secrets::get($provider);
+        $existing = Ettic_OTC_Chat_Secrets::get($provider);
         if ($existing !== null) {
-            $fingerprint = OpenTrust_Chat_Secrets::fingerprint($existing);
-            delete_transient('opentrust_models_' . $provider . '_' . $fingerprint);
+            $fingerprint = Ettic_OTC_Chat_Secrets::fingerprint($existing);
+            delete_transient('ettic_otc_models_' . $provider . '_' . $fingerprint);
         }
 
-        OpenTrust_Chat_Secrets::forget($provider);
+        Ettic_OTC_Chat_Secrets::forget($provider);
 
         // If the forgotten provider was the active one, disable chat and clear the model.
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         if (($settings['ai_provider'] ?? '') === $provider) {
             $settings['ai_enabled']  = false;
             $settings['ai_provider'] = '';
             $settings['ai_model']    = '';
             $settings['ai_model_list_cached_at'] = 0;
-            OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+            Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
         }
 
-        $this->ai_notice('success', __('Key removed.', 'opentrust'));
+        $this->ai_notice('success', __('Key removed.', 'open-trust-center-by-ettic'));
         $this->redirect_to_ai_tab();
     }
 
     public function handle_ai_refresh_models(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_refresh_models');
+        check_admin_referer('ettic_otc_ai_refresh_models');
 
         $provider = isset($_GET['provider']) ? sanitize_key((string) wp_unslash($_GET['provider'])) : '';
-        $adapter  = OpenTrust_Chat_Provider::for($provider);
+        $adapter  = Ettic_OTC_Chat_Provider::for($provider);
         if (!$adapter) {
-            $this->ai_notice('error', __('Unknown provider.', 'opentrust'));
+            $this->ai_notice('error', __('Unknown provider.', 'open-trust-center-by-ettic'));
             $this->redirect_to_ai_tab();
         }
 
-        $api_key = OpenTrust_Chat_Secrets::get($provider);
+        $api_key = Ettic_OTC_Chat_Secrets::get($provider);
         if ($api_key === null) {
-            $this->ai_notice('error', __('No key on file for this provider.', 'opentrust'));
+            $this->ai_notice('error', __('No key on file for this provider.', 'open-trust-center-by-ettic'));
             $this->redirect_to_ai_tab();
         }
 
         $result = $this->refresh_provider_cache($provider, $api_key);
         if (empty($result['ok'])) {
-            $error = $result['error'] ?? __('Refresh failed.', 'opentrust');
+            $error = $result['error'] ?? __('Refresh failed.', 'open-trust-center-by-ettic');
             /* translators: %s: error message from the provider */
-            $this->ai_notice('error', sprintf(__('Refresh failed: %s', 'opentrust'), $error));
+            $this->ai_notice('error', sprintf(__('Refresh failed: %s', 'open-trust-center-by-ettic'), $error));
             $this->redirect_to_ai_tab();
         }
 
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $settings['ai_model_list_cached_at'] = time();
         $this->snapshot_active_model($settings, $result['models']);
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+        Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
 
         /* translators: %d: number of models */
-        $this->ai_notice('success', sprintf(__('Model list refreshed. Found %d model(s).', 'opentrust'), count($result['models'])));
+        $this->ai_notice('success', sprintf(__('Model list refreshed. Found %d model(s).', 'open-trust-center-by-ettic'), count($result['models'])));
         $this->redirect_to_ai_tab();
     }
 
@@ -793,17 +793,17 @@ final class OpenTrust_Admin_AI {
      */
     public function handle_ai_summarize_sweep(): void {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to perform this action.', 'opentrust'), '', ['response' => 403]);
+            wp_die(esc_html__('You do not have permission to perform this action.', 'open-trust-center-by-ettic'), '', ['response' => 403]);
         }
-        check_admin_referer('opentrust_ai_summarize_sweep');
+        check_admin_referer('ettic_otc_ai_summarize_sweep');
 
         $count = 0;
-        if (class_exists('OpenTrust_Chat_Summarizer')) {
-            $count = OpenTrust_Chat_Summarizer::sweep_all();
+        if (class_exists('Ettic_OTC_Chat_Summarizer')) {
+            $count = Ettic_OTC_Chat_Summarizer::sweep_all();
         }
 
         set_transient(
-            'opentrust_ai_notice_' . get_current_user_id(),
+            'ettic_otc_ai_notice_' . get_current_user_id(),
             [
                 'type'    => 'success',
                 'message' => $count > 0
@@ -813,28 +813,28 @@ final class OpenTrust_Admin_AI {
                             'Queued %d policy for AI summary generation. Summaries will appear over the next minute.',
                             'Queued %d policies for AI summary generation. Summaries will appear over the next few minutes.',
                             $count,
-                            'opentrust'
+                            'open-trust-center-by-ettic'
                         ),
                         (int) $count
                     )
-                    : __('All policies already have up-to-date AI summaries.', 'opentrust'),
+                    : __('All policies already have up-to-date AI summaries.', 'open-trust-center-by-ettic'),
             ],
             MINUTE_IN_SECONDS
         );
-        wp_safe_redirect(admin_url('admin.php?page=opentrust&tab=ai'));
+        wp_safe_redirect(admin_url('admin.php?page=ettic-otc&tab=ai'));
         exit;
     }
 
     private function ai_notice(string $type, string $message): void {
         set_transient(
-            'opentrust_ai_notice_' . get_current_user_id(),
+            'ettic_otc_ai_notice_' . get_current_user_id(),
             ['type' => $type, 'message' => $message],
             MINUTE_IN_SECONDS
         );
     }
 
     private function redirect_to_ai_tab(): never {
-        wp_safe_redirect(admin_url('admin.php?page=opentrust&tab=ai'));
+        wp_safe_redirect(admin_url('admin.php?page=ettic-otc&tab=ai'));
         exit;
     }
 
@@ -862,15 +862,15 @@ final class OpenTrust_Admin_AI {
      * others.
      */
     public static function cron_refresh_all_providers(): void {
-        $stored_keys = OpenTrust_Chat_Secrets::get_all();
+        $stored_keys = Ettic_OTC_Chat_Secrets::get_all();
         if (empty($stored_keys)) {
             return;
         }
 
         $self     = self::instance();
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         $active   = (string) ($settings['ai_provider'] ?? '');
-        $log      = static fn(string $slug, string $why) => OpenTrust::debug_log("AI model refresh failed for {$slug}: {$why}");
+        $log      = static fn(string $slug, string $why) => Ettic_OTC::debug_log("AI model refresh failed for {$slug}: {$why}");
         $dirty    = false;
 
         foreach ($stored_keys as $slug => $api_key) {
@@ -892,10 +892,10 @@ final class OpenTrust_Admin_AI {
         }
 
         if ($dirty) {
-            OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
+            Ettic_OTC_Admin_Settings::instance()->save_settings_raw($settings);
         }
     }
 }
 
 // Wire the cron hook at file load so it fires regardless of admin context.
-add_action(OpenTrust_Admin_AI::CRON_HOOK, [OpenTrust_Admin_AI::class, 'cron_refresh_all_providers']);
+add_action(Ettic_OTC_Admin_AI::CRON_HOOK, [Ettic_OTC_Admin_AI::class, 'cron_refresh_all_providers']);

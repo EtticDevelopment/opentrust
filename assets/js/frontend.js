@@ -32,7 +32,7 @@
 
                 e.preventDefault();
 
-                var nav = document.querySelector('.ot-nav');
+                var nav = document.querySelector('.ettic-otc-nav');
                 var offset = nav ? nav.offsetHeight + 16 : 16;
 
                 window.scrollTo({
@@ -49,7 +49,7 @@
     // ── Scroll Spy ─────────────────────────────────
 
     function initScrollSpy() {
-        var navLinks = document.querySelectorAll('[data-ot-nav]');
+        var navLinks = document.querySelectorAll('[data-ettic-otc-nav]');
         if (!navLinks.length) return;
 
         var sections = [];
@@ -63,7 +63,7 @@
 
         if (!sections.length) return;
 
-        var nav = document.querySelector('.ot-nav');
+        var nav = document.querySelector('.ettic-otc-nav');
         var offset = nav ? nav.offsetHeight + 32 : 32;
 
         function update() {
@@ -76,8 +76,8 @@
                 }
             }
 
-            navLinks.forEach(function (l) { l.classList.remove('ot-nav__link--active'); });
-            if (active) active.link.classList.add('ot-nav__link--active');
+            navLinks.forEach(function (l) { l.classList.remove('ettic-otc-nav__link--active'); });
+            if (active) active.link.classList.add('ettic-otc-nav__link--active');
         }
 
         window.addEventListener('scroll', throttle(update, 100), { passive: true });
@@ -87,7 +87,7 @@
     // ── Table Sort ─────────────────────────────────
 
     function initTableSort() {
-        document.querySelectorAll('.ot-table th[data-ot-sort]').forEach(function (th) {
+        document.querySelectorAll('.ettic-otc-table th[data-ettic-otc-sort]').forEach(function (th) {
             th.addEventListener('click', function () {
                 sortTable(this);
             });
@@ -99,11 +99,11 @@
         var tbody = table.querySelector('tbody');
         var rows = Array.from(tbody.querySelectorAll('tr'));
         var colIndex = Array.from(th.parentNode.children).indexOf(th);
-        var ascending = th.getAttribute('data-ot-sort-dir') !== 'asc';
+        var ascending = th.getAttribute('data-ettic-otc-sort-dir') !== 'asc';
 
         // Clear sort direction on siblings.
-        th.parentNode.querySelectorAll('[data-ot-sort]').forEach(function (sibling) {
-            if (sibling !== th) sibling.removeAttribute('data-ot-sort-dir');
+        th.parentNode.querySelectorAll('[data-ettic-otc-sort]').forEach(function (sibling) {
+            if (sibling !== th) sibling.removeAttribute('data-ettic-otc-sort-dir');
         });
 
         rows.sort(function (a, b) {
@@ -114,7 +114,7 @@
             return ascending ? aText.localeCompare(bText) : bText.localeCompare(aText);
         });
 
-        th.setAttribute('data-ot-sort-dir', ascending ? 'asc' : 'desc');
+        th.setAttribute('data-ettic-otc-sort-dir', ascending ? 'asc' : 'desc');
 
         var fragment = document.createDocumentFragment();
         rows.forEach(function (row) { fragment.appendChild(row); });
@@ -125,9 +125,9 @@
 
     function initDpCards() {
         // Card header toggle — expand/collapse details.
-        document.querySelectorAll('[data-ot-dp-toggle]').forEach(function (head) {
+        document.querySelectorAll('[data-ettic-otc-dp-toggle]').forEach(function (head) {
             function toggle() {
-                var detailId = head.getAttribute('data-ot-dp-toggle');
+                var detailId = head.getAttribute('data-ettic-otc-dp-toggle');
                 var detail = document.getElementById(detailId);
                 if (!detail) return;
 
@@ -146,14 +146,14 @@
         });
 
         // "View N more" buttons — show overflow items.
-        document.querySelectorAll('[data-ot-dp-more]').forEach(function (btn) {
+        document.querySelectorAll('[data-ettic-otc-dp-more]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var card = this.closest('.ot-dp-card');
-                var overflow = card.querySelector('.ot-dp-card__list--overflow');
+                var card = this.closest('.ettic-otc-dp-card');
+                var overflow = card.querySelector('.ettic-otc-dp-card__list--overflow');
                 if (overflow) {
                     overflow.hidden = false;
                 }
-                this.classList.add('ot-dp-card__more--hidden');
+                this.classList.add('ettic-otc-dp-card__more--hidden');
             });
         });
     }
@@ -161,7 +161,7 @@
     // ── Version History Toggle ─────────────────────
 
     function initVersionHistory() {
-        var toggle = document.querySelector('[data-ot-version-toggle]');
+        var toggle = document.querySelector('[data-ettic-otc-version-toggle]');
         if (!toggle) return;
 
         var list = toggle.nextElementSibling;
@@ -177,20 +177,20 @@
     // ── Clamp Toggles (subprocessor table) ─────────
 
     function initClampToggles() {
-        document.querySelectorAll('.ot-table__clamp-text').forEach(function (el) {
+        document.querySelectorAll('.ettic-otc-table__clamp-text').forEach(function (el) {
             // Show the "more" button only if text is actually truncated.
             if (el.scrollHeight > el.clientHeight + 1) {
                 var btn = el.nextElementSibling;
-                if (btn && btn.hasAttribute('data-ot-clamp-toggle')) {
+                if (btn && btn.hasAttribute('data-ettic-otc-clamp-toggle')) {
                     btn.style.display = 'inline';
                 }
             }
         });
 
-        document.querySelectorAll('[data-ot-clamp-toggle]').forEach(function (btn) {
+        document.querySelectorAll('[data-ettic-otc-clamp-toggle]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var text = this.previousElementSibling;
-                var expanded = text.classList.toggle('ot-table__clamp-text--expanded');
+                var expanded = text.classList.toggle('ettic-otc-table__clamp-text--expanded');
                 this.textContent = expanded ? 'less' : 'more';
             });
         });

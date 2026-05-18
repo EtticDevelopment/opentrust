@@ -32,20 +32,20 @@ $ot_rows = [];
 if ($ot_dpo_name || $ot_dpo_email) {
     $lines = [];
     if ($ot_dpo_name) {
-        $lines[] = '<span class="ot-get-row__strong">' . esc_html($ot_dpo_name) . '</span>';
+        $lines[] = '<span class="ettic-otc-get-row__strong">' . esc_html($ot_dpo_name) . '</span>';
     }
     if ($ot_dpo_email) {
         $lines[] = '<a href="' . esc_url('mailto:' . $ot_dpo_email) . '">' . esc_html($ot_dpo_email) . '</a>';
     }
     $ot_rows[] = [
-        'label' => __('Data Protection Officer', 'opentrust'),
+        'label' => __('Data Protection Officer', 'open-trust-center-by-ettic'),
         'lines' => $lines,
     ];
 }
 
 if ($ot_security_email) {
     $ot_rows[] = [
-        'label' => __('Security Team', 'opentrust'),
+        'label' => __('Security Team', 'open-trust-center-by-ettic'),
         'lines' => [
             '<a href="' . esc_url('mailto:' . $ot_security_email) . '">' . esc_html($ot_security_email) . '</a>',
         ],
@@ -54,18 +54,18 @@ if ($ot_security_email) {
 
 if ($ot_contact_form_url) {
     $ot_rows[] = [
-        'label' => __('Contact Form', 'opentrust'),
+        'label' => __('Contact Form', 'open-trust-center-by-ettic'),
         'lines' => [
-            '<a href="' . esc_url($ot_contact_form_url) . '" target="_blank" rel="noopener">' . esc_html__('Open the contact form', 'opentrust') . ' &rarr;</a>',
+            '<a href="' . esc_url($ot_contact_form_url) . '" target="_blank" rel="noopener">' . esc_html__('Open the contact form', 'open-trust-center-by-ettic') . ' &rarr;</a>',
         ],
     ];
 }
 
 if ($ot_pgp_key_url) {
     $ot_rows[] = [
-        'label' => __('PGP Public Key', 'opentrust'),
+        'label' => __('PGP Public Key', 'open-trust-center-by-ettic'),
         'lines' => [
-            '<a href="' . esc_url($ot_pgp_key_url) . '" target="_blank" rel="noopener">' . esc_html__('Download public key', 'opentrust') . '</a>',
+            '<a href="' . esc_url($ot_pgp_key_url) . '" target="_blank" rel="noopener">' . esc_html__('Download public key', 'open-trust-center-by-ettic') . '</a>',
         ],
     ];
 }
@@ -81,36 +81,36 @@ if ($ot_contact_address) {
         $lines[] = '<span>' . esc_html($ot_contact_address) . '</span>';
     }
     $ot_rows[] = [
-        'label' => __('Mailing Address', 'opentrust'),
+        'label' => __('Mailing Address', 'open-trust-center-by-ettic'),
         'lines' => $lines,
     ];
 }
 
 if ($ot_company_reg) {
     $ot_rows[] = [
-        'label' => __('Company Registration', 'opentrust'),
+        'label' => __('Company Registration', 'open-trust-center-by-ettic'),
         'lines' => [
-            '<span class="ot-get-row__strong">' . esc_html($ot_company_reg) . '</span>',
+            '<span class="ettic-otc-get-row__strong">' . esc_html($ot_company_reg) . '</span>',
         ],
     ];
 }
 
 if ($ot_vat_number) {
     $ot_rows[] = [
-        'label' => __('VAT / Tax ID', 'opentrust'),
+        'label' => __('VAT / Tax ID', 'open-trust-center-by-ettic'),
         'lines' => [
-            '<span class="ot-get-row__strong">' . esc_html($ot_vat_number) . '</span>',
+            '<span class="ettic-otc-get-row__strong">' . esc_html($ot_vat_number) . '</span>',
         ],
     ];
 }
 ?>
-<section id="ot-contact" class="ot-section ot-section--getintouch">
-    <div class="ot-container">
-        <div class="ot-get-inner">
-            <div class="ot-get-header">
-                <h2 class="ot-get-header__title"><?php esc_html_e('Get in touch', 'opentrust'); ?></h2>
+<section id="ettic-otc-contact" class="ettic-otc-section ettic-otc-section--getintouch">
+    <div class="ettic-otc-container">
+        <div class="ettic-otc-get-inner">
+            <div class="ettic-otc-get-header">
+                <h2 class="ettic-otc-get-header__title"><?php esc_html_e('Get in touch', 'open-trust-center-by-ettic'); ?></h2>
                 <?php if ($ot_company_description): ?>
-                    <p class="ot-get-header__description"><?php echo esc_html($ot_company_description); ?></p>
+                    <p class="ettic-otc-get-header__description"><?php echo esc_html($ot_company_description); ?></p>
                 <?php endif; ?>
             </div>
 
@@ -123,11 +123,11 @@ if ($ot_vat_number) {
                     'a'    => ['href' => true, 'target' => true, 'rel' => true],
                 ];
                 ?>
-                <dl class="ot-get-list">
+                <dl class="ettic-otc-get-list">
                     <?php foreach ($ot_rows as $ot_row): ?>
-                        <div class="ot-get-row">
-                            <dt class="ot-get-row__label"><?php echo esc_html($ot_row['label']); ?></dt>
-                            <dd class="ot-get-row__lines">
+                        <div class="ettic-otc-get-row">
+                            <dt class="ettic-otc-get-row__label"><?php echo esc_html($ot_row['label']); ?></dt>
+                            <dd class="ettic-otc-get-row__lines">
                                 <?php foreach ($ot_row['lines'] as $ot_line): ?>
                                     <?php echo wp_kses($ot_line, $ot_line_allowed); ?>
                                 <?php endforeach; ?>

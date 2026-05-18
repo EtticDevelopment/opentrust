@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Catalog {
+final class Ettic_OTC_Catalog {
 
     /**
      * Return the normalized subprocessor catalog.
@@ -36,7 +36,7 @@ final class OpenTrust_Catalog {
      * @return array<string, array{name:string, aliases:array<int,string>, fields:array<string,mixed>, fields_review:array<string,mixed>}>
      */
     public static function subprocessors(): array {
-        return self::load_catalog( 'subprocessor-catalog.php', 'opentrust_subprocessor_catalog' );
+        return self::load_catalog( 'subprocessor-catalog.php', 'ettic_otc_subprocessor_catalog' );
     }
 
     /**
@@ -45,7 +45,7 @@ final class OpenTrust_Catalog {
      * @return array<string, array{name:string, aliases:array<int,string>, fields:array<string,mixed>, fields_review:array<string,mixed>}>
      */
     public static function data_practices(): array {
-        return self::load_catalog( 'data-practice-catalog.php', 'opentrust_data_practice_catalog' );
+        return self::load_catalog( 'data-practice-catalog.php', 'ettic_otc_data_practice_catalog' );
     }
 
     /**
@@ -54,7 +54,7 @@ final class OpenTrust_Catalog {
      * @return array<string, array{name:string, aliases:array<int,string>, fields:array<string,mixed>, fields_review:array<string,mixed>}>
      */
     public static function certifications(): array {
-        return self::load_catalog( 'certification-catalog.php', 'opentrust_certification_catalog' );
+        return self::load_catalog( 'certification-catalog.php', 'ettic_otc_certification_catalog' );
     }
 
     /**
@@ -72,11 +72,11 @@ final class OpenTrust_Catalog {
             return $cache[ $file_basename ];
         }
 
-        $raw = require OPENTRUST_PLUGIN_DIR . 'includes/data/' . $file_basename;
+        $raw = require ETTIC_OTC_PLUGIN_DIR . 'includes/data/' . $file_basename;
         $raw = is_array( $raw ) ? $raw : [];
 
         /** @var array $raw */
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Filter name is supplied by internal callers only and always opentrust_-prefixed.
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Filter name is supplied by internal callers only and always ettic_otc_-prefixed.
         $raw = apply_filters( $filter_name, $raw );
 
         $cache[ $file_basename ] = self::normalize( is_array( $raw ) ? $raw : [] );
@@ -87,7 +87,7 @@ final class OpenTrust_Catalog {
      * Return the default FAQ catalog as a list of question/answer pairs.
      *
      * Unlike the other catalogs, FAQ entries are seeded once into real
-     * `opentr_faq` posts on first activation and then owned by the user. This
+     * `eotc_faq` posts on first activation and then owned by the user. This
      * loader is only consulted by the seeder.
      *
      * @return array<string, array{question:string, answer:string}>
@@ -98,7 +98,7 @@ final class OpenTrust_Catalog {
             return $cache;
         }
 
-        $raw = require OPENTRUST_PLUGIN_DIR . 'includes/data/faq-catalog.php';
+        $raw = require ETTIC_OTC_PLUGIN_DIR . 'includes/data/faq-catalog.php';
         $raw = is_array( $raw ) ? $raw : [];
 
         /**
@@ -109,7 +109,7 @@ final class OpenTrust_Catalog {
          *
          * @param array $raw FAQ entries keyed by slug.
          */
-        $raw = apply_filters( 'opentrust_faq_catalog', $raw );
+        $raw = apply_filters( 'ettic_otc_faq_catalog', $raw );
 
         $out = [];
         foreach ( is_array( $raw ) ? $raw : [] as $slug => $entry ) {
@@ -132,15 +132,15 @@ final class OpenTrust_Catalog {
     }
 
     /**
-     * Seed the default FAQs as published `opentr_faq` posts.
+     * Seed the default FAQs as published `eotc_faq` posts.
      *
-     * Gated by the `opentrust_faqs_seeded` option so deletions stick: once a
+     * Gated by the `ettic_otc_faqs_seeded` option so deletions stick: once a
      * site has been seeded, re-activating the plugin will not recreate the
-     * FAQs. Each seeded post is tagged with `_opentrust_seeded=1` and a stable
-     * `_opentrust_seed_slug` meta for later bulk operations.
+     * FAQs. Each seeded post is tagged with `_ettic_otc_seeded=1` and a stable
+     * `_ettic_otc_seed_slug` meta for later bulk operations.
      */
     public static function seed_default_faqs(): void {
-        if ( get_option( 'opentrust_faqs_seeded' ) ) {
+        if ( get_option( 'ettic_otc_faqs_seeded' ) ) {
             return;
         }
 
@@ -154,7 +154,7 @@ final class OpenTrust_Catalog {
 
             $post_id = wp_insert_post(
                 [
-                    'post_type'    => OpenTrust_CPT::FAQ,
+                    'post_type'    => Ettic_OTC_CPT::FAQ,
                     'post_status'  => 'publish',
                     'post_title'   => $entry['question'],
                     'post_content' => $content,
@@ -164,12 +164,12 @@ final class OpenTrust_Catalog {
             );
 
             if ( is_int( $post_id ) && $post_id > 0 ) {
-                update_post_meta( $post_id, '_opentrust_seeded', 1 );
-                update_post_meta( $post_id, '_opentrust_seed_slug', $slug );
+                update_post_meta( $post_id, '_ettic_otc_seeded', 1 );
+                update_post_meta( $post_id, '_ettic_otc_seed_slug', $slug );
             }
         }
 
-        update_option( 'opentrust_faqs_seeded', 1, false );
+        update_option( 'ettic_otc_faqs_seeded', 1, false );
     }
 
     /**
@@ -181,9 +181,9 @@ final class OpenTrust_Catalog {
      */
     public static function for_js( string $post_type ): array {
         $catalog = match ( $post_type ) {
-            OpenTrust_CPT::SUBPROCESSOR  => self::subprocessors(),
-            OpenTrust_CPT::DATA_PRACTICE => self::data_practices(),
-            OpenTrust_CPT::CERTIFICATION => self::certifications(),
+            Ettic_OTC_CPT::SUBPROCESSOR  => self::subprocessors(),
+            Ettic_OTC_CPT::DATA_PRACTICE => self::data_practices(),
+            Ettic_OTC_CPT::CERTIFICATION => self::certifications(),
             default                      => [],
         };
 

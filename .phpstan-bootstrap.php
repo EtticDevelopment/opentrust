@@ -7,18 +7,18 @@
 
 declare(strict_types=1);
 
-if (!defined('OPENTRUST_VERSION')) {
-    define('OPENTRUST_VERSION', '1.0.0');
+if (!defined('ETTIC_OTC_VERSION')) {
+    define('ETTIC_OTC_VERSION', '1.0.0');
 }
-if (!defined('OPENTRUST_PLUGIN_DIR')) {
-    define('OPENTRUST_PLUGIN_DIR', __DIR__ . '/');
+if (!defined('ETTIC_OTC_PLUGIN_DIR')) {
+    define('ETTIC_OTC_PLUGIN_DIR', __DIR__ . '/');
 }
-if (!defined('OPENTRUST_PLUGIN_URL')) {
-    define('OPENTRUST_PLUGIN_URL', 'https://example.com/wp-content/plugins/opentrust/');
+if (!defined('ETTIC_OTC_PLUGIN_URL')) {
+    define('ETTIC_OTC_PLUGIN_URL', 'https://example.com/wp-content/plugins/open-trust-center-by-ettic/');
 }
-if (!defined('OPENTRUST_PLUGIN_FILE')) {
-    define('OPENTRUST_PLUGIN_FILE', __DIR__ . '/opentrust.php');
+if (!defined('ETTIC_OTC_PLUGIN_FILE')) {
+    define('ETTIC_OTC_PLUGIN_FILE', __DIR__ . '/open-trust-center-by-ettic.php');
 }
-if (!defined('OPENTRUST_DB_VERSION')) {
-    define('OPENTRUST_DB_VERSION', 2);
+if (!defined('ETTIC_OTC_DB_VERSION')) {
+    define('ETTIC_OTC_DB_VERSION', 1);
 }

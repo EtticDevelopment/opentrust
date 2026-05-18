@@ -137,10 +137,10 @@
         var chosenHex = (String(hex).charAt(0) === '#' ? String(hex) : '#' + hex).toUpperCase();
         var adjustedHex = result.adjustedHex.toUpperCase();
 
-        $warning.find('.ot-accent-warning__swatch--chosen').css('background', chosenHex);
-        $warning.find('.ot-accent-warning__swatch--adjusted').css('background', adjustedHex);
-        $warning.find('.ot-accent-warning__hex--chosen').text(chosenHex);
-        $warning.find('.ot-accent-warning__hex--adjusted').text(adjustedHex);
+        $warning.find('.ettic-otc-accent-warning__swatch--chosen').css('background', chosenHex);
+        $warning.find('.ettic-otc-accent-warning__swatch--adjusted').css('background', adjustedHex);
+        $warning.find('.ettic-otc-accent-warning__hex--chosen').text(chosenHex);
+        $warning.find('.ettic-otc-accent-warning__hex--adjusted').text(adjustedHex);
         $warning.removeAttr('hidden');
     }
 
@@ -150,7 +150,7 @@
         var $forceExact   = $('#opentrust_accent_force_exact');
         var $accentWarning = $('#opentrust-accent-warning');
 
-        $('.ot-color-picker').wpColorPicker({
+        $('.ettic-otc-color-picker').wpColorPicker({
             change: function (event, ui) {
                 // wpColorPicker fires `change` before the input is updated,
                 // so defer a tick before reading the value.
@@ -169,7 +169,7 @@
         // a page reload. The actual clamping still happens server-side — the
         // class only drives the admin copy/colour swap.
         $forceExact.on('change', function () {
-            $accentWarning.toggleClass('ot-accent-warning--override', this.checked);
+            $accentWarning.toggleClass('ettic-otc-accent-warning--override', this.checked);
         });
 
         // Initial check on page load.
@@ -178,12 +178,12 @@
         }
 
         // ── Media uploader (logo + avatar) ─────────
-        $('[data-ot-media-field]').each(function () {
+        $('[data-ettic-otc-media-field]').each(function () {
             var $field     = $(this);
-            var $input     = $field.find('[data-ot-media-input]');
-            var $preview   = $field.find('.ot-logo-preview');
-            var $uploadBtn = $field.find('[data-ot-media-upload]');
-            var $removeBtn = $field.find('[data-ot-media-remove]');
+            var $input     = $field.find('[data-ettic-otc-media-input]');
+            var $preview   = $field.find('.ettic-otc-logo-preview');
+            var $uploadBtn = $field.find('[data-ettic-otc-media-upload]');
+            var $removeBtn = $field.find('[data-ettic-otc-media-remove]');
             var frame;
 
             $uploadBtn.on('click', function (e) {
@@ -221,14 +221,14 @@
         });
 
         // ── Certification badge uploader ───────────
-        $('.ot-upload-badge').on('click', function (e) {
+        $('.ettic-otc-upload-badge').on('click', function (e) {
             e.preventDefault();
             var $btn   = $(this);
-            var $input = $btn.siblings('.ot-badge-input');
-            var $img   = $btn.siblings('.ot-badge-preview');
-            var $rm    = $btn.siblings('.ot-remove-badge');
+            var $input = $btn.siblings('.ettic-otc-badge-input');
+            var $img   = $btn.siblings('.ettic-otc-badge-preview');
+            var $rm    = $btn.siblings('.ettic-otc-remove-badge');
 
-            var adminI18n = (window.OpenTrustAdmin && window.OpenTrustAdmin.i18n) || {};
+            var adminI18n = (window.EtticOTCAdmin && window.EtticOTCAdmin.i18n) || {};
             var frame = wp.media({
                 title:    adminI18n.selectBadgeImage || 'Select Badge Image',
                 multiple: false,
@@ -248,26 +248,26 @@
             frame.open();
         });
 
-        $(document).on('click', '.ot-remove-badge', function (e) {
+        $(document).on('click', '.ettic-otc-remove-badge', function (e) {
             e.preventDefault();
-            $(this).siblings('.ot-badge-input').val('0');
-            $(this).siblings('.ot-badge-preview').hide();
+            $(this).siblings('.ettic-otc-badge-input').val('0');
+            $(this).siblings('.ettic-otc-badge-preview').hide();
             $(this).hide();
         });
 
         // ── Certification artifact uploader (PDF report / certificate) ──
         // Scoped to the parent meta field so the selectors don't collide
         // with the badge uploader above. Accepts any attachment type.
-        $(document).on('click', '.ot-upload-artifact', function (e) {
+        $(document).on('click', '.ettic-otc-upload-artifact', function (e) {
             e.preventDefault();
             var $btn     = $(this);
-            var $wrap    = $btn.closest('[data-ot-cert-artifact]');
-            var $input   = $wrap.find('.ot-artifact-input');
-            var $preview = $wrap.find('.ot-artifact-preview');
-            var $link    = $preview.find('.ot-artifact-preview__link');
-            var $remove  = $wrap.find('.ot-remove-artifact');
+            var $wrap    = $btn.closest('[data-ettic-otc-cert-artifact]');
+            var $input   = $wrap.find('.ettic-otc-artifact-input');
+            var $preview = $wrap.find('.ettic-otc-artifact-preview');
+            var $link    = $preview.find('.ettic-otc-artifact-preview__link');
+            var $remove  = $wrap.find('.ettic-otc-remove-artifact');
 
-            var adminI18n = (window.OpenTrustAdmin && window.OpenTrustAdmin.i18n) || {};
+            var adminI18n = (window.EtticOTCAdmin && window.EtticOTCAdmin.i18n) || {};
             var frame = wp.media({
                 title:    adminI18n.selectArtifact || 'Select Proof Artifact',
                 multiple: false,
@@ -286,29 +286,29 @@
             frame.open();
         });
 
-        $(document).on('click', '.ot-remove-artifact', function (e) {
+        $(document).on('click', '.ettic-otc-remove-artifact', function (e) {
             e.preventDefault();
-            var $wrap = $(this).closest('[data-ot-cert-artifact]');
-            $wrap.find('.ot-artifact-input').val('0');
-            $wrap.find('.ot-artifact-preview').hide();
-            var adminI18n = (window.OpenTrustAdmin && window.OpenTrustAdmin.i18n) || {};
-            $wrap.find('.ot-upload-artifact').text(adminI18n.uploadArtifact || 'Upload File');
+            var $wrap = $(this).closest('[data-ettic-otc-cert-artifact]');
+            $wrap.find('.ettic-otc-artifact-input').val('0');
+            $wrap.find('.ettic-otc-artifact-preview').hide();
+            var adminI18n = (window.EtticOTCAdmin && window.EtticOTCAdmin.i18n) || {};
+            $wrap.find('.ettic-otc-upload-artifact').text(adminI18n.uploadArtifact || 'Upload File');
             $(this).hide();
         });
 
         // ── Policy PDF attachment uploader ──
         // Mirrors the certification artifact uploader, scoped via the
-        // [data-ot-policy-attachment] wrapper so the selectors don't collide.
-        $(document).on('click', '.ot-upload-policy-attachment', function (e) {
+        // [data-ettic-otc-policy-attachment] wrapper so the selectors don't collide.
+        $(document).on('click', '.ettic-otc-upload-policy-attachment', function (e) {
             e.preventDefault();
             var $btn     = $(this);
-            var $wrap    = $btn.closest('[data-ot-policy-attachment]');
-            var $input   = $wrap.find('.ot-policy-attachment-input');
-            var $preview = $wrap.find('.ot-artifact-preview');
-            var $link    = $preview.find('.ot-artifact-preview__link');
-            var $remove  = $wrap.find('.ot-remove-policy-attachment');
+            var $wrap    = $btn.closest('[data-ettic-otc-policy-attachment]');
+            var $input   = $wrap.find('.ettic-otc-policy-attachment-input');
+            var $preview = $wrap.find('.ettic-otc-artifact-preview');
+            var $link    = $preview.find('.ettic-otc-artifact-preview__link');
+            var $remove  = $wrap.find('.ettic-otc-remove-policy-attachment');
 
-            var adminI18n = (window.OpenTrustAdmin && window.OpenTrustAdmin.i18n) || {};
+            var adminI18n = (window.EtticOTCAdmin && window.EtticOTCAdmin.i18n) || {};
             var frame = wp.media({
                 title:    adminI18n.selectPolicyPdf || 'Select Policy PDF',
                 multiple: false,
@@ -328,20 +328,20 @@
             frame.open();
         });
 
-        $(document).on('click', '.ot-remove-policy-attachment', function (e) {
+        $(document).on('click', '.ettic-otc-remove-policy-attachment', function (e) {
             e.preventDefault();
-            var $wrap = $(this).closest('[data-ot-policy-attachment]');
-            $wrap.find('.ot-policy-attachment-input').val('0');
-            $wrap.find('.ot-artifact-preview').hide();
-            var adminI18n = (window.OpenTrustAdmin && window.OpenTrustAdmin.i18n) || {};
-            $wrap.find('.ot-upload-policy-attachment').text(adminI18n.uploadPolicyPdf || 'Upload PDF');
+            var $wrap = $(this).closest('[data-ettic-otc-policy-attachment]');
+            $wrap.find('.ettic-otc-policy-attachment-input').val('0');
+            $wrap.find('.ettic-otc-artifact-preview').hide();
+            var adminI18n = (window.EtticOTCAdmin && window.EtticOTCAdmin.i18n) || {};
+            $wrap.find('.ettic-otc-upload-policy-attachment').text(adminI18n.uploadPolicyPdf || 'Upload PDF');
             $(this).hide();
         });
 
         // ── Tag input for Data Practice repeaters ──
         function otReindexTags($container) {
-            var fieldName = $container.data('ot-tags');
-            $container.find('.ot-tag').each(function (i) {
+            var fieldName = $container.data('ettic-otc-tags');
+            $container.find('.ettic-otc-tag').each(function (i) {
                 $(this).find('input[type="hidden"]').attr('name', fieldName + '[' + i + '][name]');
             });
         }
@@ -352,7 +352,7 @@
 
             // Prevent duplicates.
             var exists = false;
-            $container.find('.ot-tag__text').each(function () {
+            $container.find('.ettic-otc-tag__text').each(function () {
                 if ($(this).text().toLowerCase() === text.toLowerCase()) {
                     exists = true;
                     return false;
@@ -360,31 +360,31 @@
             });
             if (exists) return;
 
-            var fieldName = $container.data('ot-tags');
-            var idx = $container.find('.ot-tag').length;
+            var fieldName = $container.data('ettic-otc-tags');
+            var idx = $container.find('.ettic-otc-tag').length;
             var $tag = $(
-                '<span class="ot-tag">' +
-                    '<span class="ot-tag__text"></span>' +
+                '<span class="ettic-otc-tag">' +
+                    '<span class="ettic-otc-tag__text"></span>' +
                     '<input type="hidden" name="' + fieldName + '[' + idx + '][name]" value="">' +
-                    '<button type="button" class="ot-tag__remove" aria-label="Remove">&times;</button>' +
+                    '<button type="button" class="ettic-otc-tag__remove" aria-label="Remove">&times;</button>' +
                 '</span>'
             );
-            $tag.find('.ot-tag__text').text(text);
+            $tag.find('.ettic-otc-tag__text').text(text);
             $tag.find('input').val(text);
-            $container.find('.ot-tags__input').before($tag);
+            $container.find('.ettic-otc-tags__input').before($tag);
         }
 
         // Click container to focus input.
-        $(document).on('click', '.ot-tags', function (e) {
-            if ($(e.target).hasClass('ot-tags')) {
-                $(this).find('.ot-tags__input').trigger('focus');
+        $(document).on('click', '.ettic-otc-tags', function (e) {
+            if ($(e.target).hasClass('ettic-otc-tags')) {
+                $(this).find('.ettic-otc-tags__input').trigger('focus');
             }
         });
 
         // Add tag on Enter or comma.
-        $(document).on('keydown', '.ot-tags__input', function (e) {
+        $(document).on('keydown', '.ettic-otc-tags__input', function (e) {
             var $input = $(this);
-            var $container = $input.closest('.ot-tags');
+            var $container = $input.closest('.ettic-otc-tags');
 
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
@@ -394,15 +394,15 @@
 
             // Backspace on empty input removes last tag.
             if (e.key === 'Backspace' && $input.val() === '') {
-                $container.find('.ot-tag').last().remove();
+                $container.find('.ettic-otc-tag').last().remove();
                 otReindexTags($container);
             }
         });
 
         // Also add on blur (if text remains).
-        $(document).on('blur', '.ot-tags__input', function () {
+        $(document).on('blur', '.ettic-otc-tags__input', function () {
             var $input = $(this);
-            var $container = $input.closest('.ot-tags');
+            var $container = $input.closest('.ettic-otc-tags');
             if ($.trim($input.val())) {
                 otAddTag($container, $input.val());
                 $input.val('');
@@ -410,10 +410,10 @@
         });
 
         // Remove tag.
-        $(document).on('click', '.ot-tag__remove', function (e) {
+        $(document).on('click', '.ettic-otc-tag__remove', function (e) {
             e.preventDefault();
-            var $container = $(this).closest('.ot-tags');
-            $(this).closest('.ot-tag').remove();
+            var $container = $(this).closest('.ettic-otc-tags');
+            $(this).closest('.ettic-otc-tag').remove();
             otReindexTags($container);
         });
     });
@@ -427,15 +427,15 @@
  *   - `fields`        → facts, green highlight, "Auto-filled" chip
  *   - `fields_review` → templates, amber highlight, "Verify" chip + notice
  *
- * All state is client-side. The bundle at window.OpenTrustCatalog is injected
- * only on post-new.php for opentr_subprocessor / opentr_data_practice screens.
+ * All state is client-side. The bundle at window.EtticOTCCatalog is injected
+ * only on post-new.php for eotc_subprocessor / eotc_data_practice screens.
  */
 (function () {
     'use strict';
 
-    if (!window.OpenTrustCatalog) return;
+    if (!window.EtticOTCCatalog) return;
 
-    var data = window.OpenTrustCatalog;
+    var data = window.EtticOTCCatalog;
     var entries = (data.catalog && data.catalog.entries) || [];
     if (!entries.length) return;
 
@@ -457,12 +457,12 @@
     // ── Build dropdown DOM ───────────────────────────────────────
     var titleWrap = document.getElementById('titlewrap') || titleInput.parentNode;
     var shell = document.createElement('div');
-    shell.className = 'ot-typeahead';
+    shell.className = 'ettic-otc-typeahead';
 
     var panel = document.createElement('ul');
-    panel.className = 'ot-typeahead__panel';
+    panel.className = 'ettic-otc-typeahead__panel';
     panel.setAttribute('role', 'listbox');
-    panel.id = 'ot-typeahead-listbox';
+    panel.id = 'ettic-otc-typeahead-listbox';
     panel.setAttribute('aria-label', I18N.suggestions || 'Catalog suggestions');
     panel.hidden = true;
 
@@ -542,7 +542,7 @@
             // No-match hint, a single non-selectable footer row so the user
             // knows manual entry still works.
             var hint = document.createElement('li');
-            hint.className = 'ot-typeahead__hint';
+            hint.className = 'ettic-otc-typeahead__hint';
             hint.textContent = I18N.noMatchHint || 'No match in catalog, just keep typing to add manually.';
             panel.appendChild(hint);
             openPanel();
@@ -552,18 +552,18 @@
         for (var i = 0; i < results.length; i++) {
             var r = results[i];
             var li = document.createElement('li');
-            li.className = 'ot-typeahead__option';
-            li.id = 'ot-ta-opt-' + i;
+            li.className = 'ettic-otc-typeahead__option';
+            li.id = 'ettic-otc-ta-opt-' + i;
             li.setAttribute('role', 'option');
             li.setAttribute('aria-selected', 'false');
             li.dataset.index = String(i);
 
             var nameEl = document.createElement('span');
-            nameEl.className = 'ot-typeahead__option-name';
+            nameEl.className = 'ettic-otc-typeahead__option-name';
             nameEl.textContent = r.name;
 
             var hintEl = document.createElement('span');
-            hintEl.className = 'ot-typeahead__option-hint';
+            hintEl.className = 'ettic-otc-typeahead__option-hint';
             hintEl.textContent = hintText;
 
             li.appendChild(nameEl);
@@ -575,7 +575,7 @@
     };
 
     var setActive = function (idx) {
-        var opts = panel.querySelectorAll('.ot-typeahead__option');
+        var opts = panel.querySelectorAll('.ettic-otc-typeahead__option');
         if (!opts.length) return;
         if (idx < 0) idx = opts.length - 1;
         if (idx >= opts.length) idx = 0;
@@ -593,21 +593,21 @@
         // Apply a single-line colored border to the field wrapper, append a
         // short helper message in the matching tint below it, and re-trigger
         // the flash animation so the user sees what changed.
-        var wrap = fieldEl.closest('.ot-meta-field');
+        var wrap = fieldEl.closest('.ettic-otc-meta-field');
         if (!wrap) return;
 
-        var existing = wrap.querySelector('.ot-typeahead-help');
+        var existing = wrap.querySelector('.ettic-otc-typeahead-help');
         if (existing) existing.remove();
 
         // Remove-then-add forces the browser to replay the flash keyframes.
-        wrap.classList.remove('ot-typeahead-filled', 'is-fact', 'is-review');
+        wrap.classList.remove('ettic-otc-typeahead-filled', 'is-fact', 'is-review');
         // Force a reflow so the next class add re-starts the animation.
         void wrap.offsetWidth;
-        wrap.classList.add('ot-typeahead-filled', tier === 'review' ? 'is-review' : 'is-fact');
-        fieldEl.dataset.otPrefilled = tier;
+        wrap.classList.add('ettic-otc-typeahead-filled', tier === 'review' ? 'is-review' : 'is-fact');
+        fieldEl.dataset.etticOtcPrefilled = tier;
 
         var help = document.createElement('p');
-        help.className = 'ot-typeahead-help' + (tier === 'review' ? ' is-review' : '');
+        help.className = 'ettic-otc-typeahead-help' + (tier === 'review' ? ' is-review' : '');
         help.textContent = tier === 'review'
             ? (I18N.helpReview || 'Auto-filled template, please verify this matches how you use this service.')
             : (I18N.helpFact || 'Auto-filled from catalog, you may want to verify this.');
@@ -617,39 +617,39 @@
 
     // Wipe every field that was previously filled by a catalog entry so
     // that a new selection produces a clean replacement. User-typed values
-    // (without the data-ot-prefilled marker) are left untouched.
+    // (without the data-ettic-otc-prefilled marker) are left untouched.
     var clearAllPrefilled = function () {
-        var filled = document.querySelectorAll('[data-ot-prefilled]');
+        var filled = document.querySelectorAll('[data-ettic-otc-prefilled]');
         for (var i = 0; i < filled.length; i++) {
             var el = filled[i];
             if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
                 el.value = '';
             } else if (el.tagName === 'SELECT') {
                 el.selectedIndex = 0;
-            } else if (el.classList && el.classList.contains('ot-tags')) {
-                var tags = el.querySelectorAll('.ot-tag');
+            } else if (el.classList && el.classList.contains('ettic-otc-tags')) {
+                var tags = el.querySelectorAll('.ettic-otc-tag');
                 for (var t = 0; t < tags.length; t++) tags[t].remove();
             }
-            delete el.dataset.otPrefilled;
-            var wrap = el.closest('.ot-meta-field');
+            delete el.dataset.etticOtcPrefilled;
+            var wrap = el.closest('.ettic-otc-meta-field');
             if (wrap) {
-                wrap.classList.remove('ot-typeahead-filled', 'is-fact', 'is-review');
-                var help = wrap.querySelector('.ot-typeahead-help');
+                wrap.classList.remove('ettic-otc-typeahead-filled', 'is-fact', 'is-review');
+                var help = wrap.querySelector('.ettic-otc-typeahead-help');
                 if (help) help.remove();
             }
         }
     };
 
-    // Add a tag to an `.ot-tags` container, matching the existing DOM shape
+    // Add a tag to an `.ettic-otc-tags` container, matching the existing DOM shape
     // in assets/js/admin.js (fieldName[i][name]).
     var addTagToContainer = function (container, value) {
-        var fieldName = container.getAttribute('data-ot-tags');
+        var fieldName = container.getAttribute('data-ettic-otc-tags');
         if (!fieldName) return;
-        var idx = container.querySelectorAll('.ot-tag').length;
+        var idx = container.querySelectorAll('.ettic-otc-tag').length;
         var tag = document.createElement('span');
-        tag.className = 'ot-tag';
+        tag.className = 'ettic-otc-tag';
         var text = document.createElement('span');
-        text.className = 'ot-tag__text';
+        text.className = 'ettic-otc-tag__text';
         text.textContent = value;
         var hidden = document.createElement('input');
         hidden.type = 'hidden';
@@ -657,13 +657,13 @@
         hidden.value = value;
         var remove = document.createElement('button');
         remove.type = 'button';
-        remove.className = 'ot-tag__remove';
+        remove.className = 'ettic-otc-tag__remove';
         remove.setAttribute('aria-label', 'Remove');
         remove.innerHTML = '&times;';
         tag.appendChild(text);
         tag.appendChild(hidden);
         tag.appendChild(remove);
-        var input = container.querySelector('.ot-tags__input');
+        var input = container.querySelector('.ettic-otc-tags__input');
         if (input) {
             container.insertBefore(tag, input);
         } else {
@@ -674,14 +674,14 @@
     var applyField = function (metaKey, value, tier) {
         var domId = metaKeyToDomId(metaKey);
 
-        // Tag-array fields render as `.ot-tags[data-ot-tags="<postName>"]`.
+        // Tag-array fields render as `.ettic-otc-tags[data-ettic-otc-tags="<postName>"]`.
         // Locate by the data attribute — there is no element with id=domId.
-        var tagContainer = document.querySelector('.ot-tags[data-ot-tags="' + domId + '"]');
+        var tagContainer = document.querySelector('.ettic-otc-tags[data-ettic-otc-tags="' + domId + '"]');
         if (tagContainer) {
             if (!Array.isArray(value)) return;
             // Respect any existing user-typed tags; the catalog-prefilled
             // ones were already wiped in clearAllPrefilled().
-            if (tagContainer.querySelectorAll('.ot-tag').length > 0) return;
+            if (tagContainer.querySelectorAll('.ettic-otc-tag').length > 0) return;
             for (var i = 0; i < value.length; i++) {
                 addTagToContainer(tagContainer, String(value[i]));
             }
@@ -783,7 +783,7 @@
 
     panel.addEventListener('mousedown', function (e) {
         // mousedown (not click) so it fires before the title's blur
-        var opt = e.target.closest('.ot-typeahead__option');
+        var opt = e.target.closest('.ettic-otc-typeahead__option');
         if (!opt) return;
         e.preventDefault();
         var idx = parseInt(opt.dataset.index || '0', 10);
@@ -810,10 +810,10 @@
 (function () {
     'use strict';
 
-    var select = document.querySelector('[data-ot-cert-type]');
+    var select = document.querySelector('[data-ettic-otc-cert-type]');
     if (!select) return;
 
-    var certifiedOnlyFields = document.querySelectorAll('[data-ot-cert-certified-only]');
+    var certifiedOnlyFields = document.querySelectorAll('[data-ettic-otc-cert-certified-only]');
     if (!certifiedOnlyFields.length) return;
 
     var apply = function () {
@@ -840,7 +840,7 @@
     if (!toggle) return;
 
     toggle.addEventListener('change', function () {
-        var wrap = document.getElementById('ot-version-summary-wrap');
+        var wrap = document.getElementById('ettic-otc-version-summary-wrap');
         if (wrap) {
             wrap.style.display = this.checked ? 'block' : 'none';
         }

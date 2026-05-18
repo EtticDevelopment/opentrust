@@ -19,46 +19,46 @@ foreach ($ot_data['certifications'] as $ot_cert) {
     }
 }
 ?>
-<header class="ot-hero">
-    <div class="ot-container ot-hero__inner">
+<header class="ettic-otc-hero">
+    <div class="ettic-otc-container ettic-otc-hero__inner">
         <?php if ($ot_active_certs): ?>
-            <div class="ot-hero__badge">
-                <span class="ot-hero__badge-dot"></span>
+            <div class="ettic-otc-hero__badge">
+                <span class="ettic-otc-hero__badge-dot"></span>
                 <?php
                 printf(
                     esc_html(
                         /* translators: %d: number of active certifications */
-                        _n('%d Active Certification', '%d Active Certifications', $ot_active_certs, 'opentrust')
+                        _n('%d Active Certification', '%d Active Certifications', $ot_active_certs, 'open-trust-center-by-ettic')
                     ),
                     intval( $ot_active_certs )
                 ); ?>
             </div>
         <?php endif; ?>
 
-        <h1 class="ot-hero__title"><?php echo esc_html($ot_settings['page_title'] ?: __('Trust Center', 'opentrust')); ?></h1>
+        <h1 class="ettic-otc-hero__title"><?php echo esc_html($ot_settings['page_title'] ?: __('Trust Center', 'open-trust-center-by-ettic')); ?></h1>
 
         <?php if ($ot_tagline): ?>
-            <p class="ot-hero__tagline"><?php echo esc_html($ot_tagline); ?></p>
+            <p class="ettic-otc-hero__tagline"><?php echo esc_html($ot_tagline); ?></p>
         <?php endif; ?>
 
         <?php if ($ot_active_certs || $ot_policy_count || $ot_sub_count): ?>
-        <div class="ot-hero__stats">
+        <div class="ettic-otc-hero__stats">
             <?php if ($ot_active_certs): ?>
-            <div class="ot-hero__stat">
-                <span class="ot-hero__stat-value"><?php echo (int) $ot_active_certs; ?></span>
-                <span class="ot-hero__stat-label"><?php esc_html_e('Certifications', 'opentrust'); ?></span>
+            <div class="ettic-otc-hero__stat">
+                <span class="ettic-otc-hero__stat-value"><?php echo (int) $ot_active_certs; ?></span>
+                <span class="ettic-otc-hero__stat-label"><?php esc_html_e('Certifications', 'open-trust-center-by-ettic'); ?></span>
             </div>
             <?php endif; ?>
             <?php if ($ot_policy_count): ?>
-            <div class="ot-hero__stat">
-                <span class="ot-hero__stat-value"><?php echo (int) $ot_policy_count; ?></span>
-                <span class="ot-hero__stat-label"><?php esc_html_e('Policies', 'opentrust'); ?></span>
+            <div class="ettic-otc-hero__stat">
+                <span class="ettic-otc-hero__stat-value"><?php echo (int) $ot_policy_count; ?></span>
+                <span class="ettic-otc-hero__stat-label"><?php esc_html_e('Policies', 'open-trust-center-by-ettic'); ?></span>
             </div>
             <?php endif; ?>
             <?php if ($ot_sub_count): ?>
-            <div class="ot-hero__stat">
-                <span class="ot-hero__stat-value"><?php echo (int) $ot_sub_count; ?></span>
-                <span class="ot-hero__stat-label"><?php esc_html_e('Subprocessors', 'opentrust'); ?></span>
+            <div class="ettic-otc-hero__stat">
+                <span class="ettic-otc-hero__stat-value"><?php echo (int) $ot_sub_count; ?></span>
+                <span class="ettic-otc-hero__stat-label"><?php esc_html_e('Subprocessors', 'open-trust-center-by-ettic'); ?></span>
             </div>
             <?php endif; ?>
         </div>

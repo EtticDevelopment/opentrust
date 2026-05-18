@@ -3,7 +3,7 @@
  * Read-side data layer for the trust center.
  *
  * Single source of truth for "what published trust-center items exist." Owns
- * all DB fetching for the five OpenTrust CPTs and the per-CPT projection
+ * all DB fetching for the five Ettic_OTC CPTs and the per-CPT projection
  * shape consumed by Render (templates) and Chat_Corpus (AI corpus index).
  *
  * Returns ALL published items unconditionally — no visibility filtering, no
@@ -16,7 +16,7 @@
  *     the public page is also hidden from the AI's corpus index.
  *
  * Caching: each fetcher is memoized in a locale-scoped transient bumped by
- * opentrust_cache_version. Returns are plain projected arrays.
+ * ettic_otc_cache_version. Returns are plain projected arrays.
  */
 
 declare(strict_types=1);
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Repository {
+final class Ettic_OTC_Repository {
 
     private static ?self $instance = null;
 
@@ -44,25 +44,25 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'certifications',
             [
-                'post_type'      => OpenTrust_CPT::CERTIFICATION,
+                'post_type'      => Ettic_OTC_CPT::CERTIFICATION,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'menu_order title',
                 'order'          => 'ASC',
             ],
             static function (WP_Post $post): array {
-                $badge_id    = (int) get_post_meta($post->ID, '_opentrust_cert_badge_id', true);
-                $artifact_id = (int) get_post_meta($post->ID, '_opentrust_cert_artifact_id', true);
+                $badge_id    = (int) get_post_meta($post->ID, '_ettic_otc_cert_badge_id', true);
+                $artifact_id = (int) get_post_meta($post->ID, '_ettic_otc_cert_artifact_id', true);
                 return [
                     'id'           => $post->ID,
                     'title'        => $post->post_title,
-                    'type'         => get_post_meta($post->ID, '_opentrust_cert_type', true) ?: 'compliant',
-                    'issuing_body' => get_post_meta($post->ID, '_opentrust_cert_issuing_body', true) ?: '',
-                    'status'       => get_post_meta($post->ID, '_opentrust_cert_status', true) ?: 'active',
-                    'issue_date'   => get_post_meta($post->ID, '_opentrust_cert_issue_date', true) ?: '',
-                    'expiry_date'  => get_post_meta($post->ID, '_opentrust_cert_expiry_date', true) ?: '',
+                    'type'         => get_post_meta($post->ID, '_ettic_otc_cert_type', true) ?: 'compliant',
+                    'issuing_body' => get_post_meta($post->ID, '_ettic_otc_cert_issuing_body', true) ?: '',
+                    'status'       => get_post_meta($post->ID, '_ettic_otc_cert_status', true) ?: 'active',
+                    'issue_date'   => get_post_meta($post->ID, '_ettic_otc_cert_issue_date', true) ?: '',
+                    'expiry_date'  => get_post_meta($post->ID, '_ettic_otc_cert_expiry_date', true) ?: '',
                     'badge_url'    => $badge_id ? (wp_get_attachment_image_url($badge_id, 'thumbnail') ?: '') : '',
-                    'description'  => get_post_meta($post->ID, '_opentrust_cert_description', true) ?: '',
+                    'description'  => get_post_meta($post->ID, '_ettic_otc_cert_description', true) ?: '',
                     'artifact_url' => $artifact_id ? (wp_get_attachment_url($artifact_id) ?: '') : '',
                 ];
             }
@@ -76,27 +76,27 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'policies',
             [
-                'post_type'      => OpenTrust_CPT::POLICY,
+                'post_type'      => Ettic_OTC_CPT::POLICY,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
-                'meta_key'       => '_opentrust_policy_sort_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Transient-cached; <100 posts
+                'meta_key'       => '_ettic_otc_policy_sort_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Transient-cached; <100 posts
                 'order'          => 'ASC',
             ],
             function (WP_Post $post): array {
-                $eff        = get_post_meta($post->ID, '_opentrust_policy_effective_date', true) ?: '';
+                $eff        = get_post_meta($post->ID, '_ettic_otc_policy_effective_date', true) ?: '';
                 $attachment = $this->resolve_policy_attachment($post->ID);
                 return [
                     'id'             => $post->ID,
                     'title'          => $post->post_title,
                     'slug'           => $post->post_name,
                     'excerpt'        => $post->post_excerpt ?: wp_trim_words($post->post_content, 30),
-                    'version'        => (int) get_post_meta($post->ID, '_opentrust_version', true) ?: 1,
-                    'ref_id'         => (string) (get_post_meta($post->ID, '_opentrust_policy_ref_id', true) ?: ''),
-                    'category'       => get_post_meta($post->ID, '_opentrust_policy_category', true) ?: 'other',
-                    'citations'      => $this->normalize_citations(get_post_meta($post->ID, '_opentrust_policy_citations', true)),
+                    'version'        => (int) get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1,
+                    'ref_id'         => (string) (get_post_meta($post->ID, '_ettic_otc_policy_ref_id', true) ?: ''),
+                    'category'       => get_post_meta($post->ID, '_ettic_otc_policy_category', true) ?: 'other',
+                    'citations'      => $this->normalize_citations(get_post_meta($post->ID, '_ettic_otc_policy_citations', true)),
                     'effective_date' => $eff,
-                    'review_date'    => get_post_meta($post->ID, '_opentrust_policy_review_date', true) ?: '',
+                    'review_date'    => get_post_meta($post->ID, '_ettic_otc_policy_review_date', true) ?: '',
                     'attachment'     => $attachment,
                     'last_modified'  => $post->post_modified,
                     'is_pending'     => $eff && strtotime($eff) > time(),
@@ -112,7 +112,7 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'subprocessors',
             [
-                'post_type'      => OpenTrust_CPT::SUBPROCESSOR,
+                'post_type'      => Ettic_OTC_CPT::SUBPROCESSOR,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'title',
@@ -121,11 +121,11 @@ final class OpenTrust_Repository {
             static fn(WP_Post $post): array => [
                 'id'             => $post->ID,
                 'name'           => $post->post_title,
-                'purpose'        => get_post_meta($post->ID, '_opentrust_sub_purpose', true) ?: '',
-                'data_processed' => get_post_meta($post->ID, '_opentrust_sub_data_processed', true) ?: '',
-                'country'        => get_post_meta($post->ID, '_opentrust_sub_country', true) ?: '',
-                'website'        => get_post_meta($post->ID, '_opentrust_sub_website', true) ?: '',
-                'dpa_signed'     => (bool) get_post_meta($post->ID, '_opentrust_sub_dpa_signed', true),
+                'purpose'        => get_post_meta($post->ID, '_ettic_otc_sub_purpose', true) ?: '',
+                'data_processed' => get_post_meta($post->ID, '_ettic_otc_sub_data_processed', true) ?: '',
+                'country'        => get_post_meta($post->ID, '_ettic_otc_sub_country', true) ?: '',
+                'website'        => get_post_meta($post->ID, '_ettic_otc_sub_website', true) ?: '',
+                'dpa_signed'     => (bool) get_post_meta($post->ID, '_ettic_otc_sub_dpa_signed', true),
             ]
         );
     }
@@ -137,29 +137,29 @@ final class OpenTrust_Repository {
         return $this->cached_query(
             'data_practices',
             [
-                'post_type'      => OpenTrust_CPT::DATA_PRACTICE,
+                'post_type'      => Ettic_OTC_CPT::DATA_PRACTICE,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => 'meta_value_num title',
-                'meta_key'       => '_opentrust_dp_sort_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Transient-cached; <100 posts
+                'meta_key'       => '_ettic_otc_dp_sort_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Transient-cached; <100 posts
                 'order'          => 'ASC',
             ],
             static function (WP_Post $post): array {
-                $data_items = get_post_meta($post->ID, '_opentrust_dp_data_items', true);
-                $shared     = get_post_meta($post->ID, '_opentrust_dp_shared_with', true);
+                $data_items = get_post_meta($post->ID, '_ettic_otc_dp_data_items', true);
+                $shared     = get_post_meta($post->ID, '_ettic_otc_dp_shared_with', true);
                 return [
                     'id'               => $post->ID,
                     'title'            => $post->post_title,
                     'data_items'       => is_array($data_items) ? $data_items : [],
-                    'purpose'          => get_post_meta($post->ID, '_opentrust_dp_purpose', true) ?: '',
-                    'legal_basis'      => get_post_meta($post->ID, '_opentrust_dp_legal_basis', true) ?: '',
-                    'retention_period' => get_post_meta($post->ID, '_opentrust_dp_retention_period', true) ?: '',
+                    'purpose'          => get_post_meta($post->ID, '_ettic_otc_dp_purpose', true) ?: '',
+                    'legal_basis'      => get_post_meta($post->ID, '_ettic_otc_dp_legal_basis', true) ?: '',
+                    'retention_period' => get_post_meta($post->ID, '_ettic_otc_dp_retention_period', true) ?: '',
                     'shared_with'      => is_array($shared) ? $shared : [],
-                    'prop_collected'   => (bool) get_post_meta($post->ID, '_opentrust_dp_collected', true),
-                    'prop_stored'      => (bool) get_post_meta($post->ID, '_opentrust_dp_stored', true),
-                    'prop_shared'      => (bool) get_post_meta($post->ID, '_opentrust_dp_shared', true),
-                    'prop_sold'        => (bool) get_post_meta($post->ID, '_opentrust_dp_sold', true),
-                    'prop_encrypted'   => (bool) get_post_meta($post->ID, '_opentrust_dp_encrypted', true),
+                    'prop_collected'   => (bool) get_post_meta($post->ID, '_ettic_otc_dp_collected', true),
+                    'prop_stored'      => (bool) get_post_meta($post->ID, '_ettic_otc_dp_stored', true),
+                    'prop_shared'      => (bool) get_post_meta($post->ID, '_ettic_otc_dp_shared', true),
+                    'prop_sold'        => (bool) get_post_meta($post->ID, '_ettic_otc_dp_sold', true),
+                    'prop_encrypted'   => (bool) get_post_meta($post->ID, '_ettic_otc_dp_encrypted', true),
                 ];
             }
         );
@@ -169,18 +169,18 @@ final class OpenTrust_Repository {
      * @return array<int, array<string, mixed>>
      */
     public function fetch_faqs(): array {
-        $endpoint = OpenTrust::get_settings()['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $endpoint = Ettic_OTC::get_settings()['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
 
         return $this->cached_query(
             'faqs',
             [
-                'post_type'      => OpenTrust_CPT::FAQ,
+                'post_type'      => Ettic_OTC_CPT::FAQ,
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'orderby'        => ['menu_order' => 'ASC', 'title' => 'ASC'],
             ],
             static function (WP_Post $post) use ($endpoint): array {
-                $related_id    = (int) get_post_meta($post->ID, '_opentrust_faq_related_policy', true);
+                $related_id    = (int) get_post_meta($post->ID, '_ettic_otc_faq_related_policy', true);
                 $related_url   = '';
                 $related_title = '';
                 if ($related_id && get_post_status($related_id) === 'publish') {
@@ -214,7 +214,7 @@ final class OpenTrust_Repository {
      */
     public function fetch_policy_posts(): array {
         return get_posts([
-            'post_type'      => OpenTrust_CPT::POLICY,
+            'post_type'      => Ettic_OTC_CPT::POLICY,
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'orderby'        => 'title',
@@ -252,17 +252,17 @@ final class OpenTrust_Repository {
     /**
      * Build a locale-and-version-scoped transient key. The locale suffix keeps
      * WPML/Polylang variants in separate buckets; the version counter
-     * (opentrust_cache_version, bumped by OpenTrust::invalidate_cache) lets a
+     * (ettic_otc_cache_version, bumped by Ettic_OTC::invalidate_cache) lets a
      * single option flip bust every cached locale at once.
      */
     private function cache_key(string $bucket): string {
-        $version = (int) get_option('opentrust_cache_version', 1);
-        return 'opentrust_' . $bucket . '_' . sanitize_key(determine_locale()) . '_v' . $version;
+        $version = (int) get_option('ettic_otc_cache_version', 1);
+        return 'ettic_otc_' . $bucket . '_' . sanitize_key(determine_locale()) . '_v' . $version;
     }
 
     /**
      * Shared transient + WP_Query plumbing for the per-CPT fetchers. Memoized
-     * for HOUR_IN_SECONDS and invalidated globally via opentrust_cache_version.
+     * for HOUR_IN_SECONDS and invalidated globally via ettic_otc_cache_version.
      *
      * @param array<string,mixed> $query_args
      * @param callable(WP_Post):array<string,mixed> $mapper
@@ -313,7 +313,7 @@ final class OpenTrust_Repository {
      * @return array{url:string,filename:string,size_bytes:int,size_human:string}|null
      */
     public function resolve_policy_attachment(int $post_id): ?array {
-        $attachment_id = (int) get_post_meta($post_id, '_opentrust_policy_attachment_id', true);
+        $attachment_id = (int) get_post_meta($post_id, '_ettic_otc_policy_attachment_id', true);
         if ($attachment_id <= 0 || get_post_type($attachment_id) !== 'attachment') {
             return null;
         }

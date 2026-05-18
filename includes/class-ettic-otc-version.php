@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust_Version {
+final class Ettic_OTC_Version {
 
     private static ?self $instance = null;
 
@@ -37,7 +37,7 @@ final class OpenTrust_Version {
      * with the OLD version so it's preserved in history.
      */
     public static function bump_version(int $post_id, string $change_summary = ''): void {
-        $current_version = (int) get_post_meta($post_id, '_opentrust_version', true) ?: 1;
+        $current_version = (int) get_post_meta($post_id, '_ettic_otc_version', true) ?: 1;
         $new_version     = $current_version + 1;
 
         // Find an untagged revision that holds the OLD content (pre-update).
@@ -51,7 +51,7 @@ final class OpenTrust_Version {
 
         if ($revisions && $post) {
             foreach ($revisions as $rev) {
-                $existing = get_post_meta($rev->ID, '_opentrust_version', true);
+                $existing = get_post_meta($rev->ID, '_ettic_otc_version', true);
                 if (!empty($existing) && (int) $existing > 0) {
                     continue; // already tagged, skip
                 }
@@ -66,16 +66,16 @@ final class OpenTrust_Version {
                 // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.SlowDBQuery -- Admin-only postmeta operations on revisions
                 $wpdb->delete($wpdb->postmeta, [
                     'post_id'  => $rev->ID,
-                    'meta_key' => '_opentrust_version',
+                    'meta_key' => '_ettic_otc_version',
                 ]);
                 $wpdb->insert($wpdb->postmeta, [
                     'post_id'    => $rev->ID,
-                    'meta_key'   => '_opentrust_version',
+                    'meta_key'   => '_ettic_otc_version',
                     'meta_value' => (string) $current_version,
                 ]);
 
                 // Copy old version's summary and effective date to the revision.
-                foreach (['_opentrust_version_summary', '_opentrust_policy_effective_date'] as $meta_key) {
+                foreach (['_ettic_otc_version_summary', '_ettic_otc_policy_effective_date'] as $meta_key) {
                     $old_val = get_post_meta($post_id, $meta_key, true);
                     if ($old_val) {
                         $wpdb->delete($wpdb->postmeta, [
@@ -97,13 +97,13 @@ final class OpenTrust_Version {
         }
 
         // Bump the main post to the new version.
-        update_post_meta($post_id, '_opentrust_version', $new_version);
+        update_post_meta($post_id, '_ettic_otc_version', $new_version);
 
         // Store change summary for this version.
         if ($change_summary !== '') {
-            update_post_meta($post_id, '_opentrust_version_summary', $change_summary);
+            update_post_meta($post_id, '_ettic_otc_version_summary', $change_summary);
         } else {
-            delete_post_meta($post_id, '_opentrust_version_summary');
+            delete_post_meta($post_id, '_ettic_otc_version_summary');
         }
     }
 
@@ -111,9 +111,9 @@ final class OpenTrust_Version {
      * Ensure a first-publish post gets v1.
      */
     public static function ensure_initial_version(int $post_id): void {
-        $version = get_post_meta($post_id, '_opentrust_version', true);
+        $version = get_post_meta($post_id, '_ettic_otc_version', true);
         if (!$version) {
-            update_post_meta($post_id, '_opentrust_version', 1);
+            update_post_meta($post_id, '_ettic_otc_version', 1);
         }
     }
 
@@ -123,53 +123,53 @@ final class OpenTrust_Version {
 
     public function add_version_history_meta_box(): void {
         add_meta_box(
-            'opentrust_version_history',
-            __('Version History', 'opentrust'),
+            'ettic_otc_version_history',
+            __('Version History', 'open-trust-center-by-ettic'),
             [$this, 'render_version_history'],
-            OpenTrust_CPT::POLICY,
+            Ettic_OTC_CPT::POLICY,
             'side',
             'default'
         );
     }
 
     public function render_version_history(\WP_Post $post): void {
-        $current_version = (int) get_post_meta($post->ID, '_opentrust_version', true) ?: 1;
+        $current_version = (int) get_post_meta($post->ID, '_ettic_otc_version', true) ?: 1;
         $revisions       = wp_get_post_revisions($post->ID, [
             'orderby' => 'ID',
             'order'   => 'DESC',
         ]);
 
-        $settings  = OpenTrust::get_settings();
-        $slug      = $settings['endpoint_slug'] ?? OpenTrust::DEFAULT_ENDPOINT_SLUG;
+        $settings  = Ettic_OTC::get_settings();
+        $slug      = $settings['endpoint_slug'] ?? Ettic_OTC::DEFAULT_ENDPOINT_SLUG;
         $post_slug = $post->post_name ?: sanitize_title($post->post_title);
 
         if (empty($revisions)) {
             printf(
                 '<p>%s <strong>v%d</strong></p>',
-                esc_html__('Current version:', 'opentrust'),
+                esc_html__('Current version:', 'open-trust-center-by-ettic'),
                 (int) $current_version
             );
-            echo '<p class="description">' . esc_html__('Version history will appear after the first update.', 'opentrust') . '</p>';
+            echo '<p class="description">' . esc_html__('Version history will appear after the first update.', 'open-trust-center-by-ettic') . '</p>';
             return;
         }
         ?>
-        <div class="ot-version-history">
+        <div class="ettic-otc-version-history">
             <table>
                 <thead>
                     <tr>
-                        <th><?php esc_html_e('Version', 'opentrust'); ?></th>
-                        <th><?php esc_html_e('Date', 'opentrust'); ?></th>
-                        <th><?php esc_html_e('Actions', 'opentrust'); ?></th>
+                        <th><?php esc_html_e('Version', 'open-trust-center-by-ettic'); ?></th>
+                        <th><?php esc_html_e('Date', 'open-trust-center-by-ettic'); ?></th>
+                        <th><?php esc_html_e('Actions', 'open-trust-center-by-ettic'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span class="ot-version-badge">v<?php echo esc_html((string) $current_version); ?></span></td>
+                        <td><span class="ettic-otc-version-badge">v<?php echo esc_html((string) $current_version); ?></span></td>
                         <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($post->post_modified))); ?></td>
-                        <td><em><?php esc_html_e('Current', 'opentrust'); ?></em></td>
+                        <td><em><?php esc_html_e('Current', 'open-trust-center-by-ettic'); ?></em></td>
                     </tr>
                     <?php foreach ($revisions as $rev):
-                        $rev_version = (int) get_post_meta($rev->ID, '_opentrust_version', true);
+                        $rev_version = (int) get_post_meta($rev->ID, '_ettic_otc_version', true);
                         if (!$rev_version) continue;
                         if ($rev_version === $current_version) continue;
 
@@ -180,12 +180,12 @@ final class OpenTrust_Version {
                         <td>v<?php echo esc_html((string) $rev_version); ?></td>
                         <td><?php echo esc_html(wp_date(get_option('date_format'), strtotime($rev->post_modified))); ?></td>
                         <td>
-                            <a href="<?php echo esc_url($view_url); ?>" target="_blank" title="<?php esc_attr_e('View', 'opentrust'); ?>">
-                                <?php esc_html_e('View', 'opentrust'); ?>
+                            <a href="<?php echo esc_url($view_url); ?>" target="_blank" title="<?php esc_attr_e('View', 'open-trust-center-by-ettic'); ?>">
+                                <?php esc_html_e('View', 'open-trust-center-by-ettic'); ?>
                             </a>
                             &nbsp;|&nbsp;
-                            <a href="<?php echo esc_url($compare_url); ?>" title="<?php esc_attr_e('Compare', 'opentrust'); ?>">
-                                <?php esc_html_e('Diff', 'opentrust'); ?>
+                            <a href="<?php echo esc_url($compare_url); ?>" title="<?php esc_attr_e('Compare', 'open-trust-center-by-ettic'); ?>">
+                                <?php esc_html_e('Diff', 'open-trust-center-by-ettic'); ?>
                             </a>
                         </td>
                     </tr>

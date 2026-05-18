@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class OpenTrust {
+final class Ettic_OTC {
 
     /**
      * Default URL path the trust center mounts at when the operator hasn't
@@ -33,20 +33,17 @@ final class OpenTrust {
         // Flush rewrite rules when settings change (transient flag).
         add_action('init', [$this, 'maybe_flush_rewrites'], 99);
 
-        // Check for DB schema upgrades.
-        add_action('init', [$this, 'maybe_upgrade'], 5);
-
-        // Bump the render-cache version on any OpenTrust CPT change. Catches
+        // Bump the render-cache version on any Ettic_OTC CPT change. Catches
         // saves, deletes, trash/untrash, and publish transitions in one wire-up.
-        OpenTrust_CPT::register_invalidator(OpenTrust_CPT::ALL, [$this, 'invalidate_cache']);
+        Ettic_OTC_CPT::register_invalidator(Ettic_OTC_CPT::ALL, [$this, 'invalidate_cache']);
 
         // Boot sub-systems.
-        OpenTrust_CPT::instance();
-        OpenTrust_Version::instance();
-        OpenTrust_Chat::instance();
+        Ettic_OTC_CPT::instance();
+        Ettic_OTC_Version::instance();
+        Ettic_OTC_Chat::instance();
 
         if (is_admin()) {
-            OpenTrust_Admin::instance();
+            Ettic_OTC_Admin::instance();
         }
     }
 
@@ -89,11 +86,11 @@ final class OpenTrust {
             'company_registration' => '',
             'vat_number'           => '',
 
-            // Per-site salt — written out-of-band by OpenTrust_Chat_Budget::site_salt()
+            // Per-site salt — written out-of-band by Ettic_OTC_Chat_Budget::site_salt()
             // on first access. Empty here so a fresh install starts in the
             // "needs lazy generation" state; once written, sanitize_settings
             // carries it forward byte-for-byte.
-            'opentrust_site_salt'  => '',
+            'ettic_otc_site_salt'  => '',
 
             // ── AI chat (OTC) ──────────────────────────
             'ai_enabled'                => false,
@@ -105,11 +102,11 @@ final class OpenTrust {
             // expired or the provider has deprecated the model id.
             'ai_model_display_name'     => '',
             'ai_model_recommended'      => false,
-            'ai_daily_token_budget'     => OpenTrust_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
-            'ai_monthly_token_budget'   => OpenTrust_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
-            'ai_rate_limit_per_ip'      => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
-            'ai_rate_limit_per_session' => OpenTrust_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
-            'ai_max_message_length'     => OpenTrust_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
+            'ai_daily_token_budget'     => Ettic_OTC_Chat_Budget::DEFAULT_DAILY_TOKEN_BUDGET,
+            'ai_monthly_token_budget'   => Ettic_OTC_Chat_Budget::DEFAULT_MONTHLY_TOKEN_BUDGET,
+            'ai_rate_limit_per_ip'      => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_IP,
+            'ai_rate_limit_per_session' => Ettic_OTC_Chat_Budget::DEFAULT_RATE_LIMIT_PER_SESSION,
+            'ai_max_message_length'     => Ettic_OTC_Chat::DEFAULT_MAX_MESSAGE_LENGTH,
             'ai_contact_url'            => '',
             'ai_show_model_attribution' => true,
             'ai_logging_enabled'        => true,
@@ -127,7 +124,7 @@ final class OpenTrust {
     }
 
     public static function get_settings(): array {
-        $saved = get_option('opentrust_settings', []);
+        $saved = get_option('ettic_otc_settings', []);
         return wp_parse_args($saved, self::defaults());
     }
 
@@ -141,216 +138,38 @@ final class OpenTrust {
 
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/?$',
-            'index.php?opentrust=main',
+            'index.php?ettic_otc=main',
             'top'
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/?$',
-            'index.php?opentrust=policy&opentrust_policy_slug=$matches[1]',
+            'index.php?ettic_otc=policy&ettic_otc_policy_slug=$matches[1]',
             'top'
         );
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/policy/([^/]+)/version/([0-9]+)/?$',
-            'index.php?opentrust=policy_version&opentrust_policy_slug=$matches[1]&opentrust_version=$matches[2]',
+            'index.php?ettic_otc=policy_version&ettic_otc_policy_slug=$matches[1]&ettic_otc_version=$matches[2]',
             'top'
         );
 
         // AI chat (OTC).
         add_rewrite_rule(
             '^' . preg_quote($slug, '/') . '/ask/?$',
-            'index.php?opentrust=ask',
+            'index.php?ettic_otc=ask',
             'top'
         );
     }
 
     public function register_query_vars(array $vars): array {
-        $vars[] = 'opentrust';
-        $vars[] = 'opentrust_policy_slug';
-        $vars[] = 'opentrust_version';
+        $vars[] = 'ettic_otc';
+        $vars[] = 'ettic_otc_policy_slug';
+        $vars[] = 'ettic_otc_version';
         return $vars;
     }
 
-    /**
-     * Schema upgrade hook. Runs on every init at priority 5. Future schema
-     * migrations land here, gated on the current value of opentrust_db_version
-     * vs. the OPENTRUST_DB_VERSION constant. opentrust_db_version is only
-     * advanced once, at the tail — so an interrupted migration retries cleanly
-     * on the next init, and every migration step must be idempotent.
-     */
-    public function maybe_upgrade(): void {
-        $current = (int) get_option('opentrust_db_version', 0);
-        if ($current === (int) OPENTRUST_DB_VERSION) {
-            return;
-        }
-
-        // v3 → v4: rename CPT slugs from `ot_*` to `opentr_*` to satisfy the
-        // wp.org 4-character-prefix rule. Runs first so any v1→v4 jump renames
-        // the rows before the v1→v2 UUID back-fill queries them — the back-fill
-        // resolves OpenTrust_CPT::ALL to the new slugs, so the rows must already
-        // carry those slugs by the time it runs. Runs at init priority 5,
-        // before OpenTrust_CPT::register_post_types() at priority 10.
-        if ($current < 4) {
-            self::rename_cpt_slugs_v4();
-        }
-
-        // v4 → v5: rename postmeta keys from `_ot_*` to `_opentrust_*` so the
-        // plugin no longer uses a 2-character prefix in the shared postmeta
-        // table. MUST run before the v1→v2 UUID back-fill below: the back-fill
-        // stamps `_opentrust_uuid` on any post that lacks it, so a v1 post's
-        // legacy `_ot_uuid` row has to be renamed to `_opentrust_uuid` first —
-        // otherwise the back-fill would see no `_opentrust_uuid`, add a second
-        // one, and the post would end up with two conflicting UUID rows.
-        if ($current < 5) {
-            self::rename_postmeta_keys_v5();
-        }
-
-        // v1 → v2: back-fill _opentrust_uuid on existing CPT posts. Runs after
-        // the v4→v5 rename above so it never double-stamps a post that already
-        // carries a (renamed) legacy UUID.
-        if ($current < 2) {
-            self::backfill_uuids();
-        }
-
-        // v2 → v3: register the daily AI-model-refresh cron and back-fill
-        // the active-model snapshot so existing installs don't render a raw
-        // id before the first cron tick.
-        if ($current < 3) {
-            OpenTrust_Admin_AI::schedule_cron();
-            self::backfill_model_snapshot();
-        }
-
-        update_option('opentrust_db_version', OPENTRUST_DB_VERSION, false);
-        set_transient('opentrust_flush_rewrite', true);
-        $this->invalidate_cache();
-
-        // The chat corpus transient is locale-keyed and not bound to
-        // opentrust_cache_version, so invalidate_cache() above doesn't bust
-        // it. After the v4 rename the surviving corpus would be valid but
-        // mention the old slug context in admin telemetry — drop it so the
-        // next chat request rebuilds against the renamed rows.
-        if (class_exists('OpenTrust_Chat_Corpus')) {
-            OpenTrust_Chat_Corpus::invalidate();
-        }
-    }
-
-    /**
-     * Seed the active-model snapshot from the existing per-provider transient
-     * cache. No HTTP — runs at upgrade time only.
-     */
-    private static function backfill_model_snapshot(): void {
-        $settings = self::get_settings();
-        $snap     = OpenTrust_Admin_AI::instance()->snapshot_for_provider(
-            (string) ($settings['ai_provider'] ?? ''),
-            (string) ($settings['ai_model'] ?? '')
-        );
-        if ($snap === null) {
-            return;
-        }
-        $settings['ai_model_display_name'] = $snap['display_name'];
-        $settings['ai_model_recommended']  = $snap['recommended'];
-        OpenTrust_Admin_Settings::instance()->save_settings_raw($settings);
-    }
-
-    /**
-     * Rewrite wp_posts.post_type for each renamed CPT. Idempotent: if the
-     * migration is interrupted, opentrust_db_version stays unadvanced and the
-     * next init retries. Revisions carry post_type='revision' and are not
-     * matched. Translation linkage (WPML/Polylang) is keyed by post ID, not
-     * by slug, so existing translations stay paired.
-     *
-     * Collects affected IDs before the UPDATE so each row's WP_Post entry in
-     * the object cache can be invalidated — otherwise post_type checks that
-     * read from cache return stale 'ot_*' values until the cache expires.
-     *
-     * @deprecated 1.1.0 Drop in 2.0.0 once v1.0.x upgrades are no longer
-     *             supported. Also remove the `if ($current < 4)` branch in
-     *             maybe_upgrade() and the OpenTrust_CPT::LEGACY_* constants.
-     */
-    private static function rename_cpt_slugs_v4(): void {
-        global $wpdb;
-        foreach (OpenTrust_CPT::LEGACY_MAP as $old => $new) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
-            $ids = $wpdb->get_col(
-                $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", $old)
-            );
-            if (empty($ids)) {
-                continue;
-            }
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
-            $wpdb->update(
-                $wpdb->posts,
-                ['post_type' => $new],
-                ['post_type' => $old],
-                ['%s'],
-                ['%s']
-            );
-            foreach ($ids as $id) {
-                clean_post_cache((int) $id);
-            }
-        }
-    }
-
-    /**
-     * Rewrite wp_postmeta.meta_key for every plugin-owned postmeta key, from
-     * the legacy `_ot_*` prefix to `_opentrust_*`. Idempotent: a bulk UPDATE
-     * keyed on the old meta_key matches nothing on a re-run, and
-     * opentrust_db_version stays unadvanced until the tail of maybe_upgrade()
-     * so an interrupted migration retries cleanly.
-     *
-     * The UPDATE is keyed on meta_key alone, so it catches postmeta on posts,
-     * revisions, and attachments alike. Affected post IDs are collected first
-     * so each WP_Post's meta cache can be invalidated — otherwise get_post_meta
-     * would serve stale `_ot_*` lookups until the cache expires.
-     *
-     * @deprecated 1.1.1 Drop in 2.0.0 once v1.0.x upgrades are no longer
-     *             supported. Also remove the `if ($current < 5)` branch in
-     *             maybe_upgrade() and OpenTrust_CPT::LEGACY_META_MAP.
-     */
-    private static function rename_postmeta_keys_v5(): void {
-        global $wpdb;
-        foreach (OpenTrust_CPT::LEGACY_META_MAP as $old => $new) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
-            $ids = $wpdb->get_col(
-                $wpdb->prepare("SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s", $old)
-            );
-            if (empty($ids)) {
-                continue;
-            }
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-shot schema migration; per-row clean_post_cache() runs below + opentrust_cache_version bumped after maybe_upgrade.
-            $wpdb->update(
-                $wpdb->postmeta,
-                ['meta_key' => $new],
-                ['meta_key' => $old],
-                ['%s'],
-                ['%s']
-            );
-            foreach ($ids as $id) {
-                clean_post_cache((int) $id);
-            }
-        }
-    }
-
-    private static function backfill_uuids(): void {
-        $posts = get_posts([
-            'post_type'      => OpenTrust_CPT::ALL,
-            'post_status'    => 'any',
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-            'meta_query'     => [
-                [
-                    'key'     => '_opentrust_uuid',
-                    'compare' => 'NOT EXISTS',
-                ],
-            ],
-        ]);
-        foreach ($posts as $post_id) {
-            update_post_meta((int) $post_id, '_opentrust_uuid', wp_generate_uuid4());
-        }
-    }
-
     public function maybe_flush_rewrites(): void {
-        if (get_transient('opentrust_flush_rewrite')) {
-            delete_transient('opentrust_flush_rewrite');
+        if (get_transient('ettic_otc_flush_rewrite')) {
+            delete_transient('ettic_otc_flush_rewrite');
             flush_rewrite_rules();
         }
     }
@@ -360,12 +179,12 @@ final class OpenTrust {
     // ──────────────────────────────────────────────
 
     public function maybe_render_trust_center(): void {
-        $page = get_query_var('opentrust');
+        $page = get_query_var('ettic_otc');
         if (!$page) {
             return;
         }
 
-        OpenTrust_Render::instance()->dispatch($page);
+        Ettic_OTC_Render::instance()->dispatch($page);
         exit;
     }
 
@@ -375,12 +194,12 @@ final class OpenTrust {
 
     public function invalidate_cache(): void {
         // Bump a single version counter instead of deleting locale-specific
-        // transient keys one by one. OpenTrust_Render::cache_key() includes
+        // transient keys one by one. Ettic_OTC_Render::cache_key() includes
         // this version in every key, so every cached locale variant is
         // instantly stale after the bump. Stale transients expire naturally
         // on their existing TTL and are garbage-collected by WordPress.
-        $version = (int) get_option('opentrust_cache_version', 1);
-        update_option('opentrust_cache_version', $version + 1, false);
+        $version = (int) get_option('ettic_otc_cache_version', 1);
+        update_option('ettic_otc_cache_version', $version + 1, false);
     }
 
 
@@ -397,7 +216,7 @@ final class OpenTrust {
     public static function debug_log(string $message): void {
         if (defined('WP_DEBUG') && WP_DEBUG) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debug-gated diagnostic, only fires under WP_DEBUG
-            error_log('[OpenTrust] ' . $message);
+            error_log('[Ettic_OTC] ' . $message);
         }
     }
 

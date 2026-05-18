@@ -1,0 +1,96 @@
+<?php
+/**
+ * Plugin Name: Open Trust Center by Ettic
+ * Plugin URI:  https://plugins.ettic.nl/open-trust-center-by-ettic
+ * Description: A self-hosted, open-source trust center for publishing security policies, subprocessors, certifications, and data practices.
+ * Version:     1.2.0
+ * Requires PHP: 8.1
+ * Requires at least: 6.0
+ * Author:      Ettic
+ * Author URI:  https://plugins.ettic.nl
+ * License:     GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: open-trust-center-by-ettic
+ * Domain Path: /languages
+ */
+
+declare(strict_types=1);
+
+defined('ABSPATH') || exit;
+
+define('ETTIC_OTC_VERSION', '1.2.0');
+define('ETTIC_OTC_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('ETTIC_OTC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('ETTIC_OTC_PLUGIN_FILE', __FILE__);
+define('ETTIC_OTC_DB_VERSION', 1);
+
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-settings.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-questions.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-ai.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-review.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-cpt.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-catalog.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-repository.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-render.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-version.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-io.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-admin-tools.php';
+
+// Chat (OTC) — policy chat feature.
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-secrets.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-anthropic.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-openai.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/providers/class-ettic-otc-chat-provider-openrouter.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-search.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-corpus.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-budget.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-log.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-summarizer.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat-stream-collector.php';
+require_once ETTIC_OTC_PLUGIN_DIR . 'includes/class-ettic-otc-chat.php';
+
+add_action('plugins_loaded', static function (): void {
+    Ettic_OTC::instance();
+});
+
+register_activation_hook(__FILE__, static function (): void {
+    // Register CPTs before flushing so rewrite rules include them.
+    Ettic_OTC_CPT::register_post_types();
+
+    // First-install defaults. Autoload=no — the option is a sizeable array
+    // carrying encrypted Turnstile secret + per-site salt, and we'd rather
+    // not load it on every front-end request that never touches Ettic_OTC.
+    if (false === get_option('ettic_otc_settings')) {
+        add_option('ettic_otc_settings', Ettic_OTC::defaults(), '', false);
+    }
+
+    // Custom tables.
+    Ettic_OTC_Chat_Log::create_table();
+
+    // Stamp the schema version on a true first install only. Future schema
+    // changes (none today) would bump this constant and re-check here.
+    if (false === get_option('ettic_otc_db_version', false)) {
+        update_option('ettic_otc_db_version', ETTIC_OTC_DB_VERSION, false);
+    }
+
+    // Seed default FAQs on first activation. Gated internally so deletions
+    // stick and re-activation will not recreate them.
+    Ettic_OTC_Catalog::seed_default_faqs();
+
+    // Schedule crons.
+    Ettic_OTC_Chat_Log::schedule_cron();
+    Ettic_OTC_Admin_AI::schedule_cron();
+
+    // Add rewrite rules and flush.
+    Ettic_OTC::add_rewrite_rules();
+    flush_rewrite_rules();
+});
+
+register_deactivation_hook(__FILE__, static function (): void {
+    Ettic_OTC_Chat_Log::unschedule_cron();
+    Ettic_OTC_Admin_AI::unschedule_cron();
+    flush_rewrite_rules();
+});

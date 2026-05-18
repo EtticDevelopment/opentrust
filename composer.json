@@ -1,6 +1,6 @@
 {
-    "name": "ettic/opentrust-dev",
-    "description": "Dev tooling for the OpenTrust WordPress plugin (PHPStan). Not shipped to wp.org.",
+    "name": "ettic/open-trust-center-by-ettic-dev",
+    "description": "Dev tooling for the Open Trust Center by Ettic WordPress plugin (PHPStan). Not shipped to wp.org.",
     "license": "GPL-2.0-or-later",
     "require-dev": {
         "phpstan/phpstan": "^2.0",

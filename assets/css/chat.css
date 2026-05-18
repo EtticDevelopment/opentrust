@@ -1,18 +1,18 @@
 /**
  * OpenTrust AI chat page styles.
  * Inlined into /trust-center/ask/ via template_redirect.
- * Layered into @layer opentrust to avoid theme bleed.
+ * Layered into @layer ettic-otc to avoid theme bleed.
  *
  * Scales in use:
  *   Spacing : 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px
  *   Radius  : 8 / 12 / 16 / 999 px
  *   Weights : 400 / 500 / 600 / 700
  */
-@layer opentrust {
+@layer ettic-otc {
 
     /* ─── Page chrome ───────────────────────────── */
 
-    .ot-chat-body {
+    .ettic-otc-chat-body {
         background: #f9fafb;
         color: #111827;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -21,11 +21,11 @@
         flex-direction: column;
     }
 
-    .ot-chat-main {
+    .ettic-otc-chat-main {
         flex: 1;
         padding: 48px 16px 200px; /* bottom: clear the fixed dock */
     }
-    .ot-chat-container {
+    .ettic-otc-chat-container {
         max-width: 720px;
         margin: 0 auto;
         width: 100%;
@@ -33,17 +33,17 @@
 
     /* ─── Shell (single unified layout) ─────────── */
 
-    .ot-chat-shell {
+    .ettic-otc-chat-shell {
         display: flex;
         flex-direction: column;
     }
 
     /* Intro visible only when NOT chatting. */
-    .ot-chat-intro {
+    .ettic-otc-chat-intro {
         text-align: center;
         padding: 32px 0 48px;
     }
-    .ot-chat-intro__title {
+    .ettic-otc-chat-intro__title {
         font-size: clamp(24px, 3vw, 32px);
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -51,45 +51,45 @@
         color: #111827;
         line-height: 1.2;
     }
-    .ot-chat-intro__help {
+    .ettic-otc-chat-intro__help {
         font-size: 13px;
         color: #6b7280;
         margin: 0;
         line-height: 1.5;
     }
-    .ot-chat-intro__help strong {
+    .ettic-otc-chat-intro__help strong {
         color: #374151;
         font-weight: 600;
     }
 
     /* Thread — plain flow container, no visual chrome. Messages live directly
        on the page background. */
-    .ot-chat-thread {
+    .ettic-otc-chat-thread {
         background: transparent;
         border: 0;
         padding: 0;
     }
 
-    .ot-chat-body:not(.is-chatting) .ot-chat-thread { display: none; }
-    .ot-chat-body.is-chatting      .ot-chat-intro  { display: none; }
+    .ettic-otc-chat-body:not(.is-chatting) .ettic-otc-chat-thread { display: none; }
+    .ettic-otc-chat-body.is-chatting      .ettic-otc-chat-intro  { display: none; }
 
     /* ─── Messages ──────────────────────────────── */
 
-    .ot-chat-messages {
+    .ettic-otc-chat-messages {
         display: flex;
         flex-direction: column;
     }
 
-    .ot-chat-msg {
+    .ettic-otc-chat-msg {
         display: grid;
         grid-template-columns: 40px 1fr;
         gap: 12px;
         padding: 24px 0;
         border-bottom: 1px solid #f3f4f6;
     }
-    .ot-chat-msg:last-child { border-bottom: 0; }
+    .ettic-otc-chat-msg:last-child { border-bottom: 0; }
 
-    .ot-chat-msg__avatar {
+    .ettic-otc-chat-msg__avatar {
         width: 36px;
         height: 36px;
         border-radius: 999px;
@@ -98,18 +98,18 @@
         justify-content: center;
         flex-shrink: 0;
     }
-    .ot-chat-msg--user .ot-chat-msg__avatar {
+    .ettic-otc-chat-msg--user .ettic-otc-chat-msg__avatar {
         background: #111827;
         color: #ffffff;
     }
-    .ot-chat-msg--assistant .ot-chat-msg__avatar {
+    .ettic-otc-chat-msg--assistant .ettic-otc-chat-msg__avatar {
         background: #ffffff;
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         border: 1px solid #e5e7eb;
         overflow: hidden;
     }
 
-    .ot-chat-msg__avatar-img {
+    .ettic-otc-chat-msg__avatar-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -118,17 +118,17 @@
 
     /* Kill the SVG baseline gap inside flex-centered parents — ensures
        mathematically-centered icons also render visually centered. */
-    .ot-chat-msg__avatar > svg,
-    .ot-chat-msg__avatar-icon,
-    .ot-chat-msg__avatar-warning {
+    .ettic-otc-chat-msg__avatar > svg,
+    .ettic-otc-chat-msg__avatar-icon,
+    .ettic-otc-chat-msg__avatar-warning {
         display: block;
     }
 
-    .ot-chat-msg__content {
+    .ettic-otc-chat-msg__content {
         min-width: 0;
     }
 
-    .ot-chat-msg__header {
+    .ettic-otc-chat-msg__header {
         display: flex;
         align-items: baseline;
         gap: 8px;
@@ -136,21 +136,21 @@
         font-size: 13px;
         line-height: 1.4;
     }
-    .ot-chat-msg__name {
+    .ettic-otc-chat-msg__name {
         font-size: 14px;
         font-weight: 600;
         color: #111827;
         margin: 0;
     }
-    .ot-chat-msg__separator {
+    .ettic-otc-chat-msg__separator {
         color: #d1d5db;
         font-size: 12px;
     }
-    .ot-chat-msg__time {
+    .ettic-otc-chat-msg__time {
         color: #9ca3af;
         font-size: 12px;
     }
-    .ot-chat-msg__menu {
+    .ettic-otc-chat-msg__menu {
         margin-left: auto;
         background: transparent;
         border: 0;
@@ -161,9 +161,9 @@
         padding: 4px 8px;
         border-radius: 8px;
     }
-    .ot-chat-msg__menu:hover { color: #6b7280; background: #f9fafb; }
+    .ettic-otc-chat-msg__menu:hover { color: #6b7280; background: #f9fafb; }
 
-    .ot-chat-msg__body {
+    .ettic-otc-chat-msg__body {
         font-size: 15px;
         line-height: 1.65;
         color: #1f2937;
@@ -171,74 +171,74 @@
         overflow-wrap: break-word;
     }
 
-    /* Markdown inside .ot-chat-msg__body */
-    .ot-chat-msg__body p { margin: 0 0 12px; }
-    .ot-chat-msg__body p:last-child { margin-bottom: 0; }
-    .ot-chat-msg__body strong { font-weight: 700; color: #111827; }
-    .ot-chat-msg__body em { font-style: italic; }
+    /* Markdown inside .ettic-otc-chat-msg__body */
+    .ettic-otc-chat-msg__body p { margin: 0 0 12px; }
+    .ettic-otc-chat-msg__body p:last-child { margin-bottom: 0; }
+    .ettic-otc-chat-msg__body strong { font-weight: 700; color: #111827; }
+    .ettic-otc-chat-msg__body em { font-style: italic; }
 
     /* Inline hyperlinks inside assistant answers (auto-linked URLs or
        explicit markdown links). Explicit link-state rules so browser UA
        visited/hover colors never override the accent. */
-    .ot-chat-msg__body a,
-    .ot-chat-msg__body a:link,
-    .ot-chat-msg__body a:visited {
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-msg__body a,
+    .ettic-otc-chat-msg__body a:link,
+    .ettic-otc-chat-msg__body a:visited {
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         text-decoration: underline;
         text-underline-offset: 2px;
         text-decoration-thickness: 1px;
         word-break: break-word;
     }
-    .ot-chat-msg__body a:hover,
-    .ot-chat-msg__body a:focus {
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), calc(var(--ot-accent-l) - 8%));
+    .ettic-otc-chat-msg__body a:hover,
+    .ettic-otc-chat-msg__body a:focus {
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), calc(var(--ettic-otc-accent-l) - 8%));
         text-decoration-thickness: 2px;
     }
     /* The contact CTA inside refused messages is already styled as a filled
        button elsewhere — don't let the generic link rule fight it. */
-    .ot-chat-msg__body a.ot-chat-contact-btn,
-    .ot-chat-msg__body a.ot-chat-contact-btn:link,
-    .ot-chat-msg__body a.ot-chat-contact-btn:visited,
-    .ot-chat-msg__body a.ot-chat-contact-btn:hover,
-    .ot-chat-msg__body a.ot-chat-contact-btn:focus {
+    .ettic-otc-chat-msg__body a.ettic-otc-chat-contact-btn,
+    .ettic-otc-chat-msg__body a.ettic-otc-chat-contact-btn:link,
+    .ettic-otc-chat-msg__body a.ettic-otc-chat-contact-btn:visited,
+    .ettic-otc-chat-msg__body a.ettic-otc-chat-contact-btn:hover,
+    .ettic-otc-chat-msg__body a.ettic-otc-chat-contact-btn:focus {
         text-decoration: none;
     }
-    .ot-chat-msg__body code {
+    .ettic-otc-chat-msg__body code {
         font-family: ui-monospace, 'SF Mono', Menlo, monospace;
         font-size: 13px;
         padding: 1px 6px;
         background: #f3f4f6;
         border-radius: 4px;
     }
-    .ot-chat-msg__body ol,
-    .ot-chat-msg__body ul {
+    .ettic-otc-chat-msg__body ol,
+    .ettic-otc-chat-msg__body ul {
         margin: 0 0 12px;
         padding: 0 0 0 24px;
     }
-    .ot-chat-msg__body ol:last-child,
-    .ot-chat-msg__body ul:last-child { margin-bottom: 0; }
-    .ot-chat-msg__body li { margin-bottom: 8px; }
-    .ot-chat-msg__body li:last-child { margin-bottom: 0; }
+    .ettic-otc-chat-msg__body ol:last-child,
+    .ettic-otc-chat-msg__body ul:last-child { margin-bottom: 0; }
+    .ettic-otc-chat-msg__body li { margin-bottom: 8px; }
+    .ettic-otc-chat-msg__body li:last-child { margin-bottom: 0; }
 
-    .ot-chat-msg__body h3,
-    .ot-chat-msg__body h4,
-    .ot-chat-msg__body h5,
-    .ot-chat-msg__body h6 {
+    .ettic-otc-chat-msg__body h3,
+    .ettic-otc-chat-msg__body h4,
+    .ettic-otc-chat-msg__body h5,
+    .ettic-otc-chat-msg__body h6 {
         margin: 16px 0 8px;
         font-weight: 650;
         color: #111827;
         line-height: 1.3;
     }
-    .ot-chat-msg__body h3 { font-size: 1.05em; }
-    .ot-chat-msg__body h4 { font-size: 1em; }
-    .ot-chat-msg__body h5,
-    .ot-chat-msg__body h6 { font-size: 0.95em; }
-    .ot-chat-msg__body > h3:first-child,
-    .ot-chat-msg__body > h4:first-child,
-    .ot-chat-msg__body > h5:first-child,
-    .ot-chat-msg__body > h6:first-child { margin-top: 0; }
+    .ettic-otc-chat-msg__body h3 { font-size: 1.05em; }
+    .ettic-otc-chat-msg__body h4 { font-size: 1em; }
+    .ettic-otc-chat-msg__body h5,
+    .ettic-otc-chat-msg__body h6 { font-size: 0.95em; }
+    .ettic-otc-chat-msg__body > h3:first-child,
+    .ettic-otc-chat-msg__body > h4:first-child,
+    .ettic-otc-chat-msg__body > h5:first-child,
+    .ettic-otc-chat-msg__body > h6:first-child { margin-top: 0; }
 
-    .ot-chat-msg__body hr {
+    .ettic-otc-chat-msg__body hr {
         border: 0;
         border-top: 1px solid #e5e7eb;
         margin: 16px 0;
@@ -247,22 +247,22 @@
     /* Refusal state — signal is on the AVATAR, not the body. The body
        renders as a normal message. The assistant's circle becomes a soft
        yellow with a dark-orange warning triangle. */
-    .ot-chat-msg--refused.ot-chat-msg--assistant .ot-chat-msg__avatar {
+    .ettic-otc-chat-msg--refused.ettic-otc-chat-msg--assistant .ettic-otc-chat-msg__avatar {
         background: #fef3c7;
         border-color: #fcd34d;
         color: #b45309;
     }
-    .ot-chat-msg--refused .ot-chat-msg__avatar .ot-chat-msg__avatar-img,
-    .ot-chat-msg--refused .ot-chat-msg__avatar .ot-chat-msg__avatar-icon {
+    .ettic-otc-chat-msg--refused .ettic-otc-chat-msg__avatar .ettic-otc-chat-msg__avatar-img,
+    .ettic-otc-chat-msg--refused .ettic-otc-chat-msg__avatar .ettic-otc-chat-msg__avatar-icon {
         display: none;
     }
-    .ot-chat-msg--refused .ot-chat-msg__avatar-warning {
+    .ettic-otc-chat-msg--refused .ettic-otc-chat-msg__avatar-warning {
         display: block;
         color: #b45309;
     }
 
     /* Citation superscript chips */
-    .ot-chat-msg .ot-chat-cite {
+    .ettic-otc-chat-msg .ettic-otc-chat-cite {
         display: inline-block;
         min-width: 18px;
         height: 18px;
@@ -274,21 +274,21 @@
         line-height: 18px;
         text-align: center;
         vertical-align: 1px;
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         color: #ffffff;
         border-radius: 4px;
         text-decoration: none;
         transition: opacity 0.15s;
     }
-    .ot-chat-msg .ot-chat-cite:hover,
-    .ot-chat-msg .ot-chat-cite:focus,
-    .ot-chat-msg .ot-chat-cite:visited {
+    .ettic-otc-chat-msg .ettic-otc-chat-cite:hover,
+    .ettic-otc-chat-msg .ettic-otc-chat-cite:focus,
+    .ettic-otc-chat-msg .ettic-otc-chat-cite:visited {
         color: #ffffff;
         text-decoration: none;
     }
-    .ot-chat-msg .ot-chat-cite:hover { opacity: 0.85; }
+    .ettic-otc-chat-msg .ettic-otc-chat-cite:hover { opacity: 0.85; }
 
-    .ot-chat-msg__sources {
+    .ettic-otc-chat-msg__sources {
         margin-top: 16px;
         padding: 12px 16px;
         background: #f9fafb;
@@ -296,7 +296,7 @@
         border-radius: 12px;
         font-size: 13px;
     }
-    .ot-chat-msg__sources h4 {
+    .ettic-otc-chat-msg__sources h4 {
         margin: 0 0 8px;
         font-size: 11px;
         font-weight: 700;
@@ -304,23 +304,23 @@
         text-transform: uppercase;
         letter-spacing: 0.6px;
     }
-    .ot-chat-msg__sources ol {
+    .ettic-otc-chat-msg__sources ol {
         margin: 0;
         padding: 0 0 0 16px;
     }
-    .ot-chat-msg__sources li {
+    .ettic-otc-chat-msg__sources li {
         margin-bottom: 4px;
         color: #4b5563;
         font-size: 13px;
     }
-    .ot-chat-msg__sources li:last-child { margin-bottom: 0; }
-    .ot-chat-msg__sources a {
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-msg__sources li:last-child { margin-bottom: 0; }
+    .ettic-otc-chat-msg__sources a {
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         text-decoration: none;
     }
-    .ot-chat-msg__sources a:hover { text-decoration: underline; }
+    .ettic-otc-chat-msg__sources a:hover { text-decoration: underline; }
 
-    .ot-chat-msg__disclaimer {
+    .ettic-otc-chat-msg__disclaimer {
         margin: 14px 0 0;
         padding-top: 10px;
         border-top: 1px dashed #e5e7eb;
@@ -332,19 +332,19 @@
     }
 
     @media print {
-        .ot-chat-msg__disclaimer {
+        .ettic-otc-chat-msg__disclaimer {
             color: #6b7280 !important;
             border-top-color: #d1d5db !important;
         }
     }
 
-    .ot-chat-msg__actions {
+    .ettic-otc-chat-msg__actions {
         display: flex;
         gap: 4px;
         align-items: center;
         margin-top: 12px;
     }
-    .ot-chat-msg__actions button {
+    .ettic-otc-chat-msg__actions button {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -357,15 +357,15 @@
         cursor: pointer;
         border-radius: 8px;
     }
-    .ot-chat-msg__actions button:hover {
+    .ettic-otc-chat-msg__actions button:hover {
         color: #374151;
         background: #f3f4f6;
     }
-    .ot-chat-msg__actions button.is-success {
+    .ettic-otc-chat-msg__actions button.is-success {
         color: #15803d;
         background: #dcfce7;
     }
-    .ot-chat-msg__actions svg {
+    .ettic-otc-chat-msg__actions svg {
         width: 14px;
         height: 14px;
         flex-shrink: 0;
@@ -373,35 +373,35 @@
 
     /* ─── Thinking indicator ────────────────────── */
 
-    .ot-chat-thinking {
+    .ettic-otc-chat-thinking {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         color: #9ca3af;
         font-size: 14px;
     }
-    .ot-chat-thinking-dot {
+    .ettic-otc-chat-thinking-dot {
         display: inline-block;
         width: 6px;
         height: 6px;
         border-radius: 999px;
         background: currentColor;
-        animation: ot-chat-pulse 1.4s infinite ease-in-out both;
+        animation: ettic-otc-chat-pulse 1.4s infinite ease-in-out both;
     }
-    .ot-chat-thinking-dot:nth-child(2) { animation-delay: 0.16s; }
-    .ot-chat-thinking-dot:nth-child(3) { animation-delay: 0.32s; }
-    @keyframes ot-chat-pulse {
+    .ettic-otc-chat-thinking-dot:nth-child(2) { animation-delay: 0.16s; }
+    .ettic-otc-chat-thinking-dot:nth-child(3) { animation-delay: 0.32s; }
+    @keyframes ettic-otc-chat-pulse {
         0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
         40%           { transform: scale(1);   opacity: 1; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .ot-chat-thinking-dot { animation: none; opacity: 0.6; }
+        .ettic-otc-chat-thinking-dot { animation: none; opacity: 0.6; }
     }
     /* Tool-use label appears next to the dots when the AI is mid-retrieval —
        e.g. "Searching for incident response" or "Reading Privacy Policy".
        Set by the chat.js tool_call SSE handler; cleared when the first
        answer token arrives. */
-    .ot-chat-thinking__label {
+    .ettic-otc-chat-thinking__label {
         margin-left: 4px;
         color: #6b7280;
         font-size: 13px;
@@ -414,7 +414,7 @@
          - .is-static: settled. Dots stop animating; the pill becomes a
            permanent record of "the model looked this up here", like a
            tool-use chip in Claude / ChatGPT / Perplexity. */
-    .ot-chat-tool-status {
+    .ettic-otc-chat-tool-status {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -424,26 +424,26 @@
         background: rgba(0, 0, 0, 0.04);
         color: #9ca3af;
         font-size: 13px;
-        animation: ot-chat-tool-status-in 180ms ease-out;
+        animation: ettic-otc-chat-tool-status-in 180ms ease-out;
     }
-    .ot-chat-tool-status .ot-chat-thinking-dot { background: #9ca3af; }
-    .ot-chat-tool-status .ot-chat-thinking__label {
+    .ettic-otc-chat-tool-status .ettic-otc-chat-thinking-dot { background: #9ca3af; }
+    .ettic-otc-chat-tool-status .ettic-otc-chat-thinking__label {
         margin-left: 4px;
         color: #6b7280;
         font-style: normal;
     }
     /* Settled state — dots freeze, color shifts toward "completed" without
        a checkmark glyph. Stays a permanent inline log of what was looked up. */
-    .ot-chat-tool-status.is-static .ot-chat-thinking-dot {
+    .ettic-otc-chat-tool-status.is-static .ettic-otc-chat-thinking-dot {
         animation: none;
         opacity: 0.55;
     }
-    @keyframes ot-chat-tool-status-in {
+    @keyframes ettic-otc-chat-tool-status-in {
         from { opacity: 0; transform: translateY(2px); }
         to   { opacity: 1; transform: none; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .ot-chat-tool-status { animation: none; }
+        .ettic-otc-chat-tool-status { animation: none; }
     }
 
     /* ─── Post-stream reveal ────────────────────── */
@@ -452,43 +452,43 @@
        staggered cascade rather than appearing instantly. Only applied to
        live-streamed bubbles — history replay renders fully-formed.
        Per-element animation-delay is set inline by chat.js. */
-    @keyframes ot-chat-reveal {
+    @keyframes ettic-otc-chat-reveal {
         from { opacity: 0; transform: translateY(6px); }
         to   { opacity: 1; transform: translateY(0); }
     }
-    .ot-chat-msg__reveal {
-        animation: ot-chat-reveal 360ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+    .ettic-otc-chat-msg__reveal {
+        animation: ettic-otc-chat-reveal 360ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
     }
     @media (prefers-reduced-motion: reduce) {
-        .ot-chat-msg__reveal { animation: none; }
+        .ettic-otc-chat-msg__reveal { animation: none; }
     }
 
     /* Contact CTA inside refused messages. Explicit link-state colors so
        browser UA visited/hover styles can never override the contrast. */
-    .ot-chat-msg .ot-chat-contact-btn,
-    .ot-chat-msg .ot-chat-contact-btn:link,
-    .ot-chat-msg .ot-chat-contact-btn:visited,
-    .ot-chat-msg .ot-chat-contact-btn:hover,
-    .ot-chat-msg .ot-chat-contact-btn:focus,
-    .ot-chat-msg .ot-chat-contact-btn:active {
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:link,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:visited,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:hover,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:focus,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:active {
         display: inline-block;
         margin-top: 16px;
         padding: 10px 16px;
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
-        color: var(--ot-accent-contrast, #ffffff);
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
+        color: var(--ettic-otc-accent-contrast, #ffffff);
         font-size: 13px;
         font-weight: 600;
         text-decoration: none;
         border-radius: 8px;
     }
-    .ot-chat-msg .ot-chat-contact-btn:hover,
-    .ot-chat-msg .ot-chat-contact-btn:focus {
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), calc(var(--ot-accent-l) - 6%));
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:hover,
+    .ettic-otc-chat-msg .ettic-otc-chat-contact-btn:focus {
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), calc(var(--ettic-otc-accent-l) - 6%));
     }
 
     /* ─── Docked input (fixed at viewport bottom) ─ */
 
-    .ot-chat-dock {
+    .ettic-otc-chat-dock {
         position: fixed;
         left: 0;
         right: 0;
@@ -498,7 +498,7 @@
         background: linear-gradient(to top, #f9fafb 70%, rgba(249, 250, 251, 0) 100%);
         pointer-events: none;
     }
-    .ot-chat-dock__inner {
+    .ettic-otc-chat-dock__inner {
         max-width: 720px;
         margin: 0 auto;
         width: 100%;
@@ -506,17 +506,17 @@
     }
 
     /* Suggested question chips — visible when NOT chatting. */
-    .ot-chat-chips {
+    .ettic-otc-chat-chips {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         justify-content: center;
         margin-bottom: 12px;
     }
-    .ot-chat-shell.is-chatting ~ .ot-chat-dock .ot-chat-chips,
-    body:has(.ot-chat-shell.is-chatting) .ot-chat-chips { display: none; }
+    .ettic-otc-chat-shell.is-chatting ~ .ettic-otc-chat-dock .ettic-otc-chat-chips,
+    body:has(.ettic-otc-chat-shell.is-chatting) .ettic-otc-chat-chips { display: none; }
 
-    .ot-chat-chip {
+    .ettic-otc-chat-chip {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -532,34 +532,34 @@
         transition: border-color 0.15s, background-color 0.15s, transform 0.1s, box-shadow 0.15s;
         box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
     }
-    .ot-chat-chip:hover {
-        border-color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-chip:hover {
+        border-color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         background: #ffffff;
         box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06);
     }
-    .ot-chat-chip:active { transform: scale(0.98); }
-    .ot-chat-chip__icon {
+    .ettic-otc-chat-chip:active { transform: scale(0.98); }
+    .ettic-otc-chat-chip__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         color: #9ca3af;
         flex-shrink: 0;
     }
-    .ot-chat-chip:hover .ot-chat-chip__icon {
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-chip:hover .ettic-otc-chat-chip__icon {
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
     }
 
     /* Input bar — single card, no nested container. */
-    .ot-chat-inputbar {
-        /* Transparent wrapper. The visible card is .ot-chat-inputbar__field. */
+    .ettic-otc-chat-inputbar {
+        /* Transparent wrapper. The visible card is .ettic-otc-chat-inputbar__field. */
         background: transparent;
         border: 0;
         padding: 0;
     }
 
-    .ot-chat-form { display: block; }
+    .ettic-otc-chat-form { display: block; }
 
-    .ot-chat-inputbar__field {
+    .ettic-otc-chat-inputbar__field {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -572,14 +572,14 @@
             0 8px 32px rgba(17, 24, 39, 0.08);
         transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .ot-chat-inputbar:focus-within .ot-chat-inputbar__field {
-        border-color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-inputbar:focus-within .ettic-otc-chat-inputbar__field {
+        border-color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         box-shadow:
-            0 0 0 3px hsla(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l), 0.1),
+            0 0 0 3px hsla(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l), 0.1),
             0 8px 32px rgba(17, 24, 39, 0.08);
     }
 
-    .ot-chat-form textarea {
+    .ettic-otc-chat-form textarea {
         flex: 1;
         min-width: 0;
         border: 0;
@@ -594,12 +594,12 @@
         max-height: 180px;
         overflow-y: auto;
     }
-    .ot-chat-form textarea::placeholder {
+    .ettic-otc-chat-form textarea::placeholder {
         color: #9ca3af;
     }
 
     /* Reset button — ghost, disabled by default. */
-    .ot-chat-reset {
+    .ettic-otc-chat-reset {
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
@@ -613,86 +613,86 @@
         cursor: pointer;
         transition: color 0.15s, background-color 0.15s, opacity 0.15s;
     }
-    .ot-chat-reset:hover:not(:disabled) {
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-chat-reset:hover:not(:disabled) {
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         background: #f3f4f6;
     }
-    .ot-chat-reset:disabled {
+    .ettic-otc-chat-reset:disabled {
         opacity: 0.35;
         cursor: default;
     }
 
     /* Send button — filled accent, icon only. */
-    .ot-chat-send {
+    .ettic-otc-chat-send {
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 32px;
         height: 32px;
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         color: #ffffff;
         border: 0;
         border-radius: 8px;
         cursor: pointer;
         transition: background-color 0.15s, transform 0.1s;
     }
-    .ot-chat-send:hover:not(:disabled) {
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), calc(var(--ot-accent-l) - 6%));
+    .ettic-otc-chat-send:hover:not(:disabled) {
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), calc(var(--ettic-otc-accent-l) - 6%));
     }
-    .ot-chat-send:active { transform: scale(0.96); }
-    .ot-chat-send:disabled {
+    .ettic-otc-chat-send:active { transform: scale(0.96); }
+    .ettic-otc-chat-send:disabled {
         background: #e5e7eb;
         color: #9ca3af;
         cursor: not-allowed;
     }
-    .ot-chat-send svg,
-    .ot-chat-reset svg {
+    .ettic-otc-chat-send svg,
+    .ettic-otc-chat-reset svg {
         flex-shrink: 0;
         display: block;
     }
     /* Optical-centering nudge for the paper plane — its mathematical center
        and its visual center of mass are not the same (all the ink is in the
        upper-right quadrant). 1px down-left restores perceived center. */
-    .ot-chat-send svg {
+    .ettic-otc-chat-send svg {
         transform: translate(-1px, 1px);
     }
 
-    .ot-chat-send--stop { background: #ef4444; }
-    .ot-chat-send--stop:hover { background: #dc2626; }
+    .ettic-otc-chat-send--stop { background: #ef4444; }
+    .ettic-otc-chat-send--stop:hover { background: #dc2626; }
 
     /* Legal line below input. */
-    .ot-chat-dock__legal {
+    .ettic-otc-chat-dock__legal {
         margin: 8px 0 0;
         text-align: center;
         font-size: 11px;
         color: #9ca3af;
         line-height: 1.5;
     }
-    .ot-chat-dock__legal a {
+    .ettic-otc-chat-dock__legal a {
         color: #6b7280;
         text-decoration: underline;
     }
 
     /* ─── Inline banners / hints ─────────────────── */
 
-    .ot-chat-banner {
+    .ettic-otc-chat-banner {
         padding: 12px 16px;
         border-radius: 12px;
         margin: 16px 0;
         font-size: 14px;
     }
-    .ot-chat-banner--error {
+    .ettic-otc-chat-banner--error {
         background: #fef2f2;
         border: 1px solid #fecaca;
         color: #991b1b;
     }
-    .ot-chat-banner--warn {
+    .ettic-otc-chat-banner--warn {
         background: #fefce8;
         border: 1px solid #fef08a;
         color: #854d0e;
     }
-    .ot-chat-banner button {
+    .ettic-otc-chat-banner button {
         margin-left: 8px;
         padding: 4px 12px;
         background: #ffffff;
@@ -704,16 +704,16 @@
         border-radius: 8px;
     }
 
-    .ot-chat-long-hint {
+    .ettic-otc-chat-long-hint {
         font-size: 12px;
         color: #9ca3af;
         text-align: center;
         margin: 16px 0;
     }
-    .ot-chat-long-hint button {
+    .ettic-otc-chat-long-hint button {
         background: transparent;
         border: 0;
-        color: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+        color: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         cursor: pointer;
         font: inherit;
         text-decoration: underline;
@@ -721,11 +721,11 @@
 
     /* ─── State pages (unavailable / exhausted) ─── */
 
-    .ot-chat-state {
+    .ettic-otc-chat-state {
         text-align: center;
         padding: 64px 16px;
     }
-    .ot-chat-state__icon {
+    .ettic-otc-chat-state__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -736,17 +736,17 @@
         color: #6b7280;
         margin-bottom: 16px;
     }
-    .ot-chat-state h1 {
+    .ettic-otc-chat-state h1 {
         font-size: 22px;
         font-weight: 600;
         margin: 0 0 8px;
     }
-    .ot-chat-state p {
+    .ettic-otc-chat-state p {
         color: #6b7280;
         margin: 0 auto 24px;
         max-width: 440px;
     }
-    .ot-chat-state__actions {
+    .ettic-otc-chat-state__actions {
         display: flex;
         gap: 8px;
         justify-content: center;
@@ -755,26 +755,26 @@
 
     /* ─── No-JS fallback ─────────────────────────── */
 
-    .ot-chat-noscript {
+    .ettic-otc-chat-noscript {
         margin-top: 32px;
         padding: 24px;
         background: #fffbeb;
         border: 1px solid #fde68a;
         border-radius: 12px;
     }
-    .ot-chat-noscript p {
+    .ettic-otc-chat-noscript p {
         margin: 0 0 12px;
         font-size: 14px;
         color: #713f12;
     }
-    .ot-chat-noscript label {
+    .ettic-otc-chat-noscript label {
         display: block;
         margin-bottom: 8px;
         font-size: 13px;
         font-weight: 600;
         color: #713f12;
     }
-    .ot-chat-noscript textarea {
+    .ettic-otc-chat-noscript textarea {
         width: 100%;
         padding: 12px;
         border: 1px solid #fde68a;
@@ -782,10 +782,10 @@
         font: inherit;
         font-size: 14px;
     }
-    .ot-chat-noscript button {
+    .ettic-otc-chat-noscript button {
         margin-top: 8px;
         padding: 10px 16px;
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         color: #ffffff;
         border: 0;
         border-radius: 8px;
@@ -795,7 +795,7 @@
 
     /* ─── Utility ───────────────────────────────── */
 
-    .ot-visually-hidden {
+    .ettic-otc-visually-hidden {
         position: absolute !important;
         width: 1px;
         height: 1px;
@@ -807,7 +807,7 @@
         border: 0;
     }
 
-    .ot-button {
+    .ettic-otc-button {
         display: inline-block;
         padding: 10px 18px;
         border-radius: 8px;
@@ -818,19 +818,19 @@
         border: 0;
         transition: background-color 0.15s, transform 0.1s;
     }
-    .ot-button--primary {
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), var(--ot-accent-l));
+    .ettic-otc-button--primary {
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), var(--ettic-otc-accent-l));
         color: #ffffff;
     }
-    .ot-button--primary:hover {
-        background: hsl(var(--ot-accent-h), var(--ot-accent-s), calc(var(--ot-accent-l) - 6%));
+    .ettic-otc-button--primary:hover {
+        background: hsl(var(--ettic-otc-accent-h), var(--ettic-otc-accent-s), calc(var(--ettic-otc-accent-l) - 6%));
     }
-    .ot-button--ghost {
+    .ettic-otc-button--ghost {
         background: #ffffff;
         color: #374151;
         border: 1px solid #e5e7eb;
     }
-    .ot-button--ghost:hover {
+    .ettic-otc-button--ghost:hover {
         border-color: #d1d5db;
         background: #f9fafb;
     }
@@ -838,21 +838,21 @@
     /* ─── Responsive ────────────────────────────── */
 
     @media (max-width: 720px) {
-        .ot-chat-main { padding: 32px 16px 220px; }
+        .ettic-otc-chat-main { padding: 32px 16px 220px; }
     }
     @media (max-width: 480px) {
-        .ot-chat-intro { padding: 16px 0 32px; }
-        .ot-chat-intro__title { font-size: 22px; }
-        .ot-chat-chips { gap: 6px; }
-        .ot-chat-chip { font-size: 12px; padding: 6px 12px; }
-        .ot-chat-dock__legal { display: none; }
+        .ettic-otc-chat-intro { padding: 16px 0 32px; }
+        .ettic-otc-chat-intro__title { font-size: 22px; }
+        .ettic-otc-chat-chips { gap: 6px; }
+        .ettic-otc-chat-chip { font-size: 12px; padding: 6px 12px; }
+        .ettic-otc-chat-dock__legal { display: none; }
     }
 
     /* ─── Print ─────────────────────────────────── */
 
     @media print {
-        .ot-nav, .ot-chat-dock, .ot-chat-chips,
-        .ot-chat-msg__actions, .ot-chat-noscript {
+        .ettic-otc-nav, .ettic-otc-chat-dock, .ettic-otc-chat-chips,
+        .ettic-otc-chat-msg__actions, .ettic-otc-chat-noscript {
             display: none !important;
         }
     }

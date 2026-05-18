@@ -9,11 +9,24 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_IO {
+final class Ettic_OTC_IO {
 
     public const SCHEMA_VERSION  = 1;
-    public const FORMAT_SETTINGS = 'opentrust-settings';
-    public const FORMAT_CONTENT  = 'opentrust-content';
+    public const FORMAT_SETTINGS = 'ettic-otc-settings';
+    public const FORMAT_CONTENT  = 'ettic-otc-content';
+
+    /**
+     * Legacy format header values produced by the original OpenTrust plugin
+     * (v1.0.x and v1.1.x). Normalised on read so downstream === comparisons
+     * against the FORMAT_* constants keep working without per-site changes.
+     *
+     * @deprecated 1.2.0 Drop in 2.0.0 alongside remap_legacy_cpt_keys(),
+     *             remap_legacy_meta_keys() and Ettic_OTC_CPT::LEGACY_*MAP.
+     */
+    private const LEGACY_FORMAT_ALIASES = [
+        'opentrust-settings' => self::FORMAT_SETTINGS,
+        'opentrust-content'  => self::FORMAT_CONTENT,
+    ];
 
     public const STRATEGY_SKIP       = 'skip';
     public const STRATEGY_OVERWRITE  = 'overwrite';
@@ -22,7 +35,7 @@ final class OpenTrust_IO {
     // Encrypted secrets, per-site salt, and server-controlled flags. Never exported.
     public const SETTINGS_EXCLUDE = [
         'turnstile_secret_key',
-        'opentrust_site_salt',
+        'ettic_otc_site_salt',
         'ai_enabled',
         'ai_provider',
         // ai_model is paired with ai_provider — exporting it without the provider
@@ -35,75 +48,75 @@ final class OpenTrust_IO {
         'ai_model_recommended',
     ];
 
-    // Keep in sync with class-opentrust-cpt.php save handlers.
+    // Keep in sync with class-ettic-otc-cpt.php save handlers.
     private const META_KEYS = [
-        OpenTrust_CPT::POLICY => [
-            '_opentrust_uuid',
-            '_opentrust_policy_ref_id',
-            '_opentrust_policy_category',
-            '_opentrust_policy_effective_date',
-            '_opentrust_policy_review_date',
-            '_opentrust_policy_sort_order',
-            '_opentrust_policy_citations',
-            '_opentrust_policy_attachment_id',
-            '_opentrust_version',
-            '_opentrust_version_summary',
-            '_opentrust_policy_chat_summary',
-            '_opentrust_policy_chat_summary_updated_at',
-            '_opentrust_policy_chat_summary_origin',
+        Ettic_OTC_CPT::POLICY => [
+            '_ettic_otc_uuid',
+            '_ettic_otc_policy_ref_id',
+            '_ettic_otc_policy_category',
+            '_ettic_otc_policy_effective_date',
+            '_ettic_otc_policy_review_date',
+            '_ettic_otc_policy_sort_order',
+            '_ettic_otc_policy_citations',
+            '_ettic_otc_policy_attachment_id',
+            '_ettic_otc_version',
+            '_ettic_otc_version_summary',
+            '_ettic_otc_policy_chat_summary',
+            '_ettic_otc_policy_chat_summary_updated_at',
+            '_ettic_otc_policy_chat_summary_origin',
         ],
-        OpenTrust_CPT::CERTIFICATION => [
-            '_opentrust_uuid',
-            '_opentrust_cert_type',
-            '_opentrust_cert_status',
-            '_opentrust_cert_issuing_body',
-            '_opentrust_cert_issue_date',
-            '_opentrust_cert_expiry_date',
-            '_opentrust_cert_badge_id',
-            '_opentrust_cert_artifact_id',
-            '_opentrust_cert_description',
+        Ettic_OTC_CPT::CERTIFICATION => [
+            '_ettic_otc_uuid',
+            '_ettic_otc_cert_type',
+            '_ettic_otc_cert_status',
+            '_ettic_otc_cert_issuing_body',
+            '_ettic_otc_cert_issue_date',
+            '_ettic_otc_cert_expiry_date',
+            '_ettic_otc_cert_badge_id',
+            '_ettic_otc_cert_artifact_id',
+            '_ettic_otc_cert_description',
         ],
-        OpenTrust_CPT::SUBPROCESSOR => [
-            '_opentrust_uuid',
-            '_opentrust_sub_purpose',
-            '_opentrust_sub_data_processed',
-            '_opentrust_sub_country',
-            '_opentrust_sub_website',
-            '_opentrust_sub_dpa_signed',
+        Ettic_OTC_CPT::SUBPROCESSOR => [
+            '_ettic_otc_uuid',
+            '_ettic_otc_sub_purpose',
+            '_ettic_otc_sub_data_processed',
+            '_ettic_otc_sub_country',
+            '_ettic_otc_sub_website',
+            '_ettic_otc_sub_dpa_signed',
         ],
-        OpenTrust_CPT::DATA_PRACTICE => [
-            '_opentrust_uuid',
-            '_opentrust_dp_data_items',
-            '_opentrust_dp_purpose',
-            '_opentrust_dp_legal_basis',
-            '_opentrust_dp_retention_period',
-            '_opentrust_dp_shared_with',
-            '_opentrust_dp_sort_order',
-            '_opentrust_dp_collected',
-            '_opentrust_dp_stored',
-            '_opentrust_dp_shared',
-            '_opentrust_dp_sold',
-            '_opentrust_dp_encrypted',
+        Ettic_OTC_CPT::DATA_PRACTICE => [
+            '_ettic_otc_uuid',
+            '_ettic_otc_dp_data_items',
+            '_ettic_otc_dp_purpose',
+            '_ettic_otc_dp_legal_basis',
+            '_ettic_otc_dp_retention_period',
+            '_ettic_otc_dp_shared_with',
+            '_ettic_otc_dp_sort_order',
+            '_ettic_otc_dp_collected',
+            '_ettic_otc_dp_stored',
+            '_ettic_otc_dp_shared',
+            '_ettic_otc_dp_sold',
+            '_ettic_otc_dp_encrypted',
         ],
-        OpenTrust_CPT::FAQ => [
-            '_opentrust_uuid',
-            '_opentrust_faq_related_policy',
+        Ettic_OTC_CPT::FAQ => [
+            '_ettic_otc_uuid',
+            '_ettic_otc_faq_related_policy',
         ],
     ];
 
     // Meta keys whose value is an attachment ID; serialized as __media_ref.
     private const ATTACHMENT_META_KEYS = [
-        OpenTrust_CPT::POLICY        => ['_opentrust_policy_attachment_id'],
-        OpenTrust_CPT::CERTIFICATION => ['_opentrust_cert_badge_id', '_opentrust_cert_artifact_id'],
-        OpenTrust_CPT::SUBPROCESSOR  => [],
-        OpenTrust_CPT::DATA_PRACTICE => [],
-        OpenTrust_CPT::FAQ           => [],
+        Ettic_OTC_CPT::POLICY        => ['_ettic_otc_policy_attachment_id'],
+        Ettic_OTC_CPT::CERTIFICATION => ['_ettic_otc_cert_badge_id', '_ettic_otc_cert_artifact_id'],
+        Ettic_OTC_CPT::SUBPROCESSOR  => [],
+        Ettic_OTC_CPT::DATA_PRACTICE => [],
+        Ettic_OTC_CPT::FAQ           => [],
     ];
 
     // meta_key => target_cpt_slug. Cross-CPT refs serialized as __post_ref.
     private const POST_REF_META_KEYS = [
-        OpenTrust_CPT::FAQ => [
-            '_opentrust_faq_related_policy' => OpenTrust_CPT::POLICY,
+        Ettic_OTC_CPT::FAQ => [
+            '_ettic_otc_faq_related_policy' => Ettic_OTC_CPT::POLICY,
         ],
     ];
 
@@ -114,7 +127,7 @@ final class OpenTrust_IO {
     // ──────────────────────────────────────────────
 
     public static function build_settings_manifest(bool $include_media = true): array {
-        $settings = OpenTrust::get_settings();
+        $settings = Ettic_OTC::get_settings();
         foreach (self::SETTINGS_EXCLUDE as $k) {
             unset($settings[$k]);
         }
@@ -133,8 +146,8 @@ final class OpenTrust_IO {
         return [
             'format'            => self::FORMAT_SETTINGS,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => OPENTRUST_VERSION,
-            'db_version'        => OPENTRUST_DB_VERSION,
+            'ettic_otc_version' => ETTIC_OTC_VERSION,
+            'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
             'site_locale'       => get_locale(),
@@ -177,8 +190,8 @@ final class OpenTrust_IO {
         return [
             'format'            => self::FORMAT_CONTENT,
             'schema'            => self::SCHEMA_VERSION,
-            'opentrust_version' => OPENTRUST_VERSION,
-            'db_version'        => OPENTRUST_DB_VERSION,
+            'ettic_otc_version' => ETTIC_OTC_VERSION,
+            'db_version'        => ETTIC_OTC_DB_VERSION,
             'exported_at'       => gmdate('c'),
             'site_url'          => home_url('/'),
             'site_locale'       => get_locale(),
@@ -190,12 +203,12 @@ final class OpenTrust_IO {
     // Returns the path to a temp ZIP. Caller deletes it when done.
     public static function write_zip(array $manifest, string $filename_prefix): string {
         if (!class_exists('ZipArchive')) {
-            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required for export.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required for export.', 'open-trust-center-by-ettic'));
         }
 
         $tmp = wp_tempnam($filename_prefix . '.zip');
         if (!$tmp) {
-            throw new \RuntimeException(esc_html__('Could not create temp file for export.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not create temp file for export.', 'open-trust-center-by-ettic'));
         }
 
         // Source paths are local-only — pull them out before the manifest is encoded.
@@ -209,7 +222,7 @@ final class OpenTrust_IO {
 
         $zip = new \ZipArchive();
         if ($zip->open($tmp, \ZipArchive::OVERWRITE | \ZipArchive::CREATE) !== true) {
-            throw new \RuntimeException(esc_html__('Could not open ZIP for writing.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not open ZIP for writing.', 'open-trust-center-by-ettic'));
         }
 
         $zip->addFromString('manifest.json', wp_json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -236,28 +249,41 @@ final class OpenTrust_IO {
         $errors = [];
 
         $format = (string) ($manifest['format'] ?? '');
+        // Belt-and-suspenders normalisation for callers that bypass read_zip()
+        // and hand a raw manifest array directly (e.g. fixtures, future tests).
+        // @deprecated 1.2.0 Drop in 2.0.0 with LEGACY_FORMAT_ALIASES.
+        $format = self::LEGACY_FORMAT_ALIASES[$format] ?? $format;
         if (!in_array($format, [self::FORMAT_SETTINGS, self::FORMAT_CONTENT], true)) {
-            $errors[] = __('Unrecognised export format.', 'opentrust');
+            $errors[] = __('Unrecognised export format.', 'open-trust-center-by-ettic');
         }
 
         if ((int) ($manifest['schema'] ?? 0) !== self::SCHEMA_VERSION) {
             $errors[] = sprintf(
                 /* translators: %1$d: schema version found, %2$d: schema version expected */
-                __('Schema version mismatch (found %1$d, expected %2$d).', 'opentrust'),
+                __('Schema version mismatch (found %1$d, expected %2$d).', 'open-trust-center-by-ettic'),
                 (int) ($manifest['schema'] ?? 0),
                 self::SCHEMA_VERSION
             );
         }
 
-        $their_major = (int) explode('.', (string) ($manifest['opentrust_version'] ?? '0.0.0'))[0];
-        $our_major   = (int) explode('.', OPENTRUST_VERSION)[0];
-        if ($their_major !== $our_major) {
-            $errors[] = sprintf(
-                /* translators: %1$s: their version, %2$s: our version */
-                __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'opentrust'),
-                (string) ($manifest['opentrust_version'] ?? '?'),
-                OPENTRUST_VERSION
-            );
+        // Accept either the new ettic_otc_version field or the legacy
+        // opentrust_version field (v1.0.x and v1.1.x exports). If only the
+        // legacy field is present, skip the major-version gate — legacy
+        // archives are always v1.x and the LEGACY_MAP / LEGACY_META_MAP
+        // remap handles the schema differences.
+        $their_version = (string) ($manifest['ettic_otc_version'] ?? $manifest['opentrust_version'] ?? '');
+        $is_legacy     = isset($manifest['opentrust_version']) && !isset($manifest['ettic_otc_version']);
+        if (!$is_legacy && $their_version !== '') {
+            $their_major = (int) explode('.', $their_version)[0];
+            $our_major   = (int) explode('.', ETTIC_OTC_VERSION)[0];
+            if ($their_major !== $our_major) {
+                $errors[] = sprintf(
+                    /* translators: %1$s: their version, %2$s: our version */
+                    __('Plugin major version mismatch (export: %1$s, this site: %2$s).', 'open-trust-center-by-ettic'),
+                    $their_version,
+                    ETTIC_OTC_VERSION
+                );
+            }
         }
 
         return [
@@ -313,12 +339,12 @@ final class OpenTrust_IO {
 
         // Suppress the chat summarizer for the duration of the import, otherwise
         // every imported policy queues a fresh summary generation (real cost).
-        $had_summarizer = remove_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20);
+        $had_summarizer = remove_action('save_post_' . Ettic_OTC_CPT::POLICY, ['Ettic_OTC_Chat_Summarizer', 'on_save_post'], 20);
 
         $media_map = self::sideload_bundled_media($manifest['media'] ?? [], $zip_path, $errors);
 
         // Policies first so FAQs can resolve their policy refs in one pass.
-        $cpt_order = [OpenTrust_CPT::POLICY, OpenTrust_CPT::CERTIFICATION, OpenTrust_CPT::SUBPROCESSOR, OpenTrust_CPT::DATA_PRACTICE, OpenTrust_CPT::FAQ];
+        $cpt_order = [Ettic_OTC_CPT::POLICY, Ettic_OTC_CPT::CERTIFICATION, Ettic_OTC_CPT::SUBPROCESSOR, Ettic_OTC_CPT::DATA_PRACTICE, Ettic_OTC_CPT::FAQ];
         $uuid_to_new_id = [];
 
         foreach ($cpt_order as $cpt) {
@@ -343,10 +369,10 @@ final class OpenTrust_IO {
         self::remap_post_references($manifest['records'] ?? [], $uuid_to_new_id);
 
         if ($had_summarizer) {
-            add_action('save_post_' . OpenTrust_CPT::POLICY, ['OpenTrust_Chat_Summarizer', 'on_save_post'], 20, 3);
+            add_action('save_post_' . Ettic_OTC_CPT::POLICY, ['Ettic_OTC_Chat_Summarizer', 'on_save_post'], 20, 3);
         }
 
-        OpenTrust::instance()->invalidate_cache();
+        Ettic_OTC::instance()->invalidate_cache();
 
         return compact('created', 'updated', 'skipped', 'errors');
     }
@@ -368,21 +394,21 @@ final class OpenTrust_IO {
             }
         }
 
-        $current = OpenTrust::get_settings();
+        $current = Ettic_OTC::get_settings();
         $merged  = array_merge($current, $imported);
 
         foreach (self::SETTINGS_EXCLUDE as $k) {
             $merged[$k] = $current[$k] ?? '';
         }
 
-        update_option('opentrust_settings', $merged, false);
+        update_option('ettic_otc_settings', $merged, false);
 
         // Slug change → flush rewrites on next admin load.
         if (isset($imported['endpoint_slug']) && $imported['endpoint_slug'] !== ($current['endpoint_slug'] ?? '')) {
-            set_transient('opentrust_flush_rewrite', true);
+            set_transient('ettic_otc_flush_rewrite', true);
         }
 
-        OpenTrust::instance()->invalidate_cache();
+        Ettic_OTC::instance()->invalidate_cache();
 
         return ['updated' => count($imported), 'errors' => $errors];
     }
@@ -393,20 +419,28 @@ final class OpenTrust_IO {
 
     public static function read_zip(string $zip_path): array {
         if (!class_exists('ZipArchive')) {
-            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('PHP ZipArchive extension is required.', 'open-trust-center-by-ettic'));
         }
         $zip = new \ZipArchive();
         if ($zip->open($zip_path) !== true) {
-            throw new \RuntimeException(esc_html__('Could not open uploaded archive.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Could not open uploaded archive.', 'open-trust-center-by-ettic'));
         }
         $raw = $zip->getFromName('manifest.json');
         $zip->close();
         if ($raw === false) {
-            throw new \RuntimeException(esc_html__('Archive is missing manifest.json.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('Archive is missing manifest.json.', 'open-trust-center-by-ettic'));
         }
         $manifest = json_decode($raw, true);
         if (!is_array($manifest)) {
-            throw new \RuntimeException(esc_html__('manifest.json could not be parsed.', 'opentrust'));
+            throw new \RuntimeException(esc_html__('manifest.json could not be parsed.', 'open-trust-center-by-ettic'));
+        }
+        // Rewrite legacy "opentrust-*" format header to its renamed equivalent
+        // so the admin handler's strict === comparisons against FORMAT_*
+        // continue to dispatch correctly. Mutates the in-memory copy only.
+        // @deprecated 1.2.0 Drop in 2.0.0 with LEGACY_FORMAT_ALIASES.
+        $fmt = (string) ($manifest['format'] ?? '');
+        if (isset(self::LEGACY_FORMAT_ALIASES[$fmt])) {
+            $manifest['format'] = self::LEGACY_FORMAT_ALIASES[$fmt];
         }
         return ['manifest' => $manifest, 'zip_path' => $zip_path];
     }
@@ -416,16 +450,11 @@ final class OpenTrust_IO {
     // ──────────────────────────────────────────────
 
     /**
-     * Rewrite v1.0.x CPT slugs (ot_*) in an inbound manifest to the v1.1+
-     * slugs (opentr_*). Touches top-level record keys only — record bodies
-     * carry __post_ref values as UUIDs (not slugs) and resolve fine once the
-     * outer key is corrected.
-     *
-     * @deprecated 1.1.0 Drop in 2.0.0. The major-version mismatch check in
-     *             validate_manifest() already hard-rejects 1.x archives on a
-     *             2.x destination, so this remap becomes redundant. Also
-     *             remove the two call sites in preview_import() and
-     *             apply_content_import().
+     * Rewrite legacy CPT slugs (v1.0.x `ot_*`, v1.1.x `opentr_*`) in an
+     * inbound manifest to the current `eotc_*` slugs. Touches top-level
+     * record keys only — record bodies carry __post_ref values as UUIDs
+     * (not slugs) and resolve fine once the outer key is corrected. Phase 8
+     * extends Ettic_OTC_CPT::LEGACY_MAP with the v1.1.x entries.
      */
     private static function remap_legacy_cpt_keys(array $manifest): array {
         if (empty($manifest['records']) || !is_array($manifest['records'])) {
@@ -433,7 +462,7 @@ final class OpenTrust_IO {
         }
         $out = [];
         foreach ($manifest['records'] as $cpt => $recs) {
-            $out[OpenTrust_CPT::LEGACY_MAP[$cpt] ?? $cpt] = $recs;
+            $out[Ettic_OTC_CPT::LEGACY_MAP[$cpt] ?? $cpt] = $recs;
         }
         $manifest['records'] = $out;
         return $manifest;
@@ -441,18 +470,18 @@ final class OpenTrust_IO {
 
     /**
      * Rewrite legacy `_ot_*` postmeta keys in an inbound manifest's record
-     * bodies to the v1.1.1+ `_opentrust_*` keys. Pre-1.1.1 exports carry the
+     * bodies to the v1.1.1+ `_ettic_otc_*` keys. Pre-1.1.1 exports carry the
      * short prefix; without this remap their meta would be written under the
      * old key names and read back as empty.
      *
      * @deprecated 1.1.1 Drop in 2.0.0 alongside remap_legacy_cpt_keys() and
-     *             OpenTrust_CPT::LEGACY_META_MAP.
+     *             Ettic_OTC_CPT::LEGACY_META_MAP.
      */
     private static function remap_legacy_meta_keys(array $manifest): array {
         if (empty($manifest['records']) || !is_array($manifest['records'])) {
             return $manifest;
         }
-        $map = OpenTrust_CPT::LEGACY_META_MAP;
+        $map = Ettic_OTC_CPT::LEGACY_META_MAP;
         foreach ($manifest['records'] as $cpt => $recs) {
             if (!is_array($recs)) {
                 continue;
@@ -509,7 +538,7 @@ final class OpenTrust_IO {
         foreach (self::POST_REF_META_KEYS[$cpt] ?? [] as $meta_key => $_target_cpt) {
             $ref_id = (int) ($meta_out[$meta_key] ?? 0);
             if ($ref_id > 0) {
-                $ref_uuid = (string) get_post_meta($ref_id, '_opentrust_uuid', true);
+                $ref_uuid = (string) get_post_meta($ref_id, '_ettic_otc_uuid', true);
                 if ($ref_uuid !== '') {
                     $meta_out[$meta_key] = ['__post_ref' => $ref_uuid];
                 } else {
@@ -519,7 +548,7 @@ final class OpenTrust_IO {
         }
 
         return [
-            'uuid'       => $meta_out['_opentrust_uuid'] ?? null,
+            'uuid'       => $meta_out['_ettic_otc_uuid'] ?? null,
             'slug'       => $post->post_name,
             'title'      => $post->post_title,
             'content'    => $post->post_content,
@@ -541,8 +570,8 @@ final class OpenTrust_IO {
         }
         // Stamp the source so a same-site re-import dedupes by hash instead
         // of re-uploading (and tripping WP's MIME allowlist on SVG, etc.).
-        if (!get_post_meta($att_id, '_opentrust_import_sha256', true)) {
-            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
+        if (!get_post_meta($att_id, '_ettic_otc_import_sha256', true)) {
+            update_post_meta($att_id, '_ettic_otc_import_sha256', $hash);
         }
         $att = get_post($att_id);
         $ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -572,7 +601,7 @@ final class OpenTrust_IO {
                 'posts_per_page' => 1,
                 'fields'         => 'ids',
                 'meta_query'     => [
-                    ['key' => '_opentrust_uuid', 'value' => $uuid],
+                    ['key' => '_ettic_otc_uuid', 'value' => $uuid],
                 ],
             ]);
             if (!empty($hits)) return (int) $hits[0];
@@ -655,8 +684,8 @@ final class OpenTrust_IO {
         }
 
         // Fresh UUID on create_new so we don't collide with the existing post.
-        if (empty($meta['_opentrust_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
-            $meta['_opentrust_uuid'] = wp_generate_uuid4();
+        if (empty($meta['_ettic_otc_uuid']) || $strategy === self::STRATEGY_CREATE_NEW) {
+            $meta['_ettic_otc_uuid'] = wp_generate_uuid4();
         }
 
         foreach ($meta as $key => $val) {
@@ -694,7 +723,7 @@ final class OpenTrust_IO {
         $map = [];
         $zip = new \ZipArchive();
         if ($zip->open($zip_path) !== true) {
-            $errors[] = __('Could not reopen archive for media import.', 'opentrust');
+            $errors[] = __('Could not reopen archive for media import.', 'open-trust-center-by-ettic');
             return [];
         }
 
@@ -709,7 +738,7 @@ final class OpenTrust_IO {
             if ($contents === false) {
                 $errors[] = sprintf(
                     /* translators: %s: media path */
-                    __('Bundled media missing during import: %s', 'opentrust'),
+                    __('Bundled media missing during import: %s', 'open-trust-center-by-ettic'),
                     (string) $entry['path']
                 );
                 continue;
@@ -729,7 +758,7 @@ final class OpenTrust_IO {
             if (file_put_contents($dest_path, $contents) === false) {
                 $errors[] = sprintf(
                     /* translators: %s: filename */
-                    __('Could not write attachment file: %s', 'opentrust'),
+                    __('Could not write attachment file: %s', 'open-trust-center-by-ettic'),
                     $filename
                 );
                 continue;
@@ -747,7 +776,7 @@ final class OpenTrust_IO {
                 continue;
             }
             if (!$att_id) {
-                $errors[] = __('Could not create attachment.', 'opentrust');
+                $errors[] = __('Could not create attachment.', 'open-trust-center-by-ettic');
                 wp_delete_file($dest_path);
                 continue;
             }
@@ -760,7 +789,7 @@ final class OpenTrust_IO {
                 update_post_meta($att_id, '_wp_attachment_image_alt', (string) $entry['alt']);
             }
 
-            update_post_meta($att_id, '_opentrust_import_sha256', $hash);
+            update_post_meta($att_id, '_ettic_otc_import_sha256', $hash);
 
             $map[$hash] = $att_id;
         }
@@ -775,7 +804,7 @@ final class OpenTrust_IO {
             'posts_per_page' => 1,
             'fields'         => 'ids',
             'meta_query'     => [
-                ['key' => '_opentrust_import_sha256', 'value' => $hash],
+                ['key' => '_ettic_otc_import_sha256', 'value' => $hash],
             ],
         ]);
         return !empty($hits) ? (int) $hits[0] : 0;

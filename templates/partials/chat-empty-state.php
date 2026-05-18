@@ -20,21 +20,21 @@ $ot_policy_count = (int) ($ot_counts['policies']       ?? 0);
 $ot_sub_count    = (int) ($ot_counts['subprocessors']  ?? 0);
 $ot_dp_count     = (int) ($ot_counts['data_practices'] ?? 0);
 ?>
-<div class="ot-chat-shell" data-ot-chat-shell>
+<div class="ettic-otc-chat-shell" data-ettic-otc-chat-shell>
 
-    <section class="ot-chat-intro" data-ot-chat-intro>
-        <h1 class="ot-chat-intro__title">
+    <section class="ettic-otc-chat-intro" data-ettic-otc-chat-intro>
+        <h1 class="ettic-otc-chat-intro__title">
             <?php
             /* translators: %s: company name */
-            printf(esc_html__('Ask about %s\'s security and compliance', 'opentrust'), esc_html($ot_company_name));
+            printf(esc_html__('Ask about %s\'s security and compliance', 'open-trust-center-by-ettic'), esc_html($ot_company_name));
             ?>
         </h1>
-        <p class="ot-chat-intro__help">
+        <p class="ettic-otc-chat-intro__help">
             <?php if ($ot_show_attrib && $ot_model_id): ?>
                 <?php
                 printf(
                     /* translators: 1: model identifier, 2: sources summary */
-                    esc_html__('Using model %1$s. Grounded in %2$s.', 'opentrust'),
+                    esc_html__('Using model %1$s. Grounded in %2$s.', 'open-trust-center-by-ettic'),
                     '<strong>' . esc_html($ot_model_id) . '</strong>',
                     esc_html(sprintf(
                         '%d policies, %d certifications, %d subprocessors, %d data practices',
@@ -46,7 +46,7 @@ $ot_dp_count     = (int) ($ot_counts['data_practices'] ?? 0);
                 <?php
                 printf(
                     /* translators: %s: sources summary */
-                    esc_html__('Grounded in %s.', 'opentrust'),
+                    esc_html__('Grounded in %s.', 'open-trust-center-by-ettic'),
                     esc_html(sprintf(
                         '%d policies, %d certifications, %d subprocessors, %d data practices',
                         $ot_policy_count, $ot_cert_count, $ot_sub_count, $ot_dp_count
@@ -57,8 +57,8 @@ $ot_dp_count     = (int) ($ot_counts['data_practices'] ?? 0);
         </p>
     </section>
 
-    <section class="ot-chat-thread" aria-label="<?php esc_attr_e('Conversation', 'opentrust'); ?>">
-        <div class="ot-chat-messages" data-ot-chat-messages aria-live="polite" aria-atomic="false"></div>
+    <section class="ettic-otc-chat-thread" aria-label="<?php esc_attr_e('Conversation', 'open-trust-center-by-ettic'); ?>">
+        <div class="ettic-otc-chat-messages" data-ettic-otc-chat-messages aria-live="polite" aria-atomic="false"></div>
     </section>
 
 </div>

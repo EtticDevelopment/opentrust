@@ -1,10 +1,10 @@
-=== OpenTrust ===
+=== Open Trust Center by Ettic ===
 Contributors: ettic
 Tags: trust-center, compliance, gdpr, privacy, subprocessors
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.1
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ Self-hosted trust center: policies, subprocessors, certifications, data practice
 
 == Description ==
 
-**OpenTrust is a self-hosted, open-source trust center for WordPress.** Publish your security policies, list your subprocessors, display your compliance certifications, and document your data practices on a single branded page that lives on your own WordPress site. No SaaS subscription. No vendor lock-in. No "phone home."
+**Open Trust Center is a self-hosted, open-source trust center for WordPress.** Publish your security policies, list your subprocessors, display your compliance certifications, and document your data practices on a single branded page that lives on your own WordPress site. No SaaS subscription. No vendor lock-in. No "phone home."
 
-Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. OpenTrust gives you all three in a plugin, and lets you optionally bolt on an AI assistant that answers visitor questions from your real, published corpus — with citations.
+Procurement teams want a URL they can read. Buyers want receipts. Auditors want a version trail. Open Trust Center gives you all three in a plugin, and lets you optionally bolt on an AI assistant that answers visitor questions from your real, published corpus — with citations.
 
 = What you publish =
 
@@ -28,10 +28,10 @@ Procurement teams want a URL they can read. Buyers want receipts. Auditors want 
 = Branded, theme-isolated, fast =
 
 * **Standalone rendering.** The trust center intercepts the request at `template_redirect`, outputs a complete standalone HTML document with inlined CSS, and exits. Your theme's stylesheet, header, footer, and JavaScript never load. Zero theme conflicts.
-* **CSS scoped via `@layer opentrust`** with every class prefixed `ot-`. Belt-and-braces isolation.
+* **CSS scoped via `@layer ettic-otc`** with every class prefixed `ettic-otc-`. Belt-and-braces isolation.
 * **WCAG-aware accent colour.** Pick any brand hex; the plugin clamps lightness in HSL space until it clears 4.5:1 contrast on white. Override available if you'd rather take the hit.
-* **Locale-aware transient cache** invalidates the moment any OpenTrust post is saved, trashed, restored, or transitions status. No "reindex" button to forget.
-* **Auto-incrementing policy versions.** Tick the "new version" box on publish; OpenTrust bumps the number and archives the prior text. Past versions stay reachable at stable URLs (`/trust-center/policy/{slug}/version/{n}/`), so auditors can cite "as of v4" without you digging through revisions.
+* **Locale-aware transient cache** invalidates the moment any Open Trust Center post is saved, trashed, restored, or transitions status. No "reindex" button to forget.
+* **Auto-incrementing policy versions.** Tick the "new version" box on publish; Open Trust Center bumps the number and archives the prior text. Past versions stay reachable at stable URLs (`/trust-center/policy/{slug}/version/{n}/`), so auditors can cite "as of v4" without you digging through revisions.
 
 = Optional AI chat assistant =
 
@@ -43,14 +43,14 @@ Bolt on a trust-center chatbot in five minutes. The AI answers visitor questions
 * **Token budgets.** Daily and monthly caps (default 500K/day, 10M/month) with reserve/commit/release accounting. Hit the ceiling and the chat surfaces a graceful exhausted state — never a surprise invoice.
 * **Rate limits and bot defence.** Per-IP and per-session sliding windows; optional Cloudflare Turnstile gate with a 1-hour bypass transient.
 * **Encrypted secrets.** API keys and the Turnstile secret are encrypted at rest with libsodium `secretbox`, salted from `wp_salt('auth')`. Rotate `AUTH_KEY` and every stored secret invalidates atomically.
-* **Zero-PII logging.** Optional `wp_opentrust_chat_log` table stores only short hashed identifiers, the question text (capped at 1,000 chars), and aggregate token counts. A 90-day purge cron keeps it lean. The privacy posture is enforced by the schema itself, not by good intentions.
+* **Zero-PII logging.** Optional `wp_ettic_otc_chat_log` table stores only short hashed identifiers, the question text (capped at 1,000 chars), and aggregate token counts. A 90-day purge cron keeps it lean. The privacy posture is enforced by the schema itself, not by good intentions.
 * **No-JS fallback.** Visitors with JavaScript disabled get a plain HTML form that POSTs and renders the answer server-side.
 
 The chat is fully optional. The plugin works as a static trust center without ever adding an API key.
 
 = Pre-filled libraries =
 
-Type three letters of a vendor name; the rest auto-fills — country, purpose, default category. The bundled catalog covers 200+ subprocessors, common data practices, and the certifications you're likely to list. ~92 KB of metadata, zero network calls, two filters (`opentrust_subprocessor_catalog`, `opentrust_data_practice_catalog`) to extend or replace.
+Type three letters of a vendor name; the rest auto-fills — country, purpose, default category. The bundled catalog covers 200+ subprocessors, common data practices, and the certifications you're likely to list. ~92 KB of metadata, zero network calls, two filters (`ettic_otc_subprocessor_catalog`, `ettic_otc_data_practice_catalog`) to extend or replace.
 
 = Translations =
 
@@ -69,7 +69,7 @@ GPL-2.0-or-later. Modern PHP 8.1+ codebase with strict types and match expressio
 
 == External services ==
 
-OpenTrust is opt-in for every external request. Out of the box, with no API keys or Turnstile keys configured, the plugin makes zero outbound HTTP calls. The services below are contacted only after you explicitly enable the corresponding feature in **OpenTrust → Settings → AI Chat**. All outbound URLs are restricted by an SSRF host allowlist.
+Open Trust Center is opt-in for every external request. Out of the box, with no API keys or Turnstile keys configured, the plugin makes zero outbound HTTP calls. The services below are contacted only after you explicitly enable the corresponding feature in **Open Trust Center → Settings → AI Chat**. All outbound URLs are restricted by an SSRF host allowlist.
 
 = AI providers (one of: Anthropic, OpenAI, OpenRouter) =
 
@@ -81,7 +81,7 @@ Triggered when a visitor submits a question on `/trust-center/ask/`, after you h
 
 = Cloudflare Turnstile (optional bot defence) =
 
-Triggered when you enable Turnstile in **OpenTrust → Settings → AI Chat** by entering site and secret keys. The chat page loads a small JavaScript challenge widget from Cloudflare; the resulting token is verified server-side on the first message of each visitor session. No personal data is transmitted by OpenTrust — the token itself is opaque.
+Triggered when you enable Turnstile in **Open Trust Center → Settings → AI Chat** by entering site and secret keys. The chat page loads a small JavaScript challenge widget from Cloudflare; the resulting token is verified server-side on the first message of each visitor session. No personal data is transmitted by Open Trust Center — the token itself is opaque.
 
 * **Widget script:** `https://challenges.cloudflare.com/turnstile/v0/api.js`
 * **Token verification:** `https://challenges.cloudflare.com/turnstile/v0/siteverify`
@@ -92,18 +92,18 @@ Triggered when you enable Turnstile in **OpenTrust → Settings → AI Chat** by
 
 = Quick start (5 minutes, no AI) =
 
-1. Install from the WordPress plugin directory, or upload the `opentrust` folder to `/wp-content/plugins/` and activate.
-2. Go to **OpenTrust → Settings**. Set your company name, page title, tagline, accent colour, and upload a logo.
+1. Install from the WordPress plugin directory, or upload the `open-trust-center-by-ettic` folder to `/wp-content/plugins/` and activate.
+2. Go to **Open Trust Center → Settings**. Set your company name, page title, tagline, accent colour, and upload a logo.
 3. Add content under each menu item:
-   * **OpenTrust → Policies** — write or paste your security policies.
-   * **OpenTrust → Certifications** — list your active and in-progress certifications.
-   * **OpenTrust → Subprocessors** — start typing a vendor name; the catalog auto-fills the rest.
-   * **OpenTrust → Data Practices** — document what you collect and how it's handled.
+   * **Open Trust Center → Policies** — write or paste your security policies.
+   * **Open Trust Center → Certifications** — list your active and in-progress certifications.
+   * **Open Trust Center → Subprocessors** — start typing a vendor name; the catalog auto-fills the rest.
+   * **Open Trust Center → Data Practices** — document what you collect and how it's handled.
 4. Visit `/trust-center/` on your site. That's your live trust center.
 
 = Optional: AI chat (5 more minutes) =
 
-1. Go to **OpenTrust → Settings → AI Chat**.
+1. Go to **Open Trust Center → Settings → AI Chat**.
 2. Pick a provider (Anthropic recommended for citation accuracy), paste your API key, and pick a model. The key is encrypted before it touches the database.
 3. Save. Set the daily/monthly token budgets you're comfortable with.
 4. Visit `/trust-center/ask/` to test, or link to it from your trust center hero.
@@ -117,7 +117,7 @@ Triggered when you enable Turnstile in **OpenTrust → Settings → AI Chat** by
 
 == Frequently Asked Questions ==
 
-= Is OpenTrust really free? =
+= Is Open Trust Center really free? =
 
 Yes. GPL-2.0-or-later with no paid tier, no unlock screens, no feature gating, no "pro add-on" upsell. Install it, host it, ship it, for as long as WordPress keeps running. The only variable cost is your AI provider bill *if* you enable the chat — billed directly by the provider, never by us.
 
@@ -141,7 +141,7 @@ Three overlapping defences. Token budgets are hard ceilings, not soft hints. Per
 
 = Does the AI stay in sync when I update a policy? =
 
-Yes, automatically. The corpus the model sees is cached as a transient and invalidated the moment any OpenTrust post is saved, trashed, restored, or transitions status. Even if nothing changes, the cache expires after 12 hours. There is no "reindex" button to forget.
+Yes, automatically. The corpus the model sees is cached as a transient and invalidated the moment any Open Trust Center post is saved, trashed, restored, or transitions status. Even if nothing changes, the cache expires after 12 hours. There is no "reindex" button to forget.
 
 = Does the plugin phone home? =
 
@@ -149,15 +149,15 @@ No. Zero telemetry, zero analytics, zero licence checks. Out of the box, with no
 
 = What do chat logs store about visitors? =
 
-Structurally, never PII. The `wp_opentrust_chat_log` table has no columns capable of holding raw IPs, emails, session IDs, user agents, or referers — only short hashed identifiers, the question text (capped at 1,000 chars), and aggregate token counts. A 90-day purge runs on `wp_cron`. The privacy posture is enforced by the schema itself, not by good intentions. Logging can also be disabled entirely.
+Structurally, never PII. The `wp_ettic_otc_chat_log` table has no columns capable of holding raw IPs, emails, session IDs, user agents, or referers — only short hashed identifiers, the question text (capped at 1,000 chars), and aggregate token counts. A 90-day purge runs on `wp_cron`. The privacy posture is enforced by the schema itself, not by good intentions. Logging can also be disabled entirely.
 
 = Will it clash with my theme? =
 
-It can't. The trust center intercepts the request at `template_redirect`, outputs a complete standalone HTML document with inlined CSS, and exits. Your theme's stylesheet, header, footer, and JavaScript never load. All styles are wrapped in `@layer opentrust` and prefixed with `ot-` for belt-and-braces isolation.
+It can't. The trust center intercepts the request at `template_redirect`, outputs a complete standalone HTML document with inlined CSS, and exits. Your theme's stylesheet, header, footer, and JavaScript never load. All styles are wrapped in `@layer ettic-otc` and prefixed with `ettic-otc-` for belt-and-braces isolation.
 
 = Is there an audit trail for policy changes? =
 
-Yes. Tick the "new version" box on publish; OpenTrust bumps the version number and archives the prior text as a WordPress revision. Each historical version is reachable at a stable URL (`/trust-center/policy/{slug}/version/{n}/`), so auditors can cite "as of v4" without you digging through revisions. Buyers see "last updated" on the current policy; auditors get the receipts.
+Yes. Tick the "new version" box on publish; Open Trust Center bumps the version number and archives the prior text as a WordPress revision. Each historical version is reachable at a stable URL (`/trust-center/policy/{slug}/version/{n}/`), so auditors can cite "as of v4" without you digging through revisions. Buyers see "last updated" on the current policy; auditors get the receipts.
 
 = How hard is it to brand? =
 
@@ -167,7 +167,7 @@ Pick a hex accent colour, upload a logo, set a page title and tagline. That's th
 
 Yes. Ships with a `.pot` template and a starter Dutch (nl_NL) translation. WPML and Polylang compatible out of the box. All four content CPTs are registered public with a `wpml-config.xml` declaring translatable meta fields. Translators can regenerate the template with WP-CLI:
 
-`wp i18n make-pot . languages/opentrust.pot --domain=opentrust`
+`wp i18n make-pot . languages/open-trust-center-by-ettic.pot --domain=open-trust-center-by-ettic`
 
 = What's the minimum stack? =
 
@@ -175,7 +175,7 @@ PHP 8.1+, WordPress 6.0+. No Composer vendor tree, no build step, no Node depend
 
 = Does it generate PDFs? =
 
-Not automatically — that's intentional. Auto-rendered PDFs from HTML almost always look worse than the source, and most legal teams prefer a hand-crafted master copy anyway. If you want a PDF download next to a policy, upload your authoritative version via the media library and OpenTrust shows the Download button. No PDF? No button.
+Not automatically — that's intentional. Auto-rendered PDFs from HTML almost always look worse than the source, and most legal teams prefer a hand-crafted master copy anyway. If you want a PDF download next to a policy, upload your authoritative version via the media library and Open Trust Center shows the Download button. No PDF? No button.
 
 == Screenshots ==
 
@@ -187,6 +187,16 @@ Not automatically — that's intentional. Auto-rendered PDFs from HTML almost al
 6. Settings screen with logo upload, accent colour picker, and live WCAG contrast warning.
 
 == Changelog ==
+
+= 1.2.0 =
+First release published to the WordPress.org plugin directory. The plugin previously circulated as `opentrust`; this release retires that name due to a third-party trademark conflict and migrates every internal identifier off the trademarked term.
+
+* Change: plugin renamed to **Open Trust Center by Ettic**. New slug, new text domain, new internal namespace. PHP classes are now `Ettic_OTC_*`, options live under `ettic_otc_*`, postmeta under `_ettic_otc_*`, CPT slugs under `eotc_*`, CSS classes under `.ettic-otc-*`, REST namespace `ettic-otc/v1`.
+* Change: the v1.0.x → v1.1.x in-place database migration chain has been removed. This release is treated as a fresh install; the import/export feature (in `Open Trust Center → Settings → Import & Export`) is the supported migration path off any prior install.
+* Compat: the importer in `Open Trust Center → Settings → Import & Export` accepts export ZIPs generated by **any** prior `opentrust` version (v1.0.x or v1.1.x) with full data fidelity. Postmeta keys (`_ot_*`, `_opentrust_*`) and CPT slugs (`ot_*`, `opentr_*`) are remapped to the new `_ettic_otc_*` / `eotc_*` identifiers on read.
+* Internal: bundled translation template regenerated against the new text domain.
+
+**Upgrading from an `opentrust` install:** export your content + settings from the old plugin's Import & Export tab, deactivate the old plugin, install **Open Trust Center by Ettic**, and import the ZIPs into the new plugin. There is no in-place upgrade path — the namespaces are intentionally disjoint.
 
 = 1.1.1 =
 A proactive hardening release that extends the 1.1.0 prefix work. It contains no new features — every change is naming consistency or internal correctness.
@@ -216,6 +226,9 @@ This release implements the fixes requested in round 1 of the WordPress.org plug
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+The plugin is renamed to **Open Trust Center by Ettic** (was OpenTrust) due to a third-party trademark conflict. The slug, text domain, PHP namespace, options, postmeta, CPT slugs, and CSS classes all move to the new `ettic_otc` / `eotc_` / `ettic-otc-` namespace. **No automatic in-place upgrade from the previous `opentrust` plugin.** Migrate by exporting from the old install's Import & Export tab and importing the ZIPs into the new plugin — the importer reads v1.0.x and v1.1.x archives with full data fidelity.
 
 = 1.1.1 =
 This release renames the plugin's postmeta keys and internal identifiers to a longer prefix for naming consistency. An automatic, idempotent database migration rewrites your existing postmeta to the new keys on the first load after upgrade, so no manual action is required. Post content, meta values, revisions, version history, and translation links are all preserved, and existing trust-center URLs are unaffected. A database backup before upgrading is recommended. If you maintain custom code that references the old `_ot_*` postmeta keys directly, update those references to the new `_opentrust_*` keys.

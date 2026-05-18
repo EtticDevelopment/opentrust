@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-final class OpenTrust_Chat_Secrets {
+final class Ettic_OTC_Chat_Secrets {
 
     private const SENTINEL = 'ot_enc_v1:';
 
@@ -26,7 +26,7 @@ final class OpenTrust_Chat_Secrets {
      * Derive the 32-byte encryption key from wp_salt('auth').
      */
     private static function key(): string {
-        return hash('sha256', wp_salt('auth') . 'opentrust-chat-v1', true);
+        return hash('sha256', wp_salt('auth') . 'ettic-otc-chat-v1', true);
     }
 
     /**
@@ -86,7 +86,7 @@ final class OpenTrust_Chat_Secrets {
 
     /**
      * Short, non-reversible fingerprint of a key — used in transient cache keys
-     * (opentrust_models_{provider}_{key_hash}) so we never persist the raw key.
+     * (ettic_otc_models_{provider}_{key_hash}) so we never persist the raw key.
      */
     public static function fingerprint(string $plain): string {
         return substr(hash('sha256', $plain), 0, 16);
@@ -99,7 +99,7 @@ final class OpenTrust_Chat_Secrets {
      * @return array<string, string> Keys by provider slug.
      */
     public static function get_all(): array {
-        $stored = get_option('opentrust_provider_keys', []);
+        $stored = get_option('ettic_otc_provider_keys', []);
         if (!is_array($stored)) {
             return [];
         }
@@ -133,27 +133,26 @@ final class OpenTrust_Chat_Secrets {
             return false;
         }
 
-        $stored = get_option('opentrust_provider_keys', []);
+        $stored = get_option('ettic_otc_provider_keys', []);
         if (!is_array($stored)) {
             $stored = [];
         }
 
         $stored[$provider] = self::encrypt($plain);
 
-        return update_option('opentrust_provider_keys', $stored, false);
+        return update_option('ettic_otc_provider_keys', $stored, false);
     }
 
     /**
      * Remove a provider's stored key. Returns true if the key existed and was removed.
      */
     public static function forget(string $provider): bool {
-        $stored = get_option('opentrust_provider_keys', []);
+        $stored = get_option('ettic_otc_provider_keys', []);
         if (!is_array($stored) || !isset($stored[$provider])) {
             return false;
         }
 
         unset($stored[$provider]);
-        update_option('opentrust_provider_keys', $stored, false);
-        return true;
+        return update_option('ettic_otc_provider_keys', $stored, false);
     }
 }
